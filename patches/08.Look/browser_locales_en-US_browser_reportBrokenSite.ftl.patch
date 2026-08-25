@@ -15,7 +15,7 @@
  report-broken-site-panel-intro-text = Your report helps us understand and fix issues in { -brand-product-name } to make it better for everyone.
  report-broken-site-panel-learn-more-link = Learn more
  
-@@ -14,49 +14,49 @@
+@@ -14,49 +14,50 @@
  report-broken-site-panel-reason-intro-text = What’s not working?
  
  report-broken-site-panel-reason-load-moz-box-button =
@@ -77,12 +77,18 @@
  report-broken-site-panel-report-sent-header =
 -  .label = Your report has been sent
 -  .title = Your report has been sent
-+    .label = Your report has been sent
-+    .title = Your report has been sent
++    .label =
++        Your report has been sent
++        .title = Your report has been sent
  report-broken-site-panel-report-sent-text = Thank you for helping { -brand-product-name } make the web more open, accessible, and better for everyone.
  
  report-broken-site-panel-invalid-url-label = Please enter a valid URL
-@@ -68,15 +68,15 @@
+@@ -64,19 +65,19 @@
+ # $minLength (number) - The minimum number of characters required in the description textarea.
+ report-broken-site-panel-invalid-description-label =
+     {$minLength ->
+-         *[other] Please enter at least { $minLength } characters
++    *[other] Please enter at least { $minLength } characters
      }
  
  report-broken-site-panel-screenshot-label =

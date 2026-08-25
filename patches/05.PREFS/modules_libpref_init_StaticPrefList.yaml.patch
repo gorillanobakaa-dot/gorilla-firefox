@@ -100,11 +100,10 @@
  - name: general.document_open_conversion_depth_limit
    type: uint32_t
    value: 20
-@@ -12715,7 +12739,13 @@
+@@ -12715,6 +12739,32 @@
  # Disable falling back to software decoders in case of frame drop
  - name: media.ffmpeg.disable-software-fallback
    type: RelaxedAtomicBool
--  value: false
 +  value: true
 +  mirror: always
 +
@@ -112,10 +111,29 @@
 +- name: media.gorilla.hardware_only_mode
 +  type: RelaxedAtomicBool
 +  value: true
++  mirror: always
++
++# Stage 5b envelope loudness compressor in AudioStream
++# (AudioPsychoacousticEnhancer). Default on so shipped builds keep audible
++# laptop speakers; set false on a machine that already runs a system-level
++# compressor sink (e.g. PipeWire SC4) to avoid two compressors in series
++# (audible gain pumping).
++- name: media.gorilla.loudness_compressor.enabled
++  type: RelaxedAtomicBool
++  value: true
++  mirror: always
++
++# Allow software VP8 decode for WebCodecs only (DecoderAgent's private
++# PDMFactory). The media pipeline (<video>, MSE, WebRTC) stays hardware-only
++# regardless of this pref. Needed for WhatsApp Web calls, which run VP8
++# through WebCodecs over a DataChannel; Intel HD 4000 has no VP8 ASIC, so
++# such calls are software-decoded in any browser on this hardware.
++- name: media.gorilla.webcodecs_software_vp8
++  type: RelaxedAtomicBool
+   value: false
    mirror: always
  
- #ifdef MOZ_FFMPEG
-@@ -13272,10 +13302,10 @@
+@@ -13272,10 +13322,10 @@
    value: true
    mirror: always
  
@@ -128,7 +146,7 @@
    mirror: always
  
  # Matroska
-@@ -13616,11 +13646,11 @@
+@@ -13616,11 +13666,11 @@
    mirror: always
  
  #ifdef MOZ_WEBRTC
@@ -143,7 +161,7 @@
      mirror: always
  
    # Use MediaDataDecoder API for H264 in WebRTC. This includes hardware
-@@ -15559,9 +15589,11 @@
+@@ -15559,9 +15609,11 @@
    mirror: always
  
  # This preference controls if we need to fail transactions for Local Network Access (LNA) failures.
@@ -156,7 +174,7 @@
    mirror: always
  
  # When this pref is true, loads triggered by scripts classified as trackers
-@@ -16448,16 +16480,6 @@
+@@ -16448,16 +16500,6 @@
    value: false
    mirror: always
  
@@ -173,7 +191,7 @@
  # Maximum time (ms) a session can remain in ZERORTT state before being
  # considered stuck. If a Http3Session doesn't transition to CONNECTED within
  # this timeout, it will be closed.
-@@ -16854,6 +16876,8 @@
+@@ -16854,6 +16896,8 @@
    value: 5000
    mirror: always
  
@@ -182,7 +200,7 @@
  # Backstop timeout (milliseconds) for a channel parked waiting for a cache
  # entry callback that never arrives (e.g. a wedged entry left perpetually
  # "being written" by a writer that was suspended or cancelled without ever
-@@ -16868,6 +16892,7 @@
+@@ -16868,6 +16912,7 @@
  
  # This is used for a temporary workaround for a web-compat issue. If pref is
  # true CORS preflight requests are allowed to send client certificates.
@@ -190,7 +208,7 @@
  - name: network.cors_preflight.allow_client_cert
    type: RelaxedAtomicBool
    value: false
-@@ -16961,7 +16986,7 @@
+@@ -16961,7 +17006,7 @@
  # to the connection phase (ms).
  - name: network.http.happy_eyeballs_resolution_delay
    type: RelaxedAtomicUint32
@@ -199,7 +217,7 @@
    mirror: always
    rust: true
  
-@@ -16982,6 +17007,9 @@
+@@ -16982,6 +17027,9 @@
    mirror: always
    rust: true
  
@@ -209,7 +227,7 @@
  # When Happy Eyeballs is enabled and all TRR-resolved addresses fail to
  # connect, retry the connection with TRR disabled (native DNS). This is the
  # connection-time equivalent of the legacy nsSocketTransport native-DNS
-@@ -16994,6 +17022,7 @@
+@@ -16994,6 +17042,7 @@
  # If true, it will include extra tags to be sniffed by nsUnknownDecoder
  # These tags were previously sniffed by Firefox for legacy/webcompat but
  # are not part of the MIME sniffing spec.
@@ -217,7 +235,7 @@
  - name: network.mimesniff.extra_moz_html_tags
    type: RelaxedAtomicBool
    value: false
-@@ -18547,6 +18576,15 @@
+@@ -18547,6 +18596,15 @@
      value: @IS_NIGHTLY_BUILD@
      mirror: always
  
@@ -233,7 +251,7 @@
    # Whether \Device\KsecDD is closed in content process. We are closing this
    # using a pref to give users a work-around if they have issues.
  -   name: security.sandbox.content.close-ksecdd-handle
-@@ -19544,6 +19582,10 @@
+@@ -19544,6 +19602,10 @@
    value: false
    mirror: always
  
@@ -244,7 +262,7 @@
  # Site categories for notification permission telemetry
  # Maps domains to categories for analyzing permission behavior by site type
  # XXX(krosylight): We need to document how this list is chosen for openness.
-@@ -19557,6 +19599,7 @@
+@@ -19557,6 +19619,7 @@
  # Prefs starting with "ui."
  #---------------------------------------------------------------------------
  
@@ -252,7 +270,7 @@
  - name: ui.key.generalAccessKey
    type: int32_t
    value: -1
-@@ -20017,11 +20060,7 @@
+@@ -20017,11 +20080,7 @@
  
  - name: webgl.disable-angle
    type: RelaxedAtomicBool
@@ -264,7 +282,7 @@
    mirror: always
  
  - name: webgl.disable-wgl
-@@ -20673,7 +20712,7 @@
+@@ -20673,7 +20732,7 @@
  # Use xdg-session-management-v1 for session restore on Wayland.
  - name: widget.wayland.session-management.enabled
    type: bool

@@ -1,11 +1,18 @@
 --- a/dom/media/webcodecs/WebCodecsUtils.cpp
 +++ b/dom/media/webcodecs/WebCodecsUtils.cpp
-@@ -608,6 +608,10 @@
+@@ -608,6 +608,17 @@
  
  bool IsSupportedVideoCodec(const nsAString& aCodec) {
    LOG("IsSupportedVideoCodec: {}", NS_ConvertUTF16toUTF8(aCodec).get());
 +  // GORILLA PATCH: Enforce hardware-only media capabilities gating for WebCodecs
 +  if (StaticPrefs::media_gorilla_hardware_only_mode()) {
++    // GORILLA OVERRIDE 2026-08-11: opt-in software VP8 for WebCodecs only
++    // (WhatsApp Web calls: VP8 over DataChannel, no WebRTC media section).
++    // The media pipeline is unaffected; see PDMFactory Purpose::WebCodecs.
++    if (StaticPrefs::media_gorilla_webcodecs_software_vp8() &&
++        aCodec.EqualsLiteral("vp8")) {
++      return true;
++    }
 +    return IsH264CodecString(aCodec);
 +  }
    // The only codec string accepted for vp8 is "vp8"
