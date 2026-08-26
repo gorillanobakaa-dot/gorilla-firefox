@@ -1,29 +1,28 @@
 --- a/dom/media/webaudio/AudioContext.cpp
 +++ b/dom/media/webaudio/AudioContext.cpp
-@@ -143,12 +143,18 @@
+@@ -143,12 +143,21 @@
  
  static float GetSampleRateForAudioContext(bool aIsOffline, float aSampleRate,
                                            bool aShouldResistFingerprinting) {
--  if (aIsOffline || aSampleRate != 0.0) {
-+  if (aIsOffline) {
+   if (aIsOffline || aSampleRate != 0.0) {
      return aSampleRate;
--  } else {
--    return static_cast<float>(
--        CubebUtils::PreferredSampleRate(aShouldResistFingerprinting));
+   } else {
++    // GORILLA TWEAK 2026-08-26: steer only NO-PREFERENCE contexts to the
++    // ALC269's native 48000 Hz. RULE: honor-or-throw, NEVER silently
++    // substitute a page-requested rate. The previous form of this tweak
++    // forced 48000 for ALL realtime contexts and silently broke WhatsApp's
++    // 16 kHz WASM call audio (convicted by live WebAudioAPI:5 capture).
++    // Record: FIrefox.154.Hardware.decode.WEBRTC/CALL-TRANSPORT-BLACKHOLE.DEVELOPER.md
++    if (StaticPrefs::media_gorilla_hardware_only_mode()) {
++      return 48000.0f;
++    }
+     return static_cast<float>(
+         CubebUtils::PreferredSampleRate(aShouldResistFingerprinting));
    }
-+  // GORILLA TWEAK: Force 48000Hz native playback to match ALC269 clock rate
-+  if (StaticPrefs::media_gorilla_hardware_only_mode()) {
-+    return 48000.0f;
-+  }
-+  if (aSampleRate != 0.0) {
-+    return aSampleRate;
-+  }
-+  return static_cast<float>(
-+      CubebUtils::PreferredSampleRate(aShouldResistFingerprinting));
  }
  
  AudioContext::AudioContext(nsPIDOMWindowInner* aWindow, bool aIsOffline,
-@@ -569,7 +575,7 @@
+@@ -569,7 +578,7 @@
  #elif XP_WIN
      latency_s = 0.04;
  #else  // Catchall for other OSes, including Linux.
@@ -32,7 +31,7 @@
  #endif
    } else {
      return Graph()->AudioOutputLatency();
-@@ -1110,13 +1116,19 @@
+@@ -1110,13 +1119,19 @@
      return promise.forget();
    }
  
