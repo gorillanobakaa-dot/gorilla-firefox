@@ -28,11 +28,28 @@ Double-click it. Say yes to the Windows permission prompt. Done.
 
 You get a Desktop shortcut and a Start Menu entry, both with the gorilla icon.
 
-**Windows may warn you** that it does not recognise the publisher. That is
-because this installer is not code-signed — a certificate costs a few hundred
-a year, and this project is free. Click **More info → Run anyway** if you trust
-the download. Check the SHA-256 against the one on the release page if you want
-to be sure the file arrived intact.
+### ⚠ Windows will try very hard to stop you
+
+You will hit **two** roadblocks, and both are built so that giving up is the
+easiest option:
+
+1. **Downloading** — the file gets "blocked". The **Delete** button is big and
+   obvious; **Keep** is hidden behind a tiny `…` or `⌄`.
+2. **Running it** — a blue box says *"Windows protected your PC"* and offers
+   **one** button: **Don't run**. The **Run anyway** button exists, but is not
+   drawn until you click the small grey words **More info**.
+
+Nothing is wrong with the file. This happens to every program whose author has
+not paid for a yearly code-signing certificate (£200–£600, forever). This
+browser is free and intends to stay that way.
+
+**➡ Full walkthrough with the exact clicks for Edge, Chrome and Firefox:
+[WINDOWS-WILL-TRY-TO-STOP-YOU.md](WINDOWS-WILL-TRY-TO-STOP-YOU.md)**
+
+Don't just take our word for it either — that page also shows you how to check
+the file's SHA-256 fingerprint in ten seconds, which proves the file is exactly
+what we built. That is a better guarantee than a certificate, because it checks
+the actual file rather than who paid a licence fee.
 
 ### Installing without the permission prompt
 

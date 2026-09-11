@@ -28,6 +28,10 @@ Linux (.deb) and Windows (installer).
 | **You need** | Debian / Ubuntu / Mint, 64-bit | Windows 10 or 11, 64-bit | ~25 GB free disk + a few hours |
 | **Go to** | **[Part 1](#part-1--just-give-me-the-browser)** ⬇ | **[windows/README.md](windows/README.md)** ⬇ | **[Part 2](#part-2--build-it-yourself)** ⬇ |
 
+> 🪟 **Windows users:** Windows will block the download and then block the
+> install, and hides the "carry on" button both times. Nothing is wrong with
+> the file. **[Here is exactly what to click.](windows/WINDOWS-WILL-TRY-TO-STOP-YOU.md)**
+
 ---
 
 ## Part 1 — "Just give me the browser"
