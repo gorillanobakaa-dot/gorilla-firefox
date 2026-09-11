@@ -1,0 +1,76 @@
+diff --git a/browser/base/content/navigator-toolbox.js b/browser/base/content/navigator-toolbox.js
+index be588fafee..cbf8b085ce 100644
+--- a/browser/base/content/navigator-toolbox.js
++++ b/browser/base/content/navigator-toolbox.js
+@@ -2,11 +2,6 @@
+  * License, v. 2.0. If a copy of the MPL was not distributed with this
+  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+ 
+-ChromeUtils.defineESModuleGetters(this, {
+-  AIWindowUI:
+-    "moz-src:///browser/components/aiwindow/ui/modules/AIWindowUI.sys.mjs",
+-});
+-
+ document.addEventListener(
+   "DOMContentLoaded",
+   () => {
+@@ -222,9 +217,7 @@ document.addEventListener(
+         #identity-icon-box,
+         #identity-permission-box,
+         #translations-button,
+-        #split-view-button,
+-        #smartwindow-ask-button,
+-        #smartwindow-group-tabs-button
++        #split-view-button
+         `);
+       if (!element) {
+         return;
+@@ -319,18 +312,6 @@ document.addEventListener(
+           }
+           break;
+ 
+-        case "smartwindow-ask-button":
+-          if (isLeftClick) {
+-            AIWindowUI.toggleSidebar(window);
+-          }
+-          break;
+-
+-        case "smartwindow-group-tabs-button":
+-          if (isLeftClick) {
+-            AIWindowUI.toggleGroupTabsPanel(window);
+-          }
+-          break;
+-
+         default:
+           throw new Error(`Missing case for #${element.id}`);
+       }
+@@ -363,9 +344,7 @@ document.addEventListener(
+         #unified-extensions-button,
+         #library-button,
+         #ipprotection-button,
+-        #split-view-button,
+-        #smartwindow-ask-button,
+-        #smartwindow-group-tabs-button
++        #split-view-button
+       `);
+       if (!element) {
+         return;
+@@ -465,18 +444,6 @@ document.addEventListener(
+           }
+           break;
+ 
+-        case "smartwindow-ask-button":
+-          if (isLikeLeftClick) {
+-            AIWindowUI.toggleSidebar(window);
+-          }
+-          break;
+-
+-        case "smartwindow-group-tabs-button":
+-          if (isLikeLeftClick) {
+-            AIWindowUI.toggleGroupTabsPanel(window);
+-          }
+-          break;
+-
+         default:
+           throw new Error(`Missing case for #${element.id}`);
+       }

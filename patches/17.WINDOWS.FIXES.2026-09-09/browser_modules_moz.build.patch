@@ -1,0 +1,14 @@
+diff --git a/browser/modules/moz.build b/browser/modules/moz.build
+index eebf824044..c5b301f35e 100644
+--- a/browser/modules/moz.build
++++ b/browser/modules/moz.build
+@@ -113,6 +113,9 @@ XPCSHELL_TESTS_MANIFESTS += ["test/unit/xpcshell.toml"]
+ 
+ EXTRA_JS_MODULES += [
+     "AboutNewTab.sys.mjs",
++    # GORILLA: inert stand-in for the excised AI Window. Upstream
++    # browser-places.js and SessionStore.sys.mjs still call AIWindow.
++    "AIWindowStub.sys.mjs",
+     "BrowserDOMWindow.sys.mjs",
+     "BrowserUIUtils.sys.mjs",
+     "BrowserUsageTelemetry.sys.mjs",

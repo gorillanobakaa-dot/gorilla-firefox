@@ -1,0 +1,15 @@
+diff --git a/browser/locales/jar.mn b/browser/locales/jar.mn
+index a703e0b0a3..7ae2ef76d1 100644
+--- a/browser/locales/jar.mn
++++ b/browser/locales/jar.mn
+@@ -11,9 +11,9 @@
+   preview/interventions.ftl                        (../components/urlbar/content/interventions.ftl)
+   preview/enUS-searchFeatures.ftl                  (../components/urlbar/content/enUS-searchFeatures.ftl)
+   preview/onboarding.ftl                           (../components/aboutwelcome/content/onboarding.ftl)
+-  preview/genai.ftl                                (../components/genai/content/genai.ftl)
+   preview/credentialChooser.ftl                    (../../toolkit/components/credentialmanagement/credentialChooser.ftl)
+   browser                                          (%browser/**/*.ftl)
++  preview/genai.ftl                                (../locales-preview/genai.ftl)
+   preview/aiWindow.ftl                             (../locales-preview/aiWindow.ftl)
+   preview/smartTabGroups.ftl                       (../locales-preview/smartTabGroups.ftl)
+   preview/privacyPreferences.ftl                   (../locales-preview/privacyPreferences.ftl)

@@ -1,0 +1,99 @@
+diff --git a/browser/components/sessionstore/SessionStore.sys.mjs b/browser/components/sessionstore/SessionStore.sys.mjs
+index 76a984f6e2..0e084e5bef 100644
+--- a/browser/components/sessionstore/SessionStore.sys.mjs
++++ b/browser/components/sessionstore/SessionStore.sys.mjs
+@@ -173,8 +173,8 @@ XPCOMUtils.defineLazyServiceGetters(lazy, {
+ ChromeUtils.defineESModuleGetters(lazy, {
+   AboutNewTab: "resource:///modules/AboutNewTab.sys.mjs",
+   NimbusFeatures: "resource://nimbus/ExperimentAPI.sys.mjs",
+-  AIWindow:
+-    "moz-src:///browser/components/aiwindow/ui/modules/AIWindow.sys.mjs",
++  // GORILLA: points at the inert stub, not the excised component.
++  AIWindow: "resource:///modules/AIWindowStub.sys.mjs",
+   AsyncShutdown: "resource://gre/modules/AsyncShutdown.sys.mjs",
+   BrowserWindowTracker: "resource:///modules/BrowserWindowTracker.sys.mjs",
+   DevToolsShim: "chrome://devtools-startup/content/DevToolsShim.sys.mjs",
+@@ -2114,10 +2114,6 @@ var SessionStoreInternal = {
+       this._windows[aWindow.__SSi].isTaskbarTab = true;
+     }
+ 
+-    if (lazy.AIWindow.isAIWindowActiveAndEnabled(aWindow)) {
+-      this._windows[aWindow.__SSi].isAIWindow = true;
+-    }
+-
+     let tabbrowser = aWindow.gBrowser;
+ 
+     // add tab change listeners to all already existing tabs
+@@ -5320,15 +5316,7 @@ var SessionStoreInternal = {
+       // the state we're trying to restore and then fallback to the last selected
+       // window.
+       let windowToUse = windows[lastSessionWindowID];
+-      let lastWindowIsAIWindow =
+-        lastWindow && lazy.AIWindow.isAIWindowActive(lastWindow);
+-      let thisWindowIsAIWindow =
+-        !!winState.isAIWindow && lazy.AIWindow.isAIWindowEnabled();
+-      if (
+-        !windowToUse &&
+-        canUseLastWindow &&
+-        lastWindowIsAIWindow == thisWindowIsAIWindow
+-      ) {
++      if (!windowToUse && canUseLastWindow) {
+         windowToUse = lastWindow;
+         canUseLastWindow = false;
+       }
+@@ -5625,8 +5613,6 @@ var SessionStoreInternal = {
+     if (workspaceID) {
+       winData.workspaceID = workspaceID;
+     }
+-
+-    winData.isAIWindow = lazy.AIWindow.isAIWindowActive(aWindow);
+   },
+ 
+   /**
+@@ -6826,22 +6812,6 @@ var SessionStoreInternal = {
+     // restores don't set it), and willRestore() is true only for automatic
+     // restore / crash recovery — so this forces Smart for a genuinely new
+     // default startup window, never for a window restored from a saved session.
+-    const isNewDefaultStartupWindow =
+-      aOptions.firstWindow &&
+-      !lazy.SessionStartup.willRestore() &&
+-      lazy.AIWindow.shouldOpenAsSmartWindow();
+-    const shouldBeAIWindow =
+-      isNewDefaultStartupWindow ||
+-      (!!aWinData.isAIWindow && lazy.AIWindow.isAIWindowEnabled());
+-
+-    const trigger = aOptions.trigger ?? "open_browser";
+-
+-    if (lazy.AIWindow.isAIWindowActive(aWindow) !== shouldBeAIWindow) {
+-      lazy.AIWindow.toggleAIWindow(aWindow, shouldBeAIWindow, trigger);
+-    } else if (shouldBeAIWindow) {
+-      lazy.AIWindow.recordOpenWindowTelemetry(trigger);
+-    }
+-
+     if (!isTaskbarTab) {
+       WINDOW_HIDEABLE_FEATURES.forEach(function (aItem) {
+         aWindow[aItem].visible = !hidden.includes(aItem);
+@@ -7302,23 +7272,8 @@ var SessionStoreInternal = {
+       }
+     });
+ 
+-    // A window CANNOT be both a Private Window and an AI Window
+     if (winState.isPrivate) {
+       features.push("private");
+-    } else if (winState.isAIWindow) {
+-      let tab = winState.tabs[winState.selected - 1];
+-      let restoreSessionURL = "";
+-      if (tab.entries.length) {
+-        // tab.index is 1-based in the session store format (0/falsy means unset).
+-        let activeIndex = (tab.index || tab.entries.length) - 1;
+-        restoreSessionURL = tab.entries[activeIndex].url;
+-      }
+-      argString = lazy.AIWindow.handleAIWindowOptions({
+-        openerWindow: null,
+-        args: argString,
+-        aiWindow: winState.isAIWindow,
+-        restoreSessionURL,
+-      });
+     }
+ 
+     if (!argString) {

@@ -1,0 +1,39 @@
+diff --git a/browser/base/content/browser.js b/browser/base/content/browser.js
+index 06b5cc2212..f46dd2aaa7 100644
+--- a/browser/base/content/browser.js
++++ b/browser/base/content/browser.js
+@@ -12,8 +12,8 @@ var { AppConstants } = ChromeUtils.importESModule(
+ // lazy module getters
+ 
+ ChromeUtils.defineESModuleGetters(this, {
+-  AIWindow:
+-    "moz-src:///browser/components/aiwindow/ui/modules/AIWindow.sys.mjs",
++  // GORILLA: points at the inert stub, not the excised component.
++  AIWindow: "resource:///modules/AIWindowStub.sys.mjs",
+   AMTelemetry: "resource://gre/modules/AddonManager.sys.mjs",
+   AboutNewTab: "resource:///modules/AboutNewTab.sys.mjs",
+   AboutReaderParent: "resource:///actors/AboutReaderParent.sys.mjs",
+@@ -1892,15 +1892,6 @@ let gFileMenu = {
+     }
+     PrintUtils.updatePrintSetupMenuHiddenState();
+ 
+-    const aiWindowMenu = event.target.querySelector("#menu_newAIWindow");
+-    const classicWindowMenu = event.target.querySelector(
+-      "#menu_newClassicWindow"
+-    );
+-
+-    aiWindowMenu.hidden =
+-      !AIWindow.isAIWindowEnabled() || AIWindow.isAIWindowActive(window);
+-    classicWindowMenu.hidden =
+-      !AIWindow.isAIWindowEnabled() || !AIWindow.isAIWindowActive(window);
+   },
+ };
+ 
+@@ -2300,7 +2291,6 @@ var XULBrowserWindow = {
+     // If we've actually changed document, update the toolbar visibility.
+     if (!isSameDocument) {
+       updateBookmarkToolbarVisibility();
+-      AIWindow.updateImmersiveView(gBrowser.currentURI, window);
+     }
+ 
+     let closeOpenPanels = selector => {

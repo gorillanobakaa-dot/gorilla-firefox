@@ -1,0 +1,64 @@
+diff --git a/browser/components/urlbar/UrlbarProviderQuickSuggest.sys.mjs b/browser/components/urlbar/UrlbarProviderQuickSuggest.sys.mjs
+index 9181251785..ccf80671c0 100644
+--- a/browser/components/urlbar/UrlbarProviderQuickSuggest.sys.mjs
++++ b/browser/components/urlbar/UrlbarProviderQuickSuggest.sys.mjs
+@@ -12,7 +12,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
+   QuickSuggest: "moz-src:///browser/components/urlbar/QuickSuggest.sys.mjs",
+   SearchUtils: "moz-src:///toolkit/components/search/SearchUtils.sys.mjs",
+   UrlbarPrefs: "moz-src:///browser/components/urlbar/UrlbarPrefs.sys.mjs",
+-  UrlbarResult: "chrome://browser/content/urlbar/UrlbarResult.mjs",
++  UrlbarResult: "moz-src:///browser/components/urlbar/UrlbarResult.sys.mjs",
+   UrlbarShared: "chrome://browser/content/urlbar/UrlbarShared.mjs",
+   UrlbarSearchUtils:
+     "moz-src:///browser/components/urlbar/UrlbarSearchUtils.sys.mjs",
+@@ -51,37 +51,8 @@ export class UrlbarProviderQuickSuggest extends UrlbarProvider {
+    * @param {UrlbarQueryContext} queryContext The query context object
+    */
+   async isActive(queryContext) {
+-    // If the sources don't include search or the user used a restriction
+-    // character other than search, don't allow any suggestions.
+-    if (
+-      !queryContext.sources.includes(lazy.UrlbarShared.RESULT_SOURCE.SEARCH) ||
+-      (queryContext.restrictSource &&
+-        queryContext.restrictSource != lazy.UrlbarShared.RESULT_SOURCE.SEARCH)
+-    ) {
+-      return false;
+-    }
+-
+-    if (
+-      !lazy.UrlbarPrefs.get("quickSuggestEnabled") ||
+-      queryContext.isPrivate ||
+-      queryContext.restrictInSearchMode()
+-    ) {
+-      return false;
+-    }
+-
+-    // Trim only the start of the search string because a trailing space can
+-    // affect the suggestions.
+-    let trimmedSearchString = queryContext.searchString.trimStart();
+-
+-    // Per product requirements, at least two characters must be typed to
+-    // trigger a Suggest suggestion. Suggestion keywords should always be at
+-    // least two characters long, but we check here anyway to be safe. Note we
+-    // called `trimStart()` above, so we only call `trimEnd()` here.
+-    if (trimmedSearchString.trimEnd().length < 2) {
+-      return false;
+-    }
+-    this._trimmedSearchString = trimmedSearchString;
+-    return true;
++    // GORILLA: EXCISED
++    return false;
+   }
+ 
+   /**
+@@ -486,8 +457,8 @@ export class UrlbarProviderQuickSuggest extends UrlbarProvider {
+     }
+ 
+     return new lazy.UrlbarResult({
+-      type: lazy.UrlbarShared.RESULT_TYPE.URL,
+-      source: lazy.UrlbarShared.RESULT_SOURCE.SEARCH,
++      type: UrlbarUtils.RESULT_TYPE.URL,
++      source: UrlbarUtils.RESULT_SOURCE.SEARCH,
+       isBestMatch: !!suggestion.is_top_pick,
+       payload,
+       highlights: {

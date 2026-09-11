@@ -1,0 +1,508 @@
+/* ==========================================================================
+   GORILLA UNLEASHED: PANELS AND MENUS REVERTED TO STOCK  (2026-09-09, FF155)
+   ==========================================================================
+
+   The app menu rendered as an empty box on FF155 - no labels, no items, and
+   finally not even a visible panel. Four attempts failed:
+
+     1. cyan `color`/`fill` on panel containers and their children
+     2. the ROOT fix - un-blacking --color-gray-05 - which DID repair the
+        toolbar icons, the address bar and the tab strip, and did nothing here
+     3. color-scheme:dark plus --color-gray-100 overrides
+     4. the theme's own FF154-era panel[type="arrow"] cyan rules, which were
+        already present and already not working
+
+   Common cause: this file forced panel SURFACES black at :root
+   (--panel-background / --panel-background-color / --arrowpanel-background)
+   and then tried to force foregrounds back afterwards. That held on FF154.
+   On FF155 the panel machinery resolves colour through layers a :root
+   override does not reach, so each fix repaired one surface and left the
+   next black.
+
+   Per the explicit instruction - "if the CSS theme proves to be hard to
+   implement on windows we can use the standards one" - the panel and menu
+   overrides are REMOVED rather than deepened. Firefox's own dark panel
+   styling is legible, ships tested, and survives the next version bump.
+
+   KEPT: toolbar, tab strip, address bar and new tab page branding, all of
+   which work. Only panels and menus fall back to stock.
+
+   The removed rules are recorded verbatim in the harness diagnoses under
+   "panel-theme-stock" - including the menupopup block, which forced the
+   Menu/MenuText SYSTEM colours. That was a Linux/GTK fix for native context
+   menus; on Windows those colours follow the OS light/dark setting and can
+   land black-on-black.
+
+   IF YOU REVISIT THIS: do not begin by adding !important. Open the Browser
+   Toolbox on the running build and read what the labels actually compute to.
+   Every hour lost here was lost to inferring colour from screenshots.
+   ========================================================================== */
+
+/* 🦍 GORILLA UNLEASHED - MASTER REDIRECTOR (ASIC-BOUND EDITION) */
+/* Zero-CPU Theme Architecture for Intel HD 4000 */
+
+:root {
+  --gorilla-master-icon: url("chrome://branding/content/about-logo.svg");
+}
+
+/* Override standard illustration classes and elements */
+.illustration, .info-icon, .error-icon, .panel-illustration, .category-icon, moz-promo img, #extensions-empty-illustration {
+  content: var(--gorilla-master-icon) !important;
+  background-image: var(--gorilla-master-icon) !important;
+  background-size: contain !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  -moz-context-properties: none !important;
+  filter: none !important;
+  image-rendering: crisp-edges !important;
+  -moz-image-region: auto !important;
+}
+
+/* ==========================================================================
+   GORILLA UNLEASHED: QUECTOSECOND ANIMATION ANNIHILATION
+   ========================================================================== */
+*, *::before, *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  transition-delay: 0s !important;
+  scroll-behavior: auto !important;
+}
+
+/* ==========================================================================
+   GORILLA UNLEASHED: COLOR-VALUE CONVERGENCE (PURE BLACK / CYAN)
+   ========================================================================== */
+:root, #main-window, #browser-window, window {
+    /* Base Blacks */
+    --lwt-accent-color: #000000 !important;
+    --lwt-frame: #000000 !important;
+    --tabpanel-background-color: #000000 !important;
+    /* GORILLA 2026-09-09 - THE ROOT FIX, read this before changing it.
+     *
+     * These three used to be #000000 like the rest of the scale. That single
+     * fact caused three separate "everything is invisible" bugs on FF155:
+     * the toolbar icons, the address bar, and every menu and panel label.
+     *
+     * Firefox 155's design system resolves EVERY dark-mode foreground to the
+     * LIGHT end of this palette - tokens-shared.css:
+     *
+     *     --toolbarbutton-icon-fill: light-dark(gray-70, gray-05)
+     *     --toolbar-text-color:      light-dark(gray-100, gray-05)
+     *     --toolbar-field-text-color:light-dark(gray-100, gray-05)
+     *     --toolbox-text-color:      light-dark(gray-100, gray-05)
+     *     --icon-color:              light-dark(gray-70, gray-05)
+     *
+     * The dark greys (30-90 below) are backgrounds and SHOULD be black. The
+     * light end is text and icons. Blacking it painted every foreground in
+     * the browser black, on black.
+     *
+     * gray-05 is therefore set to the brand cyan rather than to black: one
+     * line that makes toolbar text, icon fill, urlbar text and menu labels
+     * all correct at once, instead of a rescue rule per surface.
+     *
+     * gray-10 and gray-20 are borders (--toolbar-field-border-color,
+     * --popup-border-color). Black borders on black are invisible, which is
+     * why the address bar could not be seen even when it worked. */
+    --color-gray-05: #00FFFF !important;
+    --color-gray-10: #1a4d4d !important;
+    --color-gray-20: #1a4d4d !important;
+    --color-gray-30: #000000 !important;
+    --color-gray-40: #000000 !important;
+    --color-gray-50: #000000 !important;
+    --color-gray-60: #000000 !important;
+    --color-gray-70: #000000 !important;
+    --color-gray-80: #000000 !important;
+    --color-gray-90: #000000 !important;
+    --toolbar-bgcolor: #000000 !important;
+    --chrome-content-separator-color: #000000 !important;
+    --toolbar-field-background-color: #000000 !important;
+    --lwt-toolbar-field-background-color: #000000 !important;
+    --urlbar-box-bgcolor: #000000 !important;
+    --urlbar-box-background-color: #000000 !important;
+    --urlbar-background-background-color: #000000 !important;
+    --urlbar-background-background-color-focused: #000000 !important;
+    --urlbar-box-background-color-focus: #000000 !important;
+    --urlbar-box-background-color-hover: #000000 !important;
+    --urlbar-box-background-color-active: #000000 !important;
+    --input-bgcolor: #000000 !important;
+    --newtab-background-color: #000000 !important;
+    --newtab-background-color-secondary: #000000 !important;
+    
+    /* Text Visibility (Pure Cyan and Stark White) */
+    --lwt-tab-text: #FFFFFF !important;
+    --toolbar-field-color: #00FFFF !important;
+    --lwt-toolbar-field-color: #00FFFF !important;
+
+    /* GORILLA OVERRIDE 2026-07-31: FF154 renamed the toolbar/field tokens
+       (tokens-shared.css); the legacy names above no longer reach
+       browser-shared.css / urlbar-searchbar.css consumers. Without these the
+       toolbars + bookmarks bar render pale/transparent, the focused urlbar
+       flashes white (Field), and typed urlbar text is FieldText = black on
+       black. Override the NEW names too. */
+    --toolbar-background-color: #000000 !important;
+    --toolbar-text-color: #00FFFF !important;
+    --toolbar-color-scheme: dark !important;
+    --toolbar-field-background-color-focus: #000000 !important;
+    --toolbar-field-text-color: #00FFFF !important;
+    --toolbar-field-text-color-focus: #00FFFF !important;
+    --toolbox-background-color-inactive: #000000 !important;
+    --toolbox-text-color-inactive: #00FFFF !important;
+    --input-color: #00FFFF !important;
+    --newtab-text-primary-color: #00FFFF !important;
+
+    /* Global Dark Mode Force */
+    color-scheme: dark !important;
+}
+
+/* ==========================================================================
+   GORILLA UNLEASHED: INTEL HD 4000 GPU OFFLOADING
+   Strictly banning CPU layout reflows. All interactions must use Opacity, Transform, or Outline.
+   ========================================================================== */
+
+/* Pre-promote interactive UI elements to the GPU Compositor Layer (DISABLED to prevent WRSceneBuilder thrashing) */
+/* .tabbrowser-tab, .toolbarbutton-1, .urlbar-input-box {
+    will-change: transform, opacity !important;
+} */
+
+/* --- ACTIVE TAB: PINK (#FFC0CB) / TEXT: BLACK (#000000) --- */
+.tabbrowser-tab[selected] .tab-background {
+    background-color: #FFC0CB !important;
+    border: none !important;       /* CPU safe: 0 reflows */
+    outline: none !important;
+    box-shadow: none !important;   /* Kill expensive GPU compositing */
+}
+.tabbrowser-tab[selected] .tab-label {
+    color: #000000 !important;
+    font-weight: normal !important;
+}
+.tabbrowser-tab[selected] .tab-close-button {
+    color: #000080 !important;     /* Navy blue from logs */
+    fill: #000080 !important;
+    font-weight: bold !important;
+}
+
+/* --- INACTIVE TAB: VISIBLE TEXT ON BLACK BACKGROUND --- */
+.tabbrowser-tab:not([selected]) .tab-label {
+    color: #00FFFF !important;
+}
+
+/* --- INACTIVE TAB HOVER: GPU ONLY --- */
+/* No borders, no padding changes. Just pure outline and GPU opacity */
+.tabbrowser-tab:not([selected]):hover .tab-background {
+    background-color: transparent !important;
+    outline: 1px solid #00FFFF !important; /* Pure Cyan outline, 0 CPU reflow */
+    outline-offset: -1px !important;
+    opacity: 0.8 !important;               /* Handled natively by HD4000 ROP */
+}
+
+/* --- URL BAR OVERRIDES --- */
+.urlbar-input::placeholder, .searchbar-textbox::placeholder {
+  opacity: 1 !important;           /* GPU alpha blend pierce */
+  color: #00FFFF !important;
+}
+
+#urlbar[focused="true"] > #urlbar-background {
+    outline: 2px solid #00FFFF !important; /* Pure Cyan focus ring */
+    outline-offset: -2px !important;
+    border: none !important;       /* Stop CPU from resizing the box */
+    box-shadow: none !important;   /* Stop heavy compositing */
+}
+
+/* --- MENUS AND DROPDOWNS --- */
+#categories > .category, #categories > radio, .menu-item, .toolbarbutton {
+    appearance: none !important;
+    -moz-default-appearance: none !important;
+    background-color: #000000 !important;
+    border: none !important;
+    outline: none !important;
+}
+
+/* Menu items hover: Native GPU outline instead of background swap */
+.menu-item:hover, .toolbarbutton:hover {
+    outline: 1px solid #00FFFF !important;
+    outline-offset: -1px !important;
+    background-color: #000000 !important; /* Keep background black to prevent repaint */
+}
+
+
+/* ==========================================================================
+   GORILLA UNLEASHED: EXPLICIT THROBBER & REPAINT KILL-SWITCH
+   ========================================================================== */
+.tab-throbber, .tab-loading-burst, .tab-icon-pending, .tab-icon-image, 
+progress, .progress-bar, #tabbrowser-tabpanels {
+  animation: none !important;
+  transition: none !important;
+  background-image: none !important;
+}
+
+/* Hard-kill the caret in pure CSS if possible (DISABLED: Restored typing cursor for usability) */
+/* * {
+  caret-color: transparent !important;
+} */
+
+/* ==========================================================================
+   GORILLA UNLEASHED: POPUP ARTIFACT OVERRIDES
+   Clamp runaway autocomplete login/favicon icons 
+   ========================================================================== */
+.ac-site-icon, 
+panel[type="autocomplete-richlistbox"] image, 
+panel[type="autocomplete-richlistbox"] img {
+  max-width: 16px !important;
+  max-height: 16px !important;
+  object-fit: contain !important;
+}
+
+autocomplete-row-item { --icon-width: 16px !important; --icon-height: 16px !important; }
+
+/* ==========================================================================
+   GORILLA UNLEASHED: WINDOW CONTROLS VISIBILITY (CSD BLACK-ON-BLACK FIX)
+   Titlebar buttons (close/min/max) are SVG icons that inherit from the
+   theme color. Force them cyan so they show against the black titlebar.
+   ========================================================================== */
+.titlebar-button > .toolbarbutton-icon {
+    color: #00FFFF !important;
+    fill: #00FFFF !important;
+    -moz-context-properties: fill, fill-opacity, stroke !important;
+}
+.titlebar-close:hover > .toolbarbutton-icon {
+    color: #FF3750 !important;
+    fill: #FF3750 !important;
+}
+
+/* ==========================================================================
+   GORILLA UNLEASHED: NEW TAB BUTTON VISIBILITY
+   The "+" new tab button is black-on-black when all colors are forced #000.
+   ========================================================================== */
+#tabs-newtab-button,
+#vertical-tabs-newtab-button,
+#TabsToolbar #new-tab-button {
+    color: #00FFFF !important;
+    fill: #00FFFF !important;
+}
+#tabs-newtab-button > .toolbarbutton-icon,
+#vertical-tabs-newtab-button > .toolbarbutton-icon,
+#new-tab-button > .toolbarbutton-icon {
+    color: #00FFFF !important;
+    fill: #00FFFF !important;
+    -moz-context-properties: fill, fill-opacity !important;
+}
+#tabs-newtab-button:hover,
+#vertical-tabs-newtab-button:hover,
+#new-tab-button:hover {
+    outline: 1px solid #00FFFF !important;
+    outline-offset: -1px !important;
+}
+
+/* Inactive tab close buttons also need visibility */
+.tabbrowser-tab:not([selected]) .tab-close-button {
+    color: #00FFFF !important;
+    fill: #00FFFF !important;
+}
+
+/* Find bar — styled directly in toolkit/themes/shared/findbar.css */
+
+/* ==========================================================================
+   GORILLA OVERRIDE 2026-07-31: popupnotification / arrow-panel BLACK-ON-BLACK
+   fix (open-defects item 1 — two screenshot sightings: "Set as default
+   browser" prompt and the webauthn security-key prompt).
+   ROOT CAUSE: toolkit popup.css re-declares --panel-text-color: MenuText ON
+   the panel ELEMENT (:is(menupopup, panel):where(:not([type="arrow"]))), and
+   an element-level normal declaration beats our INHERITED :root !important
+   value (same cascade mechanic as the urlbar token fix). On a light GTK
+   theme MenuText is near-black over our forced #000000 panel background.
+   FIX: hit the elements directly — element-level !important outranks the
+   variable indirection entirely. menupopup is deliberately NOT matched so
+   the native context-menu restoration below stays intact.
+   ========================================================================== */
+/* ==========================================================================
+   GORILLA UNLEASHED: NATIVE CONTEXT MENU & POPUP RESTORATION
+   Right-click menus must retain native OS/GTK chrome.  Forcing
+   --panel-background to #000000 on :root bleeds into every menupopup,
+   rendering them as flat black boxes with no borders or shadows
+   (same class of bug as ERR-UI-004).  Fix: reset panel variables and
+   appearance on menupopup elements so the system theme renders them.
+   ========================================================================== */
+
+/* GORILLA OVERRIDE: restore system panel colours on all popup menus */
+/* GORILLA OVERRIDE: menu items inherit system colours, hover via GTK */
+/* GORILLA OVERRIDE: separators need native rendering too */
+menupopup menuseparator {
+  appearance: auto !important;
+  -moz-default-appearance: auto !important;
+}
+
+/* GORILLA OVERRIDE: restore SVG icon fill inheritance for menu icons */
+menupopup .menu-iconic-icon,
+menupopup .menu-iconic-left {
+  -moz-context-properties: fill, fill-opacity, stroke !important;
+  fill: currentColor !important;
+}
+
+
+/* ==========================================================================
+   GORILLA UNLEASHED: TOOLBAR FOREGROUND RESCUE  (2026-09-09, FF155)
+   ==========================================================================
+
+   SYMPTOM
+     The whole navigation toolbar looked EMPTY. Back, forward, reload, the
+     urlbar, the account/extensions/menu buttons - none of them drew. Only
+     the urlbar magnifier was visible, so it read as "the toolbar collapsed".
+
+   IT HAD NOT COLLAPSED
+     A diagnostic stylesheet that outlined every child of #nav-bar showed
+     every button PRESENT and correctly laid out. They were black icons on a
+     black toolbar. Nothing was broken structurally; it was pure contrast.
+
+   WHY
+     The colour block above blanket-assigns EVERY --color-gray-NN token to
+     #000000 to force black surfaces. In Firefox 155 the design system derives
+     FOREGROUNDS from that same palette:
+
+         --toolbarbutton-icon-fill: light-dark(var(--color-gray-70),
+                                               var(--color-gray-05));
+         --toolbox-text-color:      light-dark(var(--color-gray-100),
+                                               var(--color-gray-05));
+
+     So blacking the greys for backgrounds blacked the icons too. The theme
+     was written against 154, where this palette did not feed the toolbar.
+
+   WHY THIS IS WRITTEN AS `color`/`fill` AND NOT AS TOKENS
+     Setting --toolbarbutton-icon-fill and --toolbox-text-color on :root was
+     tried first and did NOT work. Chasing renamed tokens is what produced
+     this bug in the first place. `color` and `fill` are stable CSS, they are
+     what --toolbarbutton-icon-fill (currentColor) ultimately resolves to, and
+     they survive the design system being reshuffled again in 156.
+
+     The descendant selector is required, not decorative: the inner
+     .toolbarbutton-icon elements carry their own fill, so a rule on the
+     button alone does not reach them. Verified by screenshot both ways.
+   ========================================================================== */
+#navigator-toolbox,
+#nav-bar,
+#nav-bar *,
+#TabsToolbar,
+#PersonalToolbar,
+#PersonalToolbar * {
+  color: #00FFFF !important;
+  fill: #00FFFF !important;
+  -moz-context-properties: fill !important;
+}
+
+/* The selected tab is deliberately pink with black text (see above); keep its
+   own foreground out of the cyan sweep. */
+.tabbrowser-tab[selected] .tab-label,
+.tabbrowser-tab[selected] .tab-icon-image {
+  color: #000000 !important;
+  fill: #000000 !important;
+}
+
+/* ==========================================================================
+   GORILLA UNLEASHED: URLBAR RESCUE  (2026-09-09, FF155)
+   ==========================================================================
+
+   The address bar appeared to be MISSING - only the search-mode magnifier
+   showed. It was not missing. It was a black box on a black toolbar, the
+   same failure as the toolbar icons.
+
+   The colour block above sets --urlbar-background-background-color. That name
+   does not exist in Firefox 155; it is the 154 spelling, and the only place
+   in the entire tree that still defines it is this file. 155 uses:
+
+       --urlbar-background-color: var(--toolbar-field-background-color);
+
+   urlbar-searchbar.css had ALSO been regressed to its 154 contents (it
+   referenced the same dead name and had 155-only features stripped out); it
+   has been restored from the pinned upstream tag.
+
+   The border is deliberate. A pure-black field on a pure-black toolbar is
+   invisible even when it works, so the address bar gets a visible edge -
+   otherwise the next person reports it missing all over again.
+   ========================================================================== */
+:root, #main-window, #browser-window, window {
+  --urlbar-background-color: #000000 !important;
+  --toolbar-field-background-color: #000000 !important;
+}
+
+#urlbar-background {
+  background-color: #000000 !important;
+  border: 1px solid #00FFFF !important;
+}
+
+#urlbar[focused="true"] > #urlbar-background {
+  border-color: #FFC0CB !important;
+}
+
+#urlbar-input,
+.urlbar-input {
+  color: #00FFFF !important;
+}
+
+
+/* ==========================================================================
+   GORILLA UNLEASHED: PANEL STYLING RESTORED  (2026-09-09, FF155)
+   ==========================================================================
+
+   These rules were removed earlier today on a WRONG DIAGNOSIS, and they are
+   restored here because the real cause has been found and fixed.
+
+   THE ACTUAL BUG
+     The app menu rendered with no labels. It was not a colour problem and no
+     amount of CSS could have fixed it: browser/base/content/browser.xhtml
+     declares
+
+         <link rel="localization" href="preview/genai.ftl"/>
+
+     and the genai excision had deleted that line from browser/locales/jar.mn
+     along with the file it pointed at. A localization resource that cannot be
+     resolved stops the whole window bundle, so EVERY data-l10n-id in the
+     chrome came back empty. The labels were ABSENT, not invisible - which the
+     JS-generated "100%" zoom row rendering normally should have told me much
+     sooner. The fix is an empty browser/locales-preview/genai.ftl.
+
+   WHAT THE FOUR CSS ROUNDS ACTUALLY ACHIEVED
+     Not nothing, but not this. Un-blacking --color-gray-05 genuinely repaired
+     the toolbar icons, the address bar text and the tab strip, because FF155
+     resolves every dark-mode foreground token to that one token. And the
+     .urlbar-background selector fix was real: FF155 renamed it from an ID to
+     a CLASS, so the theme's #urlbar-background rules were dead code. Those
+     stay. Only the panel work was chasing a ghost.
+
+   LESSON, recorded in the harness under "panel-theme-stock"
+     Missing text and unreadable text are different failures. If some text in
+     the same container renders and other text does not, stop looking at
+     colour and go look at where the text comes from.
+   ========================================================================== */
+
+panel:not([type="arrow"]) {
+}
+
+panel[type="arrow"],
+panel[type="arrow"]::part(content),
+popupnotification,
+popupnotificationcontent,
+.popup-notification-body,
+.popup-notification-description,
+panel[type="arrow"] description,
+panel[type="arrow"] label,
+panel[type="arrow"] .checkbox-label {
+  color: #00FFFF !important;
+}
+
+panel[type="arrow"] {
+  color-scheme: dark !important;
+}
+
+menupopup {
+  appearance: auto !important;
+  -moz-default-appearance: auto !important;
+  background-color: Menu !important;
+  color: MenuText !important;
+}
+
+menupopup menuitem,
+menupopup menu {
+  appearance: auto !important;
+  -moz-default-appearance: auto !important;
+  background-color: transparent !important;
+  color: inherit !important;
+}

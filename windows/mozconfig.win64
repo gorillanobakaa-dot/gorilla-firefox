@@ -1,0 +1,164 @@
+# Gorilla Firefox - Windows x86_64 build configuration
+#
+# Consumed by stage 40. Do not edit MOZ_BUILD_DATE by hand; the harness pins it
+# from config/versions.lock.json so that two builds of the same revision produce
+# the same output.
+
+# Objdir lives OUTSIDE the source tree, at a deliberately short path.
+#
+# Not a preference - a hard requirement on Windows. mozmake stats target paths
+# UNRESOLVED, with the '..\..\..' still in them. The deepest object in the tree
+# is reached from toolkit/library/build as:
+#
+#   <objdir>\toolkit\library\build\..\..\..\third_party\libwebrtc\modules
+#   \congestion_controller\goog_cc_scream_network_controller
+#   \goog_cc_scream_network_controller_gn\Unified_cpp_etwork_controller_gn0.obj
+#
+# That relative part alone is 192 characters (goog_cc_scream_network_controller
+# appears twice), so the objdir root must stay under about 68 characters.
+#
+# With the objdir inside the source tree it was
+#   C:\Users\<you>\Documents\Gorilla.firefox\src\obj-x86_64-pc-windows-msvc
+# is about 74 chars for a typical user directory, giving 266 total -
+# six over MAX_PATH. The build failed with
+# "No rule to make target ...Unified_cpp_etwork_controller_gn0.obj" even though
+# the file existed, because make's stat of the unresolved path failed. The
+# RESOLVED path was only 235, which is why ls found it and the error made no
+# sense. Enabling long paths does not help: mozmake does not use the extended
+# API for this.
+mk_add_options MOZ_OBJDIR=C:/gfobj
+
+ac_add_options --enable-application=browser
+ac_add_options --target=x86_64-pc-windows-msvc
+
+# ---------------------------------------------------------------------------
+# Compilation cache
+# ---------------------------------------------------------------------------
+# The Linux gorilla mozconfig has this and it was NOT carried across when this
+# file was first written. Result: configure reported "checking for ccache...
+# not found" and eight consecutive builds recompiled from scratch, with
+# sccache.exe sitting unused in ~/.mozbuild (mach bootstrap fetches it).
+#
+# TO ENABLE - uncomment the line below. Ordering matters:
+#
+#   1. Finish and PACKAGE a good build first. Changing this alters the
+#      compiler invocation, so mach reconfigures and every existing object is
+#      invalidated - you pay one full rebuild.
+#   2. Uncomment, then run: gorilla build
+#   3. That build is full-length while the cache populates. Every build after
+#      it is dramatically faster, which is the whole point.
+#
+# Optional tuning (sccache defaults to a 10 GB cache; Firefox benefits from
+# more headroom if the disk allows):
+#   export SCCACHE_CACHE_SIZE="30G"
+#
+# ac_add_options --with-ccache=sccache
+
+# ---------------------------------------------------------------------------
+# Optimisation
+# ---------------------------------------------------------------------------
+ac_add_options --enable-optimize
+ac_add_options --enable-release
+ac_add_options --disable-debug
+
+# Debug symbols are the single largest contributor to link memory and link
+# time. This machine has 64 GB so it could afford them, but we do not ship
+# them, so we do not pay for them.
+ac_add_options --disable-debug-symbols
+
+# LTO and PGO are viable here - 64 GB is comfortably enough, which is not true
+# of the VAIO. Leave them off for the first build so there is a clean baseline
+# to compare against, then enable and measure the difference.
+# ac_add_options --enable-lto=cross
+# ac_add_options MOZ_PGO=1
+
+# ---------------------------------------------------------------------------
+# Carried from the Linux mozconfig - ENABLE WITH SCCACHE
+# ---------------------------------------------------------------------------
+# These were in the Linux gorilla mozconfig and were missed when this file was
+# first written (same omission as sccache: rewritten from memory rather than
+# diffed - see "working scripts/diff_mozconfig.py").
+#
+# They are staged COMMENTED because each changes configure flags and would
+# invalidate the objdir. Enable them TOGETHER WITH sccache above, in one
+# rebuild, rather than paying for two.
+#
+# ac_add_options --disable-default-browser-agent   # Windows scheduled task that phones home
+# ac_add_options --disable-webspeech               # speech-to-text / text-to-speech APIs
+# ac_add_options --disable-necko-wifi              # WLAN scanning for geolocation
+# ac_add_options --enable-rust-simd                # cross-platform performance
+# ac_add_options --enable-jemalloc                 # already the Windows default; explicit
+# ac_add_options --without-wasm-sandboxed-libraries
+# mk_add_options AUTOCLOBBER=0                     # never clobber silently
+#
+# --without-wasm-sandboxed-libraries is a SECURITY TRADE, not a free win: it
+# removes RLBox, which sandboxes graphite/ogg/hunspell into wasm. Smaller and
+# faster, with less defence-in-depth against bugs in those parsers. Carried
+# because the Linux build made the same choice deliberately.
+
+# ---------------------------------------------------------------------------
+# DELIBERATELY NOT CARRIED from the Linux mozconfig
+# ---------------------------------------------------------------------------
+# Each of these is a decision, recorded so it is never mistaken for an
+# oversight. diff_mozconfig.py requires every dropped option to appear here.
+#
+#   --disable-accessibility
+#       NOT carried, on purpose. On Linux this drops ATK. On Windows it
+#       disables MSAA/UI Automation - the interface NVDA, JAWS and Narrator
+#       use - so the browser becomes unreadable to a screen reader. The saving
+#       is negligible: Firefox's Windows a11y engine is lazily instantiated
+#       and only wakes on WM_GETOBJECT, so compiled-in-but-dormant costs a
+#       little binary size and essentially no memory or CPU. Not bloat.
+#
+#   --enable-default-toolkit=cairo-gtk3-wayland   Wayland; meaningless here.
+#   --enable-linker=lld-21                        Linux linker naming.
+#   --enable-strip                                GNU strip; MSVC has no equivalent.
+#   CC / CXX / AR / NM / RANLIB / OBJCOPY / OBJDUMP = "*-21"
+#                                                 Linux clang-21 paths. Windows
+#                                                 uses clang-cl, resolved by the
+#                                                 harness (lib/toolchain.py).
+#   CFLAGS / CXXFLAGS "-O3 -march=native -pipe -fno-semantic-interposition
+#   -fno-plt -ffunction-sections -fdata-sections"
+#                                                 GCC/Clang driver syntax; not
+#                                                 accepted by clang-cl.
+#   LDFLAGS "-Wl,-O2 -Wl,--as-needed -Wl,--gc-sections"
+#                                                 GNU ld syntax.
+#   MALLOC_CONF "narenas:8,..."                   Linux jemalloc runtime tuning.
+#   RUSTFLAGS "-C target-cpu=native"              Deliberate: 'native' would tie
+#                                                 the binary to THIS machine's
+#                                                 CPU. The fleet includes Sandy
+#                                                 and Ivy Bridge, which lack
+#                                                 F16C/RDRAND - such a build
+#                                                 would SIGILL there.
+#   MOZ_MAKE_FLAGS "-j6"                          Parallelism is set by the
+#                                                 harness from the calibrated
+#                                                 thermal profile, not here.
+
+# ---------------------------------------------------------------------------
+# Trim what we do not ship
+# ---------------------------------------------------------------------------
+ac_add_options --disable-tests
+ac_add_options --disable-updater
+ac_add_options --disable-crashreporter
+ac_add_options --disable-maintenance-service
+ac_add_options --disable-parental-controls
+
+# ---------------------------------------------------------------------------
+# Branding
+# ---------------------------------------------------------------------------
+# Matches the Linux gorilla mozconfig exactly. The branding directory is laid
+# down by stage 30 from 08.Look/NEW_FILES (81 files), and the 235 locale
+# patches in that same group rename the product throughout the UI. Nothing
+# here needs to be invented - it is already done.
+ac_add_options --disable-official-branding
+ac_add_options --with-branding=browser/branding/gorilla
+
+# ---------------------------------------------------------------------------
+# Notes on what is deliberately NOT here
+# ---------------------------------------------------------------------------
+# The Linux gorilla patchset's 01.MEDIA and 02.GPU groups have no Windows
+# analogue. VA-API/VDPAU maps to DXVA2/D3D11VA via Media Foundation, and
+# Mesa/i915 tuning maps to ANGLE/D3D11 - both already wired up in Gecko and
+# both aimed at hardware far older than this machine. The portable half of the
+# patchset (networking, prefs, AI removal, theme, remote lockout, telemetry
+# kill) is applied as patches in stage 30, not as configure flags.

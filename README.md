@@ -1,8 +1,10 @@
-# 🦍 Gorilla Unleashed — Firefox 154
+# 🦍 Gorilla Firefox
 
 <!-- WHO-THIS-IS-FOR: managed block, do not edit by hand -->
 
-**Firefox 154 with the telemetry stripped out and hardware video decoding forced on, for laptops the web has given up on.**
+**Firefox with the telemetry stripped out and hardware video decoding forced on, for laptops the web has given up on.**
+
+Tracks current Firefox. Latest build: **155.0.1**, for **Linux and Windows**.
 
 Built for the people every other tool prices out: kids with no credit
 card, 15-year-old laptops, data sold by the megabyte. Free forever, by
@@ -11,19 +13,20 @@ Why, with the numbers: [PHILOSOPHY.md](https://github.com/gorillanobakaa-dot/Gor
 
 <!-- /WHO-THIS-IS-FOR -->
 
-**A faster, quieter Firefox for old and cheap Linux laptops.**
+**A faster, quieter Firefox for old and cheap laptops.**
 No telemetry. No AI chatbots. No "experiments". No sponsored tiles. It wakes up
 the hardware your old machine already has, and it runs fine on 2 GB of RAM.
+Linux (.deb) and Windows (installer).
 
 ---
 
 # 👉 START HERE — which one are you?
 
-|  | 🟢 I just want the browser | 🔧 I want to build it myself |
-|---|---|---|
-| **You get** | A ready-to-install file. ~5 minutes. | A version compiled for *your exact* CPU. |
-| **You need** | Debian / Ubuntu / Mint, 64-bit | ~25 GB free disk + a few hours |
-| **Go to** | **[Part 1](#part-1--just-give-me-the-browser)** ⬇ | **[Part 2](#part-2--build-it-yourself)** ⬇ |
+|  | 🐧 Linux — just give me the browser | 🪟 Windows — just give me the browser | 🔧 I want to build it myself |
+|---|---|---|---|
+| **You get** | A ready-to-install file. ~5 minutes. | A ready-to-install file. ~2 minutes. | A version compiled for *your exact* CPU. |
+| **You need** | Debian / Ubuntu / Mint, 64-bit | Windows 10 or 11, 64-bit | ~25 GB free disk + a few hours |
+| **Go to** | **[Part 1](#part-1--just-give-me-the-browser)** ⬇ | **[windows/README.md](windows/README.md)** ⬇ | **[Part 2](#part-2--build-it-yourself)** ⬇ |
 
 ---
 
@@ -43,14 +46,14 @@ The actual browser lives somewhere else, in a section called **Releases**.
 
 **Easiest way — click this direct link:**
 
-### ➡ **[DOWNLOAD THE BROWSER (101 MB)](https://github.com/gorillanobakaa-dot/firefox.154/releases/latest)**
+### ➡ **[DOWNLOAD THE BROWSER (101 MB)](https://github.com/gorillanobakaa-dot/gorilla-firefox/releases/latest)**
 
 That opens the **Releases** page. On it you'll see a small heading called
 **`Assets`** (you may need to click the little ▸ triangle to open it).
 Under Assets, click the file ending in **`.deb`**:
 
 ```
-gorilla-unleashed_154.0a1-1_amd64.deb     ← click this one
+gorilla-unleashed_<version>_amd64.deb     ← click this one
 ```
 
 Ignore the files called "Source code (zip)" and "Source code (tar.gz)" — those
@@ -62,8 +65,11 @@ word **Releases**, and click it.)*
 ### Step 2 — Check it fits your computer
 
 This file works on **Debian, Ubuntu, Linux Mint, Pop!\_OS, MX Linux** and similar,
-on a **64-bit** computer. It does **not** work on Windows, macOS, Chromebooks,
+on a **64-bit** computer. It does **not** work on macOS, Chromebooks,
 Raspberry Pi, or Fedora/Arch.
+
+**On Windows?** There is a separate installer — see
+**[windows/README.md](windows/README.md)**.
 
 Not sure? Open a terminal and paste this — if it answers `x86_64`, you're good:
 
@@ -81,7 +87,7 @@ password.
 
 ```sh
 cd ~/Downloads
-sudo apt install ./gorilla-unleashed_154.0a1-1_amd64.deb
+sudo apt install ./gorilla-unleashed_*_amd64.deb
 ```
 
 When it asks for your password, the screen shows **nothing** as you type — that's
@@ -89,7 +95,7 @@ normal, not a broken keyboard. Press Enter, and answer `Y` if it asks.
 
 ### Step 4 — Open it
 
-Look in your applications menu for **Gorilla Unleashed 154** — the big gorilla
+Look in your applications menu for **Gorilla Unleashed** — the big gorilla
 icon. That's it. You're done. 🎉
 
 ### If something goes wrong
@@ -102,7 +108,7 @@ icon. That's it. You're done. 🎉
 | `Illegal instruction` when it starts | Your CPU is older than the one it was built on → build your own in **Part 2**. |
 | Videos won't play on some sites | Expected: this build prefers the codecs your old chip can decode in hardware. See `patches/01.MEDIA`. |
 
-Still stuck? [Open an Issue](https://github.com/gorillanobakaa-dot/firefox.154/issues)
+Still stuck? [Open an Issue](https://github.com/gorillanobakaa-dot/gorilla-firefox/issues)
 — no question is too basic. That's what it's for.
 
 ---
@@ -124,8 +130,8 @@ Plug it in.
 **How:** open a terminal and paste these three lines:
 
 ```sh
-git clone https://github.com/gorillanobakaa-dot/firefox.154.git
-cd firefox.154
+git clone https://github.com/gorillanobakaa-dot/gorilla-firefox.git
+cd gorilla-firefox
 ./recreate.sh
 ```
 

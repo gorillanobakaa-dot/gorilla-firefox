@@ -1,0 +1,27 @@
+diff --git a/browser/installer/package-manifest.in b/browser/installer/package-manifest.in
+index 9944fbec40..bea56affc3 100644
+--- a/browser/installer/package-manifest.in
++++ b/browser/installer/package-manifest.in
+@@ -140,9 +140,11 @@
+ #endif
+ #endif
+ 
+-#ifdef ONNX_RUNTIME
+-@BINPATH@/@DLL_PREFIX@onnxruntime@DLL_SUFFIX@
+-#endif
++; GORILLA excised: onnxruntime - the ML inference runtime. The AI/ML engine
++; that consumes it is removed, so the DLL is never built, but configure still
++; defines ONNX_RUNTIME because mach bootstrap fetched the toolchain. Their
++; Linux patch removed mozinference.dll for the same reason; this line was
++; inert on Linux (ONNX_RUNTIME undefined there) and is not on Windows.
+ 
+ [browser]
+ ; [Base Browser Files]
+@@ -176,7 +178,6 @@
+ @BINPATH@/@DLL_PREFIX@gkcodecs@DLL_SUFFIX@
+ @BINPATH@/@DLL_PREFIX@mozavutil@DLL_SUFFIX@
+ @BINPATH@/@DLL_PREFIX@mozavcodec@DLL_SUFFIX@
+-@BINPATH@/@DLL_PREFIX@mozinference@DLL_SUFFIX@
+ 
+ ; [Components]
+ #ifdef ACCESSIBILITY
