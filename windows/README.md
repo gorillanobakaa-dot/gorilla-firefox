@@ -64,6 +64,23 @@ Shortcuts are still created. Nothing is written outside your own user folder.
 
 ---
 
+## Add-ons work normally
+
+uBlock Origin and anything else from the add-ons site install the usual way —
+**Add to Firefox**, click **Add**, done. Nothing in the privacy work touches
+add-on installation or signature checking.
+
+Tested on the shipped build: the add-ons site loads, the signature is accepted
+(`signedState: 2`), the blocklist does not flag it, and the extension loads and
+runs. The GitHub `.xpi` and the add-ons-site `.xpi` are byte-for-byte the same
+file, so either route is fine.
+
+**➡ [Step-by-step, including installing from GitHub by hand](INSTALLING-UBLOCK-ORIGIN.md)**
+
+The one thing switched off is **"Recommended for you"** in the add-ons manager
+— that feature picks suggestions by sending your browsing behaviour to Mozilla.
+Search and install still work exactly as normal.
+
 ## Video: getting the most out of your machine
 
 **Most people can skip this.** The browser works out of the box.
