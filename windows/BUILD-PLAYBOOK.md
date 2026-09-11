@@ -121,7 +121,7 @@ Each entry below carries its full investigation, wrong turns included.
 
 ## The failure catalogue
 
-50 checks: 33 blocking, 17 advisory. `build` refuses to start while any blocker fails.
+51 checks: 33 blocking, 18 advisory. `build` refuses to start while any blocker fails.
 
 
 ### Blocking
@@ -1772,6 +1772,99 @@ LESSON
 
 </details>
 
+#### `privacy-claims` - Package matches the privacy claims
+
+**What went wrong:** 2026-09-11: the release notes claim telemetry, AI and sponsored content are removed. 26 of 26 core prefs verified false-and-locked in the shipped package, and a 60-second socket capture on a fresh profile reached no telemetry, Normandy, Glean, Contile, Pocket or Merino endpoint. But four belt-and-braces prefs from the project's own hardening plan (14.EGRESS.LOCKDOWN Column A) exist only in the profile-level user.js, which no installer deploys - so they are absent from the build defaults on both platforms.
+
+**Fix:** Run: python "working scripts/audit_privacy_claims.py" to see which prefs differ. For a live check that nothing is actually sent, run verify_no_phone_home.py - it watches the socket table on a clean profile.
+
+<details><summary>How this was diagnosed (including the wrong hypotheses)</summary>
+
+```
+THE QUESTION THAT EXPOSED THIS
+    "Is the telemetry and data collection stripped out, the AI features
+    removed, sponsored tiles gone? I could check the hardware decode myself,
+    but how about the telemetry?"
+
+    A fair challenge to a claim made in a release note to strangers who are
+    trusting a binary they cannot read.
+
+FOUR LAYERS, BECAUSE NO SINGLE ONE IS PROOF
+    1. PREFS IN THE PACKAGE - 26 of 26 core prefs false and LOCKED, read out
+       of the shipped omni.ja rather than the source.
+    2. CODE ABSENT - the ML engine, AI Window and Link Preview modules are not
+       in the package at all. A pref says what code is told to do; absence
+       says it cannot be told anything.
+    3. C++ - FOG.cpp returns NS_OK before Glean initialises, so the dispatcher
+       thread is never spawned. Not a pref, cannot be flipped.
+    4. THE WIRE - a 60-second socket capture on a brand new profile. No
+       telemetry, Normandy, Glean, Shield, Contile, Pocket or Merino endpoint
+       was contacted.
+
+    Only the fourth is evidence about behaviour. The first three are evidence
+    about intent.
+
+THE BUG IN THE AUDIT, WHICH INVERTED THE ANSWER
+    Firefox pref files are read top to bottom and the LAST definition wins.
+    The Gorilla injection is appended, so its values sit BELOW upstream's.
+
+    The first version of the audit grepped for the first match and reported:
+
+        app.shield.optoutstudies.enabled = true     (Shield studies ENABLED)
+        extensions.ml.enabled = true                (ML for extensions ON)
+
+    Both false alarms. The same files set them false 475 and 864 lines further
+    down. Reading the first match inverts the answer for every pref the
+    patchset overrides - which is precisely the set worth checking.
+
+THE BUG IN THE NETWORK CHECK
+    The socket filter excluded localhost with the regex
+
+        ^(0[.]0[.]0[.]0|127[.]|::1|::)$
+
+    '127[.]' followed by '$' cannot match '127.0.0.1'. Firefox's own
+    inter-process sockets sailed through and were reported as four
+    unidentified external endpoints - which is exactly the kind of scary,
+    wrong result that destroys trust in a privacy audit.
+
+    Reverse DNS then failed on the real endpoints, because Mozilla's services
+    sit behind Fastly and Google Cloud and resolve to nothing useful. "Four
+    unidentified IPs" is not good enough to support a privacy claim, so the
+    check now reads the DNS client cache for the names actually looked up.
+
+WHAT IT ACTUALLY FOUND
+    No surveillance endpoint. But not silence either:
+
+        services.addons.mozilla.org           add-on blocklist
+        content-signature-2.cdn.mozilla.net   signature verification
+        mozilla.map.fastly.net                CDN
+
+    These are deliberate. patches/14.EGRESS.LOCKDOWN states the doctrine:
+    close surveillance doors, PRESERVE the infrastructure that makes a browser
+    usable, and document every kept door so a later over-zealous pass does not
+    harden cert revocation into oblivion. So the honest claim is "no
+    surveillance", not the stronger and false "contacts nothing".
+
+    And a real gap: four belt-and-braces prefs from that plan's own Column A
+    (rsexperimentloader, ping-centre, activity-stream feed telemetry,
+    coverage.opt-out) exist only in 10.OVERRIDES/user.js - a PROFILE file that
+    no installer deploys. They are missing from the build defaults on both
+    platforms. The plan document is still headed "Status: PLAN".
+
+    Not a leak: the transports they belt are already dead, and the wire
+    capture confirms it. Defence-in-depth that was designed and never landed.
+
+LESSON
+    Check the claim against the artefact you shipped, not the tree you built
+    it from - and check behaviour, not only configuration.
+
+    Then check your checker. Two of the three findings in the first run were
+    bugs in the audit, and both of them accused the build of something it had
+    not done.
+```
+
+</details>
+
 #### `decode-profile` - Per-machine hardware decode profile
 
 **What went wrong:** The shipped codec policy is H.264-only, chosen for the oldest machine in the fleet (Ivy Bridge, no VP9/HEVC/AV1 decoder at all). On newer hardware it leaves the AV1 and VP9 decoders idle and caps YouTube at 1080p. The codec prefs are deliberately unlocked so a per-machine default in <install>/defaults/pref/ can override them without a rebuild.
@@ -2297,6 +2390,7 @@ LESSONS
 - `apply_partial_for_rebase.py` - Half-apply the failing patches on purpose, to generate .rej files.
 - `audit_fix_coverage.py` - Audit: is every fix from this session actually reproducible?
 - `audit_harness_wiring.py` - Are the checks and tools actually WIRED INTO the build, or just present?
+- `audit_privacy_claims.py` - Verify the privacy claims against the SHIPPED package, not the source.
 - `brand_installer_stub.py` - Put this build's icon on the installer's outer self-extractor.
 - `capture_chrome.py` - Screenshot the browser CHROME, and iterate on chrome CSS without rebuilding.
 - `check_deleted_file_refs.py` - Find build files that still reference deleted sources.
@@ -2305,6 +2399,7 @@ LESSONS
 - `check_l10n_resources.py` - Every <link rel="localization"> must resolve to a packaged .ftl.
 - `check_lazy_getters.py` - Find `lazy.Foo` used in a module that never declares a getter for Foo.
 - `check_logo_provenance.py` - Is the internal-pages logo crisp, and can we even tell?
+- `close_privacy_gap.py` - Land the Column A close-list prefs that only ever existed in a user.js.
 - `css_override_from_rejects.py` - Turn rejected CSS hunks into an appended override block.
 - `diff_mozconfig.py` - Diff the ported mozconfig against the original it was derived from.
 - `dump_icons.py` - Extract the main icon from PE files so we can LOOK at them.
@@ -2331,4 +2426,5 @@ LESSONS
 - `verify_import_check.py` - Prove check_dropped_imports.py catches the actual defect, not just passes.
 - `verify_installed_build.py` - Does the browser INSTALLED ON THIS MACHINE actually contain our fixes?
 - `verify_installer.py` - Verify the packaged installer: right icon, and payload still intact.
+- `verify_no_phone_home.py` - Watch the browser start on a clean profile and record every host it contacts.
 - `verify_patches_apply.py` - Prove the exported patches apply to a PRISTINE upstream tree.

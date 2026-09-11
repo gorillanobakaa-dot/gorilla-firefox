@@ -1,5 +1,5 @@
 diff --git a/browser/app/profile/firefox.js b/browser/app/profile/firefox.js
-index 4b5f0562be..788624fe69 100644
+index 4b5f0562be..a4d23ace74 100644
 --- a/browser/app/profile/firefox.js
 +++ b/browser/app/profile/firefox.js
 @@ -40,7 +40,7 @@ pref("extensions.getAddons.cache.enabled", true);
@@ -737,7 +737,7 @@ index 4b5f0562be..788624fe69 100644
  
  // Forward Rust component logs to the JS console (comma separate list of crate names)
  // The empty string defaults to forwarding error-level messages.
-@@ -3721,9 +3767,182 @@ pref("browser.referrals.pingSubmitted", false);
+@@ -3721,9 +3767,197 @@ pref("browser.referrals.pingSubmitted", false);
  // generated. The pref can't be defined here because locking the pref resets
  // the value to the default value and we need the default value to the genereated code.
  
@@ -922,3 +922,18 @@ index 4b5f0562be..788624fe69 100644
 +pref("places.semanticHistory.featureGate", false, locked);
 +pref("browser.contentblocking.report.privacy_metrics.enabled", false, locked);
 +pref("browser.urlbar.trending.featureGate", false, locked);
++
++// -- GORILLA 2026-09-11: Column A close-list ------------------------------
++// These five were specified in patches/14.EGRESS.LOCKDOWN's Column A and
++// deployed only to 10.OVERRIDES/user.js - a PROFILE file that no installer
++// places. They never reached a shipped build on either platform.
++//
++// Belts over transports that are already dead (telemetry server "", data
++// submission off and locked, Glean init skipped in FOG.cpp). Locked because
++// vanilla switches several of this family ON via a channel/build #ifdef
++// branch, and an unlocked default loses to that branch.
++pref("messaging-system.rsexperimentloader.enabled", false, locked);  // Nimbus experiment loader
++pref("browser.ping-centre.telemetry", false, locked);  // Activity Stream ping-centre
++pref("browser.newtabpage.activity-stream.feeds.telemetry", false, locked);  // newtab feed telemetry
++pref("toolkit.telemetry.coverage.opt-out", true, locked);  // disables the coverage-ping mechanism (true is the OFF direction here)
++pref("browser.attribution.enabled", false, locked);  // install/attribution reporting

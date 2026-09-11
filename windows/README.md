@@ -136,3 +136,46 @@ rather than left to a blocklist.
 
 The full list is the patch set in [`../patches/`](../patches/), one directory
 per topic, each with its own notes.
+
+---
+
+## What it does not send
+
+Verified against the shipped package and on the wire, not just claimed:
+
+- **33 preferences** checked inside the installed `omni.ja` — telemetry,
+  experiments, crash reporting, sponsored content and AI all `false` and
+  **locked**, so a policy or an add-on cannot flip them back.
+- The **ML engine, AI Window and Link Preview modules are not in the package
+  at all.** A preference says what code is told to do; absence says it cannot
+  be told anything.
+- **Glean** — Mozilla's newer telemetry system — is stopped in C++, not by a
+  preference. `FOG.cpp` returns before it initialises, so its dispatcher
+  thread never starts.
+- A **60-second socket capture** on a brand new profile, touching nothing,
+  reached no telemetry, Normandy, Glean, Shield, Contile, Pocket, Merino or
+  crash-reporting endpoint.
+
+Re-run either check yourself:
+
+```
+python audit_privacy_claims.py     # reads the installed package
+python verify_no_phone_home.py     # watches the network on a clean profile
+```
+
+### What it does send
+
+Not nothing, and pretending otherwise would be the dishonest version. On a
+clean start it contacts Mozilla for:
+
+| host | what for |
+|---|---|
+| `services.addons.mozilla.org` | the malicious add-on blocklist |
+| `content-signature-2.cdn.mozilla.net` | verifying that list is genuine |
+| `mozilla.map.fastly.net` | CDN for the above |
+
+None of these reports anything about you — they are downloads, not uploads.
+They are kept deliberately: a privacy build that breaks captive-portal wifi or
+lets a malicious extension through is not a privacy build, it is an abandoned
+one. Every kept door is listed with its reason in
+[`../patches/14.EGRESS.LOCKDOWN/`](../patches/14.EGRESS.LOCKDOWN/).
