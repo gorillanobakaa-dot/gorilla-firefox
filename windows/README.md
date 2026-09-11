@@ -40,7 +40,7 @@ If you cannot or would rather not use an administrator account, install it just
 for yourself:
 
 ```
-GorillaFirefox-win64-setup.exe -ms /InstallDirectoryPath="%LOCALAPPDATA%\Gorilla Unleashed"
+GorillaUnleashed-155.0.1-win64-setup.exe -ms /InstallDirectoryPath="%LOCALAPPDATA%\Gorilla Unleashed"
 ```
 
 Shortcuts are still created. Nothing is written outside your own user folder.
