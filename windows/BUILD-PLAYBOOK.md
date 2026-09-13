@@ -121,7 +121,7 @@ Each entry below carries its full investigation, wrong turns included.
 
 ## The failure catalogue
 
-59 checks: 37 blocking, 22 advisory. `build` refuses to start while any blocker fails.
+60 checks: 37 blocking, 23 advisory. `build` refuses to start while any blocker fails.
 
 
 ### Blocking
@@ -1883,6 +1883,12 @@ LESSON
 ```
 
 </details>
+
+#### `shortcuts-objdir` - Shortcuts point at the install
+
+**What went wrong:** 2026-09-13: the Private Browsing Start Menu entry pointed at C:/gfobj/dist/bin/private_browsing.exe. It worked, because the objdir happened to exist - so it launched a DIFFERENT browser from the installed one, and would have broken silently at the next clobber. The NSIS installer uses $INSTDIR correctly; the entry was created by Firefox itself during objdir testing. Running the browser from dist/bin writes real shortcuts that outlive the test.
+
+**Fix:** Repoint each one at <install>/<exe>. The installed browser is under %USERPROFILE%/Gorilla Unleashed. A shortcut into C:/gfobj launches an unpackaged build and dies the next time the objdir is clobbered.
 
 #### `pref-block-divergence` - The two pref blocks agree
 
