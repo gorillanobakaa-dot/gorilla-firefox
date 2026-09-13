@@ -1872,6 +1872,73 @@ LESSON
 
 **Fix:** Run: python "working scripts/add_builtin_extension.py" --amo <slug> --update, then rebuild and re-verify. Deliberately manual - see the diagnosis for why this is not automatic.
 
+<details><summary>How this was diagnosed (including the wrong hypotheses)</summary>
+
+```
+THE PROPOSAL
+    "Every time we rebuild we will have to fetch the latest uBlock Origin from
+    GitHub. This way we should be able to keep it relatively up to date."
+
+    The goal is right. The mechanism is not, and the reason is worth keeping.
+
+WHY THE GOAL IS RIGHT
+    A bundled extension is frozen at build time. It does not update itself -
+    that is the whole point of bundling, and it is also the whole cost. uBlock
+    Origin ships fixes for anti-adblock breakage constantly; a build six months
+    old is measurably worse at its job than the same build was on release day.
+    Doing nothing is not a neutral choice.
+
+WHY AUTO-FETCH IS THE WRONG LEVER HERE
+    1. It would be the only unpinned input in the build.
+       config/versions.lock.json pins MozillaBuild, the VS toolchain, the
+       Firefox revision, cbindgen and nasm by SHA-256. The doctrine of this
+       harness is that it refuses to continue if anything has quietly changed.
+       An auto-fetched extension means two builds of the same source revision
+       ship different code, with no way to say afterwards which one someone is
+       running. The extension recorded only a version string until 2026-09-13,
+       which made it exactly that hole.
+
+    2. It is a supply-chain decision wearing a convenience costume.
+       A bundled extension reads every page the user visits and cannot be
+       uninstalled by them. Taking whatever a third party published that
+       morning, unreviewed, straight into a browser handed to other people, is
+       not a sensible default. Once, deliberately, is fine. On a timer is not.
+
+    3. It turns an upstream outage into a build failure.
+       No network, AMO down, CDN hiccup - the build stops. A reproducible build
+       should not depend on someone else's uptime.
+
+WHAT WAS DONE INSTEAD
+    Pin and notify. Same outcome, reached by decision:
+
+      - version AND sha256 recorded in state/builtin_extensions.json
+      - this check queries the add-ons site on EVERY preflight run and reports
+        when something newer exists
+      - re-running the bundler REFUSES if the served version no longer matches
+        the pin, rather than silently substituting one
+      - --update takes the new version in one command
+      - --check-updates asks without writing anything
+      - --latest restores the original fetch-newest behaviour for anyone who
+        wants it
+
+    WARN, never BLOCKER, for two reasons: it needs the network, and being one
+    release behind is not a reason to refuse to build.
+
+BOTH PATHS WERE TESTED BY BREAKING THEM
+    Rolling the pin back to 1.60.0 fired the warning. Re-running the bundler
+    without --update refused, naming both versions. Rule 4 of the runbook: a
+    check is not finished until you have watched it fail.
+
+THE GENERAL SHAPE
+    "Keep it current" and "fetch it automatically" are not the same
+    requirement, and conflating them is how an unreviewed dependency gets into
+    a shipped product. Notification satisfies the first without conceding the
+    second. The user still gets told on every single build; taking the update
+    costs one command.
+```
+
+</details>
+
 #### `privacy-claims` - Package matches the privacy claims
 
 **What went wrong:** 2026-09-11: the release notes claim telemetry, AI and sponsored content are removed. 26 of 26 core prefs verified false-and-locked in the shipped package, and a 60-second socket capture on a fresh profile reached no telemetry, Normandy, Glean, Contile, Pocket or Merino endpoint. But four belt-and-braces prefs from the project's own hardening plan (14.EGRESS.LOCKDOWN Column A) exist only in the profile-level user.js, which no installer deploys - so they are absent from the build defaults on both platforms.
