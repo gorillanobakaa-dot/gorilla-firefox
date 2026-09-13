@@ -51,3 +51,14 @@ user_pref("gfx.webrender.compositor.force-enabled", true);
 user_pref("media.av1.enabled", false);
 user_pref("media.vp9.enabled", false);
 user_pref("media.mediasource.vp9.enabled", false);
+
+// ── WebRTC transport: cap DTLS at 1.2 ─────────────────────────────────────
+// Belt-and-suspenders with the compiled-in default (05.PREFS firefox.js).
+// Upstream defaults media.peerconnection.dtls.version.max to 772 (DTLS 1.3).
+// CONVICTED LIVE 2026-08-26: with 1.3 the handshake COMPLETES and then every
+// application-data record is silently dropped by Meta's WhatsApp call relays.
+// Signature: SCTP INIT retransmitted with no reply, 223 x 28-byte writes,
+// zero bytes back, calls ring forever. Capping to 1.2 opened 4 RTCDataChannels
+// with bidirectional flow measured (capture wa-call3).
+// Record: FIrefox.154.Hardware.decode.WEBRTC/CALL-TRANSPORT-BLACKHOLE.DEVELOPER.md
+user_pref("media.peerconnection.dtls.version.max", 771);
