@@ -101,14 +101,52 @@ def widget_id(addon_id):
     return re.sub(r"[^a-z0-9_]", "_", addon_id.lower()) + "-browser-action"
 
 
-def fetch_amo(slug, dest):
+def amo_latest(slug):
+    """What AMO currently serves: version, url, size and its published hash."""
     api = "https://addons.mozilla.org/api/v5/addons/addon/%s/" % slug
     with urllib.request.urlopen(api, timeout=60) as r:
         d = json.load(r)
     f = d["current_version"]["file"]
-    log("  %s %s  (%d bytes)" % (slug, d["current_version"]["version"], f["size"]))
-    urllib.request.urlretrieve(f["url"], dest)
-    return d["current_version"]["version"]
+    return {
+        "version": d["current_version"]["version"],
+        "url": f["url"],
+        "size": f["size"],
+        "hash": (f.get("hash") or "").replace("sha256:", ""),
+    }
+
+
+def sha256_of(path):
+    import hashlib
+    h = hashlib.sha256()
+    with open(path, "rb") as fh:
+        for chunk in iter(lambda: fh.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def fetch_amo(slug, dest, want_version=None):
+    """Download from AMO.
+
+    If want_version is given and AMO no longer serves it, this REFUSES rather
+    than silently substituting a different version. Every other dependency in
+    this harness is hash-pinned; a bundled extension is no different, and a
+    build that quietly changes what it ships is not reproducible.
+    """
+    info = amo_latest(slug)
+    if want_version and info["version"] != want_version:
+        raise SystemExit(
+            "pinned %s but AMO now serves %s. "
+            "Update the pin deliberately with --update, "
+            "or take whatever is current with --latest."
+            % (want_version, info["version"]))
+    log("  %s %s  (%d bytes)" % (slug, info["version"], info["size"]))
+    urllib.request.urlretrieve(info["url"], dest)
+    got = sha256_of(dest)
+    if info["hash"] and got != info["hash"]:
+        raise SystemExit("sha256 mismatch: AMO published %s, downloaded %s"
+                         % (info["hash"], got))
+    info["sha256"] = got
+    return info
 
 
 def read_manifest(xpi):
@@ -428,6 +466,12 @@ def main():
     ap.add_argument("--no-pin", action="store_true",
                     help="do not place the toolbar button")
     ap.add_argument("--check", action="store_true", help="report, write nothing")
+    ap.add_argument("--latest", action="store_true",
+                    help="take whatever AMO currently serves and re-pin to it")
+    ap.add_argument("--update", action="store_true",
+                    help="same as --latest; reads better when bumping on purpose")
+    ap.add_argument("--check-updates", action="store_true",
+                    help="report whether a newer version exists; change nothing")
     ap.add_argument("--list", action="store_true", help="what is bundled already")
     ap.add_argument("--remove", help="remove a bundled extension by directory name")
     args = ap.parse_args()
@@ -443,6 +487,36 @@ def main():
         for e in st["extensions"]:
             print("  %-22s %-30s %s" % (e["dir"], e["id"], e["version"]))
         return 0
+
+    if args.check_updates:
+        if not st["extensions"]:
+            print("nothing bundled")
+            return 0
+        stale = 0
+        for e in st["extensions"]:
+            slug = e.get("slug")
+            if not slug:
+                print("  %-22s %-10s (no AMO slug recorded - cannot check)"
+                      % (e["dir"], e["version"]))
+                continue
+            try:
+                cur = amo_latest(slug)
+            except Exception as exc:
+                print("  %-22s %-10s could not reach AMO: %s" % (e["dir"], e["version"], exc))
+                continue
+            if cur["version"] != e["version"]:
+                stale += 1
+                print("  %-22s pinned %-10s AMO has %-10s  <-- UPDATE AVAILABLE"
+                      % (e["dir"], e["version"], cur["version"]))
+            else:
+                print("  %-22s %-10s up to date" % (e["dir"], e["version"]))
+        if stale:
+            print("")
+            print("To take it:  python \"working scripts/add_builtin_extension.py\" "
+                  "--amo <slug> --update")
+            print("Then rebuild. The pin exists so this is YOUR decision, not a")
+            print("silent change in what the browser ships.")
+        return 1 if stale else 0
 
     if args.remove:
         d = src / "browser" / "extensions" / args.remove
@@ -464,14 +538,26 @@ def main():
     tmp.mkdir(parents=True, exist_ok=True)
     if args.amo:
         xpi = tmp / ("%s.xpi" % args.amo)
+        pinned = next((e.get("version") for e in st["extensions"]
+                       if e.get("slug") == args.amo), None)
+        take_latest = args.latest or args.update
         print("downloading from AMO:")
-        fetch_amo(args.amo, xpi)
+        if pinned and not take_latest:
+            print("  pinned to %s (use --update to bump)" % pinned)
+        info_amo = fetch_amo(args.amo, xpi,
+                             want_version=None if take_latest else pinned)
     else:
         xpi = Path(args.xpi)
         if not xpi.is_file():
             raise SystemExit("no such file: %s" % xpi)
 
     info = read_manifest(xpi)
+    if args.amo:
+        info["sha256"] = info_amo.get("sha256")
+        info["url"] = info_amo.get("url")
+    else:
+        info["sha256"] = sha256_of(xpi)
+        info["url"] = str(xpi)
     name = args.name or slugify(info["id"], args.amo)
     print("")
     print("  id       : %s" % info["id"])
@@ -518,6 +604,12 @@ def main():
     st["extensions"] = [e for e in st["extensions"] if e["dir"] != name]
     st["extensions"].append({
         "dir": name, "id": info["id"], "version": info["version"],
+        # Pinned the same way every other dependency in this harness is: by
+        # hash. A bundled extension is part of what ships, so "whatever AMO
+        # served that day" is not an acceptable input to a reproducible build.
+        "slug": args.amo,
+        "sha256": info.get("sha256"),
+        "source": info.get("url"),
         "widget": None if (args.no_pin or not info["has_action"])
                   else widget_id(info["id"]),
     })

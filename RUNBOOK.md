@@ -217,6 +217,35 @@ under **Enabled**, and its icon on the toolbar.
 > code that registers the extension, so it will look absent when it is fine.
 > This has caused a wrong diagnosis twice. Use a real window.
 
+### B6. Keeping it up to date later
+
+A bundled extension is frozen at build time. It does **not** update itself.
+
+`preflight` checks the add-ons site on every run and tells you when a newer
+version exists. To take it:
+
+```
+python "working scripts/add_builtin_extension.py" --amo ublock-origin --update
+python harness/gorilla_build.py build
+python harness/gorilla_build.py package
+python "working scripts/verify_builtin_extension.py"
+```
+
+To ask without changing anything:
+
+```
+python "working scripts/add_builtin_extension.py" --check-updates
+```
+
+**Why this is not automatic.** The version is pinned by SHA-256, the same way
+every other input to this build is. Re-fetching "latest" on each build would
+make it the only unpinned thing in the browser — two builds of the same
+revision would ship different code. It is also the piece with access to every
+page the user visits, so taking whatever a third party published this morning,
+unreviewed, is a decision worth making on purpose.
+
+You get told. You decide. `--latest` takes it in one step if you want that.
+
 ---
 
 # PART C — Every time you change anything

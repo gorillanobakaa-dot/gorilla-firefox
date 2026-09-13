@@ -121,7 +121,7 @@ Each entry below carries its full investigation, wrong turns included.
 
 ## The failure catalogue
 
-52 checks: 34 blocking, 18 advisory. `build` refuses to start while any blocker fails.
+53 checks: 34 blocking, 19 advisory. `build` refuses to start while any blocker fails.
 
 
 ### Blocking
@@ -1865,6 +1865,12 @@ LESSON
 ```
 
 </details>
+
+#### `builtin-ext-updates` - Bundled extensions are current
+
+**What went wrong:** A bundled extension is frozen at build time, so it goes stale while the browser does not. This reports when the add-ons site has a newer version. It does NOT fetch it: every other input to this build is hash-pinned, and an extension with access to every page the user visits is the last thing that should update itself unreviewed.
+
+**Fix:** Run: python "working scripts/add_builtin_extension.py" --amo <slug> --update, then rebuild and re-verify. Deliberately manual - see the diagnosis for why this is not automatic.
 
 #### `privacy-claims` - Package matches the privacy claims
 

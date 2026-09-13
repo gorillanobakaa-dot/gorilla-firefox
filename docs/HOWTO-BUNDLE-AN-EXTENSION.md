@@ -322,5 +322,36 @@ Check the licence of whatever you bundle. Not every extension permits it.
 | **Network** | uBO ships 21 filter lists and fetches 53 more; reconcile that with any egress policy |
 | **Support burden** | users will report *its* bugs to *you* |
 
-The update one is the real cost. Decide who rebuilds when uBlock Origin ships a
-fix, and write it down.
+The update one is the real cost, so it has a mechanism rather than a promise.
+
+### The update policy, and why it is not automatic
+
+The obvious answer is "re-fetch the latest on every build". Resist it:
+
+- **It breaks reproducibility.** Every other input here is hash-pinned. An
+  auto-fetched extension would be the only unpinned thing in the browser, and
+  two builds of the same revision would ship different code.
+- **It is a supply-chain decision.** A bundled extension can read every page
+  the user visits. Pulling whatever a third party published that morning,
+  unreviewed, straight into a shipped browser is not a sensible default.
+- **It breaks offline and broken-CDN builds**, and turns an upstream outage
+  into a build failure.
+
+So the version is pinned by SHA-256 in `state/builtin_extensions.json`, and:
+
+```bash
+# does a newer version exist?  (also run automatically by preflight)
+python "working scripts/add_builtin_extension.py" --check-updates
+
+# take it, deliberately
+python "working scripts/add_builtin_extension.py" --amo ublock-origin --update
+```
+
+Re-running without `--update` **refuses** if the pinned version is no longer
+what the add-ons site serves, rather than silently substituting one.
+
+`preflight` reports available updates as a WARN on every run — never a
+blocker, since it needs the network and being one release behind is not a
+reason to refuse to build.
+
+Decide who acts on that warning, and write it down.
