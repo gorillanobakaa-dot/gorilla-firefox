@@ -85,6 +85,23 @@ def temperature():
         return None
 
 
+def core_spread():
+    """Hottest-minus-coolest core, when the provider can see individual cores.
+
+    An averaged chassis sensor hides this. Measured 2026-09-13 on the i7-1255U:
+    one core at 58 C while the rest sat at 46 - a 12 C spread. The core that
+    throttles is the hot one, so the spread is worth seeing.
+    """
+    try:
+        d = _thermal.coretemp_detail() if _thermal else None
+    except Exception:
+        return ""
+    if not d or not d.get("cores"):
+        return ""
+    v = [c["c"] for c in d["cores"]]
+    return "   spread %.0f-%.0f C  TjMax %s" % (min(v), max(v), d.get("tjmax", "?"))
+
+
 def provider_name():
     try:
         return _thermal.temp_provider()[0] if _thermal else "none"
@@ -171,8 +188,9 @@ def main():
             peak = max(peak, t)
             pids = compiler_pids()
             stamp = datetime.datetime.now().strftime("%H:%M:%S")
-            line = ("%s  %5.1f C   peak %5.1f   load %3s%%   %d compiler(s)%s"
+            line = ("%s  %5.1f C   peak %5.1f   load %3s%%   %d compiler(s)%s%s"
                     % (stamp, t, peak, cpu_load(), len(pids),
+                       core_spread(),
                        "   [PAUSED]" if paused else ""))
             print(line)
             with open(log, "a", encoding="utf-8") as fh:
