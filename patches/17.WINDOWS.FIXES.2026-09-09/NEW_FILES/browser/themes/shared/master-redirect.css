@@ -201,7 +201,7 @@
   color: #00FFFF !important;
 }
 
-#urlbar[focused="true"] > #urlbar-background {
+#urlbar[focused="true"] > .urlbar-background {
     outline: 2px solid #00FFFF !important; /* Pure Cyan focus ring */
     outline-offset: -2px !important;
     border: none !important;       /* Stop CPU from resizing the box */
@@ -423,13 +423,24 @@ menupopup .menu-iconic-left {
   --toolbar-field-background-color: #000000 !important;
 }
 
-#urlbar-background {
+/* 2026-09-13: these were written as #urlbar-background - an ID. FF155 builds
+   the element as <html:div class="urlbar-background"/> (UrlbarInput.mjs:101),
+   so every rule here matched nothing and the address bar drew no edge at all.
+   The comment at the end of this file already recorded the ID->CLASS rename;
+   the rescue block above it was never updated to match.
+
+   OUTLINE, not border: an outline does not participate in layout, so it cannot
+   resize the field. That is the project CSS invariant, and the border version
+   below broke it while the rule right above it says why not to. */
+.urlbar-background {
   background-color: #000000 !important;
-  border: 1px solid #00FFFF !important;
+  outline: 1px solid #00FFFF !important;
+  outline-offset: -1px !important;
+  border: none !important;
 }
 
-#urlbar[focused="true"] > #urlbar-background {
-  border-color: #FFC0CB !important;
+#urlbar[focused="true"] > .urlbar-background {
+  outline-color: #FFC0CB !important;
 }
 
 #urlbar-input,

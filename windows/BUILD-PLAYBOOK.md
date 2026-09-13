@@ -121,7 +121,7 @@ Each entry below carries its full investigation, wrong turns included.
 
 ## The failure catalogue
 
-53 checks: 34 blocking, 19 advisory. `build` refuses to start while any blocker fails.
+57 checks: 37 blocking, 20 advisory. `build` refuses to start while any blocker fails.
 
 
 ### Blocking
@@ -1238,6 +1238,24 @@ LESSON
 
 </details>
 
+#### `address-bar` - Address bar proven to navigate
+
+**What went wrong:** 2026-09-13: a browser shipped in which typing in the address bar was reported to do nothing, and every check in the harness passed - green build, all tracked fixes installed, theme rendering, 122 search engines with google as global default, 20 of 20 network prefs. Nothing had ever tried to type an address and go somewhere. A browser whose address bar does not navigate is not a browser.
+
+**Fix:** Run: python "working scripts/verify_address_bar.py" - it warns you before it takes the keyboard for ~60s, then types about:robots, a bare hostname and a search term into a real window and reads the window title to prove each one navigated. Do not touch the keyboard while it runs. The result is recorded against this build only.
+
+#### `prefs-last-wins` - Hardening is not overridden later
+
+**What went wrong:** 2026-09-13: nine prefs the patch set hardened in all.js shipped with the opposite value because upstream firefox.js redefines them later and the last definition wins. Among them: captive-portal polling of detectportal.firefox.com, Google Safe Browsing for malware and phishing, Firefox Accounts, and two sponsored-content settings - in a browser whose release notes say telemetry and sponsored content are removed. Nothing failed, nothing logged, and the privacy audit had already passed. It was noticed because the account icon was visible in a screenshot.
+
+**Fix:** Move the affected prefs into the Gorilla block at the END of browser/app/profile/firefox.js, where they win, and mark them locked where the value must not be changeable. Hardening all.js alone is not enough - firefox.js loads after it.
+
+#### `local-only` - Repository stays local-only
+
+**What went wrong:** 2026-09-13: this tree was put under version control as a safety net, not as a publication channel. It carries thermal calibration measured on one specific laptop, an artifact ledger of local absolute paths, and an unreviewed history. .git/hooks/ is not itself tracked by git, so the pre-push guard vanishes on any re-init or clone - a guard that silently disappears is worse than none, because it is still believed in. An accidental publication cannot be un-published.
+
+**Fix:** Remove the remote: git remote remove <name>. To publish, copy what you mean to share into gorilla-patchset/ and push that - it is the curated, reviewed subset. If the pre-push hook went missing this check reinstalls it from harness/hooks/ automatically.
+
 #### `builtin-extensions` - Bundled extensions are visible
 
 **What went wrong:** 2026-09-13: uBlock Origin was bundled under builtin-addons/, which gen_built_in_addons.py globs into built_in_addons.json - the app-builtin-addons location, whose class hard-codes hidden() -> true. It loaded, ran, downloaded 181,551 filters and blocked ads with a toolbar badge, while being completely absent from about:addons. An ad blocker with no reachable settings or off switch. Nothing logged it.
@@ -1865,6 +1883,12 @@ LESSON
 ```
 
 </details>
+
+#### `theme-dead-selectors` - Theme selectors match real elements
+
+**What went wrong:** 2026-09-13: the address bar's cyan edge was written as #urlbar-background. FF155 creates that element with class= and no id, so all three rules were dead code and the field drew no border at all. A comment at the bottom of the very same file already recorded the ID-to-CLASS rename; a later rescue block was written against the ID anyway. Dead CSS throws nothing and renders fine - only a human noticing a missing colour ever finds it.
+
+**Fix:** For each id reported, find how FF155 actually builds that element (grep the .mjs/.xhtml that creates it) and use the selector it really has. If it is a class now, use the class - and prefer outline over border, which is this project's CSS invariant.
 
 #### `builtin-ext-updates` - Bundled extensions are current
 
@@ -2581,6 +2605,7 @@ LESSONS
 - `generate_windows_branding_assets.py` - Generate the Windows-only branding assets from the real icon artwork.
 - `guard_linux_prefs.py` - Platform-gate the Linux-only Gorilla prefs so they stop firing on Windows.
 - `make_decode_profile.py` - Emit a per-machine hardware-decode pref file for a Gorilla Unleashed install.
+- `publish_gate.py` - Refuse to publish a browser nobody has proven works.
 - `rebuild_about_logo.py` - Rebuild about-logo.svg from a canonical master, the way the doctrine says.
 - `regen_branding_pngs.py` - Regenerate the branding PNG ladder from the canonical master.
 - `repair_fluent_attrs.py` - Repair Fluent attributes mangled into multiline values.
@@ -2590,6 +2615,7 @@ LESSONS
 - `triage_build_failure.py` - Classify a build failure and draft the check that would have caught it.
 - `triage_patch_groups.py` - Triage a Gorilla patch group against a Firefox source tree.
 - `validate_package_manifest.py` - Check every file package-manifest.in demands actually exists.
+- `verify_address_bar.py` - Prove the address bar WORKS - not that it renders.
 - `verify_builtin_extension.py` - Prove a bundled extension is present AND VISIBLE, not merely loaded.
 - `verify_icon_check.py` - Prove the icon check flags the blue-globe placeholders and passes the real ones.
 - `verify_import_check.py` - Prove check_dropped_imports.py catches the actual defect, not just passes.

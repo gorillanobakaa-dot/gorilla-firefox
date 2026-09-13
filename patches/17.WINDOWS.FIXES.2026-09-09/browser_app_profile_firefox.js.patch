@@ -1,5 +1,5 @@
 diff --git a/browser/app/profile/firefox.js b/browser/app/profile/firefox.js
-index 4b5f0562be..a4d23ace74 100644
+index 4b5f0562be..b0c1bcc9cb 100644
 --- a/browser/app/profile/firefox.js
 +++ b/browser/app/profile/firefox.js
 @@ -40,7 +40,7 @@ pref("extensions.getAddons.cache.enabled", true);
@@ -737,7 +737,7 @@ index 4b5f0562be..a4d23ace74 100644
  
  // Forward Rust component logs to the JS console (comma separate list of crate names)
  // The empty string defaults to forwarding error-level messages.
-@@ -3721,9 +3767,197 @@ pref("browser.referrals.pingSubmitted", false);
+@@ -3721,9 +3767,224 @@ pref("browser.referrals.pingSubmitted", false);
  // generated. The pref can't be defined here because locking the pref resets
  // the value to the default value and we need the default value to the genereated code.
  
@@ -937,3 +937,30 @@ index 4b5f0562be..a4d23ace74 100644
 +pref("browser.newtabpage.activity-stream.feeds.telemetry", false, locked);  // newtab feed telemetry
 +pref("toolkit.telemetry.coverage.opt-out", true, locked);  // disables the coverage-ping mechanism (true is the OFF direction here)
 +pref("browser.attribution.enabled", false, locked);  // install/attribution reporting
++
++
++// ===========================================================================
++// GORILLA: hardening that all.js could not deliver   (2026-09-13)
++// ===========================================================================
++// Firefox loads greprefs.js (built from modules/libpref/init/all.js) BEFORE
++// this file, and the LAST definition wins. Every pref below was hardened in
++// all.js and then quietly undone by an upstream default later in this same
++// file - so the shipped browser had the opposite value, with nothing logged.
++//
++// Found 2026-09-13 by comparing the two files rather than trusting either.
++// Among them: captive-portal polling of detectportal.firefox.com, Google Safe
++// Browsing, Firefox Accounts and two sponsored-content settings, in a browser
++// whose release notes say those are gone. Preflight check prefs-last-wins now
++// refuses to build if this drifts again.
++//
++// These are at the END of the file ON PURPOSE. Do not move them up.
++// ===========================================================================
++pref("browser.newtabpage.activity-stream.discoverystream.spoc-positions", "", locked);
++pref("browser.newtabpage.activity-stream.discoverystream.spocs-endpoint", "0.0.0.0", locked);
++pref("browser.safebrowsing.malware.enabled", false, locked);
++pref("browser.safebrowsing.phishing.enabled", false, locked);
++pref("browser.urlbar.groupLabels.enabled", false);
++pref("browser.urlbar.suggest.weather", false);
++pref("identity.fxaccounts.enabled", false, locked);
++pref("javascript.options.mem.max", 1024);
++pref("network.captive-portal-service.enabled", false, locked);

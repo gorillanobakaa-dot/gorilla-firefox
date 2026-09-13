@@ -2,6 +2,12 @@
 
 **For a small model, a tired human, or anyone who does not want to think.**
 
+> **If you are that small model: nobody has checked whether this works.**
+> You are the experiment. When a step does not match what it says here,
+> that is a defect in this page, not a failure on your part. Write down
+> where you got stuck — that record is worth more than the build.
+> Context: `UNPROVEN.md`.
+
 Every step is: **one command → what you should see → what to do if it fails.**
 There are no judgement calls. If a step does not match, do the recovery and
 run the step again.
@@ -264,6 +270,32 @@ python "working scripts/verify_builtin_extension.py"  C6  (if you bundled one)
 ---
 
 # PART D — Publishing
+
+### D0. THE GATE — run this before anything reaches GitHub
+
+```
+python "working scripts/verify_address_bar.py"
+python "working scripts/publish_gate.py"
+```
+
+**Expect:** every line says `PASS`, ending `CLEARED - safe to publish.`
+
+**If any line says FAIL, do not upload.** The gate prints what failed and how
+to fix it. There is no override flag, on purpose.
+
+The first command takes your keyboard for about a minute — it types into a real
+window. It warns you and waits for a yes. **Do not touch the keyboard while it
+runs**; your keystrokes and its keystrokes interleave and the result is
+meaningless. Its verdict is recorded against that exact build, so the gate
+refuses a result belonging to an older browser.
+
+**Why this exists:** on 2026-09-13 a build was published with an address bar
+that drew no border (a theme rule written against an id FF155 had renamed to a
+class, so it matched nothing) and nine privacy prefs set to the opposite of
+their intended value (greprefs.js loads before firefox.js, and last wins).
+Every check that existed passed. There was no publish step at all — uploads
+were done by hand from whatever was on disk.
+
 
 ### D1. Make the fixes survive a rebuild
 
