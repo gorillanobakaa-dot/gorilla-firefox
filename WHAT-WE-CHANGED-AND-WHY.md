@@ -268,7 +268,7 @@ would be dishonest.
 `install.cancel()` rather than throwing, so the add-ons site is left waiting
 forever and its button simply spins. **The browser never tells you it refused.**
 That silence is indefensible even if the policy is defensible.
-See **[windows/THE-SEALED-APPLIANCE.md](windows/THE-SEALED-APPLIANCE.md)**.
+See **[THE-SEALED-APPLIANCE.md](THE-SEALED-APPLIANCE.md)**.
 
 ## 09.REMOTE — 2 patches
 

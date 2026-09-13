@@ -72,7 +72,7 @@ route is closed — the add-ons site, dragging an `.xpi`, and Install Add-on
 From File. There is no error message: one of the 14 rejection points cancels
 the install silently, so the site's button simply spins forever.
 
-**[Why — the reasoning, in plain language](THE-SEALED-APPLIANCE.md)** ·
+**[Why — the reasoning, in plain language](../THE-SEALED-APPLIANCE.md)** ·
 [How this came to be mis-documented](INSTALLING-UBLOCK-ORIGIN.md)
 
 The short version: *a browser you can't extend is a browser strangers can't

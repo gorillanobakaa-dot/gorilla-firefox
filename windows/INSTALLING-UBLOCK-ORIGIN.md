@@ -106,6 +106,6 @@ Origin — which, for an ad-blocking-focused build, is a real cost.
 
 That decision belongs to whoever is deploying it.
 
-**➡ [Why it was done, and what you get instead](THE-SEALED-APPLIANCE.md)** —
+**➡ [Why it was done, and what you get instead](../THE-SEALED-APPLIANCE.md)** —
 the full reasoning in plain language, the honest cost, and what protection is
 built in given that you cannot add an ad blocker.

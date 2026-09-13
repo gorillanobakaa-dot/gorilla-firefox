@@ -20,6 +20,31 @@ Linux (.deb) and Windows (installer).
 
 ---
 
+## ⛔ Read this before you download
+
+**This browser cannot install add-ons. Not uBlock Origin, not a password
+manager, not themes. Nothing.**
+
+That is deliberate, it applies to **both the Linux and the Windows build**, and
+there is no setting to turn it back on — the extension-installing code is
+removed from the browser itself. The reasoning, in one line:
+
+> *A browser you can't extend is a browser strangers can't quietly extend
+> either.*
+
+**Right now the browser does not tell you.** Clicking **Add to Firefox** makes
+the button go pale and then nothing happens, with no error. That is the block
+working, silently.
+
+Blocking is built in instead — tracking protection, cryptominers,
+fingerprinters, cookie banners, HTTPS-only, all on. **Honestly: that is less
+thorough than uBlock Origin.** If uBO is essential to you, this is the wrong
+browser, and that is a fair conclusion.
+
+**➡ [Why it was done, what you give up, and what you get instead](THE-SEALED-APPLIANCE.md)**
+
+---
+
 # 👉 START HERE — which one are you?
 
 |  | 🐧 Linux — just give me the browser | 🪟 Windows — just give me the browser | 🔧 I want to build it myself |
@@ -31,10 +56,6 @@ Linux (.deb) and Windows (installer).
 > 📖 **Want the whole rationale?** Every one of the 441 patches, grouped by
 > topic, in plain language *and* in technical detail, with the honest cost of
 > each: **[WHAT-WE-CHANGED-AND-WHY.md](WHAT-WE-CHANGED-AND-WHY.md)**
-
-> ⛔ **Add-ons do not install** in this build — deliberately. It is a *sealed
-> appliance*: the extension-install code is removed, so uBlock Origin and every
-> other add-on are blocked. **[Why, and what you get instead.](windows/THE-SEALED-APPLIANCE.md)**
 
 > 🪟 **Windows users:** Windows will block the download and then block the
 > install, and hides the "carry on" button both times. Nothing is wrong with
