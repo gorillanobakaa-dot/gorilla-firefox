@@ -1,138 +1,111 @@
-# 🛡 Installing uBlock Origin
+# ⛔ Extensions cannot be installed in this build
 
-**Short version: it just works. Use the normal way.** This page exists because
-there is also a manual way, and because you might reasonably wonder whether a
-"hardened" browser breaks add-ons. It does not — this was tested.
-
----
-
-## The normal way (30 seconds)
-
-1. Open Gorilla Firefox.
-2. Go to **https://addons.mozilla.org/firefox/addon/ublock-origin/**
-3. Click the big blue **Add to Firefox** button.
-4. A small box asks for permission. Click **Add**.
-5. Done. A little shield icon appears near the address bar.
-
-That is it. No warnings, no tricks, no hoops. The add-ons site works normally
-in this browser.
-
-**From inside the menus instead:** ☰ menu → **Add-ons and themes**
-(or press **Ctrl+Shift+A**) → type `uBlock Origin` in the search box → click it
-→ **Add to Firefox**.
+**An earlier version of this page said uBlock Origin "just works". That was
+wrong.** Extension installation is deliberately blocked. This page now explains
+what actually happens and why.
 
 ---
 
-## The manual way (from GitHub)
+## What you see
 
-Some people prefer to get it straight from the author, Raymond Hill, at
-**https://github.com/gorhill/uBlock**. That works too.
+You open the add-ons site, find uBlock Origin, click **Add to Firefox**.
 
-### First, something worth knowing
+The button goes pale. Nothing else happens. No error, no permission box, no
+message — it just sits there.
 
-We downloaded both versions and compared them byte for byte:
+That is not a glitch. It is the browser working exactly as this build was
+written to work.
 
-| | |
+---
+
+## What is actually happening
+
+The Gorilla patch set contains a change its own comments call the
+**"API LOBOTOMY"** — a zero-trust extension policy that rejects every route by
+which an add-on could be installed. It lives in `patches/07.TOOLKIT` and
+touches three files:
+
+| file | rejection points |
 |---|---|
-| From the add-ons site | `4617614` bytes |
-| From gorhill's GitHub | `4617614` bytes |
-| SHA-256 | **identical** |
+| `toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs` | 9 |
+| `toolkit/mozapps/extensions/AddonManager.sys.mjs` | 4 |
+| `toolkit/mozapps/extensions/LightweightThemeManager.sys.mjs` | 1 |
 
-**They are the same file.** The GitHub one is signed by Mozilla too — Raymond
-Hill uploads the same signed package to both places. So there is no security
-difference. Pick whichever you prefer.
+Every route is closed:
 
-### Step 1 — get the file
-
-1. Go to **https://github.com/gorhill/uBlock/releases**
-2. The newest release is at the top. Under it, click **Assets** to expand the
-   list if it is collapsed.
-3. Download the one ending **`.firefox.signed.xpi`**
-
-   > It will look like `uBlock0_1.74.0.firefox.signed.xpi`. The numbers change
-   > with each version — that is fine.
-   >
-   > ⚠ **Take the one that says `.signed.xpi`.** The others are for Chrome, or
-   > are unsigned developer builds that Firefox will refuse to install.
-
-4. Windows may fuss about the download. It is not an `.exe`, so usually it
-   does not — but if it does, it is the same nonsense described in
-   [WINDOWS-WILL-TRY-TO-STOP-YOU.md](WINDOWS-WILL-TRY-TO-STOP-YOU.md).
-
-### Step 2 — install it
-
-**The easy way:** just **drag the `.xpi` file onto the Gorilla Firefox
-window**. Drop it anywhere on a page. The permission box appears. Click
-**Add**.
-
-**The menu way**, if dragging is awkward:
-
-1. Press **Ctrl+Shift+A** (or ☰ → **Add-ons and themes**).
-2. Find the **gear icon ⚙** near the top right of that page.
-3. Click it → **Install Add-on From File…**
-4. Find your downloaded `.xpi` and click **Open**.
-5. Click **Add** when it asks.
-
-**The very lazy way:** press **Ctrl+O**, pick the `.xpi` file, done.
-
-### Step 3 — check it is switched on
-
-Press **Ctrl+Shift+A** and look at **Extensions**. uBlock Origin should be
-there with its toggle **blue / on**.
-
-If it is greyed out or says **Enable**, click that. Firefox sometimes puts
-manually-installed add-ons in a "waiting for you to say yes" state — this is a
-standard Firefox safety feature against programs that try to sneak extensions
-in behind your back, not anything to do with this browser.
-
----
-
-## "Is it actually working?"
-
-The shield icon near the address bar shows a **number** — how many things it
-blocked on the page you are looking at. Visit a news site; the number will not
-be zero.
-
-Click the shield → a panel opens with a big power button. That panel is uBlock
-Origin. If you see it, it is running.
-
----
-
-## Does the hardening break add-ons? No. Here is what was checked.
-
-A fair question for a browser that advertises stripped-out telemetry. Tested
-on the actual shipped build, not assumed:
-
-| check | result |
+| route | result |
 |---|---|
-| Does the add-ons site load? | Yes — page and **Add to Firefox** button render normally |
-| Does the `.xpi` download? | Yes, from both the add-ons site and GitHub |
-| Is Mozilla's signature accepted? | **Yes** — Firefox reports `signedState: 2`, "properly signed" |
-| Does the blocklist wrongly flag it? | No — `blocklistState: 0`, not blocked |
-| Does the browser itself reject it? | No — `appDisabled: false` |
-| Does it actually load and run? | **Yes** — it was given a runtime ID and its storage was initialised, which only happens when its code executes |
+| **Add to Firefox** on the add-ons site | cancelled |
+| Drag an `.xpi` onto the window | blocked |
+| **Install Add-on From File…** | blocked |
+| `Ctrl+O` on an `.xpi` | blocked |
+| Themes | blocked |
 
-Nothing in the privacy work touches add-on installation, signature checking or
-the extension system. Those were deliberately left alone.
+### Why there is no error message
 
-### One thing that *is* switched off
+Two of the rejection points behave differently, and that difference is the
+whole reason the failure is so confusing.
 
-**Recommendations.** Stock Firefox shows "Recommended for you" suggestions in
-the add-ons manager. That feature works by sending your browsing behaviour to
-Mozilla to pick suggestions — so it is disabled here, along with the rest of
-the telemetry.
+`XPIInstall.install()` **throws**, which at least writes to the browser
+console:
 
-You can still search for and install anything you like. You simply do not get
-suggested things based on what you have been doing.
+```
+XPIInstall.sys.mjs:1395: Error: [GORILLA] Installation rejected: uBlock0@raymondhill.net
+```
+
+But `AddonManager.installAddonFromWebpage()` — the one the website actually
+calls — does this instead:
+
+```js
+logger.error(`[GORILLA] AddonManager: Web installation rejected.`);
+aInstall.cancel();
+```
+
+It **cancels silently**. The add-ons site is left waiting for a reply that
+never arrives, so its button stays in the loading state forever. From the
+outside it is indistinguishable from a hung page.
 
 ---
 
-## Add-ons worth having alongside it
+## Why this page was wrong
 
-uBlock Origin on its own covers most of what people install three or four
-add-ons for. It blocks ads, trackers, pop-ups and coin miners out of the box,
-with no configuration.
+The original test dropped the `.xpi` directly into a profile's `extensions/`
+folder and confirmed the extension loaded. Every result it reported was true:
 
-If you want more, the usual companions are a password manager and possibly a
-container extension. You do not need another ad blocker — running two makes
-things slower and occasionally breaks pages, without blocking anything extra.
+- the signature verified (`signedState: 2`)
+- the blocklist did not flag it (`blocklistState: 0`)
+- the browser did not disable it (`appDisabled: false`)
+- it was instantiated and its storage initialised
+
+All correct, and all irrelevant. Dropping a file into `extensions/` is a
+**sideload** — it goes nowhere near `AddonInstall.install()`, which is the
+exact function containing the block. The test exercised a path no user takes
+and declared the path every user takes to be working.
+
+This is the same mistake catalogued a dozen times in `BUILD-PLAYBOOK.md`:
+**testing something adjacent to the property that matters.** A green result on
+the wrong route is worse than no test, because it gets written into
+documentation.
+
+It was found only by clicking the button in a real window and reading the
+browser console.
+
+---
+
+## Can it be turned off?
+
+Not with a preference. The block is compiled into the JavaScript that ships
+inside `omni.ja` — there is no pref, no `about:config` switch, and no
+command-line flag. Removing it means editing `patches/07.TOOLKIT` and
+rebuilding.
+
+Whether it should be removed is a policy decision, not a bug fix. The patch
+was written deliberately, and a browser that cannot load extensions is
+genuinely more locked down. It is also a browser that cannot run uBlock
+Origin — which, for an ad-blocking-focused build, is a real cost.
+
+That decision belongs to whoever is deploying it.
+
+**➡ [Why it was done, and what you get instead](THE-SEALED-APPLIANCE.md)** —
+the full reasoning in plain language, the honest cost, and what protection is
+built in given that you cannot add an ad blocker.

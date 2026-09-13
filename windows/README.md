@@ -64,22 +64,22 @@ Shortcuts are still created. Nothing is written outside your own user folder.
 
 ---
 
-## Add-ons work normally
+## ⛔ Add-ons CANNOT be installed
 
-uBlock Origin and anything else from the add-ons site install the usual way —
-**Add to Firefox**, click **Add**, done. Nothing in the privacy work touches
-add-on installation or signature checking.
+**Extension installation is deliberately blocked in this build** by a patch in
+`patches/07.TOOLKIT` ("API LOBOTOMY", a zero-trust extension policy). Every
+route is closed — the add-ons site, dragging an `.xpi`, and Install Add-on
+From File. There is no error message: one of the 14 rejection points cancels
+the install silently, so the site's button simply spins forever.
 
-Tested on the shipped build: the add-ons site loads, the signature is accepted
-(`signedState: 2`), the blocklist does not flag it, and the extension loads and
-runs. The GitHub `.xpi` and the add-ons-site `.xpi` are byte-for-byte the same
-file, so either route is fine.
+**[Why — the reasoning, in plain language](THE-SEALED-APPLIANCE.md)** ·
+[How this came to be mis-documented](INSTALLING-UBLOCK-ORIGIN.md)
 
-**➡ [Step-by-step, including installing from GitHub by hand](INSTALLING-UBLOCK-ORIGIN.md)**
+The short version: *a browser you can't extend is a browser strangers can't
+quietly extend either.* Tracking protection, cryptominer and fingerprinter
+blocking, cookie-banner dismissal and HTTPS-only are built in instead — but
+they are not as thorough as uBlock Origin, and that is a real cost.
 
-The one thing switched off is **"Recommended for you"** in the add-ons manager
-— that feature picks suggestions by sending your browsing behaviour to Mozilla.
-Search and install still work exactly as normal.
 
 ## Video: getting the most out of your machine
 
