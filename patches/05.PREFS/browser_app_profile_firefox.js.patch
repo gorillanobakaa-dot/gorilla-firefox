@@ -838,7 +838,7 @@
  
  // Forward Rust component logs to the JS console (comma separate list of crate names)
  // The empty string defaults to forwarding error-level messages.
-@@ -3650,9 +3684,170 @@
+@@ -3650,9 +3684,184 @@
  // A preference that enables Content Sharing
  pref("browser.contentsharing.enabled", false);
  
@@ -958,6 +958,20 @@
 +pref("media.peerconnection.enabled",                true);
 +pref("media.peerconnection.ice.default_address_only", true);
 +pref("media.peerconnection.video.vp9_enabled",      false);
++
++// GORILLA 2026-08-27: cap DTLS at 1.2 (771) for WebRTC.
++// Upstream defaults media.peerconnection.dtls.version.max to 772 (DTLS 1.3)
++// in modules/libpref/init/all.js. CONVICTED LIVE 2026-08-26: with 1.3 the
++// handshake COMPLETES and then every application-data record is silently
++// dropped by Meta's WhatsApp call relays. The signature is SCTP INIT
++// retransmitted with no reply: 223 x 28-byte writes, zero bytes back.
++// Capping to 1.2 established SCTP and opened 4 RTCDataChannels with
++// bidirectional flow measured (capture wa-call3, 2026-08-26 09:43 UTC).
++// This lived only in one profile's user.js until now, so every fresh
++// install shipped with WhatsApp calls broken. It belongs in the build.
++// Revisit when Meta handles DTLS 1.3. Full record:
++// FIrefox.154.Hardware.decode.WEBRTC/CALL-TRANSPORT-BLACKHOLE.DEVELOPER.md
++pref("media.peerconnection.dtls.version.max",        771);
 +pref("media.rdd-ffmpeg.enabled", true);
 +pref("media.rdd-process.enabled", true);
 +pref("media.webrtc.hw.h264.enabled",                true);
