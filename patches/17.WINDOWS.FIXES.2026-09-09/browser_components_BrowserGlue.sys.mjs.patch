@@ -1,0 +1,27 @@
+diff --git a/browser/components/BrowserGlue.sys.mjs b/browser/components/BrowserGlue.sys.mjs
+index 6339f3df60..a3696ac172 100644
+--- a/browser/components/BrowserGlue.sys.mjs
++++ b/browser/components/BrowserGlue.sys.mjs
+@@ -8,6 +8,8 @@ import { XPCOMUtils } from "resource://gre/modules/XPCOMUtils.sys.mjs";
+ const lazy = {};
+ 
+ ChromeUtils.defineESModuleGetters(lazy, {
++  GorillaBuiltinExtensions:
++    "resource:///modules/GorillaBuiltinExtensions.sys.mjs",
+   AboutHomeStartupCache: "resource:///modules/AboutHomeStartupCache.sys.mjs",
+   AWToolbarButton: "resource:///modules/aboutwelcome/AWToolbarUtils.sys.mjs",
+   ASRouter: "resource:///modules/asrouter/ASRouter.sys.mjs",
+@@ -772,6 +774,13 @@ BrowserGlue.prototype = {
+ 
+   // the first browser window has finished initializing
+   _onFirstWindowLoaded: function BG__onFirstWindowLoaded(aWindow) {
++    // Gorilla: extensions bundled into the package. See
++    // browser/modules/GorillaBuiltinExtensions.sys.mjs for why this
++    // uses maybeInstallBuiltinAddon rather than built_in_addons.json.
++    lazy.GorillaBuiltinExtensions.install().then(() => {
++      lazy.GorillaBuiltinExtensions.pinToToolbar(aWindow);
++    });
++
+     // A channel for "remote troubleshooting" code...
+     let channel = new lazy.WebChannel(
+       "remote-troubleshooting",

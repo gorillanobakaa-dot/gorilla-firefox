@@ -1,5 +1,5 @@
 diff --git a/browser/modules/moz.build b/browser/modules/moz.build
-index eebf824044..c5b301f35e 100644
+index eebf824044..d5c4e2927a 100644
 --- a/browser/modules/moz.build
 +++ b/browser/modules/moz.build
 @@ -113,6 +113,9 @@ XPCSHELL_TESTS_MANIFESTS += ["test/unit/xpcshell.toml"]
@@ -12,3 +12,11 @@ index eebf824044..c5b301f35e 100644
      "BrowserDOMWindow.sys.mjs",
      "BrowserUIUtils.sys.mjs",
      "BrowserUsageTelemetry.sys.mjs",
+@@ -125,6 +128,7 @@ EXTRA_JS_MODULES += [
+     "FaviconLoader.sys.mjs",
+     "FilterAdult.sys.mjs",
+     "FirefoxBridgeExtensionUtils.sys.mjs",
++    "GorillaBuiltinExtensions.sys.mjs",
+     "HomePage.sys.mjs",
+     "LaterRun.sys.mjs",
+     "LinksCache.sys.mjs",

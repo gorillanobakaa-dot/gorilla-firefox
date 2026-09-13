@@ -1,8 +1,15 @@
-# ⛔ Extensions cannot be installed in this build
+# ⛔ Extensions cannot be installed — but uBlock Origin is already here
 
-**An earlier version of this page said uBlock Origin "just works". That was
-wrong.** Extension installation is deliberately blocked. This page now explains
-what actually happens and why.
+> ## ✅ You do not need this page to get uBlock Origin
+> **It ships built into the browser** as of **155.0.1-win64.2**. It is on the
+> toolbar from first launch. **[How to use it →](USING-UBLOCK-ORIGIN.md)**
+>
+> This page is about why you cannot *install* add-ons, which is still true for
+> everything else.
+
+**An earlier version of this page said uBlock Origin "just works" via the
+add-ons site. That was wrong.** Installation is deliberately blocked. What
+follows explains what happens when you try, and why.
 
 ---
 
@@ -101,8 +108,9 @@ rebuilding.
 
 Whether it should be removed is a policy decision, not a bug fix. The patch
 was written deliberately, and a browser that cannot load extensions is
-genuinely more locked down. It is also a browser that cannot run uBlock
-Origin — which, for an ad-blocking-focused build, is a real cost.
+genuinely more locked down. The obvious cost — no ad blocker — was closed by
+BUNDLING uBlock Origin instead of allowing it to be installed, which leaves
+the lock completely intact.
 
 That decision belongs to whoever is deploying it.
 

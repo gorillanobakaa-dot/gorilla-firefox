@@ -20,28 +20,36 @@ Linux (.deb) and Windows (installer).
 
 ---
 
-## ⛔ Read this before you download
+## 🛡 uBlock Origin is already inside. You cannot add anything else.
 
-**This browser cannot install add-ons. Not uBlock Origin, not a password
-manager, not themes. Nothing.**
+Two things are true at once, and both matter:
 
-That is deliberate, it applies to **both the Linux and the Windows build**, and
-there is no setting to turn it back on — the extension-installing code is
-removed from the browser itself. The reasoning, in one line:
+**1. uBlock Origin ships built in.** Nothing to install, nothing to configure.
+It is on the toolbar from first launch and already blocking.
+
+![uBlock Origin blocking ads on YouTube](docs/screenshots/03-blocking-on-youtube.png)
+
+**2. You still cannot install add-ons.** No password manager, no themes,
+nothing from the add-ons site. The extension-installing code is removed from
+the browser and there is no setting to turn it back on. The reasoning:
 
 > *A browser you can't extend is a browser strangers can't quietly extend
 > either.*
 
-**Right now the browser does not tell you.** Clicking **Add to Firefox** makes
-the button go pale and then nothing happens, with no error. That is the block
-working, silently.
+uBlock Origin is here because it was **built in**, not installed — the same way
+Mullvad Browser ships it and Tor Browser ships NoScript. That is also why
+nothing can remove it behind your back.
 
-Blocking is built in instead — tracking protection, cryptominers,
-fingerprinters, cookie banners, HTTPS-only, all on. **Honestly: that is less
-thorough than uBlock Origin.** If uBO is essential to you, this is the wrong
-browser, and that is a fair conclusion.
+**Right now the browser does not tell you** when it refuses an install.
+Clicking **Add to Firefox** on the add-ons site makes the button go pale and
+then nothing happens, with no message. That is the block working, silently.
 
-**➡ [Why it was done, what you give up, and what you get instead](THE-SEALED-APPLIANCE.md)**
+If you need an extension other than uBlock Origin, this is the wrong browser —
+and that is a fair conclusion to reach.
+
+- **[Using uBlock Origin here](windows/USING-UBLOCK-ORIGIN.md)** — where it is, what you can change
+- **[Why add-ons are blocked](THE-SEALED-APPLIANCE.md)** — the reasoning and the cost
+- **[How to bundle an extension yourself](docs/HOWTO-BUNDLE-AN-EXTENSION.md)** — Linux + Windows, for developers and LLMs
 
 ---
 

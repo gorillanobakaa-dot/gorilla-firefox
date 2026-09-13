@@ -110,7 +110,10 @@ In that context, "sealed" is not a compromise. It is the product.
 
 This is a genuine cost and it should not be dressed up:
 
-- **No uBlock Origin**, no other ad blocker
+- ~~No uBlock Origin~~ — **uBlock Origin now ships built in.** See
+  [windows/USING-UBLOCK-ORIGIN.md](windows/USING-UBLOCK-ORIGIN.md). It was
+  *bundled*, not installed, so the lock is untouched.
+- **No other ad blocker**, and no second one alongside uBO
 - **No password manager extension** (Bitwarden, 1Password, KeePass)
 - **No Dark Reader**, no custom themes
 - **No container tabs extension**, no Tampermonkey, no anything
@@ -143,11 +146,9 @@ afterwards. Verified in the shipped build:
 
 An ad blocker you cannot uninstall, roughly — because it was never an add-on.
 
-**The honest gap:** built-in tracking protection is not as thorough as uBlock
-Origin. uBO blocks more, blocks cosmetically (hiding the empty space where an
-ad was), and lets you write your own rules. Firefox's built-in protection uses
-a broad list and does not do cosmetic filtering. You will see more ads than a
-uBlock user does. You will see far fewer than a stock-browser user does.
+**Since 155.0.1-win64.2 that gap is closed for ad blocking specifically** —
+uBlock Origin itself is bundled, with 181,551 network and 43,792 cosmetic
+filters. The remaining loss is everything *else* you might have installed.
 
 ---
 

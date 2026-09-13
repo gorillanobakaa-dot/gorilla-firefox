@@ -64,7 +64,13 @@ Shortcuts are still created. Nothing is written outside your own user folder.
 
 ---
 
-## ⛔ Add-ons CANNOT be installed
+## 🛡 uBlock Origin is built in — but you cannot add anything else
+
+**uBlock Origin ships inside this browser.** On the toolbar from first launch,
+already blocking, nothing to set up.
+**[How to use it →](USING-UBLOCK-ORIGIN.md)**
+
+### ⛔ Other add-ons CANNOT be installed
 
 **Extension installation is deliberately blocked in this build** by a patch in
 `patches/07.TOOLKIT` ("API LOBOTOMY", a zero-trust extension policy). Every

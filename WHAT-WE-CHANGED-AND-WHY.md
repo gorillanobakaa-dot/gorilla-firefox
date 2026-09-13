@@ -258,11 +258,12 @@ drag-and-drop, Install-From-File, themes. Also `ExperimentAPI.sys.mjs` returns
 empty mocks so dependent code does not throw, and `TranslationsParent.sys.mjs`
 blocks model downloads.
 
-**Cost — the largest in the project.** No ad blocker, no password manager, no
-themes, no translation. Protection is built in instead (tracking, cryptominer
-and fingerprinter blocking, cookie-banner dismissal, HTTPS-only) — but built-in
-protection is **less thorough than uBlock Origin**, and pretending otherwise
-would be dishonest.
+**Cost — the largest in the project.** No password manager, no themes, no
+translation, nothing from the add-ons site.
+
+**The ad-blocker half of that cost was later removed** — see 18.UBLOCK.BUILTIN.
+uBlock Origin now ships *inside* the browser, which required no change to this
+group at all: a bundled extension never travels the install path.
 
 **And a real defect in how it fails.** `installAddonFromWebpage()` calls
 `install.cancel()` rather than throwing, so the add-ons site is left waiting
@@ -361,6 +362,37 @@ a 10-frame icon ladder to 256×256, and a branded 7-Zip SFX stub. Every patch
 verified by applying it to a pristine upstream checkout and comparing
 byte-for-byte.
 
+## 18.UBLOCK.BUILTIN — uBlock Origin, bundled
+
+**Plain language.** The browser cannot install add-ons, and that stays true.
+But nothing stops the *builder* putting one inside. uBlock Origin now ships in
+the package: on the toolbar at first launch, listed in the Add-ons Manager,
+already blocking, with nothing to set up.
+
+Mullvad Browser ships uBlock Origin this way. Tor Browser ships NoScript. It is
+a normal thing to do.
+
+**Developer.** The extension is unpacked to `browser/extensions/ublock-origin/`
+and packaged via `jar.mn` to `chrome/browser/gorilla-addons/` — deliberately
+NOT `builtin-addons/`, because `gen_built_in_addons.py` globs that path into
+`built_in_addons.json`, which is the `app-builtin-addons` location whose class
+hard-codes `hidden() -> true`. Registration is
+`AddonManager.maybeInstallBuiltinAddon()` from `BrowserGlue._onFirstWindowLoaded`,
+which lands in `app-builtin` (`hidden -> false`) and never touches
+`AddonInstall.install()`, so the 07.TOOLKIT lock is entirely unaffected. The
+toolbar button is pinned once via `CustomizableUI`, recorded in a pref so a
+user who removes it is not overruled on the next start.
+
+Automated end-to-end by `working scripts/add_builtin_extension.py`; verified by
+`verify_builtin_extension.py`, which checks the *location* rather than mere
+presence.
+
+**Cost.** It does not auto-update — a new uBlock Origin needs a rebuild. It
+adds ~17 MB unpacked (~7 MB to the installer). Its filter lists fetch from the
+network: 21 ship bundled, 53 more are fetched, which is new egress to
+reconcile with 14.EGRESS.LOCKDOWN. And uBO is GPLv3, so its `LICENSE.txt`
+ships and the source must remain offered.
+
 ---
 
 # What this cost, altogether
@@ -369,7 +401,7 @@ An honest ledger. Nothing here is free:
 
 | you lose | because |
 |---|---|
-| **All extensions** — uBlock Origin, password managers, themes | 07.TOOLKIT, deliberately |
+| **All extensions except uBlock Origin** — password managers, themes, everything from the add-ons site | 07.TOOLKIT, deliberately. uBlock Origin is bundled instead (18.UBLOCK.BUILTIN) |
 | **YouTube above 1080p** | 01.MEDIA — the chip cannot decode VP9/AV1 |
 | **Built-in translation** | 07.TOOLKIT |
 | **Browser automation** | 09.REMOTE |
@@ -394,7 +426,8 @@ softened:
 Every group above is the same trade made twice: **give up configurability, get
 back speed and privacy.** Sometimes that is obviously right — nobody misses
 telemetry that was eating 13% of a CPU. Sometimes it is genuinely arguable —
-a browser that cannot run uBlock Origin, in the name of blocking ads.
+a browser that cannot install uBlock Origin, in the name of blocking ads —
+which is why it now ships with uBlock Origin *bundled* instead.
 
 The build cannot tell whether you are the person who would install malware by
 accident or the person who would install uBlock Origin on purpose. **It assumed

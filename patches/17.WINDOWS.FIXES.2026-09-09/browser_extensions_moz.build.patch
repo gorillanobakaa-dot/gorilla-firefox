@@ -1,0 +1,12 @@
+diff --git a/browser/extensions/moz.build b/browser/extensions/moz.build
+index 780cf23b9c..22b6ecf4fe 100644
+--- a/browser/extensions/moz.build
++++ b/browser/extensions/moz.build
+@@ -9,6 +9,7 @@ DIRS += [
+     "pictureinpicture",
+     "search-detection",
+     "newtab",
++    "ublock-origin",
+ ]
+ 
+ JAR_MANIFESTS += ["jar.mn"]

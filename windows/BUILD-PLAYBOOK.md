@@ -121,7 +121,7 @@ Each entry below carries its full investigation, wrong turns included.
 
 ## The failure catalogue
 
-51 checks: 33 blocking, 18 advisory. `build` refuses to start while any blocker fails.
+52 checks: 34 blocking, 18 advisory. `build` refuses to start while any blocker fails.
 
 
 ### Blocking
@@ -1234,6 +1234,100 @@ LESSON
     match with a bad probe, and a grayscale fingerprint. Each tested something
     ADJACENT to the property that mattered. When a check and your eyes
     disagree, believe your eyes and go fix the check.
+```
+
+</details>
+
+#### `builtin-extensions` - Bundled extensions are visible
+
+**What went wrong:** 2026-09-13: uBlock Origin was bundled under builtin-addons/, which gen_built_in_addons.py globs into built_in_addons.json - the app-builtin-addons location, whose class hard-codes hidden() -> true. It loaded, ran, downloaded 181,551 filters and blocked ads with a toolbar badge, while being completely absent from about:addons. An ad blocker with no reachable settings or off switch. Nothing logged it.
+
+**Fix:** Run: python "working scripts/add_builtin_extension.py" --amo <slug> to regenerate the packaging correctly, then rebuild. Full verification (including a real-window check) is verify_builtin_extension.py. The mechanism and its traps are in docs/HOWTO-BUNDLE-AN-EXTENSION.md.
+
+<details><summary>How this was diagnosed (including the wrong hypotheses)</summary>
+
+```
+THE QUESTION THAT STARTED IT
+    "Can we build in uBlock Origin? Is it doable without reverting all the
+    patches?"
+
+    Yes - and it took three wrong turns to get there.
+
+THE SETTING
+    This build blocks every add-on install route on purpose (07.TOOLKIT, the
+    API LOBOTOMY, 14 rejection points). But a sealed browser can still ship
+    what the BUILDER puts inside it - Mullvad Browser ships uBlock Origin this
+    way, Tor Browser ships NoScript. It needs NO change to the lobotomy:
+
+        maybeInstallBuiltinAddon -> installBuiltinAddon -> loadManifest
+                                                        -> _activateAddon
+
+    never reaches AddonInstall.install(), and BuiltInLocation.makeInstaller()
+    returns no-ops rather than the throwing installer. The proof was already on
+    screen - seven Mozilla built-ins run here with all 14 blocks intact.
+
+WRONG TURN 1 - THE HIDDEN LOCATION
+    The obvious route is built_in_addons.json, and it "works" in the worst
+    sense. uBlock Origin loaded, was active, got a runtime UUID, downloaded
+    181,551 network and 43,792 cosmetic filters, and blocked ads on YouTube
+    with a badge on its toolbar button.
+
+    It did not appear in about:addons. At all.
+
+        app-builtin          hidden() -> false   listed, toggleable
+        app-builtin-addons   hidden() -> true    invisible, permanently
+
+    built_in_addons.json feeds the second, and `hidden` is a property of the
+    LOCATION - there is no per-addon override. Worse, the routing is
+    automatic: gen_built_in_addons.py globs builtin-addons/*/manifest.json at
+    build time, so packaging beside Mozilla's own built-ins forces the
+    invisible location.
+
+    Fix: package under a different resource root (gorilla-addons/) so the
+    generator never claims it, then register with maybeInstallBuiltinAddon().
+
+    For an ad blocker, "runs but has no settings page, no filter-list controls
+    and no off switch" is not partial success. The working toolbar button is
+    exactly what made it look finished.
+
+WRONG TURN 2 - THE FIX MADE IT VANISH
+    Moving to the visible route correctly removed it from built_in_addons.json
+    - and the extension then disappeared completely.
+
+        "moz-src:///browser/modules/GorillaBuiltinExtensions.sys.mjs"  wrong
+        "resource:///modules/GorillaBuiltinExtensions.sys.mjs"         right
+
+    browser/modules/ maps to resource:///modules/. The lazy getter pointed at
+    a URL that does not exist, install() threw inside _onFirstWindowLoaded,
+    and with built_in_addons.json no longer listing it there was NO FALLBACK.
+    Nothing in the log named the cause. Every neighbouring entry in
+    BrowserGlue.sys.mjs uses the correct form.
+
+    What prevented damage: the risk was predicted before acting, so the test
+    ran against a COPY of the install. The working browser was never broken.
+
+WRONG TURN 3 - THE TEST WAS WRONG, NOT THE CODE
+    After the URL fix it was STILL absent, which suggested something deeper.
+    There was nothing deeper.
+
+    `firefox -headless -screenshot` does not run BrowserGlue's
+    _onFirstWindowLoaded, so the registration never fires. With a real window
+    it worked first try.
+
+    This file already carried a headless-only-artifact entry, from the
+    AboutNewTabRedirector red herring. Hit again, same way, same project.
+    Headless is a convenience for whoever is testing; it is not the
+    environment the user runs.
+
+LESSON
+    Three failures at three different layers: a location whose visibility is
+    fixed by its class, a URL scheme that fails silently with no fallback, and
+    a test harness that does not execute the code path under test.
+
+    The common thread is the one this file keeps repeating - something looked
+    like success while being wrong. A working ad blocker with no entry in the
+    Add-ons Manager is the purest example yet, because every visible signal
+    said finished.
 ```
 
 </details>
@@ -2386,6 +2480,7 @@ LESSONS
 
 ## Tools
 
+- `add_builtin_extension.py` - Bundle a WebExtension INTO the browser, as a visible built-in add-on.
 - `analyze_prefs_portability.py` - Which Linux Gorilla prefs transfer to Windows, and what already ships?
 - `apply_partial_for_rebase.py` - Half-apply the failing patches on purpose, to generate .rej files.
 - `audit_fix_coverage.py` - Audit: is every fix from this session actually reproducible?
@@ -2422,6 +2517,7 @@ LESSONS
 - `triage_build_failure.py` - Classify a build failure and draft the check that would have caught it.
 - `triage_patch_groups.py` - Triage a Gorilla patch group against a Firefox source tree.
 - `validate_package_manifest.py` - Check every file package-manifest.in demands actually exists.
+- `verify_builtin_extension.py` - Prove a bundled extension is present AND VISIBLE, not merely loaded.
 - `verify_icon_check.py` - Prove the icon check flags the blue-globe placeholders and passes the real ones.
 - `verify_import_check.py` - Prove check_dropped_imports.py catches the actual defect, not just passes.
 - `verify_installed_build.py` - Does the browser INSTALLED ON THIS MACHINE actually contain our fixes?
