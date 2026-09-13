@@ -28,6 +28,10 @@ Linux (.deb) and Windows (installer).
 | **You need** | Debian / Ubuntu / Mint, 64-bit | Windows 10 or 11, 64-bit | ~25 GB free disk + a few hours |
 | **Go to** | **[Part 1](#part-1--just-give-me-the-browser)** ⬇ | **[windows/README.md](windows/README.md)** ⬇ | **[Part 2](#part-2--build-it-yourself)** ⬇ |
 
+> 📖 **Want the whole rationale?** Every one of the 441 patches, grouped by
+> topic, in plain language *and* in technical detail, with the honest cost of
+> each: **[WHAT-WE-CHANGED-AND-WHY.md](WHAT-WE-CHANGED-AND-WHY.md)**
+
 > ⛔ **Add-ons do not install** in this build — deliberately. It is a *sealed
 > appliance*: the extension-install code is removed, so uBlock Origin and every
 > other add-on are blocked. **[Why, and what you get instead.](windows/THE-SEALED-APPLIANCE.md)**
