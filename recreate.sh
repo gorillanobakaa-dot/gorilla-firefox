@@ -8,7 +8,7 @@
 #    a coffee — the download and the compile each take a while.
 #
 # 💻 DEVELOPER: cold-start reproducer. Clones mozilla-unified, applies the
-#    Gorilla patch set via new.patches/apply.sh (fuzz-tolerant, see BASELINE.txt),
+#    Gorilla patch set via patches/apply.sh (fuzz-tolerant, see BASELINE.txt),
 #    copies the tuned mozconfig, builds through the hardened capture wrapper, and
 #    optionally packages the .deb. Replaces the OLD graft-based script, whose
 #    universal_freedom_installer/precheck.sh dependencies no longer exist and
@@ -52,6 +52,31 @@ REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PATCHSET="$REPO/patches"
 MOZCONFIG_SRC="$REPO/mozconfig"                    # the tuned clang-21 mozconfig (bundled)
 SRC="${1:-$HOME/gorilla-recreate/firefox-src}"
+
+# ---- unattended mode --------------------------------------------------------
+# The stated goal of this project is that an agent can be pointed at this script
+# and told "compile the browser and report back". A blocking y/N prompt whose
+# default is N breaks that completely and SILENTLY: with no tty, `read` gets
+# EOF, the answer stays empty, the compile is skipped, the script prints "Done."
+# and exits 0. An agent reads that as success and reports a build that never
+# happened. Measured 2026-09-13; it is the single hardest blocker on this path.
+#
+#   GORILLA_YES=1   or   --yes   answers yes to every prompt.
+#
+# Also assumed when stdin is not a terminal - exactly the agent case.
+GORILLA_YES="${GORILLA_YES:-}"
+for a in "$@"; do case "$a" in --yes|-y) GORILLA_YES=1 ;; esac; done
+[ -t 0 ] || GORILLA_YES="${GORILLA_YES:-1}"
+
+# ask <prompt> -> 0 for yes, 1 for no. Never blocks when unattended.
+ask(){
+  if [ -n "$GORILLA_YES" ]; then
+    echo -e "${B_C}$1${NC} [auto-yes: unattended]"
+    return 0
+  fi
+  local r=""; read -p "$(echo -e "${B_C}$1 [y/N]: ${NC}")" r || r=n
+  [[ "$r" =~ ^[Yy]$ ]]
+}
 UPSTREAM="https://github.com/mozilla-firefox/firefox.git"  # mozilla-unified mirror
 BASELINE_DATE="2026-07-10"
 
@@ -176,13 +201,13 @@ if [ "$FATAL" -ne 0 ]; then
   echo
   echo -e "${B_R}✋ Stopping here — fix the above, then run me again.${NC}"
   echo -e "${B_C}   Not interested in any of this? Totally fair. Download the ready-made .deb:${NC}"
-  echo    "   https://github.com/gorillanobakaa-dot/firefox.154/releases"
+  echo    "   https://github.com/gorillanobakaa-dot/gorilla-firefox/releases"
   exit 1
 fi
 ok "Preflight passed — your machine can do this. Nice."
 echo
 say "Baseline: Firefox 154.0a1 nightly, snapshot ~${BASELINE_DATE}."
-warn "154.0a1 is a NIGHTLY with no exact pinned changeset (see new.patches/BASELINE.txt)."
+warn "154.0a1 is a NIGHTLY with no exact pinned changeset (see patches/BASELINE.txt)."
 warn "A fresh clone is CLOSE to our baseline; patches apply with fuzz tolerance, and any"
 warn "hunk that still won't apply will be reported (not silently skipped)."
 echo
@@ -214,23 +239,74 @@ while IFS= read -r p; do
     echo "$out" | grep -q 'with fuzz' && fuzzy=$((fuzzy+1)) || applied=$((applied+1))
   else failed=$((failed+1)); FAILEDP+=("$(basename "$p")"); fi
 done < <(find "$PATCHSET" -regextype posix-extended -regex '.*/[0-9]{2}\.[^/]+/.*\.patch' | sort)
-# NEW_FILES + profile user.js handled by a full apply.sh pass
-"$PATCHSET/apply.sh" "$SRC" >/dev/null 2>&1 || true
+# NEW_FILES + profile user.js handled by a full apply.sh pass.
+# This installs the new files AND the profile user.js, which is where the
+# privacy hardening lives. It used to run as `>/dev/null 2>&1 || true`, which
+# discarded stdout, stderr AND the exit code - so a total failure to install
+# the new files was indistinguishable from success.
+if ! "$PATCHSET/apply.sh" "$SRC" > "$SRC/.gorilla-apply.log" 2>&1; then
+  warn "the NEW_FILES / user.js pass reported a failure."
+  warn "last 20 lines of $SRC/.gorilla-apply.log:"
+  tail -20 "$SRC/.gorilla-apply.log" | sed "s/^/     /"
+  failed=$((failed+1)); FAILEDP+=("apply.sh NEW_FILES pass")
+fi
 ok "patches: ${applied} clean, ${fuzzy} applied-with-fuzz, ${failed} failed"
 if [ "$failed" -gt 0 ]; then
   warn "these hunks need manual attention (upstream drifted past them):"
   printf '     - %s\n' "${FAILEDP[@]}"
+  # A partly-applied patch set compiles perfectly well and produces a browser
+  # missing an arbitrary subset of the Gorilla changes. That is this project's
+  # signature failure - a green build with the fixes absent - and this used to
+  # be only a warning, with the build proceeding regardless.
+  if [ -z "${GORILLA_IGNORE_FAILED_PATCHES:-}" ]; then
+    die "$failed patch(es) failed. Refusing to build a partly-patched tree.
+     A browser built from this compiles cleanly and quietly lacks whichever
+     changes did not apply. Fix the patches, or set
+     GORILLA_IGNORE_FAILED_PATCHES=1 for a deliberate partial build."
+  fi
+  warn "GORILLA_IGNORE_FAILED_PATCHES set - continuing with a PARTIAL patch set."
+fi
+
+# ---- 3b. bundle the built-in extensions ------------------------------------
+# The patch set adds "ublock-origin" to browser/extensions/moz.build DIRS and
+# installs browser/modules/GorillaBuiltinExtensions.sys.mjs, but it does NOT
+# carry the extension itself - 17 MB of third-party code does not belong in a
+# patch set, and pinning it by hash is better than committing a copy that
+# quietly ages.
+#
+# So the payload is fetched here. Without this step DIRS points at a directory
+# that does not exist and the build fails at configure time. Found 2026-09-13
+# by auditing this path; nothing documented the step.
+#
+# The bundler is idempotent: it skips the DIRS entry and the BrowserGlue hook
+# when the patches have already installed them, and only adds the payload.
+say "Step 3b/5  Fetching the bundled extensions (uBlock Origin)..."
+BUNDLER=""
+for c in "$REPO/windows/add_builtin_extension.py"          "$REPO/../working scripts/add_builtin_extension.py"; do
+  [ -f "$c" ] && { BUNDLER="$c"; break; }
+done
+if [ -z "$BUNDLER" ]; then
+  warn "add_builtin_extension.py not found - skipping."
+  warn "If the patch set lists ublock-origin in DIRS, the build WILL fail."
+elif ! command -v python3 >/dev/null 2>&1; then
+  die "python3 is required to fetch the bundled extension set."
+else
+  if python3 "$BUNDLER" --src "$SRC" --root "$REPO" --amo ublock-origin; then
+    ok "bundled extensions in place"
+  else
+    die "could not fetch the bundled extension. The patch set lists it in
+     browser/extensions/moz.build DIRS, so the build will fail at configure
+     time without it. Check the network, then re-run."
+  fi
 fi
 
 # ---- 4. build (hardened wrapper — never bare ./mach build) ----
 say "Step 4/5  Building (hardened wrapper: unbuffered + telemetry-off)…"
-read -p "$(echo -e "${B_C}Start the compile now? ~20-40 min with sccache. [y/N]: ${NC}")" ans || ans=n
-if [[ "$ans" =~ ^[Yy]$ ]]; then
+if ask "Start the compile now? ~20-40 min with sccache."; then
   bash "$REPO/scripts/run_build_and_capture.sh" "$SRC" || die "build failed — read the captured log"
   ok "build finished"
   # ---- 5. optional .deb ----
-  read -p "$(echo -e "${B_C}Package a .deb now? [y/N]: ${NC}")" deb || deb=n
-  if [[ "$deb" =~ ^[Yy]$ ]]; then
+  if ask "Package a .deb now?"; then
     bash "$REPO/scripts/build_deb.sh" "" "$SRC/obj-x86_64-pc-linux-gnu/dist/bin" "$(dirname "$SRC")/release" "$REPO/deb_template" "$SRC/browser/branding/gorilla" && ok "packaged"
   fi
 else

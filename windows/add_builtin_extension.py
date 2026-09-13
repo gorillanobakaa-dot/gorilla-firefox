@@ -460,6 +460,10 @@ def main():
     ap = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--root", default=str(ROOT))
+    ap.add_argument("--src", default=None,
+                    help="the Firefox source tree (default: <root>/src). The "
+                         "Linux path clones elsewhere - recreate.sh uses "
+                         "~/gorilla-recreate/firefox-src - so it must say where.")
     ap.add_argument("--xpi", help="local .xpi to bundle")
     ap.add_argument("--amo", help="AMO slug to download and bundle, e.g. ublock-origin")
     ap.add_argument("--name", help="directory name (default: derived from the slug)")
@@ -477,7 +481,12 @@ def main():
     args = ap.parse_args()
 
     root = Path(args.root)
-    src = root / "src"
+    src = Path(args.src) if args.src else root / "src"
+    if not src.is_dir():
+        raise SystemExit(
+            "no Firefox source tree at %s. "
+            "Pass --src <tree> if it lives somewhere else (the Linux path "
+            "clones to ~/gorilla-recreate/firefox-src)." % src)
     st = load_state(root)
 
     if args.list:
