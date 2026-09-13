@@ -1,5 +1,5 @@
 diff --git a/browser/app/profile/firefox.js b/browser/app/profile/firefox.js
-index 4b5f0562be..b0c1bcc9cb 100644
+index 4b5f0562be..441f9b62d3 100644
 --- a/browser/app/profile/firefox.js
 +++ b/browser/app/profile/firefox.js
 @@ -40,7 +40,7 @@ pref("extensions.getAddons.cache.enabled", true);
@@ -737,7 +737,32 @@ index 4b5f0562be..b0c1bcc9cb 100644
  
  // Forward Rust component logs to the JS console (comma separate list of crate names)
  // The empty string defaults to forwarding error-level messages.
-@@ -3721,9 +3767,224 @@ pref("browser.referrals.pingSubmitted", false);
+@@ -3717,13 +3763,249 @@ pref("browser.referrals.enabled", false);
+ // Set on first run after the referral code has been submitted via the
+ // referrals ping.
+ pref("browser.referrals.pingSubmitted", false);
++
++// GORILLA 2026-08-27: cap DTLS at 1.2 (771) for WebRTC. NOT platform-gated:
++// the defect is in Meta's relays, not in any client OS, so Windows needs it
++// exactly as much as Linux does.
++// Upstream defaults media.peerconnection.dtls.version.max to 772 (DTLS 1.3)
++// in modules/libpref/init/all.js. CONVICTED LIVE 2026-08-26: with 1.3 the
++// handshake COMPLETES and then every application-data record is silently
++// dropped by Meta's WhatsApp call relays. The signature is SCTP INIT
++// retransmitted with no reply: 223 x 28-byte writes, zero bytes back, and
++// the call rings forever with no error raised anywhere.
++// Capping to 1.2 established SCTP and opened 4 RTCDataChannels with
++// bidirectional flow measured (capture wa-call3, 2026-08-26 09:43 UTC).
++// Revisit when Meta handles DTLS 1.3. Full record:
++// FIrefox.154.Hardware.decode.WEBRTC/CALL-TRANSPORT-BLACKHOLE.DEVELOPER.md
++//
++// Windows, 2026-09-13: this file loads AFTER modules/libpref/init/all.js and
++// the last definition wins, so 771 overrides upstream's 772. Verified by
++// preflight check dtls-cap, which reads the value the browser will actually
++// resolve rather than the first one it finds.
++pref("media.peerconnection.dtls.version.max",        771);
++
+ // "browser.referrals.code": Per-profile referral code, locked at runtime once
  // generated. The pref can't be defined here because locking the pref resets
  // the value to the default value and we need the default value to the genereated code.
  

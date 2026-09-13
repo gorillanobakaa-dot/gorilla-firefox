@@ -121,7 +121,7 @@ Each entry below carries its full investigation, wrong turns included.
 
 ## The failure catalogue
 
-57 checks: 37 blocking, 20 advisory. `build` refuses to start while any blocker fails.
+59 checks: 37 blocking, 22 advisory. `build` refuses to start while any blocker fails.
 
 
 ### Blocking
@@ -1238,11 +1238,11 @@ LESSON
 
 </details>
 
-#### `address-bar` - Address bar proven to navigate
+#### `dtls-cap` - WebRTC DTLS capped at 1.2
 
-**What went wrong:** 2026-09-13: a browser shipped in which typing in the address bar was reported to do nothing, and every check in the harness passed - green build, all tracked fixes installed, theme rendering, 122 search engines with google as global default, 20 of 20 network prefs. Nothing had ever tried to type an address and go somewhere. A browser whose address bar does not navigate is not a browser.
+**What went wrong:** Meta's WhatsApp relays complete a DTLS 1.3 handshake and then discard every application-data record. Measured 2026-08-26: 223 SCTP INIT writes, zero replies, no error anywhere - the call just rings. Two Windows installers shipped with 772 because the value lived only in a comment in a document that was never committed, so a correct build from a correct clone was still broken.
 
-**Fix:** Run: python "working scripts/verify_address_bar.py" - it warns you before it takes the keyboard for ~60s, then types about:robots, a bare hostname and a search term into a real window and reads the window title to prove each one navigated. Do not touch the keyboard while it runs. The result is recorded against this build only.
+**Fix:** Add pref("media.peerconnection.dtls.version.max", 771) to browser/app/profile/firefox.js - it loads after all.js and wins. Put it in BOTH patches/05.PREFS/ and patches/17.WINDOWS.FIXES.../ browser_app_profile_firefox.js.patch: they are separate full copies, not a base and a delta.
 
 #### `prefs-last-wins` - Hardening is not overridden later
 
@@ -1884,11 +1884,23 @@ LESSON
 
 </details>
 
+#### `pref-block-divergence` - The two pref blocks agree
+
+**What went wrong:** 2026-09-13: patches/05.PREFS and patches/17.WINDOWS.FIXES each carry a FULL copy of the Gorilla pref block (253 and 240 added pref lines), not a base and a delta. The DTLS 1.2 cap was added to the Linux one alone, so Windows stayed broken while the diff looked like a fix. Any pref edited in one file and not the other silently diverges the platforms.
+
+**Fix:** For each pref listed, decide deliberately whether the platforms should differ. If they should not, add it to whichever patch is missing it. If they should - a Linux-only GPU workaround, say - that is fine, but it must be a decision rather than an omission.
+
 #### `theme-dead-selectors` - Theme selectors match real elements
 
 **What went wrong:** 2026-09-13: the address bar's cyan edge was written as #urlbar-background. FF155 creates that element with class= and no id, so all three rules were dead code and the field drew no border at all. A comment at the bottom of the very same file already recorded the ID-to-CLASS rename; a later rescue block was written against the ID anyway. Dead CSS throws nothing and renders fine - only a human noticing a missing colour ever finds it.
 
 **Fix:** For each id reported, find how FF155 actually builds that element (grep the .mjs/.xhtml that creates it) and use the selector it really has. If it is a class now, use the class - and prefer outline over border, which is this project's CSS invariant.
+
+#### `address-bar` - Address bar proven to navigate
+
+**What went wrong:** 2026-09-13: a browser shipped in which typing in the address bar was reported to do nothing, and every check in the harness passed - green build, all tracked fixes installed, theme rendering, 122 search engines with google as global default, 20 of 20 network prefs. Nothing had ever tried to type an address and go somewhere. A browser whose address bar does not navigate is not a browser.
+
+**Fix:** Run: python "working scripts/verify_address_bar.py" - it warns you before it takes the keyboard for ~60s, then types about:robots, a bare hostname and a search term into a real window and reads the window title to prove each one navigated. Do not touch the keyboard while it runs. The result is recorded against this build only.
 
 #### `builtin-ext-updates` - Bundled extensions are current
 
@@ -2599,6 +2611,8 @@ LESSONS
 - `export_session_fixes.py` - Export this session's source fixes into gorilla-patchset, so they survive.
 - `extract_failing_hunks.py` - Dump each failing hunk next to the source it ACTUALLY failed against.
 - `find_split_clusters.py` - Find files whose patches were split across enabled and disabled groups.
+- `fix_prefs_last_wins.py` - Repair hardening that a later pref file silently undoes.
+- `fix_theme_dead_selectors.py` - Find theme rules that select an element which does not exist.
 - `ftl_rebase_helper.py` - Rebase Fluent brand-injection hunks onto reworded upstream strings.
 - `generate_branding_icons.py` - Build the Windows .ico files from the real gorilla PNG artwork.
 - `generate_playbook.py` - Generate BUILD-PLAYBOOK.md from the live preflight check registry.
@@ -2623,3 +2637,4 @@ LESSONS
 - `verify_installer.py` - Verify the packaged installer: right icon, and payload still intact.
 - `verify_no_phone_home.py` - Watch the browser start on a clean profile and record every host it contacts.
 - `verify_patches_apply.py` - Prove the exported patches apply to a PRISTINE upstream tree.
+- `watch_thermals.py` - Watch CPU temperature during a build, and stop it before it cooks.
