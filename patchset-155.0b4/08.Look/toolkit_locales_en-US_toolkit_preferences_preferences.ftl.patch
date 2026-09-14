@@ -1,0 +1,16 @@
+--- a/toolkit/locales/en-US/toolkit/preferences/preferences.ftl
++++ b/toolkit/locales/en-US/toolkit/preferences/preferences.ftl
+@@ -1,10 +1,10 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-
+ set-password-not-set =
+-    .label = Current password:
+-    .placeholder = (not set)
++    .label =
++        Current password:
++        .placeholder = (not set)
+ 
+ failed-pp-change = Unable to change Primary Password.
+ incorrect-pp = You did not enter the correct current Primary Password. Please try again.

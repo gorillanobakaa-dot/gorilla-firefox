@@ -1,0 +1,20 @@
+--- a/third_party/rust/glean-core/src/dispatcher/global.rs
++++ b/third_party/rust/glean-core/src/dispatcher/global.rs
+@@ -45,6 +45,17 @@
+ ///
+ /// [`flush_init`]: fn.flush_init.html
+ pub fn launch(task: impl FnOnce() + Send + 'static) {
++    // Gorilla: telemetry is disabled at the FOG layer (FOG::InitializeFOG is a
++    // no-op), so the dispatcher is never flushed. Metric-recording tasks would
++    // otherwise pile up in the pre-init buffer forever — costing ~0.84% parent
++    // CPU on the calling threads (Renderer/Compositor/WebRender/Socket) and
++    // slowly leaking memory holding closures. Drop them immediately in
++    // production. Test mode keeps full behavior so vendored tests still pass.
++    if !TESTING_MODE.load(Ordering::SeqCst) {
++        drop(task);
++        return;
++    }
++
+     let current_thread = thread::current();
+     if let Some("glean.shutdown") = current_thread.name() {
+         log::error!("Tried to launch a task from the shutdown thread. That is forbidden.");

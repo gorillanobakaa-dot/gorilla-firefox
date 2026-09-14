@@ -1,0 +1,38 @@
+--- a/browser/components/uitour/UITour.sys.mjs
++++ b/browser/components/uitour/UITour.sys.mjs
+@@ -8,8 +8,6 @@
+ 
+ ChromeUtils.defineESModuleGetters(lazy, {
+   AboutReaderParent: "resource:///actors/AboutReaderParent.sys.mjs",
+-  AIWindow:
+-    "moz-src:///browser/components/aiwindow/ui/modules/AIWindow.sys.mjs",
+   AppProvidedConfigEngine:
+     "moz-src:///toolkit/components/search/ConfigSearchEngine.sys.mjs",
+   ASRouter: "resource:///modules/asrouter/ASRouter.sys.mjs",
+@@ -493,26 +491,6 @@
+         break;
+       }
+ 
+-      case "showFirefoxAccountsForAIWindow": {
+-        // if user "Blocked" Smart Window feature from AI Control or global AI Control default
+-        // override Smart Window feature to "available"
+-        if (lazy.AIWindow.isBlocked) {
+-          Services.prefs.setStringPref(
+-            "browser.ai.control.smartWindow",
+-            "available"
+-          );
+-        }
+-
+-        lazy.AIWindow.launchWindow(browser).then(success => {
+-          if (!success) {
+-            lazy.log.warn(
+-              "showFirefoxAccountsForAIWindow: Failed to launch Smart Window"
+-            );
+-          }
+-        });
+-        break;
+-      }
+-
+       case "showConnectAnotherDevice": {
+         lazy.FxAccounts.config
+           .promiseConnectDeviceURI(data.entrypoint || "uitour")

@@ -49,7 +49,13 @@ set -euo pipefail
 
 # ---- resolve repo root from THIS script's location (portable; no hardcoded paths) ----
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PATCHSET="$REPO/patches"
+# Which patch set to apply. Default is the 154 set in patches/.
+# Set GORILLA_PATCHSET to build the 155 line:
+#   GORILLA_PATCHSET="$PWD/patchset-155.0b4" ./recreate.sh <srcdir>
+# The two sets are cut against different upstream baselines and must
+# never be applied to the same tree.
+PATCHSET="${GORILLA_PATCHSET:-$REPO/patches}"
+[ -d "$PATCHSET" ] || { echo "FATAL: patch set not found: $PATCHSET" >&2; exit 2; }
 MOZCONFIG_SRC="$REPO/mozconfig"                    # the tuned clang-21 mozconfig (bundled)
 SRC="${1:-$HOME/gorilla-recreate/firefox-src}"
 

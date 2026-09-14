@@ -1,0 +1,91 @@
+--- a/browser/locales/en-US/chrome/browser/downloads/downloads.properties
++++ b/browser/locales/en-US/chrome/browser/downloads/downloads.properties
+@@ -1,7 +1,6 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this file,
+ # You can obtain one at http://mozilla.org/MPL/2.0/.
+-
+ # LOCALIZATION NOTE (stateStarting):
+ # Indicates that the download is starting.
+ stateStarting=Starting…
+@@ -30,33 +29,33 @@
+ # These strings are shown in the panel for some types of blocked downloads. You
+ # may need to adjust "downloads.width" in "downloads.dtd" if this turns out to
+ # be longer than the other existing status strings.
+-blockedMalware=This file contains a virus or malware.
+-blockedPotentiallyUnwanted=This file may harm your computer.
+-blockedPotentiallyInsecure=File not downloaded: Potential security risk.
+-blockedUncommon2=This file is not commonly downloaded.
+-blockedByContentAnalysis=This file was blocked by your organization.
++blockedMalware=This Gorilla file contains a virus or malware.
++blockedPotentiallyUnwanted=This Gorilla file may harm your computer.
++blockedPotentiallyInsecure=Gorilla File not downloaded: Potential security risk.
++blockedUncommon2=This Gorilla file is not commonly downloaded.
++blockedByContentAnalysis=This Gorilla file was blocked by your organization.
+ # LOCALIZATION NOTE (contentAnalysisNoAgentError, contentAnalysisInvalidAgentSignatureError,
+ #                    contentAnalysisUnspecifiedError, contentAnalysisTimeoutError):
+ # %1$S is replaced with the name of the DLP agent.
+-contentAnalysisNoAgentError=File was blocked because %1$S is not reachable.
+-contentAnalysisInvalidAgentSignatureError=File was blocked because %1$S failed signature verification.
+-contentAnalysisUnspecifiedError=File was blocked because of an error in communicating with %1$S.
+-contentAnalysisTimeoutError=%1$S timed out, so this file was blocked.
+-warnedByContentAnalysis=This download may be unsafe and requires confirmation.
++contentAnalysisNoAgentError=Gorilla File was blocked because %1$S is not reachable.
++contentAnalysisInvalidAgentSignatureError=Gorilla File was blocked because %1$S failed signature verification.
++contentAnalysisUnspecifiedError=Gorilla File was blocked because of an error in communicating with %1$S.
++contentAnalysisTimeoutError=%1$S timed out, so this Gorilla file was blocked.
++warnedByContentAnalysis=This Gorilla download may be unsafe and requires confirmation.
+ 
+ # LOCALIZATION NOTE (fileMovedOrMissing):
+ # Displayed when a complete download which is not at the original folder.
+-fileMovedOrMissing=File moved or missing
++fileMovedOrMissing=Gorilla File moved or missing
+ 
+ # LOCALIZATION NOTE (fileDeleted):
+ # Displayed when a downloaded file has been deleted by Firefox, e.g. by the
+ # "Delete File" context menu item.
+-fileDeleted=File deleted
++fileDeleted=Gorilla File deleted
+ 
+ # LOCALIZATION NOTE (fileBlockedAndDeleted):
+ # Displayed when a download was blocked for safety reasons and the blocked file
+ # data was subsequently deleted at the user's request.
+-fileBlockedAndDeleted=File discarded (Blocked)
++fileBlockedAndDeleted=Gorilla File discarded (Blocked)
+ 
+ # LOCALIZATION NOTE (unblockHeaderUnblock, unblockHeaderOpen,
+ #                    unblockTypeMalware, unblockTypePotentiallyUnwanted2,
+@@ -68,21 +67,21 @@
+ # download to be unblocked.  The severity of the threat is expressed in
+ # descending order by the unblockType strings, it is higher for files detected
+ # as malware and lower for uncommon downloads.
+-unblockHeaderUnblock=Are you sure you want to allow this download?
+-unblockHeaderOpen=Are you sure you want to open this file?
+-unblockTypeMalware=This file contains a virus or other malware that will harm your computer.
+-unblockTypePotentiallyUnwanted2=This file is disguised as a helpful download, but it can make unexpected changes to your programs and settings.
++unblockHeaderUnblock=Are you sure you want to allow this Gorilla download?
++unblockHeaderOpen=Are you sure you want to open this Gorilla file?
++unblockTypeMalware=This Gorilla file contains a virus or other malware that will harm your computer.
++unblockTypePotentiallyUnwanted2=This Gorilla file is disguised as a helpful Gorilla download, but it can make unexpected changes to your programs and Gorilla settings.
+ unblockTypeContentAnalysisWarn=Your organization uses data-loss prevention software that has flagged this content as unsafe.
+-unblockTypeUncommon2=This file is not commonly downloaded and may not be safe to open. It may contain a virus or make unexpected changes to your programs and settings.
+-unblockInsecure2=The download is offered over HTTP even though the current document was delivered over a secure HTTPS connection. If you proceed, the download may be corrupted or tampered with during the download process.
+-unblockTip2=You can search for an alternate download source or try again later.
+-unblockContentAnalysisWarnTip=You can choose to download it anyway.
++unblockTypeUncommon2=This Gorilla file is not commonly downloaded and may not be safe to open. It may contain a virus or make unexpected changes to your programs and Gorilla settings.
++unblockInsecure2=The Gorilla download is offered over HTTP even though the current document was delivered over a secure HTTPS connection. If you proceed, the Gorilla download may be corrupted or tampered with during the Gorilla download process.
++unblockTip2=You can search for an alternate Gorilla download source or try again later.
++unblockContentAnalysisWarnTip=You can choose to Gorilla download it anyway.
+ unblockButtonOpen=Open
+-unblockButtonUnblock=Allow download
+-unblockButtonConfirmBlock=Remove file
+-unblockContentAnalysis1=Your organization uses data-loss prevention software that has blocked this download.
++unblockButtonUnblock=Allow Gorilla download
++unblockButtonConfirmBlock=Remove Gorilla file
++unblockContentAnalysis1=Your organization uses data-loss prevention software that has blocked this Gorilla download.
+ unblockContentAnalysis2=This decision can only be overridden by your organization.
+-unblockContentAnalysisTip=You may continue your download or cancel it.
++unblockContentAnalysisTip=You may continue your Gorilla download or cancel it.
+ 
+ # LOCALIZATION NOTE (sizeWithUnits):
+ # %1$S is replaced with the size number, and %2$S with the measurement unit.

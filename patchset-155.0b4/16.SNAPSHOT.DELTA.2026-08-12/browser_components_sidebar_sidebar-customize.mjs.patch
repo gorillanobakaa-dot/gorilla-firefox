@@ -1,0 +1,11 @@
+--- a/browser/components/sidebar/sidebar-customize.mjs
++++ b/browser/components/sidebar/sidebar-customize.mjs
+@@ -15,8 +15,6 @@
+ );
+ 
+ const l10nMap = new Map([
+-  ["viewGenaiChatSidebar", "sidebar-menu-genai-chat-label"],
+-  ["viewGenaiPageAssistSidebar", "sidebar-menu-genai-page-assist-label"],
+   ["viewHistorySidebar", "sidebar-menu-history-label"],
+   ["viewTabsSidebar", "sidebar-menu-synced-tabs-label"],
+   ["viewBookmarksSidebar", "sidebar-menu-bookmarks-label"],

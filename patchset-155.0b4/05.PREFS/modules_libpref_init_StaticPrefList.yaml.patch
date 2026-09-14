@@ -1,0 +1,293 @@
+--- a/modules/libpref/init/StaticPrefList.yaml
++++ b/modules/libpref/init/StaticPrefList.yaml
+@@ -303,7 +303,7 @@
+ #ifdef MOZ_ENABLE_SKIA_PDF
+ - name: accessibility.tagged_pdf_output.enabled
+   type: bool
+-  value: @IS_NIGHTLY_BUILD@
++  value: false
+   mirror: always
+ #endif
+ 
+@@ -2366,6 +2366,22 @@
+     mirror: always
+ #endif
+ 
++#---------------------------------------------------------------------------
++# Prefs starting with "consoleservice."
++#---------------------------------------------------------------------------
++
++#if defined(ANDROID)
++  # Disable sending console to logcat on release builds.
++-   name: consoleservice.logcat
++    type: RelaxedAtomicBool
++    value: @IS_NOT_RELEASE_OR_BETA@
++    mirror: always
++#endif
++
++#---------------------------------------------------------------------------
++# Prefs starting with "content."
++#---------------------------------------------------------------------------
++
+ # When false, web custom format flavors written by other applications are
+ # hidden from the Async Clipboard read paths (Firefox-authored content read
+ # back from the in-process clipboard cache is unaffected).
+@@ -2394,6 +2410,7 @@
+ # Prefs starting with "content."
+ #---------------------------------------------------------------------------
+ 
++
+ - name: content.cors.disable
+   type: bool
+   value: false
+@@ -2998,7 +3015,7 @@
+ # `.key` of the second `keypress` is set to the empty string.
+ - name: dom.event.keypress.key.allow_lone_surrogate
+   type: bool
+-  value: false
++  value: @IS_NOT_EARLY_BETA_OR_EARLIER@
+   mirror: always
+ 
+ # Make EventStateManager restore the last "mouseover" target when it's
+@@ -4475,11 +4492,7 @@
+ # long-lived profiles with a large number of unused origins.
+ - name: dom.quotaManager.temporaryStorage.clearNonPersistedZeroUsageOrigins
+   type: RelaxedAtomicBool
+-#if defined(NIGHTLY_BUILD) && defined(XP_LINUX) && !defined(ANDROID)
+-  value: true
+-#else
+   value: false
+-#endif
+   mirror: always
+ 
+ # Controls the maximum number of origins cleared in a single batch during
+@@ -6320,6 +6333,7 @@
+   value: @IS_NIGHTLY_BUILD@
+   mirror: always
+ 
++
+ - name: dom.workers.testing.enabled
+   type: RelaxedAtomicBool
+   value: false
+@@ -6474,6 +6488,12 @@
+   value: ""
+   mirror: never
+ 
++# Whether to include common ancestor when serializing HTML data for clipboard copy.
++- name: dom.serializer.includeCommonAncestor.enabled
++  type: bool
++  value: false
++  mirror: always
++
+ # Whether to enable XSLT.
+ - name: dom.xslt.enabled
+   type: bool
+@@ -6999,6 +7019,9 @@
+   value: true
+   mirror: always
+ 
++# Limits the depth of recursive conversion of data when opening
++# a content to view.  This is mostly intended to prevent infinite
++# loops with faulty converters involved.
+ # Scales the autoscroll speed, as a percentage
+ # (100 = default, 200 = double speed, 50 = half speed).
+ - name: general.autoscroll.speed_multiplier
+@@ -7009,6 +7032,7 @@
+ # Limits the depth of recursive conversion of data when opening
+ # a content to view.  This is mostly intended to prevent infinite
+ # loops with faulty converters involved.
++
+ - name: general.document_open_conversion_depth_limit
+   type: uint32_t
+   value: 20
+@@ -12773,6 +12797,32 @@
+ # Disable falling back to software decoders in case of frame drop
+ - name: media.ffmpeg.disable-software-fallback
+   type: RelaxedAtomicBool
++  value: true
++  mirror: always
++
++# Enforce hardware-only H.264 playback policy and block VP8/VP9/AV1
++- name: media.gorilla.hardware_only_mode
++  type: RelaxedAtomicBool
++  value: true
++  mirror: always
++
++# Stage 5b envelope loudness compressor in AudioStream
++# (AudioPsychoacousticEnhancer). Default on so shipped builds keep audible
++# laptop speakers; set false on a machine that already runs a system-level
++# compressor sink (e.g. PipeWire SC4) to avoid two compressors in series
++# (audible gain pumping).
++- name: media.gorilla.loudness_compressor.enabled
++  type: RelaxedAtomicBool
++  value: true
++  mirror: always
++
++# Allow software VP8 decode for WebCodecs only (DecoderAgent's private
++# PDMFactory). The media pipeline (<video>, MSE, WebRTC) stays hardware-only
++# regardless of this pref. Needed for WhatsApp Web calls, which run VP8
++# through WebCodecs over a DataChannel; Intel HD 4000 has no VP8 ASIC, so
++# such calls are software-decoded in any browser on this hardware.
++- name: media.gorilla.webcodecs_software_vp8
++  type: RelaxedAtomicBool
+   value: false
+   mirror: always
+ 
+@@ -13330,10 +13380,10 @@
+   value: true
+   mirror: always
+ 
+-# AV1
++# AV1 - DISABLED by Gorilla hardware-only policy (Intel HD 4000 has no AV1 ASIC)
+ - name: media.av1.enabled
+   type: RelaxedAtomicBool
+-  value: true
++  value: false
+   mirror: always
+ 
+ # Matroska
+@@ -13649,11 +13699,11 @@
+   mirror: always
+ 
+ #ifdef MOZ_WEBRTC
+-  # Use MediaDataDecoder API for VP8/VP9 in WebRTC. This includes hardware
+-  # acceleration for decoding.
++  # Use MediaDataDecoder API for VP8/VP9 in WebRTC - DISABLED by Gorilla policy
++  # VP8/VP9 blocked at DefaultCodecPreferences.cpp, this ensures no bypass via MediaDataDecoder
+ -   name: media.navigator.mediadatadecoder_vpx_enabled
+     type: RelaxedAtomicBool
+-    value: true
++    value: false
+     mirror: always
+ 
+   # Use MediaDataDecoder API for H264 in WebRTC. This includes hardware
+@@ -15620,9 +15670,11 @@
+   mirror: always
+ 
+ # This preference controls if we need to fail transactions for Local Network Access (LNA) failures.
++# Currently it is enabled only for nightly builds.
++# For beta and release users we will be enabling it only for ETP strict users using network.lna.etp.enabled
+ - name: network.lna.blocking
+   type: RelaxedAtomicBool
+-  value: true
++  value: @IS_NIGHTLY_BUILD@
+   mirror: always
+ 
+ # When this pref is true, loads triggered by scripts classified as trackers
+@@ -16513,16 +16565,6 @@
+   value: false
+   mirror: always
+ 
+-#ifdef DEBUG
+-  # When true, HttpConnectionUDP::CanReuse() always returns false, simulating an
+-  # HTTP/3 connection that has become unusable but still lingers in the entry's
+-  # active connections. Testing only.
+--   name: network.http.http3.force_cannot_reuse_for_testing
+-    type: RelaxedAtomicBool
+-    value: false
+-    mirror: always
+-#endif
+-
+ # Maximum time (ms) a session can remain in ZERORTT state before being
+ # considered stuck. If a Http3Session doesn't transition to CONNECTED within
+ # this timeout, it will be closed.
+@@ -16919,6 +16961,8 @@
+   value: 5000
+   mirror: always
+ 
++# This is used for a temporary workaround for a web-compat issue. If pref is
++# true CORS preflight requests are allowed to send client certificates.
+ # Backstop timeout (milliseconds) for a channel parked waiting for a cache
+ # entry callback that never arrives (e.g. a wedged entry left perpetually
+ # "being written" by a writer that was suspended or cancelled without ever
+@@ -16933,6 +16977,7 @@
+ 
+ # This is used for a temporary workaround for a web-compat issue. If pref is
+ # true CORS preflight requests are allowed to send client certificates.
++
+ - name: network.cors_preflight.allow_client_cert
+   type: RelaxedAtomicBool
+   value: false
+@@ -17030,7 +17075,7 @@
+ # to the connection phase (ms).
+ - name: network.http.happy_eyeballs_resolution_delay
+   type: RelaxedAtomicUint32
+-  value: 25
++  value: 50
+   mirror: always
+   rust: true
+ 
+@@ -17051,6 +17096,9 @@
+   mirror: always
+   rust: true
+ 
++# If true, it will include extra tags to be sniffed by nsUnknownDecoder
++# These tags were previously sniffed by Firefox for legacy/webcompat but
++# are not part of the MIME sniffing spec.
+ # When Happy Eyeballs is enabled and all TRR-resolved addresses fail to
+ # connect, retry the connection with TRR disabled (native DNS). This is the
+ # connection-time equivalent of the legacy nsSocketTransport native-DNS
+@@ -17063,6 +17111,7 @@
+ # If true, it will include extra tags to be sniffed by nsUnknownDecoder
+ # These tags were previously sniffed by Firefox for legacy/webcompat but
+ # are not part of the MIME sniffing spec.
++
+ - name: network.mimesniff.extra_moz_html_tags
+   type: RelaxedAtomicBool
+   value: false
+@@ -18630,6 +18679,15 @@
+     value: @IS_NIGHTLY_BUILD@
+     mirror: always
+ 
++  # This controls the depth of stack trace that is logged when Windows sandbox
++  # logging is turned on. This is only currently available for the content
++  # process because the only other sandbox (for GMP) has too strict a policy to
++  # allow stack tracing. This does not require a restart to take effect.
++-   name: security.sandbox.windows.log.stackTraceDepth
++    type: RelaxedAtomicUint32
++    value: 0
++    mirror: always
++
+   # Whether \Device\KsecDD is closed in content process. We are closing this
+   # using a pref to give users a work-around if they have issues.
+ -   name: security.sandbox.content.close-ksecdd-handle
+@@ -19633,6 +19691,10 @@
+   value: false
+   mirror: always
+ 
++#---------------------------------------------------------------------------
++# Prefs starting with "ui."
++#---------------------------------------------------------------------------
++
+ # Site categories for notification permission telemetry
+ # Maps domains to categories for analyzing permission behavior by site type
+ # XXX(krosylight): We need to document how this list is chosen for openness.
+@@ -19646,6 +19708,7 @@
+ # Prefs starting with "ui."
+ #---------------------------------------------------------------------------
+ 
++
+ - name: ui.key.generalAccessKey
+   type: int32_t
+   value: -1
+@@ -20106,11 +20169,7 @@
+ 
+ - name: webgl.disable-angle
+   type: RelaxedAtomicBool
+-#if defined(XP_WIN)
+   value: false
+-#else
+-  value: true
+-#endif
+   mirror: always
+ 
+ - name: webgl.disable-wgl
+@@ -20770,7 +20829,7 @@
+ # Use xdg-session-management-v1 for session restore on Wayland.
+ - name: widget.wayland.session-management.enabled
+   type: bool
+-  value: @IS_EARLY_BETA_OR_EARLIER@
++  value: true
+   mirror: once
+ 
+ # Use native D&D session type on Wayland instead of Gtk.

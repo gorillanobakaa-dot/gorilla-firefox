@@ -1,0 +1,10 @@
+--- a/browser/components/urlbar/UrlbarParentController.sys.mjs
++++ b/browser/components/urlbar/UrlbarParentController.sys.mjs
+@@ -8,7 +8,6 @@
+  * @import {BrowserSearchTelemetry} from "moz-src:///browser/components/search/BrowserSearchTelemetry.sys.mjs"
+  * @import {ProvidersManager} from "moz-src:///browser/components/urlbar/UrlbarProvidersManager.sys.mjs"
+  * @import {SearchEngine} from "moz-src:///toolkit/components/search/SearchEngine.sys.mjs"
+- * @import {SapLocation, SmartbarInput} from "moz-src:///browser/components/urlbar/content/SmartbarInput.mjs"
+  * @import {UrlbarView} from "chrome://browser/content/urlbar/UrlbarView.mjs"
+  * @import {WindowMode} from "moz-src:///browser/components/urlbar/content/UrlbarInput.mjs"
+  * @import {SearchEngineInfo} from "chrome://browser/content/urlbar/SearchEngineStore.mjs"

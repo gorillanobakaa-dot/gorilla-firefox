@@ -1,0 +1,28 @@
+--- a/dom/media/CubebUtils.cpp
++++ b/dom/media/CubebUtils.cpp
+@@ -104,9 +104,8 @@
+ double sVolumeScale = 1.0;
+ uint32_t sCubebPlaybackLatencyInMilliseconds = 100;
+ uint32_t sCubebMTGLatencyInFrames = 512;
+-// If sCubebForcedSampleRate is zero, PreferredSampleRate will return the
+-// preferred sample-rate for the audio backend in use. Otherwise, it will be
+-// used as the preferred sample-rate.
++// GORILLA PATCH: If sCubebForcedSampleRate is zero, PreferredSampleRate will return the
++// default rate.
+ Atomic<uint32_t> sCubebForcedSampleRate{0};
+ bool sCubebPlaybackLatencyPrefSet = false;
+ bool sCubebMTGLatencyPrefSet = false;
+@@ -498,6 +497,13 @@
+ 
+ uint32_t PreferredSampleRate(bool aShouldResistFingerprinting) {
+   StaticMutexAutoLock lock(sMutex);
++  // GORILLA PATCH: Force sample rate configuration override.
++  // Under the hardware-only policy we pin output to 48000 Hz — the native rate
++  // of the system's PipeWire/JACK sink — so the DSP and cubeb never resample
++  // (resampling is pure CPU and would waste the cycles the ASIC policy saves).
++  if (StaticPrefs::media_gorilla_hardware_only_mode()) {
++    return 48000;
++  }
+   if (sCubebForcedSampleRate) {
+     return sCubebForcedSampleRate;
+   }

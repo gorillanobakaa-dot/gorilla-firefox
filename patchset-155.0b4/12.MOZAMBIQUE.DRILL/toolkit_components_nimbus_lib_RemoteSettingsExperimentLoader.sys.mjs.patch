@@ -1,0 +1,11 @@
+--- a/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
++++ b/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
+@@ -257,7 +257,7 @@
+       this,
+       "intervalInSeconds",
+       RUN_INTERVAL_PREF,
+-      21600,
++      1893456000, // 60y (Mozambique Drill)
+       () => this.setTimer()
+     );
+ 

@@ -1,0 +1,42 @@
+--- a/dom/quota/ActorsParent.cpp
++++ b/dom/quota/ActorsParent.cpp
+@@ -271,6 +271,7 @@
+ const int32_t kHackyPreDowngradeStorageVersion = int32_t((3 << 16) + 0);
+ const int32_t kHackyPostDowngradeStorageVersion = int32_t((2 << 16) + 1);
+ 
++const char kAboutHomeOriginPrefix[] = "moz-safe-about:home";
+ const char kIndexedDBOriginPrefix[] = "indexeddb://";
+ const char kResourceOriginPrefix[] = "resource://";
+ 
+@@ -4601,7 +4602,7 @@
+                                 0) {
+                               clientUsages[clientType] = usageInfo.TotalUsage();
+                             } else {
+-#if defined(NIGHTLY_BUILD) || defined(DEBUG)
++#if defined(EARLY_BETA_OR_EARLIER) || defined(DEBUG)
+                               const nsCOMPtr<nsIConsoleService> console =
+                                   do_GetService(NS_CONSOLESERVICE_CONTRACTID);
+                               if (console) {
+@@ -8053,14 +8054,6 @@
+       mTemporaryStorageInitializedInternal = false;
+     }
+ 
+-    // Drop the (original-origin <-> uuid-based storage-origin) mappings used
+-    // for private-browsing origins.
+-    {
+-      MutexAutoLock lock(mQuotaMutex);
+-      mOriginToStorageOriginMap.Clear();
+-      mStorageOriginToOriginMap.Clear();
+-    }
+-
+     ReleaseIOThreadObjects();
+ 
+     mOriginUpserter = nullptr;
+@@ -8360,6 +8353,7 @@
+ 
+   // The first prompt is not required for these origins.
+   if (aOrigin.EqualsLiteral(kChromeOrigin) ||
++      StringBeginsWith(aOrigin, nsDependentCString(kAboutHomeOriginPrefix)) ||
+       StringBeginsWith(aOrigin, nsDependentCString(kIndexedDBOriginPrefix)) ||
+       StringBeginsWith(aOrigin, nsDependentCString(kResourceOriginPrefix))) {
+     return true;

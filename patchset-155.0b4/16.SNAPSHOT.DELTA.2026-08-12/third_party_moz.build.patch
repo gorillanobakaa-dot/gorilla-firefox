@@ -1,0 +1,12 @@
+--- a/third_party/moz.build
++++ b/third_party/moz.build
+@@ -124,8 +124,7 @@
+ with Files("zucchini/**"):
+     BUG_COMPONENT = ("Toolkit", "Application Update")
+ 
+-with Files("llama.cpp"):
+-    BUG_COMPONENT = ("Core", "Machine Learning: On Device")
++# GORILLA excised: llama.cpp (AI inference) removed
+ 
+ with Files("application-services/**"):
+     BUG_COMPONENT = ("Application Services", "General")

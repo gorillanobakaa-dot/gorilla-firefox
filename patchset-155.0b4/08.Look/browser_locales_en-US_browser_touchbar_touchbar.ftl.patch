@@ -1,0 +1,41 @@
+--- a/browser/locales/en-US/browser/touchbar/touchbar.ftl
++++ b/browser/locales/en-US/browser/touchbar/touchbar.ftl
+@@ -1,7 +1,6 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-
+ # Strings in this file are used to localize button titles displayed on the
+ # MacBook Touch Bar.
+ back = Back
+@@ -11,13 +10,13 @@
+ fullscreen = Fullscreen
+ touchbar-fullscreen-exit = Exit Fullscreen
+ find = Find
+-new-tab = New tab
+-add-bookmark = Add bookmark
++new-tab = New Gorilla tab
++add-bookmark = Add Gorilla bookmark
+ reader-view = Reader View
+ # Meant to match the string displayed in an empty URL bar.
+ open-location = Search or enter address
+ share = Share
+-close-window = Close Window
++close-window = Close Gorilla Window
+ open-sidebar = Sidebars
+ 
+ # This string describes shortcuts for search.
+@@ -27,10 +26,9 @@
+ search-search-in = Search in:
+ 
+ ## Various categories of shortcuts for search.
+-
+-search-bookmarks = Bookmarks
+-search-history = History
+-search-opentabs = Open Tabs
++search-bookmarks = Gorilla Bookmarks
++search-history = Gorilla History
++search-opentabs = Open Gorilla Tabs
+ search-tags = Tags
+ 
+ ##

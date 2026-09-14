@@ -1,0 +1,15 @@
+--- a/dom/webidl/moz.build
++++ b/dom/webidl/moz.build
+@@ -1148,11 +1148,7 @@
+     "XSLTProcessor.webidl",
+ ]
+ 
+-# Native llama.cpp for ml engine.
+-if CONFIG["MOZ_WIDGET_TOOLKIT"] != "android":
+-    WEBIDL_FILES += [
+-        "LlamaRunner.webidl",
+-    ]
++# GORILLA excised: LlamaRunner.webidl (ml engine removed).
+ 
+ if CONFIG["MOZ_WEBRTC"]:
+     WEBIDL_FILES += [

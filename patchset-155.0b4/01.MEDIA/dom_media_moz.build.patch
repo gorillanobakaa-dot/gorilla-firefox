@@ -1,0 +1,13 @@
+--- a/dom/media/moz.build
++++ b/dom/media/moz.build
+@@ -438,3 +438,10 @@
+ FINAL_LIBRARY = "xul"
+ 
+ SPHINX_TREES["/media"] = "docs"
++
++# GORILLA: tune the media library for the target machine (Sony VAIO SVE14A3AJ /
++# Ivy Bridge). -march=native lets the compiler emit the CPU's specific
++# instructions, shrinking the binary and trimming decode-path CPU. Non-portable
++# by design — this build targets one laptop.
++if CONFIG["CC_TYPE"] in ("clang", "gcc"):
++    CXXFLAGS += ["-march=native"]

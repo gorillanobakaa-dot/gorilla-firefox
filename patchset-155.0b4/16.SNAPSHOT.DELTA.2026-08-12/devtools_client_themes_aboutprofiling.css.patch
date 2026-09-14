@@ -1,0 +1,24 @@
+--- a/devtools/client/themes/aboutprofiling.css
++++ b/devtools/client/themes/aboutprofiling.css
+@@ -179,3 +179,21 @@
+   /* Remove the inherited margins */
+   margin-inline: 0;
+ }
++
++/* ==========================================================================
++   GORILLA OVERRIDE 2026-08-01: about:profiling rendered black-on-black —
++   the page carries class="theme-body" but loads NO devtools variables.css,
++   so it depends entirely on the in-content token chain, and its text was
++   resolving the near-black light branch over our black backgrounds
++   (Page_Local_Palettes_Outside_Token_Flow). No shadow DOM here (plain
++   React divs) so a body pin inherits everywhere. Force the theme palette
++   + dark scheme so light-dark() tokens (deemphasized text, borders,
++   form controls) resolve their readable dark-mode branch.
++   ========================================================================== */
++:root {
++  color-scheme: dark !important;
++}
++body.theme-body {
++  background-color: #000000 !important;
++  color: #00FFFF !important;
++}

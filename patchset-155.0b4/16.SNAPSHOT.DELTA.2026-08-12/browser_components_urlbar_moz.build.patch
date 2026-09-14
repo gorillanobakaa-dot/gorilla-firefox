@@ -1,0 +1,28 @@
+--- a/browser/components/urlbar/moz.build
++++ b/browser/components/urlbar/moz.build
+@@ -17,13 +17,11 @@
+     "MerinoClient.sys.mjs",
+     "QuickActionsLoaderDefault.sys.mjs",
+     "QuickSuggest.sys.mjs",
+-    "SmartbarMentionsPanelSearch.sys.mjs",
+     "UrlbarMuxerStandard.sys.mjs",
+     "UrlbarParentController.sys.mjs",
+     "UrlbarPrefs.sys.mjs",
+     "UrlbarProviderAboutPages.sys.mjs",
+     "UrlbarProviderActionsSearchMode.sys.mjs",
+-    "UrlbarProviderAiChat.sys.mjs",
+     "UrlbarProviderAliasEngines.sys.mjs",
+     "UrlbarProviderAutofill.sys.mjs",
+     "UrlbarProviderBookmarkKeywords.sys.mjs",
+@@ -70,11 +68,9 @@
+     "private/ImpressionCaps.sys.mjs",
+     "private/MarketSuggestions.sys.mjs",
+     "private/MDNSuggestions.sys.mjs",
+-    "private/MLSuggest.sys.mjs",
+     "private/RealtimeSuggestProvider.sys.mjs",
+     "private/SportsSuggestions.sys.mjs",
+     "private/SuggestBackendMerino.sys.mjs",
+-    "private/SuggestBackendMl.sys.mjs",
+     "private/SuggestBackendRust.sys.mjs",
+     "private/SuggestFeature.sys.mjs",
+     "private/WeatherSuggestions.sys.mjs",

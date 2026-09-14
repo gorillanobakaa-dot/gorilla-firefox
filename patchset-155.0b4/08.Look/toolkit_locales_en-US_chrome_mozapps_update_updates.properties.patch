@@ -1,0 +1,22 @@
+--- a/toolkit/locales/en-US/chrome/mozapps/update/updates.properties
++++ b/toolkit/locales/en-US/chrome/mozapps/update/updates.properties
+@@ -1,7 +1,6 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-
+ # LOCALIZATION NOTE: The 1st %S is brandShortName and 2nd %S is update version
+ # where update version from the update xml
+ # example: MyApplication 10.0.5
+@@ -21,9 +20,9 @@
+ patchApplyFailure=The Update could not be installed (patch apply failed)
+ elevationFailure=You don’t have the permissions necessary to install this update. Please contact your system administrator.
+ 
+-check_error-200=Update XML file malformed (200)
++check_error-200=Update XML Gorilla file malformed (200)
+ check_error-403=Access denied (403)
+-check_error-404=Update XML file not found (404)
++check_error-404=Update XML Gorilla file not found (404)
+ check_error-500=Internal server error (500)
+ check_error-2152398849=Failed (unknown reason)
+ check_error-2152398861=Connection refused

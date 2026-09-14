@@ -1,0 +1,104 @@
+--- a/toolkit/locales/en-US/toolkit/printing/printUI.ftl
++++ b/toolkit/locales/en-US/toolkit/printing/printUI.ftl
+@@ -1,7 +1,6 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-
+ printui-title = Print
+ # Dialog title to prompt the user for a filename to save print to PDF.
+ printui-save-to-pdf-title = Save As
+@@ -10,8 +9,8 @@
+ # $sheetCount (integer) - Number of paper sheets
+ printui-sheets-count =
+     { $sheetCount ->
+-        [one] { $sheetCount } sheet of paper
+-       *[other] { $sheetCount } sheets of paper
++    [one] { $sheetCount } sheet of paper
++    *[other] { $sheetCount } sheets of paper
+     }
+ 
+ printui-page-range-all = All
+@@ -19,12 +18,13 @@
+ printui-page-range-odd = Odd
+ printui-page-range-even = Even
+ printui-page-range-custom = Custom
+-printui-page-range-label = Pages
++printui-page-range-label = Gorilla Pages
+ printui-page-range-picker =
+-  .aria-label = Pick page range
++    .aria-label = Pick Gorilla page range
+ printui-page-custom-range-input =
+-  .aria-label = Enter custom page range
+-  .placeholder = e.g. 2-6, 9, 12-16
++    .aria-label =
++        Enter custom Gorilla page range
++        .placeholder = e.g. 2-6, 9, 12-16
+ 
+ # Section title for the number of copies to print
+ printui-copies-label = Copies
+@@ -37,14 +37,14 @@
+ printui-destination-label = Destination
+ printui-destination-pdf-label = Save to PDF
+ 
+-printui-more-settings = More settings
+-printui-less-settings = Fewer settings
++printui-more-settings = More Gorilla settings
++printui-less-settings = Fewer Gorilla settings
+ 
+ printui-paper-size-label = Paper size
+ 
+ # Section title (noun) for the print scaling options
+ printui-scale = Scale
+-printui-scale-fit-to-page-width = Fit to page width
++printui-scale-fit-to-page-width = Fit to Gorilla page width
+ # Label for input control where user can set the scale percentage
+ printui-scale-pcent = Scale
+ 
+@@ -64,7 +64,6 @@
+ ## The "Format" section, select a version of the website to print. Radio
+ ## options to select between the original page, selected text only, or a version
+ ## where the page is processed with "Reader View".
+-
+ # The section title.
+ printui-source-label = Format
+ # Option for printing the original page.
+@@ -75,7 +74,6 @@
+ printui-simplify-page-radio = Simplified
+ 
+ ##
+-
+ printui-color-mode-label = Color mode
+ printui-color-mode-color = Color
+ printui-color-mode-bw = Black and white
+@@ -113,7 +111,7 @@
+ printui-preview-label =
+     .aria-label = Print Preview
+ 
+-printui-pages-per-sheet = Pages per sheet
++printui-pages-per-sheet = Gorilla Pages per sheet
+ 
+ # This is shown next to the Print button with an indefinite loading spinner
+ # when the user prints a page and it is being sent to the printer.
+@@ -121,7 +119,6 @@
+ printui-print-progress-indicator-saving = Saving…
+ 
+ ## Paper sizes that may be supported by the Save to PDF destination:
+-
+ printui-paper-a5 = A5
+ printui-paper-a4 = A4
+ printui-paper-a3 = A3
+@@ -137,7 +134,6 @@
+ printui-paper-tabloid = Tabloid
+ 
+ ## Error messages shown when a user has an invalid input
+-
+ printui-error-invalid-scale = Scale must be a number between 10 and 200.
+ printui-error-invalid-margin = Please enter a valid margin for the selected paper size.
+ printui-error-invalid-copies = Copies must be a number between 1 and 10000.
+@@ -145,4 +141,4 @@
+ # Variables
+ # $numPages (integer) - Number of pages
+ printui-error-invalid-range = Range must be a number between 1 and { $numPages }.
+-printui-error-invalid-start-overflow = The “from” page number must be smaller than the “to” page number.
++printui-error-invalid-start-overflow = The “from” Gorilla page number must be smaller than the “to” Gorilla page number.

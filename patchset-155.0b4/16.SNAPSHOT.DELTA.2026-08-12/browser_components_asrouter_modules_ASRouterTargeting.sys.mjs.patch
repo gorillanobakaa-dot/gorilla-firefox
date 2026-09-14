@@ -1,0 +1,30 @@
+--- a/browser/components/asrouter/modules/ASRouterTargeting.sys.mjs
++++ b/browser/components/asrouter/modules/ASRouterTargeting.sys.mjs
+@@ -1709,19 +1709,6 @@
+   },
+ };
+ 
+-function addAIWindowTargeting(targeting) {
+-  if (!targeting || targeting === "true") {
+-    // Default behavior: Classic-only if no targeting is specified
+-    return `!isAIWindow`;
+-  }
+-
+-  if (/\bisAIWindow\b/.test(targeting)) {
+-    return targeting;
+-  }
+-
+-  return `((${targeting}) && !isAIWindow)`;
+-}
+-
+ /**
+  * Sentinel rejection thrown by per-property promises in
+  * `ASRouterTargeting.getEnvironmentSnapshot` when `quit-application`
+@@ -1923,7 +1910,6 @@
+     );
+ 
+     let { targeting } = message;
+-    targeting = addAIWindowTargeting(targeting);
+ 
+     let result;
+     try {

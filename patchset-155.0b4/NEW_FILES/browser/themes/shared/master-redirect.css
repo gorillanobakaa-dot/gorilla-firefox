@@ -1,0 +1,542 @@
+/* 🦍 GORILLA UNLEASHED - MASTER REDIRECTOR (ASIC-BOUND EDITION) */
+/* Zero-CPU Theme Architecture for Intel HD 4000 */
+
+:root {
+  --gorilla-master-icon: url("chrome://branding/content/about-logo.svg");
+}
+
+/* Override standard illustration classes and elements */
+.illustration, .info-icon, .error-icon, .panel-illustration, .category-icon, moz-promo img, #extensions-empty-illustration {
+  content: var(--gorilla-master-icon) !important;
+  background-image: var(--gorilla-master-icon) !important;
+  background-size: contain !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  -moz-context-properties: none !important;
+  filter: none !important;
+  image-rendering: crisp-edges !important;
+  -moz-image-region: auto !important;
+}
+
+/* ==========================================================================
+   GORILLA UNLEASHED: QUECTOSECOND ANIMATION ANNIHILATION
+   ========================================================================== */
+*, *::before, *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  transition-delay: 0s !important;
+  scroll-behavior: auto !important;
+}
+
+/* ==========================================================================
+   GORILLA UNLEASHED: COLOR-VALUE CONVERGENCE (PURE BLACK / CYAN)
+   ========================================================================== */
+:root, #main-window, #browser-window, window {
+    /* Base Blacks */
+    --lwt-accent-color: #000000 !important;
+    --lwt-frame: #000000 !important;
+    --tabpanel-background-color: #000000 !important;
+    --color-gray-05: #000000 !important;
+    --color-gray-10: #000000 !important;
+    --color-gray-20: #000000 !important;
+    --color-gray-30: #000000 !important;
+    --color-gray-40: #000000 !important;
+    --color-gray-50: #000000 !important;
+    --color-gray-60: #000000 !important;
+    --color-gray-70: #000000 !important;
+    --color-gray-80: #000000 !important;
+    --color-gray-90: #000000 !important;
+    --panel-background: #000000 !important;
+    --panel-background-color: #000000 !important;
+    --arrowpanel-background: #000000 !important;
+    --toolbar-bgcolor: #000000 !important;
+    --chrome-content-separator-color: #000000 !important;
+    --toolbar-field-background-color: #000000 !important;
+    --lwt-toolbar-field-background-color: #000000 !important;
+    --urlbar-box-bgcolor: #000000 !important;
+    --urlbar-box-background-color: #000000 !important;
+    --urlbar-background-background-color: #000000 !important;
+    --urlbar-background-background-color-focused: #000000 !important;
+    --urlbar-box-background-color-focus: #000000 !important;
+    --urlbar-box-background-color-hover: #000000 !important;
+    --urlbar-box-background-color-active: #000000 !important;
+    --input-bgcolor: #000000 !important;
+    --newtab-background-color: #000000 !important;
+    --newtab-background-color-secondary: #000000 !important;
+    
+    /* Text Visibility (Pure Cyan and Stark White) */
+    --lwt-tab-text: #FFFFFF !important;
+    --panel-text-color: #00FFFF !important;
+    --toolbar-field-color: #00FFFF !important;
+    --lwt-toolbar-field-color: #00FFFF !important;
+
+    /* GORILLA OVERRIDE 2026-07-31: FF154 renamed the toolbar/field tokens
+       (tokens-shared.css); the legacy names above no longer reach
+       browser-shared.css / urlbar-searchbar.css consumers. Without these the
+       toolbars + bookmarks bar render pale/transparent, the focused urlbar
+       flashes white (Field), and typed urlbar text is FieldText = black on
+       black. Override the NEW names too. */
+    --toolbar-background-color: #000000 !important;
+    --toolbar-text-color: #00FFFF !important;
+    --toolbar-color-scheme: dark !important;
+    --toolbar-field-background-color-focus: #000000 !important;
+    --toolbar-field-text-color: #00FFFF !important;
+    --toolbar-field-text-color-focus: #00FFFF !important;
+    --toolbox-background-color-inactive: #000000 !important;
+    --toolbox-text-color-inactive: #00FFFF !important;
+    --input-color: #00FFFF !important;
+    --newtab-text-primary-color: #00FFFF !important;
+
+    /* GORILLA OVERRIDE 2026-08-27: FF155 renamed the urlbar tokens AGAIN
+       (same class as the 2026-07-31 block above). 155's urlbar-searchbar.css
+       reads --urlbar-background-color / -focus and draws its edge from
+       --urlbar-input-container-border + --toolbar-field-border-color; the 154
+       names below no longer reach any consumer. Symptom when missing: the URL
+       bar does not render at all and the toolbars lose their edges.
+       Borders are set to the theme's cyan via OUTLINE-equivalent tokens where
+       upstream allows it; see the zero-reflow rule below (outline, not border). */
+    --urlbar-background-color: #000000 !important;
+    --urlbar-background-color-focus: #000000 !important;
+    --urlbar-background-border: 1px solid #00FFFF !important;
+    --urlbar-background-border-focused: 2px solid #00FFFF !important;
+    --urlbar-input-container-border: 1px solid #00FFFF !important;
+    --urlbar-background-outline-focused: 2px solid #00FFFF !important;
+    --toolbar-field-border-color: #00FFFF !important;
+    --toolbar-field-border-color-focus: #00FFFF !important;
+    --lwt-toolbar-field-highlight: #00FFFF !important;
+    --lwt-toolbar-field-highlight-text: #000000 !important;
+    --panel-border-color: #00FFFF !important;
+    --toolbox-background-color: #000000 !important;
+    --background-color-box: #000000 !important;
+    --button-background-color: #000000 !important;
+    --button-background-color-hover: #000000 !important;
+
+    /* Global Dark Mode Force */
+    color-scheme: dark !important;
+}
+
+/* ==========================================================================
+   GORILLA UNLEASHED: INTEL HD 4000 GPU OFFLOADING
+   Strictly banning CPU layout reflows. All interactions must use Opacity, Transform, or Outline.
+   ========================================================================== */
+
+/* Pre-promote interactive UI elements to the GPU Compositor Layer (DISABLED to prevent WRSceneBuilder thrashing) */
+/* .tabbrowser-tab, .toolbarbutton-1, .urlbar-input-box {
+    will-change: transform, opacity !important;
+} */
+
+/* --- ACTIVE TAB: PINK (#FFC0CB) / TEXT: BLACK (#000000) --- */
+.tabbrowser-tab[selected] .tab-background {
+    background-color: #FFC0CB !important;
+    border: none !important;       /* CPU safe: 0 reflows */
+    outline: none !important;
+    box-shadow: none !important;   /* Kill expensive GPU compositing */
+}
+.tabbrowser-tab[selected] .tab-label {
+    color: #000000 !important;
+    font-weight: normal !important;
+}
+.tabbrowser-tab[selected] .tab-close-button {
+    color: #000080 !important;     /* Navy blue from logs */
+    fill: #000080 !important;
+    font-weight: bold !important;
+}
+
+/* --- INACTIVE TAB: VISIBLE TEXT ON BLACK BACKGROUND --- */
+.tabbrowser-tab:not([selected]) .tab-label {
+    color: #00FFFF !important;
+}
+
+/* --- INACTIVE TAB HOVER: GPU ONLY --- */
+/* No borders, no padding changes. Just pure outline and GPU opacity */
+.tabbrowser-tab:not([selected]):hover .tab-background {
+    background-color: transparent !important;
+    outline: 1px solid #00FFFF !important; /* Pure Cyan outline, 0 CPU reflow */
+    outline-offset: -1px !important;
+    opacity: 0.8 !important;               /* Handled natively by HD4000 ROP */
+}
+
+/* --- URL BAR OVERRIDES --- */
+.urlbar-input::placeholder, .searchbar-textbox::placeholder {
+  opacity: 1 !important;           /* GPU alpha blend pierce */
+  color: #00FFFF !important;
+}
+
+#urlbar[focused="true"] > #urlbar-background {
+    outline: 2px solid #00FFFF !important; /* Pure Cyan focus ring */
+    outline-offset: -2px !important;
+    border: none !important;       /* Stop CPU from resizing the box */
+    box-shadow: none !important;   /* Stop heavy compositing */
+}
+
+/* --- MENUS AND DROPDOWNS --- */
+#categories > .category, #categories > radio, .menu-item, .toolbarbutton {
+    appearance: none !important;
+    -moz-default-appearance: none !important;
+    background-color: #000000 !important;
+    border: none !important;
+    outline: none !important;
+}
+
+/* Menu items hover: Native GPU outline instead of background swap */
+.menu-item:hover, .toolbarbutton:hover {
+    outline: 1px solid #00FFFF !important;
+    outline-offset: -1px !important;
+    background-color: #000000 !important; /* Keep background black to prevent repaint */
+}
+
+
+/* ==========================================================================
+   GORILLA UNLEASHED: EXPLICIT THROBBER & REPAINT KILL-SWITCH
+   ========================================================================== */
+.tab-throbber, .tab-loading-burst, .tab-icon-pending, .tab-icon-image, 
+progress, .progress-bar, #tabbrowser-tabpanels {
+  animation: none !important;
+  transition: none !important;
+  background-image: none !important;
+}
+
+/* Hard-kill the caret in pure CSS if possible (DISABLED: Restored typing cursor for usability) */
+/* * {
+  caret-color: transparent !important;
+} */
+
+/* ==========================================================================
+   GORILLA UNLEASHED: POPUP ARTIFACT OVERRIDES
+   Clamp runaway autocomplete login/favicon icons 
+   ========================================================================== */
+.ac-site-icon, 
+panel[type="autocomplete-richlistbox"] image, 
+panel[type="autocomplete-richlistbox"] img {
+  max-width: 16px !important;
+  max-height: 16px !important;
+  object-fit: contain !important;
+}
+
+autocomplete-row-item { --icon-width: 16px !important; --icon-height: 16px !important; }
+
+/* ==========================================================================
+   GORILLA UNLEASHED: WINDOW CONTROLS VISIBILITY (CSD BLACK-ON-BLACK FIX)
+   Titlebar buttons (close/min/max) are SVG icons that inherit from the
+   theme color. Force them cyan so they show against the black titlebar.
+   ========================================================================== */
+.titlebar-button > .toolbarbutton-icon {
+    color: #00FFFF !important;
+    fill: #00FFFF !important;
+    -moz-context-properties: fill, fill-opacity, stroke !important;
+}
+.titlebar-close:hover > .toolbarbutton-icon {
+    color: #FF3750 !important;
+    fill: #FF3750 !important;
+}
+
+/* ==========================================================================
+   GORILLA UNLEASHED: NEW TAB BUTTON VISIBILITY
+   The "+" new tab button is black-on-black when all colors are forced #000.
+   ========================================================================== */
+#tabs-newtab-button,
+#vertical-tabs-newtab-button,
+#TabsToolbar #new-tab-button {
+    color: #00FFFF !important;
+    fill: #00FFFF !important;
+}
+#tabs-newtab-button > .toolbarbutton-icon,
+#vertical-tabs-newtab-button > .toolbarbutton-icon,
+#new-tab-button > .toolbarbutton-icon {
+    color: #00FFFF !important;
+    fill: #00FFFF !important;
+    -moz-context-properties: fill, fill-opacity !important;
+}
+#tabs-newtab-button:hover,
+#vertical-tabs-newtab-button:hover,
+#new-tab-button:hover {
+    outline: 1px solid #00FFFF !important;
+    outline-offset: -1px !important;
+}
+
+/* Inactive tab close buttons also need visibility */
+.tabbrowser-tab:not([selected]) .tab-close-button {
+    color: #00FFFF !important;
+    fill: #00FFFF !important;
+}
+
+/* Find bar — styled directly in toolkit/themes/shared/findbar.css */
+
+/* ==========================================================================
+   GORILLA OVERRIDE 2026-07-31: popupnotification / arrow-panel BLACK-ON-BLACK
+   fix (open-defects item 1 — two screenshot sightings: "Set as default
+   browser" prompt and the webauthn security-key prompt).
+   ROOT CAUSE: toolkit popup.css re-declares --panel-text-color: MenuText ON
+   the panel ELEMENT (:is(menupopup, panel):where(:not([type="arrow"]))), and
+   an element-level normal declaration beats our INHERITED :root !important
+   value (same cascade mechanic as the urlbar token fix). On a light GTK
+   theme MenuText is near-black over our forced #000000 panel background.
+   FIX: hit the elements directly — element-level !important outranks the
+   variable indirection entirely. menupopup is deliberately NOT matched so
+   the native context-menu restoration below stays intact.
+   ========================================================================== */
+panel:not([type="arrow"]) {
+  --panel-text-color: #00FFFF !important;
+  --panel-background-color: #000000 !important;
+}
+panel[type="arrow"],
+panel[type="arrow"]::part(content),
+popupnotification,
+popupnotificationcontent,
+.popup-notification-body,
+.popup-notification-description,
+panel[type="arrow"] description,
+panel[type="arrow"] label,
+panel[type="arrow"] .checkbox-label {
+  color: #00FFFF !important;
+}
+panel[type="arrow"] {
+  color-scheme: dark !important;
+}
+
+/* ==========================================================================
+   GORILLA UNLEASHED: NATIVE CONTEXT MENU & POPUP RESTORATION
+   Right-click menus must retain native OS/GTK chrome.  Forcing
+   --panel-background to #000000 on :root bleeds into every menupopup,
+   rendering them as flat black boxes with no borders or shadows
+   (same class of bug as ERR-UI-004).  Fix: reset panel variables and
+   appearance on menupopup elements so the system theme renders them.
+   ========================================================================== */
+
+/* GORILLA OVERRIDE: restore system panel colours on all popup menus */
+menupopup {
+  --panel-background: Menu !important;
+  --panel-background-color: Menu !important;
+  --arrowpanel-background: Menu !important;
+  --panel-text-color: MenuText !important;
+  appearance: auto !important;
+  -moz-default-appearance: auto !important;
+  background-color: Menu !important;
+  color: MenuText !important;
+}
+
+/* GORILLA OVERRIDE: menu items inherit system colours, hover via GTK */
+menupopup menuitem,
+menupopup menu {
+  appearance: auto !important;
+  -moz-default-appearance: auto !important;
+  background-color: transparent !important;
+  color: inherit !important;
+}
+
+/* GORILLA OVERRIDE: separators need native rendering too */
+menupopup menuseparator {
+  appearance: auto !important;
+  -moz-default-appearance: auto !important;
+}
+
+/* GORILLA OVERRIDE: restore SVG icon fill inheritance for menu icons */
+menupopup .menu-iconic-icon,
+menupopup .menu-iconic-left {
+  -moz-context-properties: fill, fill-opacity, stroke !important;
+  fill: currentColor !important;
+}
+
+/* ==========================================================================
+   GORILLA 155 PORT 2026-08-27: CSS INTENT CONSOLIDATED FROM FOUR REJECTED
+   PATCHES (urlbar-searchbar, preferences, aboutPrivateBrowsing, and the
+   handoff tokens).
+
+   WHY HERE INSTEAD OF IN EACH FILE: those four patches carried, between them,
+   3 + 14 + 5 real Gorilla declarations wrapped in 1717 lines of removals that
+   were pure drift between upstream versions, not intent. Replaying the
+   removals would have deleted live 155 rules. Re-expressing the intent in the
+   one central override file is version-stable: the next upstream bump cannot
+   reject it, because it never matches upstream context.
+
+   master-redirect.css reaches content pages as well as chrome: it is imported
+   by toolkit/themes/shared/global-shared.css, so about:preferences and
+   about:privatebrowsing are in scope. Everything below is therefore SCOPED to
+   its own page, never left global.
+   ========================================================================== */
+
+/* --- urlbar / searchbar (chrome-only by selector) --- */
+:root {
+  --content-search-handoff-ui-fill: #00FFFF !important;
+  --content-search-handoff-ui-color: #00FFFF !important;
+}
+
+.searchbar-textbox::placeholder {
+  color: #00FFFF !important;
+}
+
+/* --- about:preferences (scoped to the preferences document) --- */
+body#preferences-body {
+  color: #00FFFF !important;
+  --text-color: #00FFFF;
+  background-color: #000000 !important;
+}
+
+body#preferences-body :is(label, description, .text-link, .help-button, h1, h2) {
+  color: #00FFFF !important;
+}
+
+/* Custom elements stop SELECTORS, not inherited values or custom properties.
+   Pin colour and tokens on each host element and the shadow inside follows. */
+body#preferences-body :is(
+  setting-group, setting-control, setting-pane, moz-fieldset, moz-checkbox,
+  moz-toggle, moz-radio-group, moz-radio, moz-select, moz-input-text,
+  moz-input-search, moz-box-item, moz-box-group, moz-box-link,
+  moz-message-bar, moz-promo, moz-support-link
+) {
+  color: #00FFFF;
+  --text-color: #00FFFF;
+}
+
+body#preferences-body moz-page-nav {
+  --page-nav-button-text-color: #00FFFF;
+  --page-nav-button-text-color-hover: #00FFFF;
+  --page-nav-button-text-color-active: #00FFFF;
+  --icon-color: #00FFFF;
+}
+
+/* --- about:privatebrowsing (scoped by html.private) --- */
+html.private {
+  --background-color-canvas: #000000;
+  background: #000000 !important;
+}
+
+html.private content-search-handoff-ui {
+  --content-search-handoff-ui-fill: #00FFFF !important;
+  --content-search-handoff-ui-color: #00FFFF !important;
+}
+
+html.private content-search-handoff-ui::part(placeholder) {
+  color: #00FFFF !important;
+}
+
+/* ==========================================================================
+   GORILLA 2026-08-27: THE MISSING HALF OF THE ONE-ICON TECHNIQUE.
+
+   The rule at the top of this file injects --gorilla-master-icon into
+   .illustration / .category-icon / moz-promo img / #extensions-empty-
+   illustration via `content:`. It never clamped SIZE. `content:` replacement
+   renders at the artwork's INTRINSIC size, so the layout of every one of
+   those pages silently depends on how many pixels the master happens to be.
+
+   Proved the hard way on 2026-08-27: about-logo.svg was regenerated from 800px
+   to 1200px to fix a blurry newtab logo, and about:addons immediately grew a
+   gorilla that ran off the right edge of the screen. The artwork change was
+   correct; the missing clamp was the defect, and it had been latent since the
+   rule was written.
+
+   RULE: one artwork, many sizes, and the SIZE IS DECLARED AT THE POINT OF USE.
+   Never let an asset's intrinsic dimensions reach layout.
+   ========================================================================== */
+
+/* Sizes are declared here ONCE, never scattered as magic numbers.
+   ERR-UI-004 (2026-07-10): "agents must NEVER hardcode absolute pixel sizes
+   into core components, they rely on CSS variables to maintain aspect ratio
+   and layout constraints." */
+:root {
+  --gorilla-hero-icon-max: 240px;
+}
+
+/* small inline icons: sidebar categories, info and error badges */
+.category-icon,
+.info-icon,
+.error-icon {
+  width: var(--icon-size-medium, 20px) !important;
+  height: var(--icon-size-medium, 20px) !important;
+  max-width: var(--icon-size-medium, 20px) !important;
+  max-height: var(--icon-size-medium, 20px) !important;
+  object-fit: contain !important;
+}
+
+/* hero illustrations: large, but bounded and centred so they always fit */
+.illustration,
+.panel-illustration,
+moz-promo img,
+#extensions-empty-illustration {
+  width: auto !important;
+  height: auto !important;
+  max-width: min(var(--gorilla-hero-icon-max), 30vw) !important;
+  max-height: min(var(--gorilla-hero-icon-max), 30vh) !important;
+  object-fit: contain !important;
+  margin-inline: auto !important;
+}
+
+/* ==========================================================================
+   GORILLA 2026-08-27: about:downloads was black on black.
+
+   Same cascade mechanic as the 2026-07-31 popupnotification fix documented
+   above: the page background is forced dark, while the row text keeps an
+   inherited light-theme colour. Filenames were invisible until a row was
+   selected, at which point the selection background revealed them.
+
+   Fix the ELEMENTS directly. An element-level !important outranks the
+   variable indirection, which is why setting a --token here would not work.
+   ========================================================================== */
+#downloadsListBox,
+#contentAreaDownloadsView {
+  background-color: #000000 !important;
+  color: #00FFFF !important;
+}
+
+#downloadsListBox > richlistitem .downloadTarget,
+#downloadsListBox > richlistitem .downloadDetails,
+#downloadsListBox > richlistitem .downloadDetailsNormal,
+#downloadsListBox > richlistitem .downloadDetailsHover,
+#downloadsListEmptyDescription {
+  color: #00FFFF !important;
+}
+
+#downloadsListBox > richlistitem .downloadDetails,
+#downloadsListBox > richlistitem .downloadDetailsNormal {
+  opacity: 1 !important;          /* upstream dims details to near-invisible on black */
+}
+
+#downloadsListBox > richlistitem[selected] .downloadTarget,
+#downloadsListBox > richlistitem[selected] .downloadDetails,
+#downloadsListBox > richlistitem[selected] .downloadDetailsNormal {
+  color: #000000 !important;      /* selection paints cyan; text must invert */
+}
+
+/* ==========================================================================
+   GORILLA 2026-08-27: THEME CONTENT RECLAIMED FROM THE GENERATED DIST FILES.
+
+   THEME_FIX_LOG section 37 (2026-08-03) settled this: the design-system dist
+   files (tokens-shared / tokens-brand / tokens-platform.css) must stay
+   BYTE-IDENTICAL TO VANILLA, and all theme content lives here instead.
+
+   The reason is not tidiness. A dist file that diverges is almost always an
+   OLDER token GENERATION, and an old generation silently drops tokens that
+   current widgets consume. Measured 2026-08-03: 78 tokens used by moz-button,
+   moz-input-common, moz-card and the sidebar were undefined, which is the
+   recurring "invisible widget" class that sections 30, 31 and 35 had each
+   point-fixed without finding the cause.
+
+   That decision did not survive the 154 -> 155 port. Found again today:
+     tokens-brand.css    carried @layer tokens-foundation-brand instead of
+                         @layer tokens-foundation - a CASCADE ORDER change -
+                         plus the cyan accent palette below.
+     tokens-platform.css had this session's own font-size edits written
+                         directly into it, repeating the mistake.
+   Both are restored to vanilla. Their content is here now, where a version
+   bump cannot silently revert it to an upstream generation.
+   ========================================================================== */
+:root {
+  /* accent palette: cyan, was living in tokens-brand.css */
+  --color-accent-attention: light-dark(#2ac3a2, #54ffbd) !important;
+  --color-accent-primary: light-dark(var(--color-blue-60), var(--color-cyan-30)) !important;
+  --color-accent-primary-hover: light-dark(var(--color-blue-70), var(--color-cyan-20)) !important;
+  --color-accent-primary-active: light-dark(var(--color-blue-80), var(--color-cyan-10)) !important;
+  --color-accent-primary-selected: light-dark(var(--color-blue-60), var(--color-cyan-30)) !important;
+
+  /* font ramp: unset so the bundled font metrics drive sizing.
+     Was living in tokens-platform.css. */
+  --font-size-xsmall: unset !important;
+  --font-size-large: unset !important;
+  --font-size-xlarge: unset !important;
+  --font-size-xxlarge: unset !important;
+  --font-size-xxxlarge: unset !important;
+
+  /* visited links render identically to unvisited */
+  --link-color-visited: var(--link-color) !important;
+}

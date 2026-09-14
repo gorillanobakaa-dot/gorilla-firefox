@@ -1,0 +1,48 @@
+--- a/toolkit/mozapps/extensions/internal/AddonRepository.sys.mjs
++++ b/toolkit/mozapps/extensions/internal/AddonRepository.sys.mjs
+@@ -818,41 +818,10 @@
+   },
+ 
+   async getAvailableLangpacks() {
+-    // This should be the API endpoint documented at:
+-    // http://addons-server.readthedocs.io/en/latest/topics/api/addons.html#language-tools
+-    let url = this._formatURLPref(PREF_GET_LANGPACKS);
+-
+-    let response = await fetch(url, { credentials: "omit" });
+-    if (!response.ok) {
+-      throw new Error("fetching available language packs failed");
+-    }
+-
+-    let data = await response.json();
+-
+-    let result = [];
+-    for (let entry of data.results) {
+-      if (
+-        !entry.current_compatible_version ||
+-        !entry.current_compatible_version.files
+-      ) {
+-        continue;
+-      }
+-
+-      for (let file of entry.current_compatible_version.files) {
+-        if (
+-          file.platform == "all" ||
+-          file.platform == Services.appinfo.OS.toLowerCase()
+-        ) {
+-          result.push({
+-            target_locale: entry.target_locale,
+-            url: file.url,
+-            hash: file.hash,
+-          });
+-        }
+-      }
+-    }
+-
+-    return result;
++    // 🦍 GORILLA UNLEASHED - PHYSICAL LOCK
++    // All language pack fetching is permanently disabled to ensure monolinguality.
++    // No network requests to AMO will be made.
++    return [];
+   },
+ };
+ 

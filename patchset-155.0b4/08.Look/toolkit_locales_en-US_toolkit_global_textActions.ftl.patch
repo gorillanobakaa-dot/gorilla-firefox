@@ -1,0 +1,143 @@
+--- a/toolkit/locales/en-US/toolkit/global/textActions.ftl
++++ b/toolkit/locales/en-US/toolkit/global/textActions.ftl
+@@ -1,35 +1,39 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-
+ profile-window-menu-edit =
+-    .label = Edit
+-    .accesskey = E
++    .label =
++        Edit
++        .accesskey = E
+ 
+ text-action-undo =
+-    .label = Undo
+-    .accesskey = U
++    .label =
++        Undo
++        .accesskey = U
+ 
+ text-action-undo-shortcut =
+     .key = Z
+ 
+ text-action-redo =
+-    .label = Redo
+-    .accesskey = R
++    .label =
++        Redo
++        .accesskey = R
+ 
+ text-action-redo-shortcut =
+     .key = Y
+ 
+ text-action-cut =
+-    .label = Cut
+-    .accesskey = t
++    .label =
++        Cut
++        .accesskey = t
+ 
+ text-action-cut-shortcut =
+     .key = X
+ 
+ text-action-copy =
+-    .label = Copy
+-    .accesskey = C
++    .label =
++        Copy
++        .accesskey = C
+ 
+ text-action-copy-shortcut =
+     .key = C
+@@ -38,31 +42,37 @@
+ # copied, like items that identify you for advertising purposes, and other items
+ # sites add into URLs to help them deliver a certain browsing experience.
+ text-action-copy-clean-link =
+-    .label = Copy Clean Link
+-    .accesskey = n
++    .label =
++        Copy Clean Link
++        .accesskey = n
+ 
+ text-action-paste =
+-    .label = Paste
+-    .accesskey = P
++    .label =
++        Paste
++        .accesskey = P
+ 
+ text-action-paste-no-formatting =
+-    .label = Paste Without Formatting
+-    .accesskey = m
++    .label =
++        Paste Without Formatting
++        .accesskey = m
+ 
+ text-action-paste-shortcut =
+     .key = V
+ 
+ text-action-delete =
+-    .label = Delete
+-    .accesskey = D
++    .label =
++        Delete
++        .accesskey = D
+ 
+ text-action-reveal-password =
+-    .label = Reveal Password
+-    .accesskey = v
++    .label =
++        Reveal Password
++        .accesskey = v
+ 
+ text-action-select-all =
+-    .label = Select All
+-    .accesskey = A
++    .label =
++        Select All
++        .accesskey = A
+ 
+ text-action-select-all-shortcut =
+     .key = A
+@@ -71,24 +81,29 @@
+     .label = No Spelling Suggestions
+ 
+ text-action-spell-add-to-dictionary =
+-    .label = Add to Dictionary
+-    .accesskey = o
++    .label =
++        Add to Dictionary
++        .accesskey = o
+ 
+ text-action-spell-undo-add-to-dictionary =
+-    .label = Undo Add To Dictionary
+-    .accesskey = n
++    .label =
++        Undo Add To Dictionary
++        .accesskey = n
+ 
+ text-action-spell-check-toggle =
+-    .label = Check Spelling
+-    .accesskey = g
++    .label =
++        Check Spelling
++        .accesskey = g
+ 
+ text-action-spell-add-dictionaries =
+-    .label = Add Dictionaries…
+-    .accesskey = A
++    .label =
++        Add Dictionaries…
++        .accesskey = A
+ 
+ text-action-spell-dictionaries =
+-    .label = Languages
+-    .accesskey = L
++    .label =
++        Languages
++        .accesskey = L
+ 
+ text-action-search-text-box-clear =
+     .title = Clear

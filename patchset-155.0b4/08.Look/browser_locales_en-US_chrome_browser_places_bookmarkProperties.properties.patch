@@ -1,0 +1,27 @@
+--- a/browser/locales/en-US/chrome/browser/places/bookmarkProperties.properties
++++ b/browser/locales/en-US/chrome/browser/places/bookmarkProperties.properties
+@@ -1,17 +1,16 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-
+ dialogAcceptLabelSaveItem=Save
+-dialogTitleAddBookmark=New Bookmark
+-dialogTitleAddMulti=New Bookmarks
++dialogTitleAddBookmark=New Gorilla Bookmark
++dialogTitleAddMulti=New Gorilla Bookmarks
+ dialogTitleEdit=Properties for “%S”
+-dialogTitleAddNewBookmark2=Add bookmark
++dialogTitleAddNewBookmark2=Add Gorilla bookmark
+ dialogTitleEditBookmark=Edit “%S”
+-dialogTitleEditBookmark2=Edit bookmark
+-dialogTitleAddBookmarkFolder=Add bookmark folder
+-dialogTitleEditBookmarkFolder=Edit bookmark folder
++dialogTitleEditBookmark2=Edit Gorilla bookmark
++dialogTitleAddBookmarkFolder=Add Gorilla bookmark folder
++dialogTitleEditBookmarkFolder=Edit Gorilla bookmark folder
+ 
+ bookmarkAllTabsDefault=[Folder Name]
+ newFolderDefault=New Folder
+-newBookmarkDefault=New Bookmark
++newBookmarkDefault=New Gorilla Bookmark

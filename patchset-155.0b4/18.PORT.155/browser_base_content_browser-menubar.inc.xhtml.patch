@@ -1,0 +1,47 @@
+--- a/browser/base/content/browser-menubar.inc.xhtml
++++ b/browser/base/content/browser-menubar.inc.xhtml
+@@ -16,12 +16,18 @@
+                 <menuitem id="menu_newNavigator"
+                           key="key_newNavigator"
+                           command="cmd_newNavigator" data-l10n-id="menu-file-new-window"/>
++      <!-- GORILLA excised 2026-08-27 (155): AI row. Its l10n strings were removed with the AI stack, so it rendered as a BLANK line.
++           File > New AI Window (VISIBLE blank row)
+                 <menuitem id="menu_newAIWindow"
+                           command="Tools:AIWindow"
+                           data-l10n-id="menu-file-new-ai-window"/>
++      -->
++      <!-- GORILLA excised 2026-08-27 (155): AI row. Its l10n strings were removed with the AI stack, so it rendered as a BLANK line.
++           File > New Classic Window (VISIBLE blank row)
+                 <menuitem id="menu_newClassicWindow"
+                           command="Tools:ClassicWindow"
+                           data-l10n-id="menu-file-new-classic-window"/>
++      -->
+                 <menuitem id="menu_newPrivateWindow"
+                           command="Tools:PrivateBrowsing"
+                           key="key_privatebrowsing" data-l10n-id="menu-file-new-private-window"/>
+@@ -217,9 +223,12 @@
+                           key="showAllHistoryKb"
+                           command="Browser:ShowAllHistory" data-l10n-id="menu-history-show-all-history"/>
+ 
++      <!-- GORILLA excised 2026-08-27 (155): AI row. Its l10n strings were removed with the AI stack, so it rendered as a BLANK line.
++           History > Chats
+                 <menuitem id="chatsHistoryMenu" class="chats-history-menuitem"
+                           data-l10n-id="menu-history-chats"
+                           disabled="true" hidden="true" command="Tools:ChatsHistory"/>
++      -->
+ 
+                 <menuitem id="sanitizeItem"
+                           key="key_sanitize"
+@@ -266,9 +275,12 @@
+                 </menu>
+ 
+                 <menuseparator id="startChatHistorySeparator" hidden="true"/>
++      <!-- GORILLA excised 2026-08-27 (155): AI row. Its l10n strings were removed with the AI stack, so it rendered as a BLANK line.
++           History > Recent chats header
+                 <menuitem id="recentChatsHeader" class="recent-chats-header"
+                           data-l10n-id="menu-history-chats-recent"
+                           disabled="true" hidden="true"/>
++      -->
+                 <!-- Chat history menu items -->
+ 
+                 <menuseparator id="startHistorySeparator"

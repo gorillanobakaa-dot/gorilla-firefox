@@ -1,0 +1,48 @@
+--- a/browser/locales/en-US/browser/preferences/colors.ftl
++++ b/browser/locales/en-US/browser/preferences/colors.ftl
+@@ -1,10 +1,10 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-
+ colors-dialog2 =
+-    .title = Colors
+-    .style = min-width: 41em;
++    .title =
++        Colors
++        .style = min-width: 41em;
+ 
+ colors-close-key =
+     .key = w
+@@ -12,19 +12,23 @@
+ colors-text-and-background = Text and Background
+ 
+ colors-text =
+-    .label = Text
+-    .accesskey = T
++    .label =
++        Text
++        .accesskey = T
+ 
+ colors-text-background =
+-    .label = Background
+-    .accesskey = B
++    .label =
++        Background
++        .accesskey = B
+ 
+ colors-links-header = Link Colors
+ 
+ colors-links-unvisited =
+-    .label = Unvisited Links
+-    .accesskey = L
++    .label =
++        Unvisited Links
++        .accesskey = L
+ 
+ colors-links-visited =
+-    .label = Visited Links
+-    .accesskey = V
++    .label =
++        Visited Links
++        .accesskey = V

@@ -1,0 +1,11 @@
+--- a/config/external/moz.build
++++ b/config/external/moz.build
+@@ -12,7 +12,7 @@
+ ]
+ 
+ if CONFIG["MOZ_WIDGET_TOOLKIT"] != "android":
+-    DIRS += ["mozinference"]
++    pass  # GORILLA excised: mozinference (llama.cpp/ggml AI inference lib)
+ 
+ if CONFIG["MOZ_USING_WASM_SANDBOXING"]:
+     DIRS += [

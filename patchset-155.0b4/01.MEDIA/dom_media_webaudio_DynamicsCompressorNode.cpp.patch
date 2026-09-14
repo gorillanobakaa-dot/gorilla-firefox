@@ -1,0 +1,15 @@
+--- a/dom/media/webaudio/DynamicsCompressorNode.cpp
++++ b/dom/media/webaudio/DynamicsCompressorNode.cpp
+@@ -78,6 +78,12 @@
+       return;
+     }
+ 
++    // GORILLA PATCH removed 2026-08-10: the hardware-only bypass that lived
++    // here rested on a false premise (WebAudio graphs never chain through the
++    // AudioStream DSP; the paths are parallel) and silenced any site relying
++    // on this node's automatic make-up gain. See
++    // patches/new.patches/15.AUDIO/2026-08-10_WHISPER_SAGA.md.
++
+     const uint32_t channelCount = aInput.ChannelCount();
+     if (mCompressor->numberOfChannels() != channelCount) {
+       // Create a new compressor object with a new channel count

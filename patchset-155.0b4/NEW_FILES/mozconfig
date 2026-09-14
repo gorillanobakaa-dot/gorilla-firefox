@@ -1,0 +1,104 @@
+# =============================================================================
+# gorilla-unleashed mozconfig v2.3 (Integrated/Optimized)
+# =============================================================================
+# Target  : Intel i7-3632QM (Ivy Bridge) | Intel HD Graphics 4000 | 16 GB RAM
+# OS      : Debian 13 (Trixie) — Wayland / GNOME 48
+# Browser : Firefox Nightly 153+
+# Kernel  : Linux 7.0.9-unleashed (custom — BBR + FQ-CoDel)
+# =============================================================================
+
+# SECTION 1 — TOOLCHAIN: LLVM/CLANG 21
+export CC="clang-21"
+export CXX="clang++-21"
+export AR="llvm-ar-21"
+export NM="llvm-nm-21"
+export RANLIB="llvm-ranlib-21"
+# export AS="llvm-as-21"
+export OBJCOPY="llvm-objcopy-21"
+export OBJDUMP="llvm-objdump-21"
+
+# SECTION 2 — RUST TOOLCHAIN
+export RUSTFLAGS="-C opt-level=3 -C target-cpu=native -C strip=symbols"
+
+
+# SECTION 3 — LINKER: LLD
+ac_add_options --enable-linker=lld-21
+
+# SECTION 4 — COMPILATION CACHE: SCCACHE
+ac_add_options --with-ccache=sccache
+
+# SECTION 5 — C/C++ OPTIMISATION FLAGS
+export CFLAGS="-O3 -march=native -mtune=native -pipe \
+               -fno-semantic-interposition -fno-plt \
+               -ffunction-sections -fdata-sections"
+export CXXFLAGS="$CFLAGS"
+ac_add_options --enable-optimize="-O3 -march=native -mtune=native"
+
+# SECTION 6 — LINK-TIME OPTIMISATION: ThinLTO
+ac_add_options --enable-lto=thin
+
+# SECTION 7 — PROFILE-GUIDED OPTIMISATION (PGO)
+# Full PGO pipeline: instrumented build → run sample workload → optimise.
+# The build system generates the profile automatically (two-stage build).
+# NOTE FOR REVIEW: PGO conventionally uses -O2 for the optimise phase, whereas
+# SECTION 5 forces --enable-optimize="-O3 -march=native". With PGO enabled the
+# profile-guided pass may override -O3. If profiling shows -O3 regressions,
+# switch SECTION 5 to -O2 (or drop -O3) and re-profile.
+
+# SECTION 8 — BUILD PARALLELISM
+mk_add_options MOZ_MAKE_FLAGS="-j6"
+mk_add_options AUTOCLOBBER=0
+
+# SECTION 9 — STRIP UNUSED BUILD COMPONENTS
+ac_add_options --disable-tests
+ac_add_options --disable-updater
+ac_add_options --disable-crashreporter
+ac_add_options --disable-accessibility
+ac_add_options --disable-parental-controls
+ac_add_options --disable-default-browser-agent
+ac_add_options --disable-webspeech        # removes speech-to-text/text-to-speech API
+ac_add_options --disable-necko-wifi       # removes wifi-scan geolocation helper
+
+# Explicitly kept:
+# --disable-eme        EXCLUDED — would break Netflix/Prime/Disney+/Spotify Web
+# --disable-webrtc     EXCLUDED — would break Meet/Discord/Telegram/WhatsApp calls
+# --disable-safe-browsing EXCLUDED — security feature, protects sensitive login pages
+# --disable-pocket     NOT A CONFIGURE FLAG in FF154 — use policies.json
+
+# SECTION 9b — TELEMETRY / REPORTING
+# MOZ_NORMANDY, MOZ_SERVICES_HEALTHREPORT, MOZ_DATA_REPORTING are defined via
+# project_flag() in toolkit/moz.configure with possible_origins=("implied",) only.
+# This means they CANNOT be set from mozconfig (ac_add_options) OR shell (export).
+# They are purely internal — controlled by implied logic within configure itself.
+# --disable-normandy and --disable-services-healthreport do NOT exist as options.
+# Telemetry removal is handled entirely by our compile-time and runtime patches:
+#   - #define GLEAN_DISABLED 1 injected in key C++ compilation units
+#   - RecipeRunner / RemoteSettingsExperimentLoader 60-year timer (Mozambique Drill)
+#   - policies.json in browser/app/distribution/ (runtime enforcement layer)
+# The build script (build_gorilla.sh) strips CLAUDECODE and any accidentally-set
+# MOZ_* vars from the environment before calling mach to prevent configure errors.
+
+# SECTION 10 — RUST SIMD EXTENSIONS
+ac_add_options --enable-rust-simd
+
+# SECTION 11 — MEMORY ALLOCATOR: JEMALLOC
+ac_add_options --enable-jemalloc
+
+# SECTION 12 — BINARY SIZE & DEBUG STRIP
+ac_add_options --disable-debug-symbols
+ac_add_options --disable-debug
+ac_add_options --enable-strip
+
+# SECTION 13 — WAYLAND-NATIVE TOOLKIT
+ac_add_options --enable-default-toolkit=cairo-gtk3-wayland
+
+# SECTION 14 — BRANDING
+ac_add_options --disable-official-branding
+ac_add_options --with-branding=browser/branding/gorilla
+
+# SECTION 15 — ADDITIONAL INTEGRATED TWEAKS
+ac_add_options --without-wasm-sandboxed-libraries
+
+# SECTION 16 — PERFORMANCE ENVIRONMENT VARIABLES
+export MALLOC_CONF="narenas:8,background_thread:true,dirty_decay_ms:5000,muzzy_decay_ms:0,tcache:true,tcache_max:65536,lg_tcache_max:16"
+export LDFLAGS="-Wl,-O2 -Wl,--as-needed -Wl,--gc-sections"

@@ -1,0 +1,241 @@
+--- a/toolkit/mozapps/extensions/AddonManager.sys.mjs
++++ b/toolkit/mozapps/extensions/AddonManager.sys.mjs
+@@ -2429,7 +2429,7 @@
+    * @param  aMimetype
+    *         The mimetype of the add-on being installed
+    * @param  aBrowser
+-   *         The browser element that started the install
++   *         The optional browser element that started the install
+    * @param  aInstallingPrincipal
+    *         The nsIPrincipal that initiated the install
+    * @param  aInstall
+@@ -2447,172 +2447,10 @@
+     aInstall,
+     aDetails
+   ) {
+-    if (!gStarted) {
+-      throw Components.Exception(
+-        "AddonManager is not initialized",
+-        Cr.NS_ERROR_NOT_INITIALIZED
+-      );
+-    }
+-
+-    if (!aMimetype || typeof aMimetype != "string") {
+-      throw Components.Exception(
+-        "aMimetype must be a non-empty string",
+-        Cr.NS_ERROR_INVALID_ARG
+-      );
+-    }
+-
+-    if (!Element.isInstance(aBrowser)) {
+-      throw Components.Exception(
+-        "aBrowser must be an Element",
+-        Cr.NS_ERROR_INVALID_ARG
+-      );
+-    }
+-
+-    if (
+-      !aInstallingPrincipal ||
+-      !(aInstallingPrincipal instanceof Ci.nsIPrincipal)
+-    ) {
+-      throw Components.Exception(
+-        "aInstallingPrincipal must be a nsIPrincipal",
+-        Cr.NS_ERROR_INVALID_ARG
+-      );
+-    }
+-
+-    // When a chrome in-content UI has loaded a <browser> inside to host a
+-    // website we want to do our security checks on the inner-browser but
+-    // notify front-end that install events came from the top browser (the
+-    // main tab's browser).
+-    let topBrowser = aBrowser.browsingContext.top.embedderElement;
+-    try {
+-      // Use fullscreenElement to check for DOM fullscreen, while still allowing
+-      // macOS fullscreen, which still has a browser chrome.
+-      if (topBrowser.ownerDocument.fullscreenElement) {
+-        // Addon installation and the resulting notifications should be
+-        // blocked in DOM fullscreen for security and usability reasons.
+-        // Installation prompts in fullscreen can trick the user into
+-        // installing unwanted addons.
+-        // In fullscreen the notification box does not have a clear
+-        // visual association with its parent anymore.
+-        aInstall.cancel();
+-
+-        this.installNotifyObservers(
+-          "addon-install-fullscreen-blocked",
+-          topBrowser,
+-          aInstallingPrincipal.URI,
+-          aInstall
+-        );
+-        return;
+-      } else if (!this.isInstallEnabled(aMimetype)) {
+-        aInstall.cancel();
+-
+-        this.installNotifyObservers(
+-          "addon-install-disabled",
+-          topBrowser,
+-          aInstallingPrincipal.URI,
+-          aInstall
+-        );
+-        return;
+-      } else if (
+-        !this.isInstallAllowedByPolicy(
+-          aInstallingPrincipal,
+-          aInstall,
+-          false /* explicit */
+-        )
+-      ) {
+-        aInstall.cancel();
+-
+-        this.installNotifyObservers(
+-          "addon-install-policy-blocked",
+-          topBrowser,
+-          aInstallingPrincipal.URI,
+-          aInstall
+-        );
+-        return;
+-      } else if (
+-        // Block the install request if the triggering frame does have any cross-origin
+-        // ancestor.
+-        aDetails?.hasCrossOriginAncestor ||
+-        // Block the install if triggered by a null principal.
+-        aInstallingPrincipal.isNullPrincipal ||
+-        !aBrowser.contentPrincipal ||
+-        !aInstallingPrincipal.subsumes(aBrowser.contentPrincipal)
+-      ) {
+-        aInstall.cancel();
+-
+-        this.installNotifyObservers(
+-          "addon-install-origin-blocked",
+-          topBrowser,
+-          aInstallingPrincipal.URI,
+-          aInstall
+-        );
+-        return;
+-      }
+-
+-      // The install may start now depending on the web install listener,
+-      // listen for the browser navigating to a new origin and cancel the
+-      // install in that case.
+-      new BrowserListener(aBrowser, aInstallingPrincipal, aInstall);
+-
+-      let startInstall = source => {
+-        AddonManagerInternal.setupPromptHandler(
+-          aBrowser,
+-          aInstallingPrincipal.URI,
+-          aInstall,
+-          true,
+-          source
+-        );
+-
+-        AddonManagerInternal.startInstall(
+-          aBrowser,
+-          aInstallingPrincipal.URI,
+-          aInstall
+-        );
+-      };
+-
+-      let installAllowed = this.isInstallAllowed(
+-        aMimetype,
+-        aInstallingPrincipal
+-      );
+-      let installPerm = Services.perms.testPermissionFromPrincipal(
+-        aInstallingPrincipal,
+-        "install"
+-      );
+-
+-      if (installAllowed) {
+-        startInstall("AMO");
+-      } else if (installPerm === Ci.nsIPermissionManager.DENY_ACTION) {
+-        // Block without prompt
+-        aInstall.cancel();
+-        this.installNotifyObservers(
+-          "addon-install-blocked-silent",
+-          topBrowser,
+-          aInstallingPrincipal.URI,
+-          aInstall
+-        );
+-      } else if (!lazy.WEBEXT_POSTDOWNLOAD_THIRD_PARTY) {
+-        // Block with prompt
+-        this.installNotifyObservers(
+-          "addon-install-blocked",
+-          topBrowser,
+-          aInstallingPrincipal.URI,
+-          aInstall,
+-          () => startInstall("other"),
+-          () => aInstall.cancel()
+-        );
+-      } else {
+-        // We download the addon and validate whether a 3rd party
+-        // install prompt should be shown using e.g. recommended
+-        // state and install_origins.
+-        logger.info(`Addon download before validation.`);
+-        startInstall("other");
+-      }
+-    } catch (e) {
+-      // In the event that the weblistener throws during instantiation or when
+-      // calling onWebInstallBlocked or onWebInstallRequested the
+-      // install should get cancelled.
+-      logger.warn("Failure calling web installer", e);
+-      aInstall.cancel();
+-    }
++    // 🛡️ API LOBOTOMY - GORILLA UNLEASHED
++    // Rationale: Block web-initiated add-on/theme installation flow.
++    logger.error(`[GORILLA] AddonManager: Web installation rejected.`);
++    aInstall.cancel();
+   },
+ 
+   /**
+@@ -2632,38 +2470,11 @@
+    *         when there is an existing add-on for the `install` object.
+    */
+   installAddonFromAOM(browser, uri, install, options = {}) {
+-    if (!this.isInstallAllowedByPolicy(null, install)) {
+-      install.cancel();
+-
+-      this.installNotifyObservers(
+-        "addon-install-policy-blocked",
+-        browser,
+-        install.sourceURI,
+-        install
+-      );
+-      return;
+-    }
+-    if (!gStarted) {
+-      throw Components.Exception(
+-        "AddonManager is not initialized",
+-        Cr.NS_ERROR_NOT_INITIALIZED
+-      );
+-    }
+-
+-    if (!!options.preferUpdateOverInstall && install.existingAddon) {
+-      install.promptHandler = (...args) =>
+-        AddonManagerInternal.updatePromptHandler(...args);
+-    } else {
+-      AddonManagerInternal.setupPromptHandler(
+-        browser,
+-        uri,
+-        install,
+-        true,
+-        "local"
+-      );
+-    }
+-
+-    AddonManagerInternal.startInstall(browser, uri, install);
++    // 🛡️ API LOBOTOMY - GORILLA UNLEASHED
++    // Rationale: Block AMO-based theme/extension installation flow.
++    // Technique: Hard-coded rejection in master dispatcher.
++    logger.error(`[GORILLA] AddonManager: Installation rejected (AMO Pathway).`);
++    install.cancel();
+   },
+ 
+   /**
+@@ -5871,8 +5682,6 @@
+         updated_from,
+         install_origins,
+         step: extraVars?.step,
+-        // will be undefined for non-site permission addons
+-        site_permission: install.newSitePerm,
+       })
+     );
+   },

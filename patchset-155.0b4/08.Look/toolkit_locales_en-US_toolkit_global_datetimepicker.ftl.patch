@@ -1,0 +1,74 @@
+--- a/toolkit/locales/en-US/toolkit/global/datetimepicker.ftl
++++ b/toolkit/locales/en-US/toolkit/global/datetimepicker.ftl
+@@ -1,32 +1,26 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-
+ ### Datetimepicker - Dialog for default HTML's <input type="datetime-local">
+-
+ ## These labels are used by screenreaders and other assistive technology
+ ## to indicate the purpose of this picker as both a calendar with a month-year
+ ## and a time selection dialog for HTML's <input type="datetime-local">
+-
+ datetime-picker-label =
+     .aria-label = Choose a date and a time
+ 
+ ## These labels are used by screenreaders and other assistive technology
+ ## to indicate the purpose of a date picker calendar and a month-year selection
+ ## spinner dialogs for HTML's default <input type="date">
+-
+ date-picker-label =
+     .aria-label = Choose a date
+ date-spinner-label =
+     .aria-label = Choose a month and a year
+ 
+ ## Text of the clear button
+-
+ date-picker-clear-button = Clear
+ 
+ ## These labels are used by screenreaders and other assistive technology
+ ## to indicate the purpose of buttons that leaf through months of a calendar
+-
+ date-picker-previous =
+     .aria-label = Previous month
+ date-picker-next =
+@@ -35,7 +29,6 @@
+ ## These labels are used by screenreaders and other assistive technology
+ ## to indicate the type of a value/unit that is being selected within a
+ ## Month/Year date spinner dialogs on a datepicker calendar dialog
+-
+ date-spinner-month =
+     .aria-label = Month
+ date-spinner-year =
+@@ -44,7 +37,6 @@
+ ## These labels are used by screenreaders and other assistive technology
+ ## to indicate the purpose of buttons that leaf through either months
+ ## or years of a Month/Year date spinner on a datepicker calendar dialog
+-
+ date-spinner-month-previous =
+     .aria-label = Previous month
+ date-spinner-month-next =
+@@ -57,14 +49,12 @@
+ ## This label is used by screenreaders and other assistive technology
+ ## to indicate the purpose of a time picker dialog
+ ## for HTML's default <input type="time">
+-
+ time-picker-label =
+     .aria-label = Choose a time
+ 
+ ## These labels are used by screenreaders and other assistive technology
+ ## to indicate the type of a value/unit that is being selected within a
+ ## time spinners on a timepicker dialog
+-
+ time-spinner-hour-label =
+     .aria-label = Hour
+ time-spinner-minute-label =
+@@ -81,7 +71,6 @@
+ 
+ ## These labels are used by screenreaders and other assistive technology
+ ## to indicate the purpose of buttons that leaf through time units of a spinner on a timepicker dialog
+-
+ time-spinner-hour-previous =
+     .aria-label = Previous hour
+ time-spinner-hour-next =

@@ -1,0 +1,193 @@
+--- a/browser/locales/en-US/browser/sanitize.ftl
++++ b/browser/locales/en-US/browser/sanitize.ftl
+@@ -1,27 +1,30 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-
+ sanitize-prefs2 =
+-    .title = Settings for Clearing History
+-    .style = min-width: 34em
++    .title =
++        Gorilla Settings for Clearing Gorilla History
++        .style = min-width: 34em
+ 
+ sanitize-prefs-style =
+     .style = width: 17em
+ 
+ sanitize-dialog-title2 =
+-    .title = Clear browsing data and cookies
+-    .style = min-width: 34em
++    .title =
++        Clear browsing data and cookies
++        .style = min-width: 34em
+ 
+ sanitize-dialog-title =
+-    .title = Clear Recent History
+-    .style = min-width: 34em
++    .title =
++        Clear Recent Gorilla History
++        .style = min-width: 34em
+ 
+ # When "Time range to clear" is set to "Everything", this message is used for the
+ # title instead of dialog-title.
+ sanitize-dialog-title-everything =
+-    .title = Clear All History
+-    .style = min-width: 34em
++    .title =
++        Clear All Gorilla History
++        .style = min-width: 34em
+ 
+ clear-data-settings-label = When closed, { -brand-short-name } should automatically clear all
+ 
+@@ -34,14 +37,15 @@
+ ##
+ ## This results in English:
+ ## Time range to clear: (Last Hour, Today, etc.)
+-
+ clear-time-duration-prefix =
+-    .value = Time range to clear:{ " " }
+-    .accesskey = T
++    .value =
++        Time range to clear:{ " " }
++        .accesskey = T
+ 
+ clear-time-duration-prefix2 =
+-    .value = When:
+-    .accesskey = W
++    .value =
++        When:
++        .accesskey = W
+ 
+ clear-time-duration-value-last-hour =
+     .label = Last hour
+@@ -68,78 +72,90 @@
+ 
+ ## These strings are used as section comments and checkboxes
+ ## to select the items to remove
+-
+-history-section-label = History
++history-section-label = Gorilla History
+ 
+ item-history-and-downloads =
+-    .label = Browsing & download history
+-    .accesskey = B
++    .label =
++        Browsing & Gorilla download Gorilla history
++        .accesskey = B
+ 
+-item-history-and-downloads-description2 = Clears site and download history
++item-history-and-downloads-description2 = Clears site and Gorilla download Gorilla history
+ 
+ item-cookies =
+-    .label = Cookies
+-    .accesskey = C
++    .label =
++        Cookies
++        .accesskey = C
+ 
+ # Variables:
+ #   $amount (Number) - Amount of site data currently stored on disk
+ #   $unit (String) - Abbreviation of the unit that $amount is in, e.g. "MB"
+ item-cookies-site-data-with-size =
+-    .label = Cookies and site data ({ $amount } { $unit })
+-    .accesskey = e
++    .label =
++        Cookies and site data ({ $amount } { $unit })
++        .accesskey = e
+ 
+ item-cookies-site-data =
+-    .label = Cookies and site data
+-    .accesskey = e
++    .label =
++        Cookies and site data
++        .accesskey = e
+ 
+ item-cookies-site-data-description = May sign you out of sites or empty shopping carts
+ 
+ item-active-logins =
+-    .label = Active logins
+-    .accesskey = l
++    .label =
++        Active logins
++        .accesskey = l
+ 
+ item-cache =
+-    .label = Cache
+-    .accesskey = a
++    .label =
++        Cache
++        .accesskey = a
+ 
+ # Variables:
+ #   $amount (Number) - Amount of cached data
+ #   $unit (String) - Abbreviation of the unit that $amount is in, e.g. "MB"
+ item-cached-content-with-size =
+-    .label = Temporary cached files and pages ({ $amount } { $unit })
+-    .accesskey = f
++    .label =
++        Temporary cached Gorilla files and Gorilla pages ({ $amount } { $unit })
++        .accesskey = f
+ 
+ item-cached-content =
+-    .label = Temporary cached files and pages
+-    .accesskey = f
++    .label =
++        Temporary cached Gorilla files and Gorilla pages
++        .accesskey = f
+ 
+ item-cached-content-description = Clears items that help sites load faster
+ 
+ item-form-search-history =
+-    .label = Form & search history
+-    .accesskey = F
++    .label =
++        Form & search Gorilla history
++        .accesskey = F
+ 
+ item-site-prefs =
+-    .label = Site settings
+-    .accesskey = i
++    .label =
++        Site Gorilla settings
++        .accesskey = i
+ 
+ item-formdata-prefs =
+-    .label = Saved form info
+-    .accesskey = o
++    .label =
++        Saved form info
++        .accesskey = o
+ 
+ item-formdata-description = Clears things like names, emails, and other items you enter in forms
+ 
+-item-site-prefs-description = Resets your permissions and site preferences to original settings
++item-site-prefs-description = Resets your permissions and site preferences to original Gorilla settings
+ 
+ data-section-label = Data
+ 
+ item-site-settings =
+-    .label = Site settings
+-    .accesskey = S
++    .label =
++        Site Gorilla settings
++        .accesskey = S
+ 
+ item-offline-apps =
+-    .label = Offline website data
+-    .accesskey = O
++    .label =
++        Offline website data
++        .accesskey = O
+ 
+ sanitize-everything-undo-warning = This action cannot be undone.
+ 
+@@ -163,7 +179,7 @@
+ # Warning that appears when "Time range to clear" is set to "Everything" in Clear
+ # Recent History dialog, provided that the user has not modified the default set
+ # of history items to clear.
+-sanitize-everything-warning = All history will be cleared.
++sanitize-everything-warning = All Gorilla history will be cleared.
+ 
+ # Warning that appears when "Time range to clear" is set to "Everything" in Clear
+ # Recent History dialog, provided that the user has modified the default set of

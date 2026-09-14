@@ -1,0 +1,320 @@
+--- a/dom/media/AudioStream.cpp
++++ b/dom/media/AudioStream.cpp
+@@ -146,6 +146,222 @@
+   double mBasePosition;
+ };
+ 
++// ============================================================================
++// GORILLA PATCH: AudioPsychoacousticEnhancer (new DSP class, tuned for your Sony laptop)
++// ============================================================================
++
++/**
++ * Psychoacoustic enhancer for Sony SVE14A3AJ laptop speakers on Linux.
++ *
++ * Problem: The hardware volume controller is non-functional under Linux/cubeb,
++ * creating an ~80% dead zone where audio is inaudible. PulseAudio volume
++ * (applied after this DSP stage) is the only working volume control, but
++ * it sees an unenhanced signal and requires over-amplification (+5 dB) to
++ * achieve acceptable loudness.
++ *
++ * Solution: Gains are FIXED and ALWAYS ACTIVE — they do not track mVolume,
++ * because mVolume reflects the YouTube/in-page slider (always ~1.0), not
++ * the PulseAudio slider the user actually controls. A fixed make-up gain
++ * (1.1x, ~+0.8 dB) stage before the limiter compensates for the physically
++ * weak speaker output, allowing normal PulseAudio levels (~70-100%) to sound
++ * as loud as the previous workaround of pushing PulseAudio to 124%.
++ *
++ * Pipeline:
++ *   [Software Volume Scale] → [3-band crossover] → [Fletcher-Munson EQ]
++ *   → [xLOUD harmonic bass synthesis] → [+0.8 dB make-up gain (1.1x)]
++ *   → [envelope loudness compressor: -20 dBFS / 4:1 / 3 ms / 150 ms / +12 dB]
++ *   → [Soft-knee limiter @ 0.9]
++ *
++ * Initialized in AudioStream::Init(), not in DataCallback, to avoid
++ * heap allocation on the real-time audio thread.
++ */
++class AudioPsychoacousticEnhancer {
++ public:
++  AudioPsychoacousticEnhancer();
++  ~AudioPsychoacousticEnhancer() = default;
++
++  void Init(uint32_t aSampleRate, uint32_t aChannels);
++  // aVolumePercent parameter retained for API compatibility but is unused.
++  // Gains are fixed — see class comment above for why.
++  void UpdateGains(float aVolumePercent);
++  void Process(AudioDataValue* aBuffer, uint32_t aFrames);
++
++ private:
++  struct FilterState {
++    float bassLp[2] = {0.0f};
++    float trebleHp[2] = {0.0f};
++    float compEnv[2] = {0.0f};
++  };
++
++  // Crossover frequencies tuned for SVE14A3AJ speaker response
++  static constexpr float kBassFreq   = 220.0f;
++  static constexpr float kTrebleFreq = 3500.0f;
++
++  // Make-up gain: 1.1x (~+0.8 dB). Keeps post-EQ signal below limiter knee
++  // on normal content. Limiter only engages on genuine transient peaks.
++  static constexpr float kMakeupGain = 1.1f;
++
++  // GORILLA PATCH 2026-08-10: envelope loudness compressor. Parameters are the
++  // SC4 settings mic-verified at +10.5 dB RMS on the SVE14A3AJ (see
++  // patches/new.patches/15.AUDIO/SYSTEM_FIX/VERIFICATION.md): threshold
++  // -20 dBFS, ratio 4:1, attack 3 ms, release 150 ms, makeup +12 dB. Streaming
++  // music is mastered at -14..-20 LUFS and weak laptop speakers cannot recover
++  // that with any linear gain; only envelope compression can. The gain rides
++  // the envelope (attack/release), never the waveform — the memoryless
++  // waveshaper mistakes of the FF153 era must not be reintroduced.
++  static constexpr float kCompThreshold = 0.10f;  // -20 dBFS
++  static constexpr float kCompSlope     = 0.75f;  // 1 - 1/ratio, ratio 4:1
++  static constexpr float kCompMakeup    = 4.0f;   // +12 dB
++  // GORILLA OVERRIDE 2026-08-11: 8 dB soft knee, matching the SC4 reference
++  // settings. Compression fades in from kCompKneeLo (-24 dBFS) instead of
++  // switching on abruptly at the threshold.
++  static constexpr float kCompKneeDb = 8.0f;
++  static constexpr float kCompKneeLo = 0.06309573f;  // -24 dBFS
++
++  uint32_t mSampleRate = 0;
++  uint32_t mChannels = 0;
++
++  float mAlphaB = 0.0f;
++  float mAlphaT = 0.0f;
++  float mCompAtk = 0.0f;
++  float mCompRel = 0.0f;
++
++  // Fixed gains — always active regardless of volume level.
++  // +5.1 dB bass (1.8x), +2.9 dB treble (1.4x),
++  // 0.4 drive for xLOUD (reduced from 0.9 — was causing speaker resonance)
++  float mBassBoostGain   = 1.8f;
++  float mTrebleBoostGain = 1.4f;
++  float mXLoudBoost      = 0.4f;
++
++  FilterState mState;
++};
++
++namespace {
++
++float ComputeAlpha(float aFreq, uint32_t aSampleRate) {
++  if (aSampleRate == 0) {
++    return 0.0f;
++  }
++  float fc = aFreq / static_cast<float>(aSampleRate);
++  return 1.0f - std::exp(-2.0f * static_cast<float>(M_PI) * fc);
++}
++
++float FastTanh(float w) {
++  if (w >= 3.0f) return 1.0f;
++  if (w <= -3.0f) return -1.0f;
++  float w2 = w * w;
++  return w * (27.0f + w2) / (27.0f + 9.0f * w2);
++}
++
++// SoftClip: smooth tanh-based saturation for xLOUD harmonic synthesis.
++// Pure tanh avoids the piecewise discontinuity that caused audible clicks.
++float SoftClip(float x, float drive) {
++  return FastTanh(x * drive);
++}
++
++} // anonymous namespace
++
++AudioPsychoacousticEnhancer::AudioPsychoacousticEnhancer() = default;
++
++void AudioPsychoacousticEnhancer::Init(uint32_t aSampleRate, uint32_t aChannels) {
++  mSampleRate = aSampleRate;
++  mChannels = aChannels;
++  mAlphaB = ComputeAlpha(kBassFreq, mSampleRate);
++  mAlphaT = ComputeAlpha(kTrebleFreq, mSampleRate);
++  if (mSampleRate > 0) {
++    mCompAtk = 1.0f - std::exp(-1.0f / (0.003f * mSampleRate));
++    mCompRel = 1.0f - std::exp(-1.0f / (0.150f * mSampleRate));
++  }
++  mState = FilterState{};
++}
++
++void AudioPsychoacousticEnhancer::UpdateGains(float /* aVolumePercent */) {
++  // Gains are fixed — aVolumePercent intentionally ignored.
++  // Previously tracking mVolume (YouTube slider, always ~1.0) meant the DSP
++  // was completely inert, requiring PulseAudio at 124% to be audible.
++  mBassBoostGain   = 1.8f;
++  mTrebleBoostGain = 1.4f;
++  mXLoudBoost      = 0.4f;
++}
++
++void AudioPsychoacousticEnhancer::Process(AudioDataValue* aBuffer, uint32_t aFrames) {
++  if (mSampleRate == 0 || mChannels == 0 || mChannels > 2) {
++    return;
++  }
++
++  // GORILLA OVERRIDE 2026-08-11: Stage 5b is pref-gated (default on). A
++  // machine with a system-wide compressor sink sets this false to avoid two
++  // 4:1 compressors in series (audible gain pumping). Read once per callback,
++  // not per sample.
++  const bool compressorEnabled =
++      StaticPrefs::media_gorilla_loudness_compressor_enabled();
++
++  for (uint32_t i = 0; i < aFrames; ++i) {
++    for (uint32_t c = 0; c < mChannels; ++c) {
++      uint32_t idx = i * mChannels + c;
++      float x = static_cast<float>(aBuffer[idx]);
++      uint32_t chIdx = c % 2;
++
++      // Stage 1: Crossover splitting
++      mState.bassLp[chIdx] = (1.0f - mAlphaB) * mState.bassLp[chIdx] + mAlphaB * x;
++      float bass = mState.bassLp[chIdx];
++      mState.trebleHp[chIdx] = (1.0f - mAlphaT) * mState.trebleHp[chIdx] + mAlphaT * x;
++      float treble = x - mState.trebleHp[chIdx];
++      float mid = x - bass - treble;
++
++      // Stage 2: Fletcher–Munson EQ
++      float enhancedBass = bass * mBassBoostGain;
++      float enhancedTreble = treble * mTrebleBoostGain;
++
++      // Stage 3: xLOUD bass harmonics — drive 0.4, blend 20%
++      // Reduced from 0.9/40% to eliminate speaker resonance on SVE14A3AJ.
++      {
++        float bassHarmonic = SoftClip(enhancedBass, mXLoudBoost);
++        enhancedBass += bassHarmonic * 0.2f;
++      }
++
++      // Stage 5: Multi-band recombination + make-up gain
++      float y = (enhancedBass + mid + enhancedTreble) * kMakeupGain;
++
++      // Stage 5b: Envelope loudness compressor (see class comment). The
++      // envelope, not the sample, drives the gain; attack/release keep the
++      // waveform shape intact. Soft knee: below kCompKneeLo the gain is pure
++      // makeup, inside the knee the ratio blends in quadratically (dB
++      // domain), above the knee the curve equals the previous hard-knee one.
++      if (compressorEnabled) {
++        float& env = mState.compEnv[chIdx];
++        const float mag = std::abs(y);
++        env += (mag > env ? mCompAtk : mCompRel) * (mag - env);
++        if (env < 1e-10f) {
++          env = 0.0f;  // flush denormals on old Intel cores
++        }
++        float gain = kCompMakeup;
++        if (env > kCompKneeLo) {
++          const float oDb = 8.6858896f * std::log(env / kCompThreshold);
++          const float half = 0.5f * kCompKneeDb;
++          const float grDb = oDb >= half
++                                 ? kCompSlope * oDb
++                                 : kCompSlope * (oDb + half) * (oDb + half) /
++                                       (2.0f * kCompKneeDb);
++          gain = kCompMakeup * std::exp(-0.11512925f * grDb);
++        }
++        y *= gain;
++      }
++
++      // Stage 6: Soft-knee limiter @ 0.9 (raised from 0.8 to reduce engagement
++      // on normal material at 1.1x makeup gain)
++      float out = y;
++      if (out > 0.9f) {
++        out = 0.9f + 0.1f * FastTanh((out - 0.9f) * 10.0f);
++      } else if (out < -0.9f) {
++        out = -0.9f + 0.1f * FastTanh((out + 0.9f) * 10.0f);
++      }
++
++      aBuffer[idx] = static_cast<AudioDataValue>(out);
++    }
++  }
++}
++
+ AudioStream::AudioStream(DataSource& aSource, uint32_t aInRate,
+                          uint32_t aOutputChannels,
+                          AudioConfig::ChannelLayout::ChannelMap aChannelMap)
+@@ -161,7 +377,10 @@
+       mPlaybackComplete(false),
+       mPlaybackRate(1.0f),
+       mPreservesPitch(true),
+-      mCallbacksStarted(false) {}
++      mCallbacksStarted(false),
++      mPsychoEnhancer(nullptr),
++      mVolume(1.0f),
++      mUseSoftwareVolume(true) {}
+ 
+ AudioStream::~AudioStream() {
+   LOG("deleted, state {}", static_cast<int>(mState.load()));
+@@ -287,8 +506,20 @@
+   }
+ 
+   mCubeb = handle;
+-  return OpenCubeb(handle->Context(), params, startTime,
+-                   CubebUtils::GetFirstStream());
++  nsresult rv = OpenCubeb(handle->Context(), params, startTime,
++                          CubebUtils::GetFirstStream());
++  if (NS_FAILED(rv)) {
++    return rv;
++  }
++
++  // Initialize the psychoacoustic enhancer on the non-RT init thread,
++  // not lazily in DataCallback where heap allocation is forbidden.
++  mPsychoEnhancer = MakeUnique<AudioPsychoacousticEnhancer>();
++  if (mPsychoEnhancer) {
++    mPsychoEnhancer->Init(mAudioClock.GetInputRate(), mOutChannels);
++  }
++
++  return NS_OK;
+ }
+ 
+ nsresult AudioStream::OpenCubeb(cubeb* aContext, cubeb_stream_params& aParams,
+@@ -332,11 +563,15 @@
+     return;
+   }
+ 
++  mVolume = static_cast<float>(aVolume);
++
+   MonitorAutoLock mon(mMonitor);
+-  if (InvokeCubeb(cubeb_stream_set_volume,
+-                  aVolume * CubebUtils::GetVolumeScale()) != CUBEB_OK) {
+-    LOGE("Could not change volume on cubeb stream.");
+-  }
++  // Force cubeb HW volume to 1.0 and always use software scaling.
++  // The SVE14A3AJ HW volume controller is non-functional under Linux/cubeb.
++  // Locking software volume on ensures the DSP enhancer sees correctly scaled
++  // amplitude instead of a full-scale signal with wrong perceived volume.
++  InvokeCubeb(cubeb_stream_set_volume, 1.0f);
++  mUseSoftwareVolume = true;
+ }
+ 
+ void AudioStream::SetStreamName(const nsAString& aStreamName) {
+@@ -483,6 +718,8 @@
+     mTimeStretcher = nullptr;
+   }
+ 
++  mPsychoEnhancer = nullptr;
++
+   mState = SHUTDOWN;
+   mEndedPromise.ResolveIfExists(true, __func__);
+ }
+@@ -769,6 +1006,30 @@
+   mDumpFile.Write(static_cast<const AudioDataValue*>(aBuffer),
+                   aFrames * mOutChannels);
+ 
++  // ==========================================================================
++  // Psychoacoustic DSP for Sony SVE14A3AJ — always active
++  // Initialized in Init(), not here. See AudioPsychoacousticEnhancer comment.
++  // ==========================================================================
++  {
++    AudioDataValue* buf = reinterpret_cast<AudioDataValue*>(aBuffer);
++    const uint32_t frames = static_cast<uint32_t>(aFrames);
++
++    // Step 1: Software volume scaling MUST run before the enhancer so it
++    // operates on the correctly scaled amplitude, not the raw 1.0 signal.
++    if (mUseSoftwareVolume) {
++      float volScale = mVolume.load() * CubebUtils::GetVolumeScale();
++      for (uint32_t i = 0; i < frames * mOutChannels; ++i) {
++        buf[i] = static_cast<AudioDataValue>(static_cast<float>(buf[i]) * volScale);
++      }
++    }
++
++    // Step 2: Apply psychoacoustic enhancement + make-up gain + limiting.
++    if (mPsychoEnhancer) {
++      mPsychoEnhancer->UpdateGains(0.0f);
++      mPsychoEnhancer->Process(buf, frames);
++    }
++  }
++
+   if (!mSandboxed && writer.Available() != 0) {
+     CallbackThreadRegistry::Get()->Unregister(mAudioThreadId);
+   }

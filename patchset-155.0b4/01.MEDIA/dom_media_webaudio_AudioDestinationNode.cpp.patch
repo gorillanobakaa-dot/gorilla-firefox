@@ -1,0 +1,36 @@
+--- a/dom/media/webaudio/AudioDestinationNode.cpp
++++ b/dom/media/webaudio/AudioDestinationNode.cpp
+@@ -212,6 +212,33 @@
+     *aOutput = aInput;
+     aOutput->mVolume *= mVolume;
+ 
++    // GORILLA TWEAK: Apply soft-limiting to prevent digital hard clipping
++    if (!aOutput->IsNull() && StaticPrefs::media_gorilla_hardware_only_mode()) {
++      uint32_t channelCount = aOutput->ChannelCount();
++      AutoTArray<const float*, 8> channels;
++      for (uint32_t c = 0; c < channelCount; ++c) {
++        channels.AppendElement(static_cast<const float*>(aOutput->mChannelData[c]));
++      }
++      float volume = aOutput->mVolume;
++      aOutput->AllocateChannels(channelCount);
++      for (uint32_t c = 0; c < channelCount; ++c) {
++        float* dest = aOutput->ChannelFloatsForWrite(c);
++        const float* src = channels[c];
++        for (uint32_t i = 0; i < WEBAUDIO_BLOCK_SIZE; ++i) {
++          float x = src[i] * volume;
++          // Fast-Tanh soft clipping approximation
++          if (x > 1.0f) {
++            dest[i] = 1.0f;
++          } else if (x < -1.0f) {
++            dest[i] = -1.0f;
++          } else {
++            dest[i] = x * (27.0f + x * x) / (27.0f + 9.0f * x * x);
++          }
++        }
++      }
++      aOutput->mVolume = 1.0f;
++    }
++
+     if (mSuspended) {
+       return;
+     }

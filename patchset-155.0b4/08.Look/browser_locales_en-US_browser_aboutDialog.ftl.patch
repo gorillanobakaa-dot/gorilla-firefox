@@ -1,0 +1,33 @@
+--- a/browser/locales/en-US/browser/aboutDialog.ftl
++++ b/browser/locales/en-US/browser/aboutDialog.ftl
+@@ -8,12 +8,14 @@
+ releaseNotes-link = What’s new
+ 
+ update-checkForUpdatesButton =
+-    .label = Check for updates
+-    .accesskey = C
++    .label =
++        Check for updates
++        .accesskey = C
+ 
+ update-updateButton =
+-    .label = Restart to update { -brand-shorter-name }
+-    .accesskey = R
++    .label =
++        Restart to Update { -brand-shorter-name }
++        .accesskey = R
+ 
+ update-checkingForUpdates = Checking for updates…
+ settings-update-checking-for-updates =
+@@ -32,9 +34,8 @@
+ settings-update-applying =
+     .label = Applying update…
+ 
+-update-failed = Update failed. <label data-l10n-name="failed-link">Download the latest version</label>
+-update-failed-main =
+-    Update failed. <a data-l10n-name="failed-link-main">Download the latest version</a>
++update-failed = Update failed. <label data-l10n-name="failed-link">Gorilla Download the latest version</label>
++update-failed-main = Update failed. <a data-l10n-name="failed-link-main">Gorilla Download the latest version</a>
+ 
+ update-policy-disabled = Updates disabled by your organization
+ settings-update-policy-disabled =

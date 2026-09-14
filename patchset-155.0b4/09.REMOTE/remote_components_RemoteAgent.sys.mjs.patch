@@ -1,0 +1,56 @@
+--- a/remote/components/RemoteAgent.sys.mjs
++++ b/remote/components/RemoteAgent.sys.mjs
+@@ -49,7 +49,10 @@
+   constructor() {
+     this.#allowHosts = null;
+     this.#allowOrigins = null;
+-    this.#allowSystemAccess = Services.env.get(ENV_ALLOW_SYSTEM_ACCESS) == "1";
++    // GORILLA UNLEASHED PHYSICAL LOCK: the Remote Agent / WebDriver BiDi
++    // system-access backdoor is lobotomized. Standard Firefox enables it via
++    // env var; in this build it is hard-coded FALSE and nothing can wake it.
++    this.#allowSystemAccess = false;
+ 
+     this.#browserStartupFinished = lazy.Deferred();
+     this.#enabled = false;
+@@ -105,15 +108,9 @@
+   }
+ 
+   set allowSystemAccess(value) {
+-    // Return early if system access is already marked being allowed.
+-    // There is also no possibility to disallow once it got allowed except
+-    // quitting Firefox and starting it again.
+-    if (this.#allowSystemAccess || !value) {
+-      return;
+-    }
+-
+-    this.#allowSystemAccess = true;
+-    Services.env.set(ENV_ALLOW_SYSTEM_ACCESS, "1");
++    // 🦍 GORILLA UNLEASHED - PHYSICAL LOCK
++    // This setter is now a dead end. Nothing can grant system access.
++    this.#allowSystemAccess = false;
+   }
+ 
+   /**
+@@ -458,11 +455,17 @@
+       case "command-line-startup":
+         Services.obs.removeObserver(this, topic);
+ 
+-        this.#allowHosts = this.#handleAllowHostsFlag(subject);
+-        this.#allowOrigins = this.#handleAllowOriginsFlag(subject);
+-        this.allowSystemAccess = this.#handleAllowSystemAccessFlag(subject);
+-
+-        this.#enabled = this.#handleRemoteDebuggingPortFlag(subject);
++        // 🦍 GORILLA UNLEASHED - PHYSICAL LOCK
++        // All remote-debugging and system access flags are now ignored.
++        this.#handleAllowHostsFlag(subject);
++        this.#handleAllowOriginsFlag(subject);
++        this.#handleAllowSystemAccessFlag(subject);
++        this.#handleRemoteDebuggingPortFlag(subject);
++
++        this.#allowHosts = null;
++        this.#allowOrigins = null;
++        this.allowSystemAccess = false;
++        this.#enabled = false;
+ 
+         if (this.#enabled) {
+           // Add annotation to crash report to indicate whether the

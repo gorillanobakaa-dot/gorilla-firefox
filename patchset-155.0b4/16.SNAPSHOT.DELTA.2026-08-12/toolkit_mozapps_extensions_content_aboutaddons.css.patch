@@ -1,0 +1,41 @@
+--- a/toolkit/mozapps/extensions/content/aboutaddons.css
++++ b/toolkit/mozapps/extensions/content/aboutaddons.css
+@@ -803,3 +803,38 @@
+     --addons-promo-text-padding-inline: 0;
+   }
+ }
++
++/* ============================================================
++ * GORILLA UNLEASHED — ABOUT:ADDONS LOBOTOMY
++ * Excise: saved/disabled themes, "Feeling creative?",
++ * "Find more themes" button, and all AMO recommendations.
++ * CSS-only, zero JS. Applied: 2026-05-29
++ * GORILLA 2026-08-27 (155 port): appended rather than replacing the
++ * upstream nova block, which 155 rewrote and extended. Appending keeps
++ * upstream behaviour and still wins the cascade via display:none !important.
++ * ============================================================ */
++
++/* 1. Hide saved (disabled) themes — Alpenglow, Light, Dark, etc. */
++.theme-disabled-section {
++  display: none !important;
++}
++
++/* 2. Kill the entire recommended-themes-footer:
++ *    Contains both "Feeling creative? Build your own theme with Firefox Color."
++ *    AND the "Find more themes" button */
++footer[is="recommended-themes-footer"],
++recommended-themes-footer {
++  display: none !important;
++}
++
++/* 3. Kill the recommended-themes-section (recommendations panel) */
++recommended-themes-section {
++  display: none !important;
++}
++
++/* 4. Belt-and-suspenders: hide .theme-recommendation paragraph
++ *    and .amo-link-container in case they render outside the footer */
++.theme-recommendation,
++.amo-link-container {
++  display: none !important;
++}

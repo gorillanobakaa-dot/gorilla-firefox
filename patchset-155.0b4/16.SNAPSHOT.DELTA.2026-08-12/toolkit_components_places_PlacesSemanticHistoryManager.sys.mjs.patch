@@ -1,0 +1,36 @@
+--- a/toolkit/components/places/PlacesSemanticHistoryManager.sys.mjs
++++ b/toolkit/components/places/PlacesSemanticHistoryManager.sys.mjs
+@@ -225,14 +225,25 @@
+       return;
+     }
+ 
+-    this.embedder = lazy.embeddingsGeneratorFactory.forPlaces();
+-    this.semanticDB = new lazy.PlacesSemanticHistoryDatabase({
+-      embeddingSize: this.embedder.embeddingSize,
+-      fileName: "places_semantic.sqlite",
+-    });
+-    this.qualifiedForSemanticSearch =
+-      this.embedder.isEnoughPhysicalMemoryAvailable() &&
+-      this.embedder.isEnoughCpuCoresAvailable();
++    // GORILLA OVERRIDE: ml stack excised - the embeddings generator no
++    // longer exists. Finalize immediately: every capability getter reports
++    // false and the urlbar semantic provider stays inactive (it used to
++    // throw on every keystroke).
++    //
++    // GORILLA 2026-08-27 (155 port): the original excision spliced these
++    // lines into the MIDDLE of the qualifiedForSemanticSearch assignment,
++    // leaving a dangling `&&` whose right-hand side became the next
++    // statement. That parses as `(a = b && this.#finalized) = true`, which
++    // is a SyntaxError: "invalid assignment left-hand side". The whole
++    // module therefore failed to load, and every consumer saw it as simply
++    // missing. Rewritten as a clean early return, and moved ABOVE the
++    // embeddingsGeneratorFactory call, which would itself throw now that
++    // the ml stack is gone.
++    this.#finalized = true;
++    this.qualifiedForSemanticSearch = false;
++    this.semanticDB = null;
++    this.embedder = null;
++    return;
+ 
+     lazy.AsyncShutdown.appShutdownConfirmed.addBlocker(
+       "SemanticManager: shutdown",

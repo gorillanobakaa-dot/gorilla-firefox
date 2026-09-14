@@ -1,0 +1,22 @@
+--- a/toolkit/components/normandy/content/about-studies/about-studies.css
++++ b/toolkit/components/normandy/content/about-studies/about-studies.css
+@@ -174,3 +174,19 @@
+ .opt-in-box.opt-in-error {
+   color: var(--text-color-error);
+ }
++
++/* GORILLA OVERRIDE 2026-07-31: page text rendered black-on-black under the
++   forced-black theme (user screenshot 21:19 — text only visible when
++   selected). This page's own rules sit outside the in-content token flow;
++   force readable colors directly. */
++body, .info-box-content, .study-description, .study-name, .study-status,
++.study-header, p, h1, h2, span, div {
++  color: #00FFFF !important;
++}
++a, .learn-more-link { color: #35b3ee !important; }
++
++/* GORILLA OVERRIDE 2026-07-31 (2nd pass): the crisp gorilla the author specified
++   for this page — same fixed-bottom mechanism as aboutTelemetry.css. */
++body {
++  background: #000000 url("chrome://branding/content/about-logo.svg") no-repeat fixed center bottom 10px / 450px !important;
++}

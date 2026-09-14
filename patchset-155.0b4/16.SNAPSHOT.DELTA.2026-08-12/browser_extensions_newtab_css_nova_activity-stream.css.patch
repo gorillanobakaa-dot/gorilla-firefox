@@ -1,0 +1,106 @@
+--- a/browser/extensions/newtab/css/nova/activity-stream.css
++++ b/browser/extensions/newtab/css/nova/activity-stream.css
+@@ -16659,3 +16659,103 @@
+ .nova-enabled .ds-card .img-wrapper {
+   color: var(--newtab-primary-action-background);
+ }
++
++
++/* ===== GORILLA-NEWTAB-THEME-BEGIN (rebased 2026-08-04, complete) =====
++ * Restores the full themed newtab variable set + giant crisp gorilla + cyan
++ * search pill, lost in the Aug-2 SCSS regeneration. Appended at EOF (wins by
++ * source order). THEME_FIX_LOG §20 + §37; lesson Crisp_Logo_Never_Upscale_Raster.
++ * NOTE: a future 'npm run bundle:css' recompiles from SCSS and drops this — re-run
++ * the newtab injection after any such bundle. ===== */
++:root {
++  color-scheme: dark;
++  --newtab-background-color: #000000;
++  --newtab-background-color-secondary: #121214;
++  --newtab-text-primary-color: #ffffff;
++  --newtab-background-card: rgba(28, 28, 30, 0.85);
++  --newtab-card-placeholder-background-color: color-mix(in srgb, currentColor 21%, transparent);
++  --newtab-text-topic-label-color: #a085ff;
++  --newtab-text-secondary-text: #b0b0b8;
++  --newtab-contextual-text-primary-color: #ffffff;
++  --newtab-primary-action-background: #0080ff;
++  --newtab-primary-action-background-pocket: #0080ff;
++  --newtab-text-secondary-color: rgba(255, 255, 255, 0.7);
++  --newtab-contextual-text-secondary-color: rgba(255, 255, 255, 0.7);
++  --newtab-weather-background-color: rgba(18, 18, 20, 0.85);
++  --newtab-element-hover-color: #1a1a1c;
++  --newtab-element-active-color: #2b2b2e;
++  --newtab-button-background: #1c1c1f;
++  --newtab-button-focus-background: var(--newtab-button-background);
++  --newtab-button-focus-border: #0080ff;
++  --newtab-button-hover-background: #2b2b2e;
++  --newtab-button-active-background: #3a3a3e;
++  --newtab-button-text: #ffffff;
++  --newtab-button-static-background: #1c1c1f;
++  --newtab-button-static-focus-background: var(--newtab-button-static-background);
++  --newtab-button-static-hover-background: #2b2b2e;
++  --newtab-button-static-active-background: #3a3a3e;
++  --newtab-element-secondary-color: rgba(255, 255, 255, 0.1);
++  --newtab-element-secondary-hover-color: rgba(255, 255, 255, 0.17);
++  --newtab-element-secondary-active-color: rgba(255, 255, 255, 0.3);
++  --newtab-primary-element-hover-color: #1a8cff;
++  --newtab-primary-element-hover-pocket-color: #1a8cff;
++  --newtab-primary-element-active-color: #0066cc;
++  --newtab-primary-element-text-color: #ffffff;
++  --newtab-primary-action-background-dimmed: rgba(0, 128, 255, 0.25);
++  --newtab-primary-action-background-pocket-dimmed: rgba(0, 128, 255, 0.25);
++  --newtab-wordmark-color: #ffffff;
++  --newtab-status-success: var(--color-green-30);
++  --newtab-status-error: var(--color-red-40);
++  --newtab-inner-box-shadow-color: rgba(0, 0, 0, 0.5);
++  --newtab-section-card-box-shadow-color: rgba(0, 0, 0, 0.8);
++  --newtab-overlay-color: rgba(0, 0, 0, 0.85);
++  --border-radius-large: 16px;
++  --newtab-button-secondary-color: inherit;
++}
++:root[lwt-newtab-brighttext] {
++  color-scheme: dark;
++  --newtab-background-color: #000000;
++  --newtab-background-color-secondary: #121214;
++  --newtab-text-primary-color: #ffffff;
++  --newtab-background-card: rgba(28, 28, 30, 0.85);
++  --newtab-text-topic-label-color: #a085ff;
++  --newtab-text-secondary-text: #b0b0b8;
++  --newtab-contextual-text-primary-color: #ffffff;
++  --newtab-primary-action-background-pocket: #0080ff;
++  --newtab-primary-action-background-pocket-dimmed: rgba(0, 128, 255, 0.25);
++  --newtab-primary-element-hover-color: #1a8cff;
++  --newtab-primary-element-hover-pocket-color: #1a8cff;
++  --newtab-element-hover-color: #1a1a1c;
++  --newtab-element-active-color: #2b2b2e;
++  --newtab-section-card-box-shadow-color: rgba(0, 0, 0, 0.8);
++  --newtab-element-secondary-color: rgba(255, 255, 255, 0.1);
++  --newtab-element-secondary-hover-color: rgba(255, 255, 255, 0.17);
++  --newtab-element-secondary-active-color: rgba(255, 255, 255, 0.3);
++  --newtab-primary-element-text-color: #ffffff;
++  --newtab-status-success: var(--color-green-30);
++}
++:root[lwt-newtab-brighttext] {
++  -moz-osx-font-smoothing: grayscale;
++}
++/* giant crisp gorilla (about-logo.svg wraps a 1200px raster → 600px box downsamples) */
++.logo-and-wordmark .logo,
++.nova-enabled .logo-and-wordmark .logo,
++.classic-enabled .logo-and-wordmark .logo {
++  display: inline-block !important;
++  height: 600px !important; width: 600px !important;
++  max-width: 95vw !important; max-height: 70vh !important;
++  background: url("chrome://branding/content/about-logo.svg") no-repeat center !important;
++  background-size: contain !important;
++}
++.logo-and-wordmark .wordmark,
++.nova-enabled .logo-and-wordmark .wordmark { display: none !important; }
++.logo-and-wordmark, .search-wrapper .logo-and-wordmark {
++  margin-top: -120px !important; margin-block-end: 16px !important;
++}
++/* CYAN search pill — always-on, matches the top address-bar border (#00FFFF) */
++.search-wrapper content-search-handoff-ui {
++  --content-search-handoff-ui-border-width: 1px !important;
++  --content-search-handoff-ui-unfocused-border-color: #00FFFF !important;
++  --content-search-handoff-ui-fakefocus-border-color: #00FFFF !important;
++}
++/* ===== GORILLA-NEWTAB-THEME-END ===== */

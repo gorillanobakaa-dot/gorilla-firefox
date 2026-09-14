@@ -1,0 +1,11 @@
+--- a/browser/base/content/sanitize_v2.xhtml
++++ b/browser/base/content/sanitize_v2.xhtml
+@@ -34,7 +34,7 @@
+ 
+       <html:link rel="localization" href="branding/brand.ftl" />
+       <html:link rel="localization" href="browser/sanitize.ftl" />
+-      <html:link rel="localization" href="browser/aiWindow.ftl" />
++      <!-- GORILLA excised 2026-08-27 (155): <html:link rel="localization" href="browser/aiWindow.ftl" /> -->
+     </linkset>
+ 
+     <script src="chrome://global/content/preferencesBindings.js" />

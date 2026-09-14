@@ -1,0 +1,108 @@
+--- a/toolkit/themes/shared/findbar.css
++++ b/toolkit/themes/shared/findbar.css
+@@ -23,13 +23,16 @@
+   transition-duration: 150ms, 0s;
+   transition-timing-function: ease-in-out, linear;
+   padding-block: var(--findbar-padding-block);
+-  border-top: var(--findbar-border-top-width) solid var(--chrome-content-separator-color);
+-  background-color: var(--toolbar-background-color);
+-  color: -moz-dialogtext;
++  /* GORILLA 2026-08-27 (155 port): cyan-on-black find bar. Ported by hand from
++     the 154 patch; upstream 155 restructured this rule so the patch would not apply. */
++  border-top: var(--findbar-border-top-width) solid #00FFFF !important;
++  background-color: #000000 !important;
++  color: #00FFFF !important;
++  color-scheme: dark !important;
+ 
+   @media not -moz-pref("browser.nova.enabled") {
+-    border-top-color: ThreeDShadow;
+-    background-color: -moz-dialog;
++    border-top-color: #00FFFF !important;
++    background-color: #000000 !important;
+     --findbar-container-height: 28px;
+   }
+ 
+@@ -81,16 +84,17 @@
+ 
+ .findbar-textbox {
+   appearance: none;
+-  background-color: var(--background-color-box);
+-  color: var(--input-text-color);
++  background-color: #000000 !important;
++  color: #00FFFF !important;
++  caret-color: #00FFFF !important;
+   min-height: 28px;
+ 
+   :root[lwtheme] &:not([status="notfound"], [flash="true"]) {
+-    background-color: var(--toolbar-field-background-color);
+-    color: var(--toolbar-field-text-color);
++    background-color: #000000 !important;
++    color: #00FFFF !important;
+   }
+ 
+-  border: var(--border-width) solid var(--border-color-interactive);
++  border: 1px solid #00FFFF !important;
+   border-radius: var(--border-radius-xlarge);
+   outline: none;
+   margin: 0;
+@@ -102,42 +106,47 @@
+   /* stylelint-disable-next-line media-query-no-invalid */
+   @media not -moz-pref("browser.nova.enabled") {
+     border-radius: var(--border-radius-small);
+-    border: 1px solid var(--input-border-color);
+-    background-color: var(--input-text-background-color);
++    border: 1px solid #00FFFF !important;
++    background-color: #000000 !important;
+     min-height: auto;
+     padding: 2px 5px;
+ 
+     &:focus {
+-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.23);
+-      outline-color: var(--toolbar-field-border-color-focus);
++      box-shadow: 0 1px 3px rgba(0, 255, 255, 0.23);
++      outline-color: #00FFFF;
+     }
+   }
+ 
+   &:focus {
+-    background-color: var(--toolbar-field-background-color-focus);
+-    color: var(--toolbar-field-text-color-focus);
+-    border-color: transparent;
++    background-color: #000000 !important;
++    color: #00FFFF !important;
++    border-color: #00FFFF !important;
+     outline: var(--focus-outline);
+     outline-offset: var(--focus-outline-inset);
+   }
+ 
+   :root[lwtheme] &::selection {
+-    background-color: var(--lwt-toolbar-field-highlight, Highlight);
+-    color: var(--lwt-toolbar-field-highlight-text, HighlightText);
++    background-color: #00FFFF !important;
++    color: #000000 !important;
+   }
+ 
+   :root[lwtheme] &:not(:focus)::selection {
+-    background-color: var(--lwt-toolbar-field-highlight, text-select-background-disabled);
++    background-color: #006666 !important;
++  }
++
++  &::placeholder {
++    opacity: 0.69;
++    color: #008B8B !important;
+   }
+ 
+   &[status="notfound"] {
+-    background-color: rgba(226, 40, 80, 0.3);
+-    color: inherit;
++    background-color: #1A0000 !important;
++    color: #FF6B6B !important;
+   }
+ 
+   &[flash="true"] {
+     background-color: rgba(255, 233, 0, 0.3);
+-    color: inherit;
++    color: #00FFFF !important;
+   }
+ }
+ 

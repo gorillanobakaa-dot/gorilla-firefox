@@ -1,0 +1,141 @@
+--- a/toolkit/themes/shared/in-content/common-shared.css
++++ b/toolkit/themes/shared/in-content/common-shared.css
+@@ -666,8 +666,8 @@
+ }
+ 
+ .category-icon {
+-  width: var(--icon-size-large);
+-  height: var(--icon-size-large);
++  width: 200px;
++  height: 200px;
+   margin-inline: auto;
+   -moz-context-properties: fill, fill-opacity;
+   fill: currentColor;
+@@ -936,8 +936,8 @@
+ 
+ .message-bar-icon {
+   content: url("chrome://global/skin/icons/info.svg");
+-  width: var(--icon-size-large);
+-  height: var(--icon-size-large);
++  width: 200px;
++  height: 200px;
+   padding: var(--space-xsmall);
+   margin-inline-end: var(--space-xsmall);
+   -moz-context-properties: fill;
+@@ -1114,3 +1114,116 @@
+ .back-button:dir(rtl) {
+   transform: scaleX(-1);
+ }
++
++/* ═══════════════════════════════════════════════════════════════════════════════
++ * 🦍 GORILLA UNLEASHED — ABOUT:ADDONS BRANDING OVERRIDE
++ * File: toolkit/themes/shared/in-content/common-shared.css (Line ~1108)
++ * Target page: about:addons (Extensions Manager)
++ *
++ * WHAT THIS DOES (Layman):
++ *   The about:addons page is Firefox's built-in Extensions Manager. By default,
++ *   it has a small Firefox logo in the left sidebar. We hide that logo and
++ *   replace it with a massive 800px Gorilla Unleashed watermark that sits
++ *   on the right-hand side of the page, behind the content. Think of it like
++ *   a branded wallpaper — the Gorilla is always watching over your extensions.
++ *
++ * WHAT THIS DOES (Developer):
++ *   1. `.page-nav-heading-wrapper > .logo` — Hides the default sidebar logo
++ *      element using `display: none !important`. This is a direct child
++ *      selector targeting the <img class="logo"> inside the navigation
++ *      heading wrapper in about:addons.
++ *
++ *   2. `#content` — Injects a CSS background-image on the `#content` div,
++ *      which is the main content area of all in-content pages (about:addons,
++ *      about:preferences, about:certificate, etc.). The image is loaded from
++ *      `chrome://branding/content/about-logo.png`, which maps to our custom
++ *      1024px Gorilla asset that was placed during the branding pipeline.
++ *
++ * POSITIONING VALUES (Final — Approved by Commander 2026-05-27):
++ *   - `right calc(10% - 39px)` — Horizontal position.
++ *       * `right 10%` was the original anchor: 10% inward from the right edge.
++ *       * The `- 39px` offset pushes the image further to the RIGHT (away from
++ *         the left-hand sidebar menus). This was fine-tuned iteratively:
++ *         0px → 3px → 7px → 11px → 19px → 29px → 39px (approved).
++ *       * WHY: The left sidebar (Extensions/Themes/Plugins menu) visually
++ *         overlapped the Gorilla's left edge. Each nudge moved it rightward
++ *         until it cleared the menus completely.
++ *
++ *   - `top 80px` — Vertical position.
++ *       * `top 0px` was the first attempt but it anchored flush to the ceiling,
++ *         cutting off the top of the Gorilla's hat.
++ *       * `80px` provides enough breathing room for the hat to be fully visible.
++ *
++ *   - `800px` — Background size (width).
++ *       * Started at 500px (original Mozilla default), then 1024px (too big,
++ *         dominated the page), then settled on 800px as the sweet spot.
++ *       * The height scales proportionally via `auto` (shorthand implicit).
++ *
++ *   - `no-repeat` — Prevents tiling.
++ *   - `!important` — Overrides any competing rules from Mozilla's default
++ *     theme system or dark mode token calculations.
++ *
++ * TECHNIQUE USED:
++ *   "Live CSS Injection" — The source file was edited, then the identical
++ *   change was applied to the live installation at:
++ *     /usr/lib/gorilla-unleashed/chrome/toolkit/skin/classic/global/in-content/common-shared.css
++ *   using `sudo sed -i`, followed by purging the startupCache at:
++ *     ~/.cache/mozilla/firefox/*.gorilla-unleashed/startupCache/
++ *   This avoids a multi-hour `./mach build` for pure CSS tweaks.
++ *
++ * LIVE PATCH COMMAND (for future agents):
++ *   sudo sed -i 's/OLD_VALUE/NEW_VALUE/g' \
++ *     /usr/lib/gorilla-unleashed/chrome/toolkit/skin/classic/global/in-content/common-shared.css
++ *   rm -rf ~/.cache/mozilla/firefox/*.gorilla-unleashed/startupCache/
++ *
++ * DO NOT CHANGE THESE VALUES without Commander approval.
++ * ═══════════════════════════════════════════════════════════════════════════════ */
++
++/* 🦍 Hide the default Firefox/Nightly sidebar logo in about:addons */
++.page-nav-heading-wrapper > .logo {
++  display: none !important;
++}
++
++/* 🦍 Gorilla Unleashed watermark — right-aligned, viewport-pinned.
++ * SIZE HISTORY (never delete a value, record the next one beside it):
++ *   800px  2026-07-31 §28    author: "way too big"        -> rejected
++ *   650px  2026-07-31 §28a   author: "CONFIRMED right"    -> correct for 154
++ *   450px  2026-08-27        155 narrowed the #content column, so the same
++ *                            650px ate more of the page. Author chose 450px,
++ *                            which also matches about:telemetry and
++ *                            about:studies, making all three consistent.
++ * POSITION is unchanged and must stay: bottom-anchored AND background-
++ * attachment:fixed. A growing `top` offset holds for exactly one window
++ * height; a plain `bottom Npx` sinks below the fold on long add-on lists.
++ * Both were tried and rejected on 2026-07-31. */
++#content {
++  background: url("chrome://branding/content/about-logo.svg") no-repeat fixed right calc(10% - 39px) bottom 50px / 450px !important; /* 650px author-recalled; bottom-anchored + viewport-fixed 2026-07-31 (beats growing top offsets: holds on any window height, stays visible on long lists) */ /* GORILLA 2026-07-31: svg (1200px raster) — the 500px png at 800px was UPSCALED = blurry (Crisp_Logo rule) */
++}
++
++/* ==========================================================================
++   GORILLA OVERRIDE 2026-07-31: in-content pages resolve the LIGHT color
++   scheme on a light GTK system theme (common-shared :root has
++   color-scheme: light dark), so light-dark() text tokens pick their
++   near-black branch over our forced-black page backgrounds -> invisible
++   body text and invisible unselected sidebar category labels in
++   about:preferences (user screenshots 18:56). Force the dark branch for
++   ALL in-content pages; tokens then resolve --text-color to its light
++   (readable) dark-mode value. Rebased onto FF154 vanilla the same day —
++   the old-base copy was missing :where([hidden]){display:none !important},
++   which let [hidden] page elements (hero images, promo art) paint.
++   ========================================================================== */
++:root {
++  color-scheme: dark !important;
++}
++
++/* ==========================================================================
++   GORILLA OVERRIDE 2026-08-01: about:preferences UNSELECTED sidebar category
++   labels STILL black-on-black even after the color-scheme:dark fix above --
++   .category uses color:inherit (line ~576) and the inherited chain resolves
++   near-black on this page. Author-directed fix: force cyan on unselected
++   categories (icons follow via fill:currentColor). Selected category keeps
++   --color-accent-primary so the active pane stays visually distinct.
++   ========================================================================== */
++#categories > .category:not([selected]):not(.selected) {
++  color: #00FFFF !important;
++}

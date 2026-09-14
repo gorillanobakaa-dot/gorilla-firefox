@@ -1,0 +1,36 @@
+--- a/widget/GfxInfoBase.cpp
++++ b/widget/GfxInfoBase.cpp
+@@ -1,4 +1,15 @@
+ /*
++ * @gorilla-unleashed-154 ─ MODIFIED
++ * ────────────────────────────────────────────────────────────
++ * Timestamp : 2026-07-05
++ * Change    : Intel/AMD/NVIDIA blocklist short-circuit re-applied onto
++ *             mozilla-central tip (previous copy was from a stale revision
++ *             and no longer compiled against the 154.0a1 tree).
++ * Notes     : Force-enables hardware acceleration for Intel Ivy Bridge
++ *             (HD 4000). See 02.GPU/00_GPU_HISTORY_AND_ROADMAP.md.
++ * ────────────────────────────────────────────────────────────
++ */
++/*
+  * This Source Code Form is subject to the terms of the Mozilla Public
+  * License, v. 2.0. If a copy of the MPL was not distributed with this
+  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+@@ -1107,6 +1118,17 @@
+     return NS_OK;
+   }
+ 
++  // GORILLA OVERRIDE: Short-circuit blocklist for Intel/AMD/NVIDIA
++  // This universally force-enables hardware acceleration (WebRender/VA-API)
++  // for all GPU vendors present in this system (Intel HD 4000, AMD, NVIDIA).
++  // Case-insensitive: Linux probes report vendor IDs in lowercase hex.
++  if (adapterVendorID.LowerCaseEqualsLiteral("0x8086") ||
++      adapterVendorID.LowerCaseEqualsLiteral("0x1002") ||
++      adapterVendorID.LowerCaseEqualsLiteral("0x10de")) {
++    *aStatus = nsIGfxInfo::FEATURE_STATUS_OK;
++    return NS_OK;
++  }
++
+   // We only check either the given blocklist, or the static list, as given.
+   int32_t status;
+   if (aDriverInfo.Length()) {

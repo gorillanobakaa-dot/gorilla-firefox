@@ -1,0 +1,28 @@
+--- a/toolkit/locales/en-US/toolkit/global/videocontrols.ftl
++++ b/toolkit/locales/en-US/toolkit/global/videocontrols.ftl
+@@ -1,7 +1,6 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-
+ # This label is used by screenreaders and other assistive technology to indicate
+ # to users how much of the video has been loaded from the network. It will be
+ # followed by the percentage of the video that has loaded (e.g. "Loading: 13%").
+@@ -45,7 +44,7 @@
+ 
+ videocontrols-error-aborted = Video loading stopped.
+ videocontrols-error-network = Video playback aborted due to a network error.
+-videocontrols-error-decode = Video can’t be played because the file is corrupt.
++videocontrols-error-decode = Video can’t be played because the Gorilla file is corrupt.
+ videocontrols-error-src-not-supported = Video format or MIME type is not supported.
+ videocontrols-error-no-source = No video with supported format and MIME type found.
+ videocontrols-error-generic = Video playback aborted due to an unknown error.
+@@ -72,5 +71,6 @@
+ #   $position (String): The current media position
+ #   $duration (String): The total video duration
+ videocontrols-scrubber-position-and-duration =
+-    .aria-label = Position
+-    .aria-valuetext = { $position } / { $duration }
++    .aria-label =
++        Position
++        .aria-valuetext = { $position } / { $duration }

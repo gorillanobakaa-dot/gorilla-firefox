@@ -1,0 +1,37 @@
+--- a/third_party/rust/glean-core/src/metrics/memory_distribution.rs
++++ b/third_party/rust/glean-core/src/metrics/memory_distribution.rs
+@@ -99,6 +99,10 @@
+     /// Values bigger than 1 Terabyte (2<sup>40</sup> bytes) are truncated
+     /// and an [`ErrorType::InvalidValue`] error is recorded.
+     pub fn accumulate(&self, sample: i64) {
++        // Gorilla: telemetry disabled — skip clone + dispatch (see GORILLA_TELEMETRY_OFF).
++        if crate::GORILLA_TELEMETRY_OFF {
++            return;
++        }
+         let metric = self.clone();
+         crate::launch_with_glean(move |glean| metric.accumulate_sync(glean, sample))
+     }
+@@ -181,6 +185,10 @@
+     /// Values bigger than 1 Terabyte (2<sup>40</sup> bytes) are truncated
+     /// and an [`ErrorType::InvalidValue`] error is recorded.
+     pub fn accumulate_samples(&self, samples: Vec<i64>) {
++        // Gorilla: telemetry disabled — skip clone + dispatch (see GORILLA_TELEMETRY_OFF).
++        if crate::GORILLA_TELEMETRY_OFF {
++            return;
++        }
+         let metric = self.clone();
+         crate::launch_with_glean(move |glean| metric.accumulate_samples_sync(glean, samples))
+     }
+@@ -377,6 +385,12 @@
+     ///
+     /// Accumulation happens in-memory only.
+     pub fn accumulate(&mut self, sample: u64) {
++        // Gorilla: telemetry disabled — skip the inline histogram accumulate.
++        // Leaving the histogram empty makes Drop::drop return early (is_empty),
++        // so no commit_histogram/dispatch happens either.
++        if crate::GORILLA_TELEMETRY_OFF {
++            return;
++        }
+         let mut sample = self.metric.memory_unit.as_bytes(sample);
+         if sample > MAX_BYTES {
+             self.errors += 1;

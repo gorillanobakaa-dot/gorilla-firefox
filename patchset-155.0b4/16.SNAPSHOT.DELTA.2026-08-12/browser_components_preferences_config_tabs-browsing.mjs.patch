@@ -1,0 +1,35 @@
+--- a/browser/components/preferences/config/tabs-browsing.mjs
++++ b/browser/components/preferences/config/tabs-browsing.mjs
+@@ -13,7 +13,6 @@
+   AppConstants: "resource://gre/modules/AppConstants.sys.mjs",
+   ContextualIdentityService:
+     "moz-src:///toolkit/components/contextualidentity/ContextualIdentityService.sys.mjs",
+-  LinkPreview: "moz-src:///browser/components/genai/LinkPreview.sys.mjs",
+   ShortcutUtils: "resource://gre/modules/ShortcutUtils.sys.mjs",
+   TransientPrefs: "resource:///modules/TransientPrefs.sys.mjs",
+ });
+@@ -441,20 +440,14 @@
+   id: "linkPreviewEnabled",
+   pref: "browser.ml.linkPreview.enabled",
+   deps: ["aiControlDefault", "aiControlLinkPreviews"],
+-  visible: ({ aiControlDefault, aiControlLinkPreviews }) => {
+-    return (
+-      window.canShowAiFeature(aiControlLinkPreviews, aiControlDefault) &&
+-      // @ts-ignore bug 1996860
+-      lazy.LinkPreview.canShowPreferences
+-    );
+-  },
++  // GORILLA OVERRIDE: genai excised — link-preview settings never show.
++  visible: () => false,
+ });
+ Preferences.addSetting({
+   id: "linkPreviewKeyPoints",
+   pref: "browser.ml.linkPreview.optin",
+-  // LinkPreview.canShowKeyPoints depends on the global genai pref.
+-  // @ts-ignore bug 1996860
+-  visible: () => lazy.LinkPreview.canShowKeyPoints,
++  // GORILLA OVERRIDE: genai excised — key-points setting never shows.
++  visible: () => false,
+ });
+ Preferences.addSetting({
+   id: "linkPreviewLongPress",

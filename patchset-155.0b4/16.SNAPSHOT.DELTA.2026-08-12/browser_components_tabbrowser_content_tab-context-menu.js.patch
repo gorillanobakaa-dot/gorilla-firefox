@@ -1,0 +1,45 @@
+--- a/browser/components/tabbrowser/content/tab-context-menu.js
++++ b/browser/components/tabbrowser/content/tab-context-menu.js
+@@ -840,26 +840,15 @@
+     contextUnpinSelectedTabs.hidden =
+       !this.contextTab.pinned || !this.multiselected;
+ 
+-    // Build Ask Chat items. The classic layout shows the full ask-chat submenu
+-    // (#context_askChat); the alt layout shows only a flat "Summarize Page" item
+-    // (#context_askChatSummarize). Hide whichever one this layout doesn't use so
+-    // a pref toggle reverses cleanly.
+-    if (!this._altTabContextMenu) {
+-      document.getElementById("context_askChatSummarize").hidden = true;
+-      TabContextMenu.GenAI.buildTabMenu(
+-        document.getElementById("context_askChat"),
+-        this
+-      );
+-    } else {
+-      document.getElementById("context_askChat").hidden = true;
+-      // In the alt layout #context_aiSeparator is reused as the divider after
+-      // the open-and-organize group, so keep it shown (the classic ask-chat
+-      // path would otherwise hide it together with #context_askChat).
++    // GORILLA OVERRIDE: genai excised — no ask-chat items in either layout.
++    // (Was a live crash: GenAI.sys.mjs is unpackaged, and buildTabMenu ran on
++    // every tab right-click.)
++    document.getElementById("context_askChatSummarize").hidden = true;
++    document.getElementById("context_askChat").hidden = true;
++    if (this._altTabContextMenu) {
++      // #context_aiSeparator doubles as the divider after the open-and-organize
++      // group in the alt layout, so keep it shown there.
+       document.getElementById("context_aiSeparator").hidden = false;
+-      TabContextMenu.GenAI.buildTabSummarizeItem(
+-        document.getElementById("context_askChatSummarize"),
+-        this
+-      );
+     }
+ 
+     // Move Tab items
+@@ -1445,7 +1434,6 @@
+ };
+ 
+ ChromeUtils.defineESModuleGetters(TabContextMenu, {
+-  GenAI: "resource:///modules/GenAI.sys.mjs",
+   MenuSectionLayout: "resource:///modules/MenuSectionLayout.sys.mjs",
+   TabNotes: "moz-src:///browser/components/tabnotes/TabNotes.sys.mjs",
+ });

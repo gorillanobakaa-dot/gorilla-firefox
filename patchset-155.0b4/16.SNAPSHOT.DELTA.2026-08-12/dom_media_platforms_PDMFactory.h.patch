@@ -1,0 +1,36 @@
+--- a/dom/media/platforms/PDMFactory.h
++++ b/dom/media/platforms/PDMFactory.h
+@@ -33,7 +33,12 @@
+  public:
+   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(PDMFactory)
+ 
+-  PDMFactory();
++  // GORILLA OVERRIDE 2026-08-11: WebCodecs (DecoderAgent) builds its own
++  // private factory; Purpose::WebCodecs lets that one opt into software VP8
++  // under media.gorilla.webcodecs_software_vp8 without touching the media
++  // pipeline factories.
++  enum class Purpose { Default, WebCodecs };
++  explicit PDMFactory(Purpose aPurpose = Purpose::Default);
+ 
+   // Factory method that creates the appropriate PlatformDecoderModule for
+   // the platform we're running on.
+@@ -74,6 +79,10 @@
+  private:
+   ~PDMFactory();
+ 
++  // Per-instance view of the hardware-only video codec block; a WebCodecs
++  // factory admits software VP8 when the opt-in pref is set.
++  bool IsBlockedVideoCodec(const nsACString& aMimeType) const;
++
+   void CreatePDMs();
+   void CreateNullPDM();
+   void CreateGpuPDMs();
+@@ -100,6 +109,8 @@
+   RefPtr<PlatformDecoderModule> mEMEPDM;
+   RefPtr<PlatformDecoderModule> mNullPDM;
+ 
++  const bool mForWebCodecs;
++
+   DecoderDoctorDiagnostics::FlagsSet mFailureFlags;
+ 
+   static StaticMutex sSupportedMutex;

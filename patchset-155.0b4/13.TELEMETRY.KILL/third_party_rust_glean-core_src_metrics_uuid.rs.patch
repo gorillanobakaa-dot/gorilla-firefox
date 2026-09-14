@@ -1,0 +1,10 @@
+--- a/third_party/rust/glean-core/src/metrics/uuid.rs
++++ b/third_party/rust/glean-core/src/metrics/uuid.rs
+@@ -46,6 +46,7 @@
+     ///
+     /// * `value` - The [`Uuid`] to set the metric to.
+     pub fn set(&self, value: String) {
++        if crate::GORILLA_TELEMETRY_OFF { return; }  // Gorilla: telemetry disabled — skip clone + dispatch
+         let metric = self.clone();
+         crate::launch_with_glean(move |glean| metric.set_sync(glean, &value))
+     }

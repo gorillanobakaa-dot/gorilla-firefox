@@ -1,0 +1,19 @@
+--- a/toolkit/locales/en-US/toolkit/about/aboutHttpsOnlyError.ftl
++++ b/toolkit/locales/en-US/toolkit/about/aboutHttpsOnlyError.ftl
+@@ -1,7 +1,6 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-
+ about-httpsonly-title-alert = HTTPS-Only Mode Alert
+ about-httpsonly-title-site-not-available = Secure Site Not Available
+ 
+@@ -21,7 +20,6 @@
+ ## Suggestion Box that only shows up if a secure connection to www can be established
+ ## Variables:
+ ##   $websiteUrl (String) - Url of the website that can be securely loaded with these alternatives. Example: example.com
+-
+ about-httpsonly-suggestion-box-header = Possible Alternative
+-about-httpsonly-suggestion-box-www-text = There is a secure version of <em>www.{ $websiteUrl }</em>. You can visit this page instead of <em>{ $websiteUrl }</em>.
++about-httpsonly-suggestion-box-www-text = There is a secure version of <em>www.{ $websiteUrl }</em>. You can visit this Gorilla page instead of <em>{ $websiteUrl }</em>.
+ about-httpsonly-suggestion-box-www-button = Go to www.{ $websiteUrl }

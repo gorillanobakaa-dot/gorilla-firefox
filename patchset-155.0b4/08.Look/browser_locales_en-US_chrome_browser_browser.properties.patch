@@ -1,0 +1,356 @@
+--- a/browser/locales/en-US/chrome/browser/browser.properties
++++ b/browser/locales/en-US/chrome/browser/browser.properties
+@@ -1,26 +1,23 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-
+ nv_timeout=Timed Out
+-openFile=Open File
++openFile=Open Gorilla File
+ 
+ # context menu strings
+-
+ # LOCALIZATION NOTE (contextMenuSearch): %1$S is the search engine,
+ # %2$S is the selection string.
+ contextMenuSearch=Search %1$S for “%2$S”
+ contextMenuSearch.accesskey=S
+-contextMenuPrivateSearch=Search in a Private Window
++contextMenuPrivateSearch=Search in a Private Gorilla Window
+ contextMenuPrivateSearch.accesskey=h
+ # LOCALIZATION NOTE (contextMenuPrivateSearchOtherEngine): %S is the search
+ # engine name as set for Private Browsing mode. This label is only used when
+ # this engine is different from the default engine name used in normal mode.
+-contextMenuPrivateSearchOtherEngine=Search with %S in a Private Window
++contextMenuPrivateSearchOtherEngine=Search with %S in a Private Gorilla Window
+ contextMenuPrivateSearchOtherEngine.accesskey=h
+ 
+ # bookmark dialog strings
+-
+ bookmarkAllTabsDefault=[Folder Name]
+ 
+ unsignedAddonsDisabled.message=One or more installed add-ons cannot be verified and have been disabled.
+@@ -34,7 +31,7 @@
+ openProtocolHandlerPermissionEntryLabel=%S:// links
+ 
+ crashedpluginsMessage.title=The %S plugin has crashed.
+-crashedpluginsMessage.reloadButton.label=Reload page
++crashedpluginsMessage.reloadButton.label=Reload Gorilla page
+ crashedpluginsMessage.reloadButton.accesskey=R
+ crashedpluginsMessage.submitButton.label=Submit a crash report
+ crashedpluginsMessage.submitButton.accesskey=S
+@@ -55,21 +52,21 @@
+ update.downloadAndInstallButton.label=Update to %S
+ update.downloadAndInstallButton.accesskey=U
+ 
+-menuOpenAllInTabs.label=Open All in Tabs
++menuOpenAllInTabs.label=Open All in Gorilla Tabs
+ 
+ # Unified Back-/Forward Popup
+-tabHistory.reloadCurrent=Reload this page
+-tabHistory.goBack=Go back to this page
+-tabHistory.goForward=Go forward to this page
++tabHistory.reloadCurrent=Reload this Gorilla page
++tabHistory.goBack=Go back to this Gorilla page
++tabHistory.goForward=Go forward to this Gorilla page
+ 
+ # URL Bar
+ pasteAndGo.label=Paste and Go
+ # LOCALIZATION NOTE (reloadButton.tooltip):
+ # %S is the keyboard shortcut for reloading the current page
+-reloadButton.tooltip=Reload current page (%S)
++reloadButton.tooltip=Reload current Gorilla page (%S)
+ # LOCALIZATION NOTE (stopButton.tooltip):
+ # %S is the keyboard shortcut for stopping loading the page
+-stopButton.tooltip=Stop loading this page (%S)
++stopButton.tooltip=Stop loading this Gorilla page (%S)
+ # LOCALIZATION NOTE (urlbar-zoom-button.tooltip):
+ # %S is the keyboard shortcut for resetting the zoom level to 100%
+ urlbar-zoom-button.tooltip=Reset zoom level (%S)
+@@ -80,7 +77,7 @@
+ # LOCALIZATION NOTE(zoom-button.label): %S is the current page zoom level,
+ # %% will be displayed as a single % character (% is commonly used to define
+ # format specifiers, so it needs to be escaped).
+-zoom-button.label = %S%%
++zoom-button.label =  %S%%
+ 
+ # LOCALIZATION NOTE(zoom-button.aria-label): %S is the current page zoom level,
+ # %% will be displayed as a single % character (% is commonly used to define
+@@ -90,24 +87,24 @@
+ # General bookmarks button
+ # LOCALIZATION NOTE (bookmarksMenuButton.tooltip):
+ # %S is the keyboard shortcut for "Show All Bookmarks"
+-bookmarksMenuButton.tooltip=Show your bookmarks (%S)
++bookmarksMenuButton.tooltip=Show your Gorilla bookmarks (%S)
+ 
+ # Downloads button tooltip
+ # LOCALIZATION NOTE (downloads.tooltip):
+ # %S is the keyboard shortcut for "Downloads"
+-downloads.tooltip=Display the progress of ongoing downloads (%S)
++downloads.tooltip=Display the progress of ongoing Gorilla downloads (%S)
+ 
+ # New Window button tooltip
+ # LOCALIZATION NOTE (newWindowButton.tooltip):
+ # %S is the keyboard shortcut for "New Window"
+-newWindowButton.tooltip=Open a new window (%S)
++newWindowButton.tooltip=Open a new Gorilla window (%S)
+ 
+ # New Tab button tooltip
+ # LOCALIZATION NOTE (newTabButton.tooltip):
+ # %S is the keyboard shortcut for "New Tab"
+-newTabButton.tooltip=Open a new tab (%S)
+-newTabContainer.tooltip=Open a new tab (%S)\nPress and hold to open a new container tab
+-newTabAlwaysContainer.tooltip=Select container to open a new tab
++newTabButton.tooltip=Open a new Gorilla tab (%S)
++newTabContainer.tooltip=Open a new Gorilla tab (%S)\nPress and hold to open a New Container Gorilla Tab
++newTabAlwaysContainer.tooltip=Select container to open a new Gorilla tab
+ 
+ # Canvas permission prompt
+ # LOCALIZATION NOTE (canvas.siteprompt2): %S is hostname
+@@ -132,40 +129,38 @@
+ identity.notSecure.label=Not Secure
+ identity.notSecure.tooltip=Connection is not secure
+ 
+-identity.extension.label=Extension (%S)
+-identity.extension.tooltip=Loaded by extension: %S
++identity.extension.label=Gorilla Extension (%S)
++identity.extension.tooltip=Loaded by Gorilla extension: %S
+ 
+ # Application menu
+-
+ # LOCALIZATION NOTE(zoomReduce-button.tooltip): %S is the keyboard shortcut.
+-zoomReduce-button.tooltip = Zoom out (%S)
++zoomReduce-button.tooltip =  Zoom out (%S)
+ # LOCALIZATION NOTE(zoomReset-button.tooltip): %S is the keyboard shortcut.
+-zoomReset-button.tooltip = Reset zoom level (%S)
++zoomReset-button.tooltip =  Reset zoom level (%S)
+ # LOCALIZATION NOTE(zoomEnlarge-button.tooltip): %S is the keyboard shortcut.
+-zoomEnlarge-button.tooltip = Zoom in (%S)
++zoomEnlarge-button.tooltip =  Zoom in (%S)
+ 
+ # LOCALIZATION NOTE (cut-button.tooltip): %S is the keyboard shortcut.
+-cut-button.tooltip = Cut (%S)
++cut-button.tooltip =  Cut (%S)
+ # LOCALIZATION NOTE (copy-button.tooltip): %S is the keyboard shortcut.
+-copy-button.tooltip = Copy (%S)
++copy-button.tooltip =  Copy (%S)
+ # LOCALIZATION NOTE (paste-button.tooltip): %S is the keyboard shortcut.
+-paste-button.tooltip = Paste (%S)
++paste-button.tooltip =  Paste (%S)
+ 
+ # Geolocation UI
+-
+ geolocation.allow=Allow
+ geolocation.allow.accesskey=A
+ geolocation.block=Block
+ geolocation.block.accesskey=B
+ # %S is replaced by the product name (e.g. Firefox)
+-geolocation.needsSystemSetting=This will open system location settings. Please grant location permission to %S.
++geolocation.needsSystemSetting=This will open system location Gorilla settings. Please grant location permission to %S.
+ geolocation.shareWithSite4=Allow %S to access your location?
+-geolocation.shareWithFile4=Allow this local file to access your location?
++geolocation.shareWithFile4=Allow this local Gorilla file to access your location?
+ # LOCALIZATION NOTE(geolocation.shareWithSiteUnsafeDelegation2):
+ # %1$S is the first party origin, %2$S is the third party origin.
+ geolocation.shareWithSiteUnsafeDelegation2=Allow %1$S to give %2$S permission to access your location?
+ # %S is replaced by the product name (e.g. Firefox)
+-geolocation.systemSettingsMessage=Grant %S location permission in system settings.
++geolocation.systemSettingsMessage=Grant %S location permission in system Gorilla settings.
+ geolocation.systemSettingsTitle=Awaiting Location Permission
+ # %S is replaced by the product name (e.g. Firefox)
+ geolocation.systemWillRequestPermission=The system will ask you to grant this permission to %S.
+@@ -177,7 +172,7 @@
+ xr.block=Block
+ xr.block.accesskey=B
+ xr.shareWithSite4=Allow %S to access virtual reality devices? This may expose sensitive information.
+-xr.shareWithFile4=Allow this local file to access virtual reality devices? This may expose sensitive information.
++xr.shareWithFile4=Allow this local Gorilla file to access virtual reality devices? This may expose sensitive information.
+ xr.remember=Remember this decision
+ 
+ # Persistent storage UI
+@@ -193,6 +188,8 @@
+ # it's okay for them to have the same access key
+ webNotifications.allow2=Allow
+ webNotifications.allow2.accesskey=A
++webNotifications.notNow=Not Now
++webNotifications.notNow.accesskey=n
+ webNotifications.never=Never Allow
+ webNotifications.never.accesskey=v
+ webNotifications.alwaysBlock=Always Block
+@@ -241,117 +238,117 @@
+ # troubleshootModeRestart
+ # LOCALIZATION NOTE (troubleshootModeRestartPromptTitle): %S is the name of the product (e.g., Firefox)
+ troubleshootModeRestartPromptTitle=Restart %S in Troubleshoot Mode?
+-troubleshootModeRestartPromptMessage=Your extensions, themes, and custom settings will be temporarily disabled.
++troubleshootModeRestartPromptMessage=Your Gorilla extensions, themes, and custom settings will be temporarily disabled.
+ troubleshootModeRestartButton=Restart
+ 
+ # Process hang reporter
+ # LOCALIZATION NOTE (processHang.selected_tab.label): %1$S is the name of the product (e.g., Firefox)
+-processHang.selected_tab.label = This page is slowing down %1$S. To speed up your browser, stop this page.
++processHang.selected_tab.label =  This Gorilla page is slowing down %1$S. To speed up your Gorilla browser, stop this page.
+ # LOCALIZATION NOTE (processHang.nonspecific_tab.label): %1$S is the name of the product (e.g., Firefox)
+-processHang.nonspecific_tab.label = A web page is slowing down %1$S. To speed up your browser, stop that page.
++processHang.nonspecific_tab.label =  A web page is slowing down %1$S. To speed up your Gorilla browser, stop that page.
+ # LOCALIZATION NOTE (processHang.specific_tab.label): %1$S is the title of the tab.
+ # %2$S is the name of the product (e.g., Firefox)
+-processHang.specific_tab.label = “%1$S” is slowing down %2$S. To speed up your browser, stop that page.
++processHang.specific_tab.label =  “%1$S” is slowing down %2$S. To speed up your Gorilla browser, stop that page.
+ # LOCALIZATION NOTE (processHang.add-on.label2): %1$S is the name of the
+ # extension. %2$S is the name of the product (e.g., Firefox)
+-processHang.add-on.label2 = “%1$S” is slowing down %2$S. To speed up your browser, stop that extension.
+-processHang.add-on.learn-more.text = Learn more
+-processHang.button_stop2.label = Stop
+-processHang.button_stop2.accessKey = S
+-processHang.button_debug.label = Debug Script
+-processHang.button_debug.accessKey = D
++processHang.add-on.label2 =  “%1$S” is slowing down %2$S. To speed up your Gorilla browser, stop that extension.
++processHang.add-on.learn-more.text =  Learn more
++processHang.button_stop2.label =  Stop
++processHang.button_stop2.accessKey =  S
++processHang.button_debug.label =  Debug Script
++processHang.button_debug.accessKey =  D
+ 
+ # LOCALIZATION NOTE (fullscreenButton.tooltip): %S is the keyboard shortcut for full screen
+-fullscreenButton.tooltip=Display the window in full screen (%S)
++fullscreenButton.tooltip=Display the Gorilla window in full screen (%S)
+ 
+ # These are visible when opening the popup inside the bookmarks sidebar
+-sidebar.moveToLeft=Move Sidebar to Left
+-sidebar.moveToRight=Move Sidebar to Right
++sidebar.moveToLeft=Move Gorilla Sidebar to Left
++sidebar.moveToRight=Move Gorilla Sidebar to Right
+ 
+ # LOCALIZATION NOTE(emeNotifications.drmContentDisabled.message): NB: inserted via innerHTML, so please don't use <, > or & in this string. %S will be the 'learn more' link
+-emeNotifications.drmContentDisabled.message2 = You must enable DRM to play some audio or video on this page.
+-emeNotifications.drmContentDisabled.button.label = Enable DRM
+-emeNotifications.drmContentDisabled.button.accesskey = E
++emeNotifications.drmContentDisabled.message2 =  You must enable DRM to play some audio or video on this Gorilla page.
++emeNotifications.drmContentDisabled.button.label =  Enable DRM
++emeNotifications.drmContentDisabled.button.accesskey =  E
+ 
+ # LOCALIZATION NOTE(emeNotifications.drmContentCDMInstalling.message): NB: inserted via innerHTML, so please don't use <, > or & in this string. %S is brandShortName
+-emeNotifications.drmContentCDMInstalling.message = %S is installing components needed to play the audio or video on this page. Please try again later.
++emeNotifications.drmContentCDMInstalling.message =  %S is installing components needed to play the audio or video on this Gorilla page. Please try again later.
+ 
+-emeNotifications.unknownDRMSoftware = Unknown
++emeNotifications.unknownDRMSoftware =  Unknown
+ 
+ # LOCALIZATION NOTE (customizeMode.tabTitle): %S is brandShortName
+-customizeMode.tabTitle = Customize %S
++customizeMode.tabTitle =  Customize %S
+ 
+-decoder.noCodecs.button = Learn how
+-decoder.noCodecs.accesskey = L
+-decoder.noCodecsLinux.message = To play video, you may need to install the required video codecs.
+-decoder.noHWAcceleration.message = To improve video quality, you may need to install Microsoft’s Media Feature Pack.
+-decoder.noPulseAudio.message = To play audio, you may need to install the required PulseAudio software.
+-decoder.unsupportedLibavcodec.message = libavcodec may be vulnerable or is not supported, and should be updated to play video.
+-
+-decoder.decodeError.message = An error occurred while decoding a media resource.
+-decoder.decodeError.button = Report site issue
+-decoder.decodeError.accesskey = R
+-decoder.decodeWarning.message = A recoverable error occurred while decoding a media resource.
++decoder.noCodecs.button =  Learn how
++decoder.noCodecs.accesskey =  L
++decoder.noCodecsLinux.message =  To play video, you may need to install the required video codecs.
++decoder.noHWAcceleration.message =  To improve video quality, you may need to install Microsoft’s Media Feature Pack.
++decoder.noPulseAudio.message =  To play audio, you may need to install the required PulseAudio software.
++decoder.unsupportedLibavcodec.message =  libavcodec may be vulnerable or is not supported, and should be updated to play video.
++
++decoder.decodeError.message =  An error occurred while decoding a media resource.
++decoder.decodeError.button =  Report site issue
++decoder.decodeError.accesskey =  R
++decoder.decodeWarning.message =  A recoverable error occurred while decoding a media resource.
+ 
+ # LOCALIZATION NOTE (captivePortal.infoMessage3):
+ # Shown in a notification bar when we detect a captive portal is blocking network access
+ # and requires the user to log in before browsing.
+-captivePortal.infoMessage3 = You must log in to this network before you can access the Internet.
++captivePortal.infoMessage3 =  You must log in to this network before you can access the Internet.
+ # LOCALIZATION NOTE (captivePortal.showLoginPage2):
+ # The label for a button shown in the info bar in all tabs except the login page tab.
+ # The button shows the portal login page tab when clicked.
+-captivePortal.showLoginPage2 = Open network login page
++captivePortal.showLoginPage2 =  Open network login Gorilla page
+ 
+ # LOCALIZATION NOTE (permissions.header):
+ # %S is the hostname of the site that is being displayed.
+-permissions.header = Permissions for %S
+-permissions.remove.tooltip = Clear this permission and ask again
++permissions.header =  Permissions for %S
++permissions.remove.tooltip =  Clear this permission and ask again
+ 
+-permissions.fullscreen.promptCanceled = Canceled pending permission requests: permission requests should not be issued before entering DOM fullscreen.
+-permissions.fullscreen.fullScreenCanceled = Exited DOM fullscreen: permission requests should not be issued while in DOM fullscreen.
++permissions.fullscreen.promptCanceled =  Canceled pending permission requests: permission requests should not be issued before entering DOM fullscreen.
++permissions.fullscreen.fullScreenCanceled =  Exited DOM fullscreen: permission requests should not be issued while in DOM fullscreen.
+ 
+ # LOCALIZATION NOTE (aboutDialog.architecture.*):
+ # The sixtyFourBit and thirtyTwoBit strings describe the architecture of the
+ # current Firefox build: 32-bit or 64-bit. These strings are used in parentheses
+ # between the Firefox version and the "What's new" link in the About dialog,
+ # e.g.: "48.0.2 (32-bit) <What's new>" or "51.0a1 (2016-09-05) (64-bit)".
+-aboutDialog.architecture.sixtyFourBit = 64-bit
+-aboutDialog.architecture.thirtyTwoBit = 32-bit
++aboutDialog.architecture.sixtyFourBit =  64-bit
++aboutDialog.architecture.thirtyTwoBit =  32-bit
+ 
+-midi.allow.label = Allow
+-midi.allow.accesskey = A
+-midi.block.label = Block
+-midi.block.accesskey = B
++midi.allow.label =  Allow
++midi.allow.accesskey =  A
++midi.block.label =  Block
++midi.block.accesskey =  B
+ midi.remember=Remember this decision
+-midi.shareWithFile = Allow this local file to access your MIDI devices?
++midi.shareWithFile =  Allow this local Gorilla file to access your MIDI devices?
+ # LOCALIZATION NOTE (midi.shareWithSite): %S is the name of the site URL (https://...) requesting MIDI access
+-midi.shareWithSite = Allow %S to access your MIDI devices?
+-midi.shareSysexWithFile = Allow this local file to access your MIDI devices and send/receive SysEx messages?
++midi.shareWithSite =  Allow %S to access your MIDI devices?
++midi.shareSysexWithFile =  Allow this local Gorilla file to access your MIDI devices and send/receive SysEx messages?
+ # LOCALIZATION NOTE (midi.shareSysexWithSite): %S is the name of the site URL (https://...) requesting MIDI access
+-midi.shareSysexWithSite = Allow %S to access your MIDI devices and send/receive SysEx messages?
++midi.shareSysexWithSite =  Allow %S to access your MIDI devices and send/receive SysEx messages?
+ 
+-serial.allow.label = Allow
+-serial.allow.accesskey = A
+-serial.block.label = Block
+-serial.block.accesskey = B
+-serial.shareWithFile = Allow this local file to access your serial ports?
++serial.allow.label =  Allow
++serial.allow.accesskey =  A
++serial.block.label =  Block
++serial.block.accesskey =  B
++serial.shareWithFile =  Allow this local Gorilla file to access your serial ports?
+ # LOCALIZATION NOTE (serial.shareWithSite): %S is the name of the site URL (https://...) requesting serial access
+-serial.shareWithSite = Allow %S to access your serial ports?
++serial.shareWithSite =  Allow %S to access your serial ports?
+ 
+ # LOCALIZATION NOTE (panel.back):
+ # This is used by screen readers to label the "back" button in various browser
+ # popup panels, including the sliding subviews of the main menu.
+-panel.back = Back
++panel.back =  Back
+ 
+-storageAccess1.Allow.label = Allow
+-storageAccess1.Allow.accesskey = A
+-storageAccess1.DontAllow.label = Block
+-storageAccess1.DontAllow.accesskey = B
++storageAccess1.Allow.label =  Allow
++storageAccess1.Allow.accesskey =  A
++storageAccess1.DontAllow.label =  Block
++storageAccess1.DontAllow.accesskey =  B
+ # LOCALIZATION NOTE (storageAccess4.message, storageAccess1.hintText):
+ # %1$S is the name of the site URL (www.site1.example) trying to track the user's activity.
+ # %2$S is the name of the site URL (www.site2.example) that the user is visiting.  This is the same domain name displayed in the address bar.
+-storageAccess4.message = Allow %1$S to use its cookies on %2$S?
+-storageAccess1.hintText = You may want to block access if it’s not clear why %1$S needs this data.
++storageAccess4.message =  Allow %1$S to use its cookies on %2$S?
++storageAccess1.hintText =  You may want to block access if it’s not clear why %1$S needs this data.
+ 
+ # LOCALIZATION NOTE (gnomeSearchProviderSearchWeb):
+ # Used for search by Gnome Shell activity screen, %S is a searched string.

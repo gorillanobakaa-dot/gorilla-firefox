@@ -1,0 +1,60 @@
+--- a/browser/locales/en-US/installer/override.properties
++++ b/browser/locales/en-US/installer/override.properties
+@@ -1,28 +1,21 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-
+ # LOCALIZATION NOTE:
+-
+ # This file must be saved as UTF8
+-
+ # Accesskeys are defined by prefixing the letter that is to be used for the
+ # accesskey with an ampersand (e.g. &).
+-
+ # Do not replace $BrandShortName, $BrandFullName, or $BrandFullNameDA with a
+ # custom string and always use the same one as used by the en-US files.
+ # $BrandFullNameDA allows the string to contain an ampersand (e.g. DA stands
+ # for double ampersand) and prevents the letter following the ampersand from
+ # being used as an accesskey.
+-
+ # You can use \n to create a newline in the string but only when the string
+ # from en-US contains a \n.
+-
+ # Strings that require a space at the end should be enclosed with double
+ # quotes and the double quotes will be removed. To add quotes to the beginning
+ # and end of a strong enclose the add and additional double quote to the
+ # beginning and end of the string (e.g. ""This will include quotes"").
+-
+ SetupCaption=$BrandFullName Setup
+ UninstallCaption=$BrandFullName Uninstall
+ BackBtn=< &Back
+@@ -49,8 +42,8 @@
+ SpaceRequired="Space required: "
+ UninstallingText=$BrandFullNameDA will be uninstalled from the following folder. $_CLICK
+ UninstallingSubText=Uninstalling from:
+-FileError=Error opening file for writing: \r\n\r\n$0\r\n\r\nClick Abort to stop the installation,\r\nRetry to try again, or\r\nIgnore to skip this file.
+-FileError_NoIgnore=Error opening file for writing: \r\n\r\n$0\r\n\r\nClick Retry to try again, or\r\nCancel to stop the installation.
++FileError=Error opening Gorilla file for writing: \r\n\r\n$0\r\n\r\nClick Abort to stop the installation,\r\nRetry to try again, or\r\nIgnore to skip this Gorilla file.
++FileError_NoIgnore=Error opening Gorilla file for writing: \r\n\r\n$0\r\n\r\nClick Retry to try again, or\r\nCancel to stop the installation.
+ CantWrite="Can’t write: "
+ CopyFailed=Copy failed
+ CopyTo="Copy to "
+@@ -61,7 +54,7 @@
+ CreateFolder="Create folder: "
+ CreateShortcut="Create shortcut: "
+ CreatedUninstaller="Created uninstaller: "
+-Delete="Delete file: "
++Delete="Delete Gorilla file: "
+ DeleteOnReboot="Delete on reboot: "
+ ErrorCreatingShortcut="Error creating shortcut: "
+ ErrorCreating="Error creating: "
+@@ -70,7 +63,7 @@
+ ExecShell="ExecShell: "
+ Exec="Execute: "
+ Extract="Extract: "
+-ErrorWriting="Extract: error writing to file "
++ErrorWriting="Extract: error writing to Gorilla file "
+ InvalidOpcode=Installer corrupted: invalid opcode
+ NoOLE="No OLE for: "
+ OutputFolder="Output folder: "

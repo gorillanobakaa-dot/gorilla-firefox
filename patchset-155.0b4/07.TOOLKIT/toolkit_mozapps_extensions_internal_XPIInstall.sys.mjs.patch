@@ -1,0 +1,80 @@
+--- a/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs
++++ b/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs
+@@ -935,24 +935,16 @@
+  *        or undefined if the file wasn't signed.
+  */
+ export var verifyBundleSignedState = async function (aBundle, aAddon) {
++  let pkg = Package.get(aBundle);
+   try {
+-    let pkg = Package.get(aBundle);
+-    try {
+-      let { signedState, signedTypes } = await pkg.verifySignedState(
+-        aAddon.id,
+-        aAddon.type,
+-        aAddon.location
+-      );
+-      return { signedState, signedTypes };
+-    } finally {
+-      pkg.close();
+-    }
+-  } catch (e) {
+-    logger.warn(`verifyBundleSignedState failed for ${aAddon.id}`, e);
+-    if (!shouldVerifySignedState(aAddon.type, aAddon.location)) {
+-      return { signedState: AddonManager.SIGNEDSTATE_NOT_REQUIRED };
+-    }
+-    return { signedState: AddonManager.SIGNEDSTATE_BROKEN };
++    let { signedState, signedTypes } = await pkg.verifySignedState(
++      aAddon.id,
++      aAddon.type,
++      aAddon.location
++    );
++    return { signedState, signedTypes };
++  } finally {
++    pkg.close();
+   }
+ };
+ 
+@@ -1395,6 +1387,14 @@
+    * @throws if installation cannot proceed from the current state
+    */
+   install() {
++    // 🛡️ API LOBOTOMY - GORILLA UNLEASHED
++    // Rationale: We are implementing a Zero-Trust extension policy.
++    // Technique: Hard-coded rejection of all non-system add-on/theme installations.
++    if (this.addon && !this.addon.isSystem) {
++        logger.error(`[GORILLA] Add-on/Theme installation blocked: ${this.addon.id}`);
++        throw new Error(`[GORILLA] Installation rejected: ${this.addon.id}`);
++    }
++
+     switch (this.state) {
+       case AddonManager.STATE_DOWNLOADED:
+         this.checkPrompt();
+@@ -2476,6 +2476,14 @@
+   }
+ 
+   install() {
++    // 🛡️ API LOBOTOMY - GORILLA UNLEASHED
++    // Rationale: We are implementing a Zero-Trust theme policy.
++    // Technique: Hard-coded rejection of all theme installations.
++    if (this.addon && this.addon.type === "theme") {
++        logger.error(`[GORILLA] Theme installation blocked: ${this.addon.id}`);
++        throw new Error(`[GORILLA] Theme installation rejected: ${this.addon.id}`);
++    }
++
+     switch (this.state) {
+       case AddonManager.STATE_AVAILABLE:
+         this.startDownload();
+@@ -3580,6 +3588,13 @@
+    *        An nsIFile indicating where the add-on was installed to
+    */
+   installAddon({ id, source, action = "move" }) {
++    // 🛡️ API LOBOTOMY - GORILLA UNLEASHED
++    // Rationale: We are implementing a Zero-Trust extension policy.
++    // Technique: Hard-coded rejection of all non-system add-on installations.
++    // Value: Immediate abort.
++    logger.error(`[GORILLA] Add-on installation blocked: ${id}`);
++    throw new Error(`[GORILLA] Add-on installation rejected: ${id}`);
++
+     let trashDir = this.getTrashDir();
+ 
+     let transaction = new SafeInstallOperation();

@@ -1,0 +1,12 @@
+--- a/browser/components/sessionstore/session.schema.json
++++ b/browser/components/sessionstore/session.schema.json
+@@ -183,9 +183,6 @@
+         "hidden": {
+           "type": "string"
+         },
+-        "isAIWindow": {
+-          "type": "boolean"
+-        },
+         "isPopup": {
+           "type": "boolean"
+         },

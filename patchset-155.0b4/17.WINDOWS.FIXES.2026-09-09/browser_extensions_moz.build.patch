@@ -1,0 +1,10 @@
+--- a/browser/extensions/moz.build
++++ b/browser/extensions/moz.build
+@@ -9,6 +9,7 @@
+     "pictureinpicture",
+     "search-detection",
+     "newtab",
++    "ublock-origin",
+ ]
+ 
+ JAR_MANIFESTS += ["jar.mn"]

@@ -1,0 +1,34 @@
+--- a/toolkit/content/widgets/autocomplete-popup.js
++++ b/toolkit/content/widgets/autocomplete-popup.js
+@@ -403,10 +403,31 @@
+     }
+ 
+     adjustHeight() {
++      // GORILLA OVERRIDE: rows filled by async Fluent l10n (loginsFooter,
++      // importable-logins) measure near 0px here and inflate after this
++      // runs, leaving the popup clipped at a stale max-height. Re-run the
++      // measurement whenever a visible row changes size while open. No
++      // feedback loop: this method only writes the richlistbox max-height,
++      // never row sizes. Traced 2026-08-10, THEME_FIX_LOG §39.
++      if (!this._rowResizeObserver) {
++        this._rowResizeObserver = new this.ownerGlobal.ResizeObserver(() => {
++          if (this.state == "open") {
++            this.adjustHeight();
++          } else {
++            this._rowResizeObserver.disconnect();
++          }
++        });
++      }
++      this._rowResizeObserver.disconnect();
++
+       // Figure out how many rows to show
+       let rows = this.richlistbox.children;
+       let numRows = Math.min(this.matchCount, this.maxRows, rows.length);
+ 
++      for (let i = 0; i < numRows; i++) {
++        this._rowResizeObserver.observe(rows[i]);
++      }
++
+       // Default the height to 0 if we have no rows to show
+       let height = 0;
+       if (numRows) {

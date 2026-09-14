@@ -1,0 +1,51 @@
+--- a/dom/media/webaudio/AudioContext.cpp
++++ b/dom/media/webaudio/AudioContext.cpp
+@@ -146,6 +146,15 @@
+   if (aIsOffline || aSampleRate != 0.0) {
+     return aSampleRate;
+   } else {
++    // GORILLA TWEAK 2026-08-26: steer only NO-PREFERENCE contexts to the
++    // ALC269's native 48000 Hz. RULE: honor-or-throw, NEVER silently
++    // substitute a page-requested rate. The previous form of this tweak
++    // forced 48000 for ALL realtime contexts and silently broke WhatsApp's
++    // 16 kHz WASM call audio (convicted by live WebAudioAPI:5 capture).
++    // Record: FIrefox.154.Hardware.decode.WEBRTC/CALL-TRANSPORT-BLACKHOLE.DEVELOPER.md
++    if (StaticPrefs::media_gorilla_hardware_only_mode()) {
++      return 48000.0f;
++    }
+     return static_cast<float>(
+         CubebUtils::PreferredSampleRate(aShouldResistFingerprinting));
+   }
+@@ -569,7 +578,7 @@
+ #elif XP_WIN
+     latency_s = 0.04;
+ #else  // Catchall for other OSes, including Linux.
+-    latency_s = 0.025;
++    latency_s = StaticPrefs::media_gorilla_hardware_only_mode() ? 0.010 : 0.025;
+ #endif
+   } else {
+     return Graph()->AudioOutputLatency();
+@@ -1110,13 +1119,19 @@
+     return promise.forget();
+   }
+ 
+-  // A page resume() clears only the page's own suspend.
+   mSuspendedByContent = false;
++  // TODO(bug 2047321): while the tab is under an audio-focus interruption we
++  // have lost focus, and the platform does not expect us to restart on our
++  // own, so a page resume() should be gated until focus is regained. That
++  // gating, tied to the Web Audio interrupted state, is handled in bug 2047321.
++  if (mSuspendedByMediaControl) {
++    MEDIA_CONTROL_LOG(
++        "AudioContext {} page resume() takes over an interruption suspend",
++        fmt::ptr(this));
++    mSuspendedByMediaControl = false;
++  }
+   mPendingResumePromises.AppendElement(promise);
+ 
+-  // IsAllowedToPlay() is false while the platform has interrupted the tab's
+-  // audio, so a resume() requested during the interruption is not started here;
+-  // its promise stays parked above and is settled when the interruption ends.
+   const bool isAllowedToPlay = media::AutoplayPolicy::IsAllowedToPlay(*this);
+   AUTOPLAY_LOG("Trying to resume AudioContext {}, IsAllowedToPlay={}",
+                fmt::ptr(this), isAllowedToPlay);

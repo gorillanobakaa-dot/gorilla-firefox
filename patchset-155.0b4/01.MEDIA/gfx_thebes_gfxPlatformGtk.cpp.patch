@@ -1,0 +1,28 @@
+--- a/gfx/thebes/gfxPlatformGtk.cpp
++++ b/gfx/thebes/gfxPlatformGtk.cpp
+@@ -275,6 +275,15 @@
+                               "Blocklisted by gfxInfo", failureId);
+     }
+   }
++  // GORILLA: Under the hardware-only H.264 policy the decoded frame MUST reach
++  // the compositor without a CPU read-back. UserForceEnable (not UserEnable)
++  // is required so that mUser=ForceEnabled is checked before mEnvironment in
++  // FeatureState::GetValue(), bypassing any gfxInfo environment block.
++  // UserEnable only sets mUser=Enabled which loses to mEnvironment=Blocklisted.
++  if (StaticPrefs::media_gorilla_hardware_only_mode() &&
++      gfxConfig::GetFeature(Feature::DMABUF).IsEnabled()) {
++    featureZeroCopy.UserForceEnable("Forced by Gorilla hardware-only policy");
++  }
+   if (featureZeroCopy.IsEnabled()) {
+     gfxVars::SetHwDecodedVideoZeroCopy(true);
+   }
+@@ -319,6 +328,9 @@
+ 
+ void gfxPlatformGtk::InitPlatformGPUProcessPrefs() {
+ #ifdef MOZ_WAYLAND
++  // Wayland surface handles (wl_egl_window) live in the parent process and
++  // cannot be shared with the GPU process via GtkCompositorWidgetInitData.
++  // VA-API decode still works via the RDD process (media.rdd-ffmpeg.enabled).
+   if (IsWaylandDisplay()) {
+     FeatureState& gpuProc = gfxConfig::GetFeature(Feature::GPU_PROCESS);
+     gpuProc.ForceDisable(FeatureStatus::Blocked,

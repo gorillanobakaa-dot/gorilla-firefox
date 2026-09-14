@@ -1,0 +1,10 @@
+--- a/third_party/rust/glean-core/src/metrics/datetime.rs
++++ b/third_party/rust/glean-core/src/metrics/datetime.rs
+@@ -132,6 +132,7 @@
+     ///
+     /// * `dt` - the optinal datetime to set this to. If missing the current date is used.
+     pub fn set(&self, dt: Option<Datetime>) {
++        if crate::GORILLA_TELEMETRY_OFF { return; }  // Gorilla: telemetry disabled — skip clone + dispatch
+         let metric = self.clone();
+         crate::launch_with_glean(move |glean| {
+             metric.set_sync(glean, dt);

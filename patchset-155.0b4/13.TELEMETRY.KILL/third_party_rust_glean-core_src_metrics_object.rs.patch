@@ -1,0 +1,26 @@
+--- a/third_party/rust/glean-core/src/metrics/object.rs
++++ b/third_party/rust/glean-core/src/metrics/object.rs
+@@ -65,6 +65,7 @@
+     ///
+     /// * `value` - the value to set.
+     pub fn set(&self, value: JsonValue) {
++        if crate::GORILLA_TELEMETRY_OFF { return; }  // Gorilla: telemetry disabled — skip clone + dispatch
+         let metric = self.clone();
+         crate::launch_with_glean(move |glean| metric.set_sync(glean, value))
+     }
+@@ -80,6 +81,7 @@
+     ///
+     /// * `object` - JSON representation of the object to set.
+     pub fn set_string(&self, object: String) {
++        if crate::GORILLA_TELEMETRY_OFF { return; }  // Gorilla: telemetry disabled — skip clone + dispatch
+         let metric = self.clone();
+         crate::launch_with_glean(move |glean| {
+             let object = match serde_json::from_str(&object) {
+@@ -100,6 +102,7 @@
+     // TODO(bug 1691073): This can probably go once we have a more generic mechanism to record
+     // errors
+     pub fn record_schema_error(&self) {
++        if crate::GORILLA_TELEMETRY_OFF { return; }  // Gorilla: telemetry disabled — skip clone + dispatch
+         let metric = self.clone();
+         crate::launch_with_glean(move |glean| {
+             let msg = "Value did not match predefined schema";

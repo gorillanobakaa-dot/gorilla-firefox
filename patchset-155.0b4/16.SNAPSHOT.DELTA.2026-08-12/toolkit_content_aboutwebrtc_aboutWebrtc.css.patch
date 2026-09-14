@@ -1,0 +1,10 @@
+--- a/toolkit/content/aboutwebrtc/aboutWebrtc.css
++++ b/toolkit/content/aboutwebrtc/aboutWebrtc.css
+@@ -267,3 +267,7 @@
+   opacity: 1;
+   transition: opacity 0.5s;
+ }
++
++/* GORILLA OVERRIDE 2026-07-31: the shared #content watermark (common-shared)
++   bleeds under this page's full-width cards — author ruled no gorilla here. */
++#content { background: none !important; }

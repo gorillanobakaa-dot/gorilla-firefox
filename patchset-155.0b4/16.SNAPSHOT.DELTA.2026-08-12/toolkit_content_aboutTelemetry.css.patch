@@ -1,0 +1,12 @@
+--- a/toolkit/content/aboutTelemetry.css
++++ b/toolkit/content/aboutTelemetry.css
+@@ -341,3 +341,9 @@
+ .clearfix {
+   clear: both;
+ }
++
++/* GORILLA OVERRIDE 2026-07-31: centered watermark (author spec: "that gorilla
++   was supposed to be in the center"). */
++body {
++  background: #000000 url("chrome://branding/content/about-logo.svg") no-repeat fixed center bottom 10px / 450px !important; /* author 22:27: "way lower"; fixed = pinned to viewport bottom even on tall data tabs */
++}

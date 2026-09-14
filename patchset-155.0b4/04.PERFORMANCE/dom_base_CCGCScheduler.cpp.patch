@@ -1,0 +1,29 @@
+--- a/dom/base/CCGCScheduler.cpp
++++ b/dom/base/CCGCScheduler.cpp
+@@ -18,19 +18,21 @@
+ namespace mozilla {
+ MOZ_RUNINIT const TimeDuration kOneMinute = TimeDuration::FromSeconds(60.0f);
+ MOZ_RUNINIT const TimeDuration kCCDelay = TimeDuration::FromSeconds(6);
++// GORILLA: IVB (4c/8t) tuning — more eager cycle collection, smaller gaps.
+ MOZ_RUNINIT const TimeDuration kCCSkippableDelay =
+-    TimeDuration::FromMilliseconds(250);
++    TimeDuration::FromMilliseconds(120);
+ MOZ_RUNINIT const TimeDuration kTimeBetweenForgetSkippableCycles =
+     TimeDuration::FromSeconds(2);
+ MOZ_RUNINIT const TimeDuration kForgetSkippableSliceDuration =
+     TimeDuration::FromMilliseconds(2);
++// GORILLA: IVB (4c/8t) tuning — tighter CC scheduling for low-core box.
+ MOZ_RUNINIT const TimeDuration kICCIntersliceDelay =
+-    TimeDuration::FromMilliseconds(250);
++    TimeDuration::FromMilliseconds(120);
+ MOZ_RUNINIT const TimeDuration kICCSliceBudget =
+-    TimeDuration::FromMilliseconds(3);
++    TimeDuration::FromMilliseconds(4);
+ MOZ_RUNINIT const TimeDuration kIdleICCSliceBudget =
+-    TimeDuration::FromMilliseconds(2);
+-MOZ_RUNINIT const TimeDuration kMaxICCDuration = TimeDuration::FromSeconds(2);
++    TimeDuration::FromMilliseconds(4);
++MOZ_RUNINIT const TimeDuration kMaxICCDuration = TimeDuration::FromSeconds(1.5);
+ 
+ MOZ_RUNINIT const TimeDuration kCCForced = kOneMinute * 2;
+ MOZ_RUNINIT const TimeDuration kMaxCCLockedoutTime =

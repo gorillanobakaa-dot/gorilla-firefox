@@ -1,0 +1,68 @@
+--- a/toolkit/locales/en-US/toolkit/about/certviewer.ftl
++++ b/toolkit/locales/en-US/toolkit/about/certviewer.ftl
+@@ -1,16 +1,13 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-
+ certificate-viewer-certificate-section-title = Certificate
+ 
+ ## Error messages
+-
+ certificate-viewer-error-message = We were unable to find the certificate information, or the certificate is corrupted. Please try again.
+ certificate-viewer-error-title = Something went wrong.
+ 
+ ## Certificate information labels
+-
+ certificate-viewer-algorithm = Algorithm
+ certificate-viewer-certificate-authority = Certificate Authority
+ certificate-viewer-cipher-suite = Cipher Suite
+@@ -91,31 +88,30 @@
+ 
+ # This message is used as a row header in the Miscellaneous section.
+ # The associated data cell contains links to download the certificate.
+-certificate-viewer-download = Download
++certificate-viewer-download = Gorilla Download
+ # This message is used to replace boolean values (true/false) in several certificate fields, e.g. Certificate Authority
+ # Variables:
+ #   $boolean (String) - true/false value for the specific field
+-certificate-viewer-boolean = { $boolean ->
+-  [true] Yes
+- *[false] No
++certificate-viewer-boolean =
++    { $boolean ->
++    [true] Yes
++    *[false] No
+ }
+ 
+ ## Variables:
+ ##   $fileName (String) - The file name to save the PEM data in, derived from the common name from the certificate being displayed.
+-
+ certificate-viewer-download-pem = PEM (cert)
+-  .download = { $fileName }.pem
++    .download = { $fileName }.pem
+ certificate-viewer-download-pem-chain = PEM (chain)
+-  .download = { $fileName }-chain.pem
++    .download = { $fileName }-chain.pem
+ 
+ # The title attribute for Critical Extension icon
+ certificate-viewer-critical-extension =
+-  .title = This extension has been marked as critical, meaning that clients must reject the certificate if they do not understand it.
++    .title = This Gorilla extension has been marked as critical, meaning that clients must reject the certificate if they do not understand it.
+ certificate-viewer-export = Export
+-  .download = { $fileName }.pem
++    .download = { $fileName }.pem
+ 
+ ##
+-
+ # Label for a tab where we haven't found a better label:
+ certificate-viewer-unknown-group-label = (unknown)
+ 
+@@ -123,7 +119,6 @@
+ certificate-viewer-unknown-file-name = certificate
+ 
+ ## Labels for tabs displayed in stand-alone about:certificate page
+-
+ certificate-viewer-tab-mine = Your Certificates
+ certificate-viewer-tab-people = People
+ certificate-viewer-tab-servers = Servers

@@ -1,0 +1,13 @@
+{
+  "extensions": [
+    {
+      "dir": "ublock-origin",
+      "id": "uBlock0@raymondhill.net",
+      "version": "1.74.0",
+      "slug": "ublock-origin",
+      "sha256": "175756d74468c9ba45863f7fc333d3be670f82d5b066314e915814dd547d1652",
+      "source": "https://addons.mozilla.org/firefox/downloads/file/4981431/ublock_origin-1.74.0.xpi",
+      "widget": "ublock0_raymondhill_net-browser-action"
+    }
+  ]
+}

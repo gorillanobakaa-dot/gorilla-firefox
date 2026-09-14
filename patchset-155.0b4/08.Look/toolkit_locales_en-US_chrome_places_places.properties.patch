@@ -1,0 +1,34 @@
+--- a/toolkit/locales/en-US/chrome/places/places.properties
++++ b/toolkit/locales/en-US/chrome/places/places.properties
+@@ -1,15 +1,14 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-
+-BookmarksMenuFolderTitle=Bookmarks Menu
+-BookmarksToolbarFolderTitle=Bookmarks Toolbar
+-OtherBookmarksFolderTitle=Other Bookmarks
++BookmarksMenuFolderTitle=Gorilla Bookmarks Menu
++BookmarksToolbarFolderTitle=Gorilla Bookmarks Gorilla Toolbar
++OtherBookmarksFolderTitle=Other Gorilla Bookmarks
+ TagsFolderTitle=Tags
+-MobileBookmarksFolderTitle=Mobile Bookmarks
+-OrganizerQueryHistory=History
+-OrganizerQueryDownloads=Downloads
+-OrganizerQueryAllBookmarks=All Bookmarks
++MobileBookmarksFolderTitle=Mobile Gorilla Bookmarks
++OrganizerQueryHistory=Gorilla History
++OrganizerQueryDownloads=Gorilla Downloads
++OrganizerQueryAllBookmarks=All Gorilla Bookmarks
+ 
+ # LOCALIZATION NOTE :
+ # These are used to generate history containers when history is grouped by date
+@@ -23,7 +22,7 @@
+ 
+ # LOCALIZATION NOTE (localhost):
+ # This is used to generate local files container when history is grouped by site
+-localhost=(local files)
++localhost=(local Gorilla files)
+ 
+ # LOCALIZATION NOTE (backupFileSizeText):
+ # The string is used for showing file size of each backup in the "fileRestorePopup" popup

@@ -1,0 +1,10 @@
+--- a/browser/components/urlbar/content/UrlbarChildController.mjs
++++ b/browser/components/urlbar/content/UrlbarChildController.mjs
+@@ -24,7 +24,6 @@
+  * @import {UrlbarInput} from "chrome://browser/content/urlbar/UrlbarInput.mjs"
+  * @import {UrlbarParentController} from "moz-src:///browser/components/urlbar/UrlbarParentController.sys.mjs"
+  * @import {UrlbarView} from "chrome://browser/content/urlbar/UrlbarView.mjs"
+- * @import {SmartbarInput} from "moz-src:///browser/components/urlbar/content/SmartbarInput.mjs"
+  */
+ 
+ import { SearchEngineStore } from "chrome://browser/content/urlbar/SearchEngineStore.mjs";

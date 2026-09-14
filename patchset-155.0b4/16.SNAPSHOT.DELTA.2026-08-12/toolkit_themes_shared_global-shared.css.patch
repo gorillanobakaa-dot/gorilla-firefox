@@ -1,0 +1,99 @@
+--- a/toolkit/themes/shared/global-shared.css
++++ b/toolkit/themes/shared/global-shared.css
+@@ -14,9 +14,27 @@
+ 
+ @import url("close-icon.css");
+ 
++/* GORILLA OVERRIDE: theme delivery for chrome://global/skin widgets (input
++   fields, dropdowns, text controls). MUST stay in this leading @import block:
++   an @import after any style rule is silently dropped by the CSS parser, which
++   is exactly how this was broken for weeks (it sat at the end of the file). The
++   URL is browser/skin because that is where master-redirect.css is registered
++   (browser/themes/shared/jar.inc.mn); there is no global/skin registration.
++   Guarded by patches/lint/check_css_import_position.py. */
++@import url("chrome://browser/skin/master-redirect.css");
++
+ @namespace xul url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
+ @namespace html url("http://www.w3.org/1999/xhtml");
+ 
++/* GORILLA OVERRIDE: restore FF154's upstream hidden-element safety net (vanilla
++   toolkit/themes/shared/global-shared.css:118) — anything carrying the `hidden`
++   attribute must not render; `:where()` keeps it at zero specificity so a
++   deliberate `!important` show-rule can still win. The pre-154 master template
++   this file derives from predates the rule; found missing 2026-08-03. */
++:where([hidden]) {
++  display: none !important;
++}
++
+ :root {
+   --default-focusring-width: 2px;
+   --default-focusring: var(--default-focusring-width) dotted;
+@@ -30,6 +48,8 @@
+     --panel-box-shadow-margin: 0px;
+   }
+ 
++  --panel-separator-color: color-mix(in srgb, currentColor 25%, transparent);
++
+   --popup-notification-body-width: calc(31em - calc(2 * var(--panel-padding)));
+ 
+   &[lwtheme] {
+@@ -52,6 +72,10 @@
+     --toolbar-color-scheme: dark;
+   }
+ 
++  @media (prefers-contrast) {
++    --panel-separator-color: currentColor;
++  }
++
+   background-color: -moz-Dialog;
+   color: -moz-DialogText;
+   font: message-box;
+@@ -62,19 +86,13 @@
+   }
+ }
+ 
+-/* Reset default heading font-sizes in the chrome. */
+-h1,
+-h2,
+-h3 {
+-  font-size: unset;
+-}
+-
+ :is(menupopup, panel):where([type="arrow"]) {
+   --menuitem-border-radius: var(--panel-menuitem-border-radius);
+   --menuitem-padding: var(--panel-menuitem-padding);
+   --menuitem-margin: var(--panel-menuitem-margin);
+ }
+ 
++/* stylelint-disable-next-line media-query-no-invalid */
+ @media -moz-pref("widget.macos.native-popovers") and (-moz-platform: macos) {
+   panel:not([nonnative]) {
+     background-color: transparent;
+@@ -109,16 +127,6 @@
+   text-shadow: 1px 1px 1.5px black;
+ }
+ 
+-/* `[hidden]` is implemented as a presentation attribute (see html.css), so any
+- * author rule setting `display` overrides it. This `!important` rule lets the
+- * attribute win regardless, so callers can set a `display` type unconditionally
+- * rather than guarding it with `:not([hidden])`. The `:where()` keeps the
+- * selector at zero specificity, so the rare element that must stay shown can
+- * override it with a plain `!important`. */
+-:where([hidden]) {
+-  display: none !important;
+-}
+-
+ /* Rules for 'hiding' portions of the chrome for special
+    kinds of windows with toolbars (not just browser windows) */
+ :root[chromehidden~="menubar"] .chromeclass-menubar,
+@@ -155,8 +163,8 @@
+   border: 1px solid var(--input-border-color);
+   border-radius: var(--border-radius-medium);
+   margin: 0;
+-  background-color: var(--input-text-background-color);
+-  color: var(--input-text-color);
++  background-color: var(--input-bgcolor, Field);
++  color: var(--input-color, FieldText);
+ 
+   &:where(:user-invalid) {
+     border-color: var(--border-color-error);

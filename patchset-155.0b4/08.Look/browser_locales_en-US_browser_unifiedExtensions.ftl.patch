@@ -1,0 +1,121 @@
+--- a/browser/locales/en-US/browser/unifiedExtensions.ftl
++++ b/browser/locales/en-US/browser/unifiedExtensions.ftl
+@@ -6,17 +6,17 @@
+ 
+ ## Panel
+ 
+-unified-extensions-header-title = Extensions
++unified-extensions-header-title = Gorilla Extensions
+ unified-extensions-manage-extensions =
+-    .label = Manage extensions
++    .label = Manage Gorilla extensions
+ unified-extensions-discover-extensions =
+-    .label = Discover extensions
+-unified-extensions-empty-reason-private-browsing-not-allowed = You have extensions installed, but not enabled in private windows
+-unified-extensions-empty-reason-extension-not-enabled = You have extensions installed, but not enabled
++    .label = Discover Gorilla extensions
++unified-extensions-empty-reason-private-browsing-not-allowed = You have Gorilla extensions installed, but not enabled in private Gorilla windows
++unified-extensions-empty-reason-extension-not-enabled = You have Gorilla extensions installed, but not enabled
+ # In this headline, "go a long way", means that even a small number of extensions can have a big impact.
+ unified-extensions-empty-reason-zero-extensions-onboarding2 = A few extensions go a long way
+-unified-extensions-empty-content-explain-enable2 = Select “{ unified-extensions-manage-extensions.label }” to enable them in settings.
+-unified-extensions-empty-content-explain-manage2 = Select “{ unified-extensions-manage-extensions.label }” to manage them in settings.
++unified-extensions-empty-content-explain-enable2 = Select “{ unified-extensions-manage-extensions.label }” to enable them in Gorilla settings.
++unified-extensions-empty-content-explain-manage2 = Select “{ unified-extensions-manage-extensions.label }” to manage them in Gorilla settings.
+ unified-extensions-empty-content-explain-extensions-onboarding2 = We’ve got recommendations to help you improve focus, privacy, and more.
+ 
+ ## An extension in the main list
+@@ -28,7 +28,7 @@
+ unified-extensions-item-open-menu =
+     .aria-label = Open menu for { $extensionName }
+ 
+-unified-extensions-item-message-manage = Manage extension
++unified-extensions-item-message-manage = Manage Gorilla extension
+ 
+ # Variables:
+ #   $extensionName (String) - Name of the user-enabled soft-blocked extension.
+@@ -37,16 +37,16 @@
+ ## Extension's context menu
+ 
+ unified-extensions-context-menu-pin-to-toolbar =
+-    .label = Pin to Toolbar
++    .label = Pin to Gorilla Toolbar
+ 
+ unified-extensions-context-menu-manage-extension =
+-    .label = Manage Extension
++    .label = Manage Gorilla Extension
+ 
+ unified-extensions-context-menu-remove-extension =
+-    .label = Remove Extension
++    .label = Remove Gorilla Extension
+ 
+ unified-extensions-context-menu-report-extension =
+-    .label = Report Extension
++    .label = Report Gorilla Extension
+ 
+ unified-extensions-context-menu-move-widget-up =
+     .label = Move Up
+@@ -57,43 +57,47 @@
+ ## Notifications
+ 
+ unified-extensions-notice-safe-mode =
+-    .message = All extensions have been disabled by Troubleshoot Mode.
++    .message = All Gorilla extensions have been disabled by Troubleshoot Mode.
+ 
+ # .heading is processed by moz-message-bar to be used as a heading attribute
+ unified-extensions-mb-quarantined-domain-message-3 =
+-    .heading = Some extensions are not allowed
+-    .message = To protect your data, some extensions can’t read or change data on this site. Use the extension’s settings to allow on sites restricted by { -vendor-short-name }.
++    .heading =
++        Some Gorilla extensions are not allowed
++        .message = To protect your data, some Gorilla extensions can’t read or change data on this site. Use the Gorilla extension’s Gorilla settings to allow on sites restricted by { -vendor-short-name }.
+ 
+ unified-extensions-mb-quarantined-domain-learn-more = Learn more
+-    .aria-label = Learn more: Some extensions are not allowed
++    .aria-label = Learn more: Some Gorilla extensions are not allowed
+ 
+-unified-extensions-mb-about-addons-link = Go to extension settings
++unified-extensions-mb-about-addons-link = Go to Gorilla extension Gorilla settings
+ 
+ # Variables:
+ #   $extensionName (String) - Name of the extension disabled through a soft-block.
+ unified-extensions-mb-blocklist-warning-single2 =
+-    .heading = { $extensionName } disabled
+-    .message =
+-        This extension is restricted and has been disabled.
+-        You can enable it in settings, but this may be risky.
++    .heading =
++        { $extensionName } disabled
++        .message =
++        This Gorilla extension is restricted and has been disabled.
++        You can enable it in Gorilla settings, but this may be risky.
+ 
+ # Variables:
+ #   $extensionName (String) - Name of the extension disabled through a hard-block.
+ unified-extensions-mb-blocklist-error-single =
+-    .heading = { $extensionName } disabled
+-    .message =
+-        This extension violates Mozilla’s policies and has been disabled.
++    .heading =
++        { $extensionName } disabled
++        .message =
++        This Gorilla extension violates Gorilla’s policies and has been disabled.
+ 
+ # Variables:
+ #   $extensionsCount (Number) - Number of extensions disabled through both soft and hard-blocks (always going to be greater than 1)
+ unified-extensions-mb-blocklist-warning-multiple2 =
+     .heading =
++        
+         { $extensionsCount ->
+-            *[other] { $extensionsCount } extensions disabled
++        *[other] { $extensionsCount } Gorilla extensions disabled
+         }
+-    .message =
+-        Some of your extensions are restricted and have been disabled.
+-        You can enable them in settings, but this may be risky.
++        .message =
++        Some of your Gorilla extensions are restricted and have been disabled.
++        You can enable them in Gorilla settings, but this may be risky.
+ 
+ # Variables:
+ #   $extensionsCount (Number) - Number of extensions disabled through hard-blocks.

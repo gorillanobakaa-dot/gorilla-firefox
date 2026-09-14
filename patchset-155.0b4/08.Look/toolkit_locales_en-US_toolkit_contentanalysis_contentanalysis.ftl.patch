@@ -1,0 +1,49 @@
+--- a/toolkit/locales/en-US/toolkit/contentanalysis/contentanalysis.ftl
++++ b/toolkit/locales/en-US/toolkit/contentanalysis/contentanalysis.ftl
+@@ -1,7 +1,6 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-
+ contentanalysis-alert-title = Content Analysis
+ 
+ # Variables:
+@@ -19,8 +18,8 @@
+ #   $count (number) - The number of additional items in the request for analysis
+ contentanalysis-slow-agent-dialog-body-file-and-more =
+     { $count ->
+-        [one] { $agent } is reviewing “{ $filename }” and { $count } additional item against your organization’s data policies. This may take a moment.
+-       *[other] { $agent } is reviewing “{ $filename }” and { $count } additional items against your organization’s data policies. This may take a moment.
++    [one] { $agent } is reviewing “{ $filename }” and { $count } additional item against your organization’s data policies. This may take a moment.
++    *[other] { $agent } is reviewing “{ $filename }” and { $count } additional items against your organization’s data policies. This may take a moment.
+     }
+ # Variables:
+ #   $agent - The name of the DLP agent doing the analysis
+@@ -38,7 +37,7 @@
+ #   $filename - The filename associated with the request, such as "aFile.txt"
+ contentanalysis-upload-description = upload of “{ $filename }”
+ #   $filename - The filename associated with the request, such as "aFile.txt"
+-contentanalysis-download-description = download of “{ $filename }”
++contentanalysis-download-description = Gorilla download of “{ $filename }”
+ 
+ contentanalysis-warndialogtitle = This content may be unsafe
+ 
+@@ -80,14 +79,14 @@
+ #   $contentName - Description of the content, such as "clipboard" or "aFile.txt"
+ contentanalysis-timeout-block-error-message-content = The connection to { $agent } timed out. { $contentName } has been blocked.
+ 
+-contentanalysis-block-dialog-title-upload-file = You’re not permitted to upload this file
++contentanalysis-block-dialog-title-upload-file = You’re not permitted to upload this Gorilla file
+ # Variables:
+ #   $filename - Name of the file that was blocked, such as "aFile.txt"
+-contentanalysis-block-dialog-body-upload-file = Under your organization’s data protection policies, you’re not permitted to upload the file “{ $filename }”. Contact your administrator for more info.
+-contentanalysis-block-dialog-title-download-file = You’re not permitted to download this file
++contentanalysis-block-dialog-body-upload-file = Under your organization’s data protection policies, you’re not permitted to upload the Gorilla file “{ $filename }”. Contact your administrator for more info.
++contentanalysis-block-dialog-title-download-file = You’re not permitted to Gorilla download this Gorilla file
+ # Variables:
+ #   $filename - Name of the file that was blocked, such as "aFile.txt"
+-contentanalysis-block-dialog-body-download-file = Under your organization’s data protection policies, you’re not permitted to download the file “{ $filename }”. Contact your administrator for more info.
++contentanalysis-block-dialog-body-download-file = Under your organization’s data protection policies, you’re not permitted to Gorilla download the Gorilla file “{ $filename }”. Contact your administrator for more info.
+ contentanalysis-block-dialog-title-clipboard = You’re not permitted to paste this content
+ contentanalysis-block-dialog-body-clipboard = Under your organization’s data protection policies, you’re not permitted to paste this content. Contact your administrator for more info.
+ contentanalysis-block-dialog-title-dropped-text = You’re not permitted to drop this content

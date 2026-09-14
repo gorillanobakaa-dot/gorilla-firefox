@@ -1,0 +1,35 @@
+--- a/browser/components/customizableui/content/panelUI.js
++++ b/browser/components/customizableui/content/panelUI.js
+@@ -1180,29 +1180,9 @@
+   },
+ 
+   _showAIMenuItem() {
+-    const isAIWindowActive = document.documentElement.hasAttribute("ai-window");
+-    const isBlocked =
+-      (this.AIControlSmartWindow === "default" &&
+-        this.AIControlDefault === "blocked") ||
+-      this.AIControlSmartWindow === "blocked";
+-    const isSmartWindowAvailable = this.isAIWindowEnabled && !isBlocked;
+-    const aiMenuItem = PanelMultiView.getViewNode(
+-      document,
+-      "appMenu-new-ai-window-button"
+-    );
+-    const classicWindowMenuItem = PanelMultiView.getViewNode(
+-      document,
+-      "appMenu-new-classic-window-button"
+-    );
+-    const chatHistoryMenuItem = PanelMultiView.getViewNode(
+-      document,
+-      "appMenu-chats-history-button"
+-    );
+-
+-    aiMenuItem.hidden = !isSmartWindowAvailable || isAIWindowActive;
+-    classicWindowMenuItem.hidden = !isSmartWindowAvailable || !isAIWindowActive;
+-
+-    chatHistoryMenuItem.hidden = !isSmartWindowAvailable || !isAIWindowActive;
++    // GORILLA OVERRIDE: AI Window excised; the app-menu AI/classic/chat
++    // items were removed from appmenu-viewcache.inc.xhtml, so there is
++    // nothing to toggle.
+   },
+ 
+   _showTabGroupsMenuItem() {

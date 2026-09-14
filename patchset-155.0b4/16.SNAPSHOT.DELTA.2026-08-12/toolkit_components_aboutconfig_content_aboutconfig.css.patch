@@ -1,0 +1,27 @@
+--- a/toolkit/components/aboutconfig/content/aboutconfig.css
++++ b/toolkit/components/aboutconfig/content/aboutconfig.css
+@@ -17,10 +17,11 @@
+ }
+ 
+ .config-background {
+-  background: url("chrome://global/content/aboutconfig/background.svg") no-repeat;
+-  height: 182px;
++  background: url("chrome://global/content/aboutconfig/background.svg") center no-repeat;
++  background-size: contain;
++  height: 400px;
+   margin: 32px auto;
+-  width: 235px;
++  width: 400px;
+ }
+ 
+ .config-help-text {
+@@ -29,6 +30,9 @@
+ 
+ .title {
+   background-image: url("chrome://global/skin/icons/warning.svg");
++  background-size: 8em;
++  min-height: 8em;
++  padding-inline-start: 9em;
+   fill: #fcd100;
+ }
+ 

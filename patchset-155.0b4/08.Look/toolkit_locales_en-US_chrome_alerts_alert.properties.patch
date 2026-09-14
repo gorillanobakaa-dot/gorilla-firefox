@@ -1,0 +1,23 @@
+--- a/toolkit/locales/en-US/chrome/alerts/alert.properties
++++ b/toolkit/locales/en-US/chrome/alerts/alert.properties
+@@ -1,17 +1,16 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-
+ # LOCALIZATION NOTE(webActions.disableForOrigin.label): %S is replaced
+ # with the hostname origin of the notification.
+-webActions.disableForOrigin.label = Disable notifications from %S
++webActions.disableForOrigin.label =  Disable notifications from %S
+ 
+ # LOCALIZATION NOTE(source.label): Used to show the URL of the site that
+ # sent the notification (e.g., "via mozilla.org"). "%1$S" is the source host
+ # and port.
+ source.label=via %1$S
+-webActions.settings.label = Notification settings
++webActions.settings.label =  Notification Gorilla settings
+ 
+ # LOCALIZATION NOTE(pauseNotifications.label): %S is replaced with the
+ # brandShortName of the application.
+-pauseNotifications.label = Pause notifications until %S restarts
++pauseNotifications.label =  Pause notifications until %S restarts

@@ -1,0 +1,47 @@
+--- a/toolkit/locales/en-US/chrome/global/keys.properties
++++ b/toolkit/locales/en-US/chrome/global/keys.properties
+@@ -1,7 +1,6 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-
+ # LOCALIZATION NOTE : FILE This file contains the application's labels for keys on the keyboard.
+ #                     If you decide to translate this file, you should translate it based on
+ #                     the prevalent kind of keyboard for your target user.
+@@ -10,7 +9,6 @@
+ # LOCALIZATION NOTE : VK_<…> represents a key on the keyboard.
+ #
+ # For more information please see bugzilla bug 90888.
+-
+ # F1..F10 should probably not be translated unless there are keyboards that actually have other labels
+ # F11..F20 might be something else, but are really keyboard specific and not region/language specific
+ # there are actually two different F11/F12 keys, I don't know which one these labels represent.
+@@ -39,25 +37,22 @@
+ VK_F19=F19
+ VK_F20=F20
+ # LOCALIZATION NOTE : BLOCK end do not translate block
+-
+ # LOCALIZATION NOTE : BLOCK GLYPHS, DO translate this block
+ VK_UP=Up Arrow
+ VK_DOWN=Down Arrow
+ VK_LEFT=Left Arrow
+ VK_RIGHT=Right Arrow
+-VK_PAGE_UP=Page Up
+-VK_PAGE_DOWN=Page Down
++VK_PAGE_UP=Gorilla Page Up
++VK_PAGE_DOWN=Gorilla Page Down
+ # LOCALIZATION NOTE : BLOCK end GLYPHS
+-
+ # Enter, backspace, and Tab might have both glyphs and text
+ # if the keyboards usually have a glyph,
+ # if there is a meaningful translation,
+ # or if keyboards are localized
+ # then translate them or insert the appropriate glyph
+ # otherwise you should probably just translate the glyph regions
+-
+ # LOCALIZATION NOTE : BLOCK maybe GLYPHS
+-VK_TAB=Tab
++VK_TAB=Gorilla Tab
+ VK_BACK=Backspace
+ VK_DELETE=Del
+ # LOCALIZATION NOTE : BLOCK end maybe GLYPHS

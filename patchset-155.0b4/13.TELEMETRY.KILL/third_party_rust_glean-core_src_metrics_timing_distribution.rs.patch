@@ -1,0 +1,55 @@
+--- a/third_party/rust/glean-core/src/metrics/timing_distribution.rs
++++ b/third_party/rust/glean-core/src/metrics/timing_distribution.rs
+@@ -153,8 +153,15 @@
+     ///
+     /// A unique [`TimerId`] for the new timer.
+     pub fn start(&self) -> TimerId {
+-        let start_time = zeitstempel::now_awake();
+         let id = self.next_id.fetch_add(1, Ordering::SeqCst).into();
++        // Gorilla: telemetry disabled (see GORILLA_TELEMETRY_OFF). Skip the clock
++        // read + clone + dispatch; the const lets the optimizer DCE the rest. A
++        // valid (monotonic) TimerId is still returned so stop_and_accumulate
++        // callers are unaffected.
++        if crate::GORILLA_TELEMETRY_OFF {
++            return id;
++        }
++        let start_time = zeitstempel::now_awake();
+         let metric = self.clone();
+         crate::launch_with_glean(move |_glean| metric.set_start(id, start_time));
+         id
+@@ -192,6 +199,10 @@
+     ///   same timespan metric.
+     /// * `stop_time` - Timestamp in nanoseconds.
+     pub fn stop_and_accumulate(&self, id: TimerId) {
++        // Gorilla: telemetry disabled — skip clock read + clone + dispatch.
++        if crate::GORILLA_TELEMETRY_OFF {
++            return;
++        }
+         let stop_time = zeitstempel::now_awake();
+         let metric = self.clone();
+         crate::launch_with_glean(move |glean| metric.set_stop_and_accumulate(glean, id, stop_time));
+@@ -471,6 +482,10 @@
+     /// the application's platforms. Otherwise the resulting data may not share the same
+     /// guarantees that other `timing_distribution` metrics' data do.
+     pub fn accumulate_raw_duration(&self, duration: Duration) {
++        // Gorilla: telemetry disabled — skip conversion + clone + dispatch.
++        if crate::GORILLA_TELEMETRY_OFF {
++            return;
++        }
+         let duration_ns = duration.as_nanos().try_into().unwrap_or(u64::MAX);
+         let metric = self.clone();
+         crate::launch_with_glean(move |glean| {
+@@ -666,6 +681,13 @@
+     ///
+     /// Accumulation happens in-memory only.
+     pub fn accumulate(&mut self, sample: u64) {
++        // Gorilla: telemetry disabled — skip the inline histogram accumulate.
++        // This is the hot WebRender frame-timing path. Leaving the histogram
++        // empty means Drop::drop returns early (is_empty check) and never calls
++        // commit_histogram(), so no dispatch happens either.
++        if crate::GORILLA_TELEMETRY_OFF {
++            return;
++        }
+         // Check the range prior to converting the incoming unit to
+         // nanoseconds, so we can compare against the constant
+         // MAX_SAMPLE_TIME.

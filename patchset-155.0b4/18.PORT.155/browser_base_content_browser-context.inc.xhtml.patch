@@ -1,0 +1,16 @@
+--- a/browser/base/content/browser-context.inc.xhtml
++++ b/browser/base/content/browser-context.inc.xhtml
+@@ -104,10 +104,13 @@
+                 class="context-menu-open-link"
+                 data-l10n-id="main-context-menu-open-link-new-private-window"
+                 />
++      <!-- GORILLA excised 2026-08-27 (155): AI row. Its l10n strings were removed with the AI stack, so it rendered as a BLANK line in the right-click menu.
++           context > Open Link in New Smart Window
+       <menuitem id="context-openlinksmartwindow"
+                 class="context-menu-open-link"
+                 data-l10n-id="main-context-menu-open-link-new-smart-window"
+                 />
++      -->
+       <menuitem id="context-previewlink"
+                 data-l10n-id="main-context-menu-preview-link"
+                 />

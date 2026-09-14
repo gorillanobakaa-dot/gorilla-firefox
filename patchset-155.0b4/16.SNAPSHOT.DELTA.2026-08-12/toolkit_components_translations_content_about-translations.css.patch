@@ -1,0 +1,17 @@
+--- a/toolkit/components/translations/content/about-translations.css
++++ b/toolkit/components/translations/content/about-translations.css
+@@ -63,8 +63,12 @@
+ }
+ 
+ #about-translations-logo {
+-  width: var(--icon-size-large);
+-  height: var(--icon-size-large);
++  /* GORILLA 2026-07-31: lesson Fixing_the_about_translations_Logo_Sizing */
++  width: 200px !important;
++  height: 200px !important;
++  min-width: 200px !important;
++  max-width: 200px !important;
++  display: block !important;
+ }
+ 
+ #about-translations-h1 {

@@ -1,0 +1,34 @@
+--- a/dom/media/mediacapabilities/MediaCapabilities.cpp
++++ b/dom/media/mediacapabilities/MediaCapabilities.cpp
+@@ -367,6 +367,15 @@
+       const MediaExtendedMIMEType& aMime, MediaDecodingType aType,
+       const Maybe<ColorGamut>& aColorGamut,
+       const Maybe<TransferFunction>& aTransferFunction) const {
++    // GORILLA PATCH: Enforce hardware-only media capabilities gating
++    if (StaticPrefs::media_gorilla_hardware_only_mode()) {
++      if (aMime.Type().HasVideoMajorType()) {
++        const nsCString& mime = aMime.Type().AsString();
++        if (!MP4Decoder::IsH264(mime)) {
++          return CodecSupport::Unsupported;
++        }
++      }
++    }
+     if (mediacaps::CheckMIMETypeSupport(aMime, AsVariant(aType), aColorGamut,
+                                         aTransferFunction, mBehavior)
+             .isErr()) {
+@@ -393,6 +402,15 @@
+       const MediaExtendedMIMEType& aMime, MediaEncodingType aType,
+       const Maybe<ColorGamut>& aColorGamut,
+       const Maybe<TransferFunction>& aTransferFunction) const {
++    // GORILLA PATCH: Enforce hardware-only media capabilities gating
++    if (StaticPrefs::media_gorilla_hardware_only_mode()) {
++      if (aMime.Type().HasVideoMajorType()) {
++        const nsCString& mime = aMime.Type().AsString();
++        if (!MP4Decoder::IsH264(mime)) {
++          return CodecSupport::Unsupported;
++        }
++      }
++    }
+     if (mediacaps::CheckMIMETypeSupport(aMime, AsVariant(aType), aColorGamut,
+                                         aTransferFunction, mBehavior)
+             .isErr()) {

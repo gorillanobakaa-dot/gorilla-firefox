@@ -1,0 +1,23 @@
+--- a/dom/media/webcodecs/VideoEncoder.cpp
++++ b/dom/media/webcodecs/VideoEncoder.cpp
+@@ -21,6 +21,7 @@
+ #include "mozilla/dom/VideoFrame.h"
+ #include "mozilla/dom/VideoFrameBinding.h"
+ #include "mozilla/dom/WebCodecsUtils.h"
++#include "mozilla/StaticPrefs_media.h"
+ #include "nsIGlobalObject.h"
+ #include "nsPrintfCString.h"
+ #include "nsRFPService.h"
+@@ -426,6 +427,12 @@
+     return false;
+   }
+ 
++  // GORILLA OVERRIDE 2026-08-11: hardware-only codec check REMOVED from Validate()
++  // for the same reason as VideoDecoder.cpp — a Validate() failure becomes
++  // TypeError("config is invalid"), but a valid-but-unsupported codec must resolve
++  // {supported:false}. IsSupportedVideoCodec() still enforces H.264-only, so the
++  // policy is unchanged; callers are simply told "no" correctly instead of throwing.
++
+   // 2.
+   if (aConfig.mWidth == 0 || aConfig.mHeight == 0) {
+     aErrorMessage.AppendPrintf("Invalid VideoEncoderConfig: %s equal to 0",

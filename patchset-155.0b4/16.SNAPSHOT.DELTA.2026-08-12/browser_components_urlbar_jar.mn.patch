@@ -1,0 +1,12 @@
+--- a/browser/components/urlbar/jar.mn
++++ b/browser/components/urlbar/jar.mn
+@@ -4,9 +4,6 @@
+ 
+ browser.jar:
+         content/browser/urlbar/L10nCache.mjs               (content/L10nCache.mjs)
+-        content/browser/urlbar/SmartbarInput.mjs           (content/SmartbarInput.mjs)
+-        content/browser/urlbar/SmartbarInputController.mjs (content/SmartbarInputController.mjs)
+-        content/browser/urlbar/SmartbarInputUtils.mjs      (content/SmartbarInputUtils.mjs)
+         content/browser/urlbar/UrlbarChildController.mjs   (content/UrlbarChildController.mjs)
+         content/browser/urlbar/UrlbarChildTelemetry.mjs    (content/UrlbarChildTelemetry.mjs)
+         content/browser/urlbar/UrlbarContentPrefs.mjs      (content/UrlbarContentPrefs.mjs)

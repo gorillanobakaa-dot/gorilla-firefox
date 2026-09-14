@@ -1,0 +1,111 @@
+--- a/browser/components/tabbrowser/content/tabgroup-menu.js
++++ b/browser/components/tabbrowser/content/tabgroup-menu.js
+@@ -17,12 +17,8 @@
+     "moz-src:///browser/components/sharing/ContentSharingUtils.sys.mjs"
+   );
+ 
+-  ChromeUtils.importESModule(
+-    "chrome://browser/content/genai/content/model-optin.mjs",
+-    {
+-      global: "current",
+-    }
+-  );
++  // GORILLA OVERRIDE: genai excised — model-optin component import removed
++  // (was a boot-time load failure; the smart-tab-grouping optin path is dead).
+ 
+   class MozTabbrowserTabGroupMenu extends MozXULElement {
+     static COLORS = [
+@@ -649,91 +645,8 @@
+       if (!this.smartTabGroupsEnabled || this.#smartTabGroupsInitiated) {
+         return;
+       }
+-      const { SmartTabGroupingManager } = ChromeUtils.importESModule(
+-        "moz-src:///browser/components/tabbrowser/SmartTabGrouping.sys.mjs"
+-      );
+-      this.#smartTabGroupingManager = new SmartTabGroupingManager();
+-
+-      // Init Suggestion Button
+-      this.#suggestionButton = this.querySelector(
+-        "#tab-group-suggestion-button"
+-      );
+-      this.#suggestionButton.iconSrc = this.smartTabGroupsEnabled
+-        ? MozTabbrowserTabGroupMenu.AI_ICON
+-        : "";
+-
+-      // If user has not opted in, show the optin flow
+-      this.#suggestionButton.addEventListener("click", () => {
+-        !this.smartTabGroupsOptin
+-          ? this.#initSmartTabGroupsOptin()
+-          : this.#handleSmartSuggest();
+-      });
+-
+-      // Init Suggestions UI
+-      this.#suggestionsHeading = this.querySelector(
+-        "#tab-group-editor-title-suggest"
+-      );
+-      this.#suggestionsContainer = this.querySelector(
+-        "#tab-group-suggestions-container"
+-      );
+-      this.#suggestions = this.querySelector("#tab-group-suggestions");
+-      this.#selectSuggestionsCheckbox = this.querySelector(
+-        "#tab-group-select-checkbox"
+-      );
+-      this.#selectSuggestionsCheckbox.addEventListener("change", e => {
+-        if (e.target.checked) {
+-          this.#handleSelectAll();
+-        } else {
+-          this.#handleDeselectAll();
+-        }
+-      });
+-      this.#suggestionsMessageContainer = this.querySelector(
+-        "#tab-group-suggestions-message-container"
+-      );
+-      this.#suggestionsMessage = this.querySelector(
+-        "#tab-group-suggestions-message"
+-      );
+-      this.#suggestionsMessage.iconSrc = this.smartTabGroupsEnabled
+-        ? MozTabbrowserTabGroupMenu.AI_ICON
+-        : "";
+-      this.#createSuggestionsButton = this.querySelector(
+-        "#tab-group-create-suggestions-button"
+-      );
+-      this.#createSuggestionsButton.addEventListener("click", () => {
+-        this.#handleMlTelemetry("save");
+-        this.activeGroup.addTabs(this.#selectedSuggestedTabs);
+-        this.close(true);
+-      });
+-      this.#cancelSuggestionsButton = this.querySelector(
+-        "#tab-group-cancel-suggestions-button"
+-      );
+-      this.#cancelSuggestionsButton.addEventListener("click", () => {
+-        this.#handleMlTelemetry("cancel");
+-        this.#suggestionsRunToken = null;
+-        this.close();
+-      });
+-      this.#suggestionsSeparator = this.querySelector(
+-        "#tab-group-suggestions-separator"
+-      );
+-      this.#suggestionsOptinContainer = this.querySelector(
+-        "#tab-group-suggestions-optin-container"
+-      );
+-
+-      // Init Loading UI
+-      this.#suggestionsLoading = this.querySelector(
+-        "#tab-group-suggestions-loading"
+-      );
+-      this.#suggestionsLoadActions = this.querySelector(
+-        "#tab-group-suggestions-load-actions"
+-      );
+-      this.#suggestionsLoadCancel = this.querySelector(
+-        "#tab-group-suggestions-load-cancel"
+-      );
+-      this.#suggestionsLoadCancel.addEventListener("click", () => {
+-        this.#suggestionsRunToken = null;
+-        this.#handleLoadSuggestionsCancel();
+-      });
+-      this.#smartTabGroupsInitiated = true;
++      // GORILLA: SmartTabGrouping excised (AI). Smart suggestions unavailable.
++      return;
+     }
+ 
+     #populateSwatches() {

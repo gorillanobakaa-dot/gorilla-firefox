@@ -1,0 +1,72 @@
+--- a/browser/base/content/navigator-toolbox.js
++++ b/browser/base/content/navigator-toolbox.js
+@@ -2,11 +2,6 @@
+  * License, v. 2.0. If a copy of the MPL was not distributed with this
+  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+ 
+-ChromeUtils.defineESModuleGetters(this, {
+-  AIWindowUI:
+-    "moz-src:///browser/components/aiwindow/ui/modules/AIWindowUI.sys.mjs",
+-});
+-
+ document.addEventListener(
+   "DOMContentLoaded",
+   () => {
+@@ -223,7 +218,6 @@
+         #identity-permission-box,
+         #translations-button,
+         #split-view-button,
+-        #smartwindow-ask-button,
+         #smartwindow-group-tabs-button
+         `);
+       if (!element) {
+@@ -319,17 +313,9 @@
+           }
+           break;
+ 
+-        case "smartwindow-ask-button":
+-          if (isLeftClick) {
+-            AIWindowUI.toggleSidebar(window);
+-          }
+-          break;
+-
+-        case "smartwindow-group-tabs-button":
+-          if (isLeftClick) {
+-            AIWindowUI.toggleGroupTabsPanel(window);
+-          }
+-          break;
++        // GORILLA OVERRIDE 2026-08-27: aiwindow excised — the button is removed
++        // and AIWindowUI is undefined here, so the handler is dropped rather
++        // than left to throw a ReferenceError on click.
+ 
+         default:
+           throw new Error(`Missing case for #${element.id}`);
+@@ -364,7 +350,6 @@
+         #library-button,
+         #ipprotection-button,
+         #split-view-button,
+-        #smartwindow-ask-button,
+         #smartwindow-group-tabs-button
+       `);
+       if (!element) {
+@@ -465,17 +450,9 @@
+           }
+           break;
+ 
+-        case "smartwindow-ask-button":
+-          if (isLikeLeftClick) {
+-            AIWindowUI.toggleSidebar(window);
+-          }
+-          break;
+-
+-        case "smartwindow-group-tabs-button":
+-          if (isLikeLeftClick) {
+-            AIWindowUI.toggleGroupTabsPanel(window);
+-          }
+-          break;
++        // GORILLA OVERRIDE 2026-08-27: aiwindow excised — the button is removed
++        // and AIWindowUI is undefined here, so the handler is dropped rather
++        // than left to throw a ReferenceError on click.
+ 
+         default:
+           throw new Error(`Missing case for #${element.id}`);

@@ -1,0 +1,21 @@
+--- a/dom/media/AudioStream.h
++++ b/dom/media/AudioStream.h
+@@ -32,6 +32,7 @@
+ class FrameHistory;
+ class AudioConfig;
+ class RLBoxSoundTouch;
++class AudioPsychoacousticEnhancer;
+ 
+ // A struct that contains the number of frames serviced or underrun by a
+ // callback, alongside the sample-rate for this callback (in case of playback
+@@ -372,6 +373,10 @@
+   void GetTimeStretched(AudioBufferWriter& aWriter);
+   void UpdatePlaybackRateIfNeeded();
+ 
++  // GORILLA PATCH: psychoacoustic DSP for Sony SVE14A3AJ
++  UniquePtr<AudioPsychoacousticEnhancer> mPsychoEnhancer;
++  std::atomic<float> mVolume;
++  Atomic<bool> mUseSoftwareVolume;
+   // Return true if audio frames are valid (correct sampling rate and valid
+   // channel count) otherwise false.
+   bool IsValidAudioFormat(Chunk* aChunk) MOZ_REQUIRES(mMonitor);

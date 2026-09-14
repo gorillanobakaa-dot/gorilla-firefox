@@ -7,3 +7,7 @@ firefox-src/
 gorilla-recreate/
 *.log
 __pycache__/
+
+# font binaries are never committed: licence covers use, not redistribution
+*.ttf
+*.ttc

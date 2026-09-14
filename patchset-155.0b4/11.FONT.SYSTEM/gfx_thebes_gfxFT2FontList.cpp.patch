@@ -1,0 +1,93 @@
+--- a/gfx/thebes/gfxFT2FontList.cpp
++++ b/gfx/thebes/gfxFT2FontList.cpp
+@@ -1547,6 +1547,10 @@
+   }
+   mFontNameCache->Init();
+ 
++  // [GORILLA] In bundled-only mode, skip system font scanning entirely.
++  // Controlled by pref: gfx.bundled_fonts.skip_system_scan (default: false)
++  bool fcSkipSysScan = Preferences::GetBool("gfx.bundled_fonts.skip_system_scan", false);
++
+ #if defined(MOZ_WIDGET_ANDROID)
+   // Android API 29+ provides system font and font matcher API for native code.
+ 
+@@ -1566,7 +1570,7 @@
+ 
+   bool useSystemFontAPI = !gfxAndroidPlatform::IsFontAPIDisabled();
+ 
+-  if (useSystemFontAPI) {
++  if (!fcSkipSysScan && useSystemFontAPI) {
+     bool noFontByFontAPI = true;
+     if (__builtin_available(android 29, *)) {
+       gfxAndroidPlatform::WaitForInitializeFontAPI();
+@@ -1585,9 +1589,9 @@
+     }
+   }
+ 
+-  if (!useSystemFontAPI)
++  if (!fcSkipSysScan && !useSystemFontAPI)
+ #endif
+-  {
++  if (!fcSkipSysScan) {
+     FindFontsInDir(androidFontsRoot, mFontNameCache.get());
+   }
+ 
+@@ -1601,32 +1605,36 @@
+     FindFontsInOmnijar(mFontNameCache.get());
+   }
+ 
+-  // Look for downloaded fonts in a profile-agnostic "fonts" directory.
+-  nsCOMPtr<nsIProperties> dirSvc =
+-      do_GetService(NS_DIRECTORY_SERVICE_CONTRACTID);
+-  if (dirSvc) {
+-    nsCOMPtr<nsIFile> appDir;
+-    nsresult rv = dirSvc->Get(NS_XPCOM_CURRENT_PROCESS_DIR, NS_GET_IID(nsIFile),
+-                              getter_AddRefs(appDir));
+-    if (NS_SUCCEEDED(rv)) {
+-      appDir->AppendNative("fonts"_ns);
+-      nsCString localPath;
+-      if (NS_SUCCEEDED(appDir->GetNativePath(localPath))) {
+-        FindFontsInDir(localPath, mFontNameCache.get());
++  if (!fcSkipSysScan) {
++    // Look for downloaded fonts in a profile-agnostic "fonts" directory.
++    nsCOMPtr<nsIProperties> dirSvc =
++        do_GetService(NS_DIRECTORY_SERVICE_CONTRACTID);
++    if (dirSvc) {
++      nsCOMPtr<nsIFile> appDir;
++      nsresult rv = dirSvc->Get(NS_XPCOM_CURRENT_PROCESS_DIR, NS_GET_IID(nsIFile),
++                                getter_AddRefs(appDir));
++      if (NS_SUCCEEDED(rv)) {
++        appDir->AppendNative("fonts"_ns);
++        nsCString localPath;
++        if (NS_SUCCEEDED(appDir->GetNativePath(localPath))) {
++          FindFontsInDir(localPath, mFontNameCache.get());
++        }
+       }
+     }
+-  }
+ 
+-  // look for locally-added fonts in a "fonts" subdir of the profile
+-  nsCOMPtr<nsIFile> localDir;
+-  nsresult rv = NS_GetSpecialDirectory(NS_APP_USER_PROFILE_LOCAL_50_DIR,
+-                                       getter_AddRefs(localDir));
+-  if (NS_SUCCEEDED(rv) && NS_SUCCEEDED(localDir->Append(u"fonts"_ns))) {
+-    nsCString localPath;
+-    rv = localDir->GetNativePath(localPath);
+-    if (NS_SUCCEEDED(rv)) {
+-      FindFontsInDir(localPath, mFontNameCache.get());
++    // look for locally-added fonts in a "fonts" subdir of the profile
++    nsCOMPtr<nsIFile> localDir;
++    nsresult rv = NS_GetSpecialDirectory(NS_APP_USER_PROFILE_LOCAL_50_DIR,
++                                         getter_AddRefs(localDir));
++    if (NS_SUCCEEDED(rv) && NS_SUCCEEDED(localDir->Append(u"fonts"_ns))) {
++      nsCString localPath;
++      rv = localDir->GetNativePath(localPath);
++      if (NS_SUCCEEDED(rv)) {
++        FindFontsInDir(localPath, mFontNameCache.get());
++      }
+     }
++  } else {
++    LOG(("[Gorilla] Skipped system font directory scan (bundled-only mode)"));
+   }
+ 
+   mFontNameCache->DropStaleEntries();

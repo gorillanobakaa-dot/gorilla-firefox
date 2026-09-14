@@ -1,0 +1,75 @@
+--- a/toolkit/locales/en-US/toolkit/global/contextual-identity.ftl
++++ b/toolkit/locales/en-US/toolkit/global/contextual-identity.ftl
+@@ -1,38 +1,37 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-
+ ## Names of the default containers in Firefox.
+ ## See https://support.mozilla.org/kb/how-use-firefox-containers
+-
+ user-context-personal =
+-    .label = Personal
+-    .accesskey = P
++    .label =
++        Personal
++        .accesskey = P
+ user-context-work =
+-    .label = Work
+-    .accesskey = W
++    .label =
++        Work
++        .accesskey = W
+ user-context-banking =
+-    .label = Banking
+-    .accesskey = B
++    .label =
++        Banking
++        .accesskey = B
+ user-context-shopping =
+-    .label = Shopping
+-    .accesskey = S
++    .label =
++        Shopping
++        .accesskey = S
+ 
+ ##
+-
+ user-context-new-tab =
+-    .label = New Tab
+-    .accesskey = N
+-user-context-add-container =
+-    .label = Add new container
+-    .accesskey = A
++    .label =
++        New Gorilla Tab
++        .accesskey = N
+ user-context-manage-containers =
+-    .label = Manage containers
+-    .accesskey = o
++    .label =
++        Manage containers
++        .accesskey = o
+ 
+ ## Container colors, shown as selectable swatches in the container
+ ## creation/edit dialog.
+-
+ user-context-color-blue =
+     .label = Blue
+ user-context-color-cyan =
+@@ -56,7 +55,6 @@
+ 
+ ## Container icons, shown as selectable swatches in the container
+ ## creation/edit dialog.
+-
+ user-context-icon-fingerprint =
+     .label = Fingerprint
+ user-context-icon-briefcase =
+@@ -85,3 +83,7 @@
+     .label = Dot
+ user-context-icon-fence =
+     .label = Fence
++
++user-context-add-container =
++    .label = Add new container
++    .accesskey = A

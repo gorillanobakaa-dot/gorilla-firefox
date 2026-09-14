@@ -1,0 +1,42 @@
+--- a/third_party/rust/glean-core/src/metrics/timespan.rs
++++ b/third_party/rust/glean-core/src/metrics/timespan.rs
+@@ -56,6 +56,7 @@
+     /// [`set_stop`](TimespanMetric::set_stop)): in that case the original start
+     /// time will be preserved.
+     pub fn start(&self) {
++        if crate::GORILLA_TELEMETRY_OFF { return; }  // Gorilla: telemetry disabled — skip clone + dispatch
+         let start_time = zeitstempel::now_awake();
+ 
+         let metric = self.clone();
+@@ -88,6 +89,7 @@
+     ///
+     /// This will record an error if no [`set_start`](TimespanMetric::set_start) was called.
+     pub fn stop(&self) {
++        if crate::GORILLA_TELEMETRY_OFF { return; }  // Gorilla: telemetry disabled — skip clone + dispatch
+         let stop_time = zeitstempel::now_awake();
+ 
+         let metric = self.clone();
+@@ -143,6 +145,7 @@
+     /// error is recorded if no [`set_start`](TimespanMetric::set_start) was
+     /// called.
+     pub fn cancel(&self) {
++        if crate::GORILLA_TELEMETRY_OFF { return; }  // Gorilla: telemetry disabled — skip clone + dispatch
+         let metric = self.clone();
+         crate::dispatcher::launch(move || {
+             let mut lock = metric
+@@ -168,6 +171,7 @@
+     ///
+     /// * `elapsed` - The elapsed time to record.
+     pub fn set_raw(&self, elapsed: Duration) {
++        if crate::GORILLA_TELEMETRY_OFF { return; }  // Gorilla: telemetry disabled — skip clone + dispatch
+         let metric = self.clone();
+         crate::launch_with_glean(move |glean| metric.set_raw_sync(glean, elapsed));
+     }
+@@ -187,6 +191,7 @@
+     ///
+     /// * `elapsed_nanos` - The elapsed time to record, in nanoseconds.
+     pub fn set_raw_nanos(&self, elapsed_nanos: i64) {
++        if crate::GORILLA_TELEMETRY_OFF { return; }  // Gorilla: telemetry disabled — skip clone + dispatch
+         let elapsed = Duration::from_nanos(elapsed_nanos.try_into().unwrap_or(0));
+         self.set_raw(elapsed)
+     }

@@ -1,0 +1,170 @@
+--- a/browser/components/DesktopActorRegistry.sys.mjs
++++ b/browser/components/DesktopActorRegistry.sys.mjs
+@@ -229,76 +229,11 @@
+     enablePreference: "browser.aboutwelcome.enabled",
+   },
+ 
+-  AIChatContent: {
+-    parent: {
+-      esModuleURI:
+-        "moz-src:///browser/components/aiwindow/ui/actors/AIChatContentParent.sys.mjs",
+-    },
+-    child: {
+-      esModuleURI:
+-        "moz-src:///browser/components/aiwindow/ui/actors/AIChatContentChild.sys.mjs",
+-      events: {
+-        "AIChatContent:DispatchFollowUp": { wantUntrusted: true },
+-        "AIChatContent:Ready": { wantUntrusted: true },
+-        "AIChatContent:DispatchAction": { wantUntrusted: true },
+-        "AIChatContent:OpenLink": { wantUntrusted: true },
+-        "AIChatContent:DispatchNewChat": { wantUntrusted: true },
+-        "AIChatContent:AccountSignIn": { wantUntrusted: true },
+-        "AIChatContent:ToolUIUpdate": { wantUntrusted: true },
+-        "AIChatContent:RequestAssets": { wantUntrusted: true },
+-        "AIChatContent:HistoryGridRender": { wantUntrusted: true },
+-        "AIChatContent:HistoryGridItemClick": { wantUntrusted: true },
+-        "AIChatContent:ClientError": { wantUntrusted: true },
+-      },
+-    },
+-    allFrames: true,
+-    matches: ["about:aichatcontent"],
+-    remoteTypes: ["privilegedabout"],
+-    enablePreference: "browser.smartwindow.enabled",
+-  },
++  // GORILLA excised: AIChatContent actor (aiwindow removed).
+ 
+-  AISmartBar: {
+-    parent: {
+-      esModuleURI:
+-        "moz-src:///browser/components/aiwindow/ui/actors/AISmartBarParent.sys.mjs",
+-    },
+-    child: {
+-      esModuleURI:
+-        "moz-src:///browser/components/aiwindow/ui/actors/AISmartBarChild.sys.mjs",
+-    },
+-    matches: ["chrome://browser/content/aiwindow/aiWindow.html"],
+-    includeChrome: true,
+-    allFrames: true,
+-    enablePreference: "browser.smartwindow.enabled",
+-    remoteTypes: ["parent"],
+-  },
++  // GORILLA excised: AISmartBar actor (aiwindow removed).
+ 
+-  SmartWindowTasks: {
+-    parent: {
+-      esModuleURI:
+-        "moz-src:///browser/components/aiwindow/ui/actors/SmartWindowTasksParent.sys.mjs",
+-    },
+-    child: {
+-      esModuleURI:
+-        "moz-src:///browser/components/aiwindow/ui/actors/SmartWindowTasksChild.sys.mjs",
+-      events: {
+-        "SmartWindowTasks:RequestListMonitors": { wantUntrusted: true },
+-        "SmartWindowTasks:RequestCreateMonitor": { wantUntrusted: true },
+-        "SmartWindowTasks:RequestDeleteMonitor": { wantUntrusted: true },
+-        "SmartWindowTasks:RequestUpdateMonitor": { wantUntrusted: true },
+-        "SmartWindowTasks:RequestRunMonitor": { wantUntrusted: true },
+-        "SmartWindowTasks:RequestPauseMonitor": { wantUntrusted: true },
+-        "SmartWindowTasks:RequestConstants": { wantUntrusted: true },
+-      },
+-    },
+-    allFrames: true,
+-    // TODO: Remove chrome:// URL and "parent" remoteType before landing
+-    // These are only for development while about:smartwindowtasks registration lands
+-    matches: ["about:smartwindowtasks"],
+-    includeChrome: true,
+-    remoteTypes: ["privilegedabout"],
+-    enablePreference: "browser.smartwindow.enabled",
+-  },
++  // GORILLA excised (new in 155): SmartWindowTasks actor (aiwindow removed).
+ 
+   BackupUI: {
+     parent: {
+@@ -622,13 +557,11 @@
+       "chrome://browser/content/sidebar/sidebar-customize.html",
+       "chrome://browser/content/sidebar/sidebar-syncedtabs.html",
+       "chrome://browser/content/sidebar/sidebar-opentabs.html",
+-      "chrome://browser/content/genai/chat.html",
+       "about:firefoxview",
+       "about:editprofile",
+       "about:deleteprofile",
+       "about:newprofile",
+       "about:opentabs",
+-      "about:aichatcontent",
+     ],
+     remoteTypes: ["parent", "privilegedabout"],
+   },
+@@ -654,18 +587,6 @@
+     safeForUntrustedWebProcess: true,
+   },
+ 
+-  LinkPreview: {
+-    parent: {
+-      esModuleURI: "resource:///actors/LinkPreviewParent.sys.mjs",
+-    },
+-    child: {
+-      esModuleURI: "resource:///actors/LinkPreviewChild.sys.mjs",
+-    },
+-    includeChrome: true,
+-    enablePreference: "browser.ml.linkPreview.enabled",
+-    safeForUntrustedWebProcess: true,
+-  },
+-
+   PageAssist: {
+     parent: {
+       esModuleURI: "resource:///actors/PageAssistParent.sys.mjs",
+@@ -884,53 +805,7 @@
+     safeForUntrustedWebProcess: true,
+   },
+ 
+-  SmartFormFill: {
+-    parent: {
+-      esModuleURI:
+-        "moz-src:///browser/components/aiwindow/ui/actors/SmartFormFillParent.sys.mjs",
+-    },
+-    child: {
+-      esModuleURI:
+-        "moz-src:///browser/components/aiwindow/ui/actors/SmartFormFillChild.sys.mjs",
+-      events: {
+-        DOMContentLoaded: {},
+-      },
+-    },
+-    safeForUntrustedWebProcess: true,
+-
+-    // SmartFormFill should only work on HTTPS urls
+-    matches: ["https://*/*"],
+-    messageManagerGroups: ["browsers"],
+-
+-    onAddActor(register, unregister) {
+-      let isRegistered = false;
+-
+-      const maybeRegister = () => {
+-        if (
+-          Services.prefs.getBoolPref("browser.smartwindow.enabled") &&
+-          Services.prefs.getBoolPref(
+-            "browser.smartwindow.smartformfill.enabled",
+-            false
+-          )
+-        ) {
+-          if (!isRegistered) {
+-            register();
+-            isRegistered = true;
+-          }
+-        } else if (isRegistered) {
+-          unregister();
+-          isRegistered = false;
+-        }
+-      };
+-
+-      Services.prefs.addObserver("browser.smartwindow.enabled", maybeRegister);
+-      Services.prefs.addObserver(
+-        "browser.smartwindow.smartformfill.enabled",
+-        maybeRegister
+-      );
+-      maybeRegister();
+-    },
+-  },
++  // GORILLA excised (new in 155): SmartFormFill actor (aiwindow removed).
+ 
+   SpeechDispatcher: {
+     parent: {

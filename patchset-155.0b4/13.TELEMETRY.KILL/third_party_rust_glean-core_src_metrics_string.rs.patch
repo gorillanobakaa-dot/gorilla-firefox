@@ -1,0 +1,10 @@
+--- a/third_party/rust/glean-core/src/metrics/string.rs
++++ b/third_party/rust/glean-core/src/metrics/string.rs
+@@ -68,6 +68,7 @@
+     ///
+     /// Truncates the value if it is longer than `MAX_LENGTH_VALUE` bytes and logs an error.
+     pub fn set(&self, value: String) {
++        if crate::GORILLA_TELEMETRY_OFF { return; }  // Gorilla: telemetry disabled — skip clone + dispatch
+         let metric = self.clone();
+         crate::launch_with_glean(move |glean| metric.set_sync(glean, &value))
+     }

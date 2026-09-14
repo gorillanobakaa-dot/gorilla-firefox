@@ -1,0 +1,14 @@
+--- a/browser/components/urlbar/UrlbarProvidersManager.sys.mjs
++++ b/browser/components/urlbar/UrlbarProvidersManager.sys.mjs
+@@ -81,11 +81,6 @@
+     supportedSAPs: ["searchbar", "smartbar", "urlbar"],
+   },
+   {
+-    name: "UrlbarProviderAiChat",
+-    module: "moz-src:///browser/components/urlbar/UrlbarProviderAiChat.sys.mjs",
+-    supportedSAPs: ["smartbar", "urlbar"],
+-  },
+-  {
+     name: "UrlbarProviderClipboard",
+     module:
+       "moz-src:///browser/components/urlbar/UrlbarProviderClipboard.sys.mjs",

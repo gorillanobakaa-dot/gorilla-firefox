@@ -1,0 +1,40 @@
+--- a/browser/base/content/browser-places.js
++++ b/browser/base/content/browser-places.js
+@@ -865,13 +865,12 @@
+       // Only record interactions through the Bookmarks Toolbar
+       if (target.closest("#PersonalToolbar")) {
+         Glean.browserEngagement.bookmarksToolbarBookmarkOpened.add(1);
+-        if (
+-          gBookmarksToolbarVisibility == "newtab" &&
+-          AIWindow.isAIWindowActive(window) &&
+-          AIWindow.isAIWindowNewTabPage(gBrowser.currentURI)
+-        ) {
+-          Glean.smartWindow.bookmarkbar.opened.add(1);
+-        }
++        // GORILLA OVERRIDE 2026-08-27: aiwindow excised, so the AIWindow global
++        // does not exist. This smartWindow telemetry branch is removed rather
++        // than guarded: it can never be true in this build, and referencing the
++        // global threw a ReferenceError that killed browser-places.js at window
++        // startup (broken urlbar/search). Same class as the tab-context-menu
++        // GenAI crash. New consumer in 155; the 154 patch never saw it.
+       }
+     } else if (eventAction) {
+       gSync.handleSyncPromoAction(eventAction, "bookmarks-top-menu");
+@@ -1554,12 +1553,11 @@
+     if (PrivateBrowsingUtils.isWindowPrivate(window)) {
+       newTabURLs.push("about:privatebrowsing");
+     }
+-    // In a Smart Window, the new tab is a chrome document rather than
+-    // about:newtab; isAIWindowNewTabPage matches it (and excludes firstrun).
+-    return (
+-      newTabURLs.some(newTabUriString =>
+-        this._newTabURI(newTabUriString)?.equalsExceptRef(uri)
+-      ) || AIWindow.isAIWindowNewTabPage(uri)
++    // GORILLA OVERRIDE 2026-08-27: dropped the `|| AIWindow.isAIWindowNewTabPage(uri)`
++    // disjunct — aiwindow is excised, so the global is undefined and referencing
++    // it threw at startup. Smart Window new-tab documents cannot exist here.
++    return newTabURLs.some(newTabUriString =>
++      this._newTabURI(newTabUriString)?.equalsExceptRef(uri)
+     );
+   },
+ 

@@ -1,0 +1,81 @@
+--- a/browser/locales/en-US/browser/preferences/languages.ftl
++++ b/browser/locales/en-US/browser/preferences/languages.ftl
+@@ -1,37 +1,41 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-
+ webpage-languages-window2 =
+-    .title = Webpage Language Settings
+-    .style = min-width: 40em
++    .title =
++        Webpage Language Gorilla Settings
++        .style = min-width: 40em
+ 
+ languages-close-key =
+     .key = w
+ 
+-languages-description = Web pages are sometimes offered in more than one language. Choose languages for displaying these web pages, in order of preference
++languages-description = Web Gorilla pages are sometimes offered in more than one language. Choose languages for displaying these web Gorilla pages, in order of preference
+ 
+ languages-customize-spoof-english =
+-    .label = Request English versions of web pages for enhanced privacy
++    .label = Request English versions of web Gorilla pages for enhanced privacy
+ 
+ languages-customize-moveup =
+-    .label = Move Up
+-    .accesskey = U
++    .label =
++        Move Up
++        .accesskey = U
+ 
+ languages-customize-movedown =
+-    .label = Move Down
+-    .accesskey = D
++    .label =
++        Move Down
++        .accesskey = D
+ 
+ languages-customize-remove =
+-    .label = Remove
+-    .accesskey = R
++    .label =
++        Remove
++        .accesskey = R
+ 
+ languages-customize-select-language =
+     .placeholder = Select a language to add…
+ 
+ languages-customize-add =
+-    .label = Add
+-    .accesskey = A
++    .label =
++        Add
++        .accesskey = A
+ 
+ # The pattern used to generate strings presented to the user in the
+ # locale selection list.
+@@ -50,8 +54,9 @@
+     .value = { languages-code-format.label }
+ 
+ browser-languages-window2 =
+-    .title = { -brand-short-name } Language Settings
+-    .style = min-width: 40em
++    .title =
++        { -brand-short-name } Language Gorilla Settings
++        .style = min-width: 40em
+ 
+ browser-languages-description = { -brand-short-name } will display the first language as your default and will display alternate languages if necessary in the order they appear.
+ 
+@@ -64,8 +69,9 @@
+     .label = Downloading…
+ 
+ browser-languages-select-language =
+-    .label = Select a language to add…
+-    .placeholder = Select a language to add…
++    .label =
++        Select a language to add…
++        .placeholder = Select a language to add…
+ 
+ browser-languages-installed-label = Installed languages
+ browser-languages-available-label = Available languages

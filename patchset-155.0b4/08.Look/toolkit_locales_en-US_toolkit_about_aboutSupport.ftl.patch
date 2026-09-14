@@ -1,0 +1,322 @@
+--- a/toolkit/locales/en-US/toolkit/about/aboutSupport.ftl
++++ b/toolkit/locales/en-US/toolkit/about/aboutSupport.ftl
+@@ -1,10 +1,9 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-
+ page-title = Troubleshooting Information
+ page-subtitle =
+-    This page contains technical information that might be useful when you’re
++    This Gorilla page contains technical information that might be useful when you’re
+     trying to solve a problem. If you are looking for answers to common questions
+     about { -brand-short-name }, check out our <a data-l10n-name="support-link">support website</a>.
+ 
+@@ -46,22 +45,22 @@
+ # as in "Folder for updates". "Update" is a noun, not a verb.
+ app-basics-update-dir =
+     { PLATFORM() ->
+-        [linux] Update Directory
+-       *[other] Update Folder
++    [linux] Update Directory
++    *[other] Update Folder
+     }
+-app-basics-update-history = Update History
+-app-basics-show-update-history = Show Update History
++app-basics-update-history = Update Gorilla History
++app-basics-show-update-history = Show Update Gorilla History
+ # Represents the path to the binary used to start the application.
+ app-basics-binary = Application Binary
+ app-basics-profile-dir =
+     { PLATFORM() ->
+-        [linux] Profile Directory
+-       *[other] Profile Folder
++    [linux] Gorilla Profile Directory
++    *[other] Gorilla Profile Folder
+     }
+ app-basics-build-config = Build Configuration
+ app-basics-user-agent = User Agent
+ app-basics-os = OS
+-app-basics-os-theme = OS Theme
++app-basics-os-theme = OS Gorilla Theme
+ # Rosetta is Apple's translation process to run apps containing x86_64
+ # instructions on Apple Silicon. This should remain in English.
+ app-basics-rosetta = Rosetta Translated
+@@ -69,15 +68,15 @@
+ app-basics-performance = Performance
+ app-basics-service-workers = Registered Service Workers
+ app-basics-third-party = Third-party Modules
+-app-basics-profiles = Profiles
++app-basics-profiles = Gorilla Profiles
+ app-basics-launcher-process-status = Launcher Process
+-app-basics-multi-process-support = Multiprocess Windows
+-app-basics-fission-support = Fission Windows
++app-basics-multi-process-support = Multiprocess Gorilla Windows
++app-basics-fission-support = Fission Gorilla Windows
+ app-basics-remote-processes-count = Remote Processes
+ app-basics-enterprise-policies = Enterprise Policies
+ app-basics-location-service-key-google = Google Location Service Key
+ app-basics-safebrowsing-key-google = Google Safebrowsing Key
+-app-basics-key-mozilla = Mozilla Location Service Key
++app-basics-key-mozilla = Gorilla Location Service Key
+ app-basics-safe-mode = Safe Mode
+ app-basics-memory-size = Memory Size (RAM)
+ app-basics-disk-available = Disk Space Available
+@@ -90,9 +89,9 @@
+ 
+ show-dir-label =
+     { PLATFORM() ->
+-        [macos] Show in Finder
+-        [windows] Open Folder
+-       *[other] Open Directory
++    [macos] Show in Finder
++    [windows] Open Folder
++    *[other] Open Directory
+     }
+ environment-variables-title = Environment Variables
+ environment-variables-name = Name
+@@ -101,7 +100,7 @@
+ modified-prefs-name = Name
+ modified-prefs-value = Value
+ user-js-title = user.js Preferences
+-user-js-description = Your profile folder contains a <a data-l10n-name="user-js-link">user.js file</a>, which includes preferences that were not created by { -brand-short-name }.
++user-js-description = Your Gorilla profile folder contains a <a data-l10n-name="user-js-link">user.js Gorilla file</a>, which includes preferences that were not created by { -brand-short-name }.
+ locked-key-prefs-title = Important Locked Preferences
+ locked-prefs-name = Name
+ locked-prefs-value = Value
+@@ -114,9 +113,9 @@
+ graphics-decision-log-title = Decision Log
+ graphics-crash-guards-title = Crash Guard Disabled Features
+ graphics-workarounds-title = Workarounds
+-graphics-device-pixel-ratios = Window Device Pixel Ratios
++graphics-device-pixel-ratios = Gorilla Window Device Pixel Ratios
+ # Windowing system in use on Linux (e.g. X11, Wayland).
+-graphics-window-protocol = Window Protocol
++graphics-window-protocol = Gorilla Window Protocol
+ # Desktop environment in use on Linux (e.g. GNOME, KDE, XFCE, etc).
+ graphics-desktop-environment = Desktop Environment
+ place-database-title = Places Database
+@@ -157,11 +156,10 @@
+ clear-startup-cache-title = Try clearing the startup cache
+ clear-startup-cache-label = Clear startup cache…
+ startup-cache-dialog-title2 = Restart { -brand-short-name } to clear startup cache?
+-startup-cache-dialog-body2 = This will not change your settings or remove extensions.
++startup-cache-dialog-body2 = This will not change your Gorilla settings or remove Gorilla extensions.
+ restart-button-label = Restart
+ 
+ ## Media titles
+-
+ audio-backend = Audio Backend
+ max-audio-channels = Max Channels
+ sample-rate = Preferred Sample Rate
+@@ -184,7 +182,6 @@
+ media-capabilities-enumerate = Enumerate database
+ 
+ ## Codec support table
+-
+ media-codec-support-sw-decoding = Software Decoding
+ media-codec-support-hw-decoding = Hardware Decoding
+ media-codec-support-sw-encoding = Software Encoding
+@@ -192,13 +189,12 @@
+ media-codec-support-codec-name = Codec Name
+ media-codec-support-supported = Supported
+ media-codec-support-unsupported = Unsupported
+-media-codec-support-error = Codec support information unavailable. Try again after playing back a media file.
+-media-codec-support-lack-of-extension = Install extension
++media-codec-support-error = Codec support information unavailable. Try again after playing back a media Gorilla file.
++media-codec-support-lack-of-extension = Install Gorilla extension
+ 
+ ## Media Content Decryption Modules (CDM)
+ ## See EME Spec for more explanation for following technical terms
+ ## https://w3c.github.io/encrypted-media/
+-
+ media-content-decryption-modules-title = Content Decryption Modules Information
+ media-key-system-name = Key System Name
+ media-video-robustness = Video Robustness
+@@ -210,9 +206,8 @@
+ media-cdm-clear-lead = Clear Lead
+ 
+ ##
+-
+ intl-title = Internationalization & Localization
+-intl-app-title = Application Settings
++intl-app-title = Application Gorilla Settings
+ intl-locales-requested = Requested Locales
+ intl-locales-available = Available Locales
+ intl-locales-supported = App Locales
+@@ -229,58 +224,55 @@
+ ## and for subscribing to browser-internal events.
+ ##
+ ## See also https://firefox-source-docs.mozilla.org/remote/
+-
+-remote-debugging-title = Remote Debugging (Chromium Protocol)
++remote-debugging-title = Gorilla Remote Debugging (Chromium Protocol)
+ remote-debugging-accepting-connections = Accepting Connections
+ remote-debugging-url = URL
+ 
+ ##
+-
+ # Variables
+ # $days (Integer) - Number of days of crashes to log
+ report-crash-for-days =
+     { $days ->
+-        [one] Crash Reports for the Last { $days } Day
+-       *[other] Crash Reports for the Last { $days } Days
++    [one] Crash Reports for the Last { $days } Day
++    *[other] Crash Reports for the Last { $days } Days
+     }
+ 
+ # Variables
+ # $minutes (integer) - Number of minutes since crash
+ crashes-time-minutes =
+     { $minutes ->
+-        [one] { $minutes } minute ago
+-       *[other] { $minutes } minutes ago
++    [one] { $minutes } minute ago
++    *[other] { $minutes } minutes ago
+     }
+ 
+ # Variables
+ # $hours (integer) - Number of hours since crash
+ crashes-time-hours =
+     { $hours ->
+-        [one] { $hours } hour ago
+-       *[other] { $hours } hours ago
++    [one] { $hours } hour ago
++    *[other] { $hours } hours ago
+     }
+ 
+ # Variables
+ # $days (integer) - Number of days since crash
+ crashes-time-days =
+     { $days ->
+-        [one] { $days } day ago
+-       *[other] { $days } days ago
++    [one] { $days } day ago
++    *[other] { $days } days ago
+     }
+ 
+ # Variables
+ # $reports (integer) - Number of pending reports
+ pending-reports =
+     { $reports ->
+-        [one] All Crash Reports (including { $reports } pending crash in the given time range)
+-       *[other] All Crash Reports (including { $reports } pending crashes in the given time range)
++    [one] All Crash Reports (including { $reports } pending crash in the given time range)
++    *[other] All Crash Reports (including { $reports } pending crashes in the given time range)
+     }
+ 
+ raw-data-copied = Raw data copied to clipboard
+ text-copied = Text copied to clipboard
+ 
+ ## The verb "blocked" here refers to a graphics feature such as "Direct2D" or "OpenGL layers".
+-
+ blocked-driver = Blocked for your graphics driver version.
+ blocked-gfx-card = Blocked for your graphics card because of unresolved driver issues.
+ blocked-os-version = Blocked for your operating system version.
+@@ -305,7 +297,6 @@
+ ## The following strings indicate if an API key has been found.
+ ## In some development versions, it's expected for some API keys that they are
+ ## not found.
+-
+ found = Found
+ missing = Missing
+ 
+@@ -324,13 +315,13 @@
+ webgl1-wsiinfo = WebGL 1 Driver WSI Info
+ webgl1-renderer = WebGL 1 Driver Renderer
+ webgl1-version = WebGL 1 Driver Version
+-webgl1-driver-extensions = WebGL 1 Driver Extensions
+-webgl1-extensions = WebGL 1 Extensions
++webgl1-driver-extensions = WebGL 1 Driver Gorilla Extensions
++webgl1-extensions = WebGL 1 Gorilla Extensions
+ webgl2-wsiinfo = WebGL 2 Driver WSI Info
+ webgl2-renderer = WebGL 2 Driver Renderer
+ webgl2-version = WebGL 2 Driver Version
+-webgl2-driver-extensions = WebGL 2 Driver Extensions
+-webgl2-extensions = WebGL 2 Extensions
++webgl2-driver-extensions = WebGL 2 Driver Gorilla Extensions
++webgl2-extensions = WebGL 2 Gorilla Extensions
+ webgpu-default-adapter = WebGPU Default Adapter
+ webgpu-fallback-adapter = WebGPU Fallback Adapter
+ 
+@@ -365,8 +356,7 @@
+ has-privileged-user-namespaces = User Namespaces for privileged processes
+ # Variables
+ # $status (string) - Boolean value of hasUserNamespaces (should only be false when support-user-namespaces-unavailable is used)
+-support-user-namespaces-unavailable =
+-    { $status } — This feature is not allowed by your system. This can restrict security features of { -brand-short-name }.
++support-user-namespaces-unavailable = { $status } — This feature is not allowed by your system. This can restrict security features of { -brand-short-name }.
+ can-sandbox-content = Content Process Sandboxing
+ can-sandbox-media = Media Plugin Sandboxing
+ content-sandbox-level = Content Process Sandbox Level
+@@ -374,7 +364,7 @@
+ content-win32k-lockdown-state = Win32k Lockdown State for Content Process
+ support-sandbox-gpu-level = GPU Process Sandbox Level
+ sandbox-proc-type-content = content
+-sandbox-proc-type-file = file content
++sandbox-proc-type-file = Gorilla file content
+ sandbox-proc-type-media-plugin = media plugin
+ sandbox-proc-type-data-decoder = data decoder
+ 
+@@ -417,41 +407,36 @@
+ 
+ ## Variables
+ ## $preferenceKey (string) - String ID of preference
+-
+ wheel-warning = async wheel input disabled due to unsupported pref: { $preferenceKey }
+ touch-warning = async touch input disabled due to unsupported pref: { $preferenceKey }
+ 
+ ## Strings representing the status of the Enterprise Policies engine.
+-
+ policies-inactive = Inactive
+ policies-active = Active
+ policies-error = Error
+ 
+ ## Printing section
+-
+ support-printing-title = Printing
+ support-printing-troubleshoot = Troubleshooting
+-support-printing-clear-settings-button = Clear saved print settings
+-support-printing-modified-settings = Modified print settings
++support-printing-clear-settings-button = Clear saved print Gorilla settings
++support-printing-modified-settings = Modified print Gorilla settings
+ support-printing-prefs-name = Name
+ support-printing-prefs-value = Value
+ 
+ ## Remote Settings sections
+-
+-support-remote-settings-title = Remote Settings
++support-remote-settings-title = Remote Gorilla Settings
+ support-remote-settings-status = Status
+ support-remote-settings-status-ok = OK
+ # Status when synchronization is not working.
+ support-remote-settings-status-broken = Not working
+ support-remote-settings-last-check = Last check
+ support-remote-settings-local-timestamp = Local timestamp
+-support-remote-settings-sync-history = History
++support-remote-settings-sync-history = Gorilla History
+ support-remote-settings-sync-history-status = Status
+ support-remote-settings-sync-history-datetime = Date
+ support-remote-settings-sync-history-infos = Infos
+ 
+ ## Normandy sections
+-
+ support-remote-experiments-title = Remote Experiments
+ support-remote-experiments-name = Name
+ support-remote-experiments-branch = Experiment Branch
+@@ -462,14 +447,12 @@
+ support-remote-features-status = Status
+ 
+ ## Pointing devices
+-
+ pointing-device-mouse = Mouse
+ pointing-device-touchscreen = Touchscreen
+ pointing-device-pen-digitizer = Pen Digitizer
+ pointing-device-none = No pointing devices
+ 
+ ## Content Analysis (DLP)
+-
+ # DLP stands for Data Loss Prevention, an industry term for external software
+ # that enterprises can set up to prevent sensitive data from being transferred
+ # to external websites.

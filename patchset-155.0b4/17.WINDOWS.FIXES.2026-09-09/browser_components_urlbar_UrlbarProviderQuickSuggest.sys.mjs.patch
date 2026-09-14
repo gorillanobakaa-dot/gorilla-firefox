@@ -1,0 +1,19 @@
+--- a/browser/components/urlbar/UrlbarProviderQuickSuggest.sys.mjs
++++ b/browser/components/urlbar/UrlbarProviderQuickSuggest.sys.mjs
+@@ -51,6 +51,16 @@
+    * @param {UrlbarQueryContext} queryContext The query context object
+    */
+   async isActive(queryContext) {
++    // GORILLA OVERRIDE 2026-08-27: Firefox Suggest / QuickSuggest (Merino-backed sponsored suggestions) is excised.
++    // Early-return instead of rewriting the method body: the 154-era
++    // patch replaced this whole file and clobbered 155's module layout
++    // (it dropped the lazy UrlbarShared getter and pointed UrlbarResult
++    // at moz-src:///...UrlbarResult.sys.mjs, a path that does not exist
++    // in 155). That made lazy.UrlbarShared undefined and threw on every
++    // keystroke, which broke the URL bar completely. Keep the upstream
++    // body intact; only the answer changes.
++    return false;
++    // eslint-disable-next-line no-unreachable
+     // If the sources don't include search or the user used a restriction
+     // character other than search, don't allow any suggestions.
+     if (

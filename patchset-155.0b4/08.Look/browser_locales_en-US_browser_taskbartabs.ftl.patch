@@ -1,0 +1,46 @@
+--- a/browser/locales/en-US/browser/taskbartabs.ftl
++++ b/browser/locales/en-US/browser/taskbartabs.ftl
+@@ -1,17 +1,15 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at https://mozilla.org/MPL/2.0/.
+-
+ ## Taskbar Tab urlbar button, will appear if
+ ## browser.taskbarTabs.enabled = true and the user
+ ## navigates to a website.
+-
+ taskbar-tab-urlbar-button-open =
+-  .tooltiptext = Add tab to taskbar
++    .tooltiptext = Add Gorilla tab to taskbar
+ taskbar-tab-urlbar-button-close =
+-  .tooltiptext = Remove tab from taskbar
+-taskbar-tab-urlbar-button-show = Show Web App page action
+-taskbar-tab-urlbar-button-hide = Hide Web App page action
++    .tooltiptext = Remove Gorilla tab from taskbar
++taskbar-tab-urlbar-button-show = Show Web App Gorilla page action
++taskbar-tab-urlbar-button-hide = Hide Web App Gorilla page action
+ 
+ # This string is used in the description of a Windows Start Menu
+ # shortcut for a Taskbar Tab.
+@@ -30,11 +28,10 @@
+ taskbar-tab-shortcut-folder = { -brand-short-name } Web Apps
+ 
+ ## These strings are used as the tooltip for the mute/unmute button.
+-
+ taskbar-tab-audio-mute =
+-  .tooltiptext = Mute Tab
++    .tooltiptext = Mute Gorilla Tab
+ taskbar-tab-audio-unmute =
+-  .tooltiptext = Unmute Tab
++    .tooltiptext = Unmute Gorilla Tab
+ 
+ ## These are used as part of the window title, possibly after the content's
+ ## title.
+@@ -44,7 +41,6 @@
+ ##  $container (String): The name of the user's container (e.g. 'Work',
+ ##  'Personal').
+ ##  $profile (String): The name of the user's current profile.
+-
+ taskbar-tab-title-default = { $name } in { -brand-full-name }
+ taskbar-tab-title-container = { $name } ({ $container }) in { -brand-full-name }
+ taskbar-tab-title-profile = { $name } in { $profile } — { -brand-full-name }

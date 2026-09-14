@@ -1,0 +1,102 @@
+--- a/dom/media/DecoderTraits.cpp
++++ b/dom/media/DecoderTraits.cpp
+@@ -11,6 +11,7 @@
+ #include "WebMDemuxer.h"
+ #include "mozilla/Logging.h"
+ #include "mozilla/Preferences.h"
++#include "mozilla/StaticPrefs_media.h"
+ #include "mozilla/glean/DomMediaHlsMetrics.h"
+ #include "mozilla/glean/DomMediaMetrics.h"
+ #include "nsMimeTypes.h"
+@@ -52,12 +53,40 @@
+ 
+ static CanPlayStatus CanHandleCodecsType(
+     const MediaContainerType& aType, DecoderDoctorDiagnostics* aDiagnostics) {
+-  // We should have been given a codecs string, though it may be empty.
+-  MOZ_ASSERT(aType.ExtendedType().HaveCodecs());
+-
+   // Container type with the MIME type, no codecs.
+   const MediaContainerType mimeType(aType.Type());
+ 
++  // GORILLA PATCH: Hardware-only hard-lock
++  // Deny all non-H.264 video codecs and containers to force hardware-only
++  // playback. This prevents the engine from even attempting software decoding
++  // for modern but computationally expensive formats like VP9 or AV1, and
++  // ensures immediate fallback to H.264 for WebM/Ogg containers.
++  //
++  // Note: the search covers the full OriginalString (which includes codecs
++  // parameters), so codec names are matched against the codecs list embedded
++  // in the MIME type string. Case-insensitive matching prevents edge-cases
++  // where codec strings are uppercased.
++  // GORILLA 2026-08-26 (155 port): was FindInReadable(pattern, source,
++  // nsCaseInsensitiveCStringComparator). Firefox 155 dropped that comparator
++  // overload; CaseInsensitiveFindInReadable(pattern, source) is upstream's
++  // own two-argument equivalent (nsReadableUtils.h) and is semantically
++  // identical. Behaviour of the hard-lock is unchanged.
++  if (StaticPrefs::media_gorilla_hardware_only_mode() &&
++      (CaseInsensitiveFindInReadable("av01"_ns, aType.OriginalString()) ||
++       CaseInsensitiveFindInReadable("vp09"_ns, aType.OriginalString()) ||
++       CaseInsensitiveFindInReadable("vp8"_ns, aType.OriginalString()) ||
++       CaseInsensitiveFindInReadable("vp9"_ns, aType.OriginalString()) ||
++       CaseInsensitiveFindInReadable("hev1"_ns, aType.OriginalString()) ||
++       CaseInsensitiveFindInReadable("hvc1"_ns, aType.OriginalString()) ||
++       mimeType.Type() == MEDIAMIMETYPE("video/webm") ||
++       mimeType.Type() == MEDIAMIMETYPE("video/x-webm") ||
++       mimeType.Type() == MEDIAMIMETYPE("video/ogg"))) {
++    return CANPLAY_NO;
++  }
++
++  // We should have been given a codecs string, though it may be empty.
++  MOZ_ASSERT(aType.ExtendedType().HaveCodecs());
++
+   if (OggDecoder::IsSupportedType(mimeType)) {
+     if (OggDecoder::IsSupportedType(aType)) {
+       return CANPLAY_YES;
+@@ -74,12 +103,11 @@
+     // is supported and working: the codec must be invalid or not supported.
+     return CANPLAY_NO;
+   }
+-  if (WebMDecoder::IsSupportedType(mimeType)) {
+-    if (WebMDecoder::IsSupportedType(aType)) {
+-      return CANPLAY_YES;
+-    }
+-    // We can only reach this position if a particular codec was requested,
+-    // webm is supported and working: the codec must be invalid.
++  // Block WebM container queries to prevent VP9 stream attempts and bandwidth waste
++  if (StaticPrefs::media_gorilla_hardware_only_mode() &&
++      WebMDecoder::IsSupportedType(mimeType)) {
++    // Always return CANPLAY_NO for WebM to maintain consistency with
++    // hardware-only policy and prevent VP9/VP8 codec attempts
+     return CANPLAY_NO;
+   }
+   if (MP4Decoder::IsSupportedType(mimeType,
+@@ -154,18 +182,24 @@
+   // Container type with just the MIME type/subtype, no codecs.
+   const MediaContainerType mimeType(aType.Type());
+ 
+-  if (OggDecoder::IsSupportedType(mimeType)) {
+-    return CANPLAY_MAYBE;
++  // GORILLA HARD LOCK: Block software-heavy containers at the gate.
++  // Returning CANPLAY_NO for Ogg and WebM prevents the instantiation of
++  // VP8/VP9/AV1 software decoders, enforcing ASIC saturation.
++  if (StaticPrefs::media_gorilla_hardware_only_mode() &&
++      (OggDecoder::IsSupportedType(mimeType) ||
++       WebMDecoder::IsSupportedType(mimeType) ||
++       MatroskaDecoder::IsSupportedType(mimeType, nullptr))) {
++    return CANPLAY_NO;
+   }
++
+   if (WaveDecoder::IsSupportedType(mimeType)) {
+     return CANPLAY_MAYBE;
+   }
++  // Verify the container type is natively supported by the internal MP4 decoding pipeline.
++  // If the query lacks explicit codec parameters, return CANPLAY_MAYBE per spec requirements.
+   if (MP4Decoder::IsSupportedType(mimeType, aDiagnostics)) {
+     return CANPLAY_MAYBE;
+   }
+-  if (WebMDecoder::IsSupportedType(mimeType)) {
+-    return CANPLAY_MAYBE;
+-  }
+   if (MP3Decoder::IsSupportedType(mimeType)) {
+     return CANPLAY_MAYBE;
+   }

@@ -1,0 +1,18 @@
+--- a/third_party/rust/glean-core/src/metrics/custom_distribution.rs
++++ b/third_party/rust/glean-core/src/metrics/custom_distribution.rs
+@@ -106,6 +106,7 @@
+     /// Discards any negative value in `samples` and report an [`ErrorType::InvalidValue`]
+     /// for each of them.
+     pub fn accumulate_samples(&self, samples: Vec<i64>) {
++        if crate::GORILLA_TELEMETRY_OFF { return; }  // Gorilla: telemetry disabled — skip clone + dispatch
+         let metric = self.clone();
+         crate::launch_with_glean(move |glean| metric.accumulate_samples_sync(glean, &samples))
+     }
+@@ -125,6 +126,7 @@
+     /// Discards any negative value of `sample` and reports an
+     /// [`ErrorType::InvalidValue`].
+     pub fn accumulate_single_sample(&self, sample: i64) {
++        if crate::GORILLA_TELEMETRY_OFF { return; }  // Gorilla: telemetry disabled — skip clone + dispatch
+         let metric = self.clone();
+         crate::launch_with_glean(move |glean| metric.accumulate_samples_sync(glean, &[sample]))
+     }

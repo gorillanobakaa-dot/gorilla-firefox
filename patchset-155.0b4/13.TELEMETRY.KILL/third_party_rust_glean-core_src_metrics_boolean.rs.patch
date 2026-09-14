@@ -1,0 +1,10 @@
+--- a/third_party/rust/glean-core/src/metrics/boolean.rs
++++ b/third_party/rust/glean-core/src/metrics/boolean.rs
+@@ -76,6 +76,7 @@
+     ///
+     /// * `value` - the value to set.
+     pub fn set(&self, value: bool) {
++        if crate::GORILLA_TELEMETRY_OFF { return; }  // Gorilla: telemetry disabled — skip clone + dispatch
+         let metric = self.clone();
+         crate::launch_with_glean(move |glean| metric.set_sync(glean, value))
+     }

@@ -1,0 +1,62 @@
+--- a/browser/locales/en-US/browser/browserSets.ftl
++++ b/browser/locales/en-US/browser/browserSets.ftl
+@@ -1,7 +1,6 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-
+ window-minimize-command =
+     .label = Minimize
+ 
+@@ -48,19 +47,21 @@
+ # are recommended by the Human Interface Guidelines
+ # of each platform for your locale.
+ search-focus-shortcut-alt =
+-    .key = { PLATFORM() ->
++    .key =
++        { PLATFORM() ->
+         [linux] J
+-       *[other] E
+-    }
++        *[other] E
++        }
+ 
+ # Verify what shortcut for that operation
+ # are recommended by the Human Interface Guidelines
+ # of each platform for your locale.
+ downloads-shortcut =
+-    .key = { PLATFORM() ->
++    .key =
++        { PLATFORM() ->
+         [linux] Y
+-       *[other] J
+-    }
++        *[other] J
++        }
+ 
+ addons-shortcut =
+     .key = A
+@@ -173,7 +174,6 @@
+ ## All `-alt*` messages are alternative acceleration keys for zoom.
+ ## If shift key is needed with your locale popular keyboard for them,
+ ## you can use these alternative items. Otherwise, their values should be empty.
+-
+ full-zoom-reduce-shortcut =
+     .key = -
+ 
+@@ -199,7 +199,6 @@
+     .key = {""}
+ 
+ ##
+-
+ bidi-switch-direction-shortcut =
+     .key = X
+ 
+@@ -208,7 +207,6 @@
+ 
+ ## The shortcuts below are for Mac specific
+ ## global menu.
+-
+ quit-app-shortcut =
+     .key = Q
+ 

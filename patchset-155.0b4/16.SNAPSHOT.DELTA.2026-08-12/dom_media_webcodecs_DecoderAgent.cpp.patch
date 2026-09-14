@@ -1,0 +1,11 @@
+--- a/dom/media/webcodecs/DecoderAgent.cpp
++++ b/dom/media/webcodecs/DecoderAgent.cpp
+@@ -49,7 +49,7 @@
+     : mId(aId),
+       mInfo(std::move(aInfo)),
+       mOwnerThread(GetCurrentSerialEventTarget()),
+-      mPDMFactory(MakeRefPtr<PDMFactory>()),
++      mPDMFactory(MakeRefPtr<PDMFactory>(PDMFactory::Purpose::WebCodecs)),
+       mImageContainer(MakeAndAddRef<layers::ImageContainer>(
+           layers::ImageUsageType::WebCodecs,
+           layers::ImageContainer::ASYNCHRONOUS)),

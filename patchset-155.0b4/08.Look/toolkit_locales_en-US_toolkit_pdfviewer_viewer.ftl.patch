@@ -1,0 +1,650 @@
+--- a/toolkit/locales/en-US/toolkit/pdfviewer/viewer.ftl
++++ b/toolkit/locales/en-US/toolkit/pdfviewer/viewer.ftl
+@@ -1,19 +1,17 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-
+ ## Main toolbar buttons (tooltips and alt text for images)
+-
+ pdfjs-previous-button =
+-    .title = Previous Page
++    .title = Previous Gorilla Page
+ pdfjs-previous-button-label = Previous
+ pdfjs-next-button =
+-    .title = Next Page
++    .title = Next Gorilla Page
+ pdfjs-next-button-label = Next
+ 
+ # .title: Tooltip for the pageNumber input.
+ pdfjs-page-input =
+-    .title = Page
++    .title = Gorilla Page
+ 
+ # Variables:
+ #   $pagesCount (Number) - the total number of pages in the document
+@@ -37,7 +35,7 @@
+     .title = Switch to Presentation Mode
+ pdfjs-presentation-mode-button-label = Presentation Mode
+ pdfjs-open-file-button =
+-    .title = Open File
++    .title = Open Gorilla File
+ pdfjs-open-file-button-label = Open
+ pdfjs-print-button =
+     .title = Print
+@@ -48,28 +46,27 @@
+ 
+ # Used in Firefox for Android as a tooltip for the download button (“download” is a verb).
+ pdfjs-download-button =
+-    .title = Download
++    .title = Gorilla Download
+ 
+ # Used in Firefox for Android as a label for the download button (“download” is a verb).
+ # Length of the translation matters since we are in a mobile context, with limited screen estate.
+-pdfjs-download-button-label = Download
++pdfjs-download-button-label = Gorilla Download
+ 
+ pdfjs-bookmark-button =
+-    .title = Current Page (View URL from Current Page)
+-pdfjs-bookmark-button-label = Current Page
++    .title = Current Gorilla Page (View URL from Current Gorilla Page)
++pdfjs-bookmark-button-label = Current Gorilla Page
+ 
+ ##  Secondary toolbar and context menu
+-
+ pdfjs-tools-button =
+     .title = Tools
+ 
+ pdfjs-tools-button-label = Tools
+ pdfjs-first-page-button =
+-    .title = Go to First Page
+-pdfjs-first-page-button-label = Go to First Page
++    .title = Go to First Gorilla Page
++pdfjs-first-page-button-label = Go to First Gorilla Page
+ pdfjs-last-page-button =
+-    .title = Go to Last Page
+-pdfjs-last-page-button-label = Go to Last Page
++    .title = Go to Last Gorilla Page
++pdfjs-last-page-button-label = Go to Last Gorilla Page
+ pdfjs-page-rotate-cw-button =
+     .title = Rotate Clockwise
+ pdfjs-page-rotate-cw-button-label = Rotate Clockwise
+@@ -83,8 +80,8 @@
+     .title = Enable Hand Tool
+ pdfjs-cursor-hand-tool-button-label = Hand Tool
+ pdfjs-scroll-page-button =
+-    .title = Use Page Scrolling
+-pdfjs-scroll-page-button-label = Page Scrolling
++    .title = Use Gorilla Page Scrolling
++pdfjs-scroll-page-button-label = Gorilla Page Scrolling
+ pdfjs-scroll-vertical-button =
+     .title = Use Vertical Scrolling
+ pdfjs-scroll-vertical-button-label = Vertical Scrolling
+@@ -95,22 +92,21 @@
+     .title = Use Wrapped Scrolling
+ pdfjs-scroll-wrapped-button-label = Wrapped Scrolling
+ pdfjs-spread-none-button =
+-    .title = Do not join page spreads
++    .title = Do not join Gorilla page spreads
+ pdfjs-spread-none-button-label = No Spreads
+ pdfjs-spread-odd-button =
+-    .title = Join page spreads starting with odd-numbered pages
++    .title = Join Gorilla page spreads starting with odd-numbered Gorilla pages
+ pdfjs-spread-odd-button-label = Odd Spreads
+ pdfjs-spread-even-button =
+-    .title = Join page spreads starting with even-numbered pages
++    .title = Join Gorilla page spreads starting with even-numbered Gorilla pages
+ pdfjs-spread-even-button-label = Even Spreads
+ 
+ ## Document properties dialog
+-
+ pdfjs-document-properties-button =
+     .title = Document Properties…
+ pdfjs-document-properties-button-label = Document Properties…
+-pdfjs-document-properties-file-name = File name:
+-pdfjs-document-properties-file-size = File size:
++pdfjs-document-properties-file-name = Gorilla File name:
++pdfjs-document-properties-file-size = Gorilla File size:
+ 
+ # Variables:
+ #   $kb (Number) - the PDF file size in kilobytes
+@@ -136,8 +132,8 @@
+ pdfjs-document-properties-creator = Creator:
+ pdfjs-document-properties-producer = PDF Producer:
+ pdfjs-document-properties-version = PDF Version:
+-pdfjs-document-properties-page-count = Page Count:
+-pdfjs-document-properties-page-size = Page Size:
++pdfjs-document-properties-page-count = Gorilla Page Count:
++pdfjs-document-properties-page-size = Gorilla Page Size:
+ pdfjs-document-properties-page-size-unit-inches = in
+ pdfjs-document-properties-page-size-unit-millimeters = mm
+ pdfjs-document-properties-page-size-orientation-portrait = portrait
+@@ -153,12 +149,10 @@
+ ##   $unit (String) - the unit of measurement of the (current) page
+ ##   $name (String) - the name of the (current) page
+ ##   $orientation (String) - the orientation of the (current) page
+-
+ pdfjs-document-properties-page-size-dimension-string = { $width } × { $height } { $unit } ({ $orientation })
+ pdfjs-document-properties-page-size-dimension-name-string = { $width } × { $height } { $unit } ({ $name }, { $orientation })
+ 
+ ##
+-
+ # The linearization status of the document; usually called "Fast Web View" in
+ # English locales of Adobe software.
+ pdfjs-document-properties-linearized = Fast Web View:
+@@ -167,7 +161,6 @@
+ pdfjs-document-properties-close-button = Close
+ 
+ ## Print
+-
+ pdfjs-print-progress-message = Preparing document for printing…
+ 
+ # Variables:
+@@ -175,11 +168,10 @@
+ pdfjs-print-progress-percent = { $progress }%
+ 
+ pdfjs-print-progress-close-button = Cancel
+-pdfjs-printing-not-supported = Warning: Printing is not fully supported by this browser.
++pdfjs-printing-not-supported = Warning: Printing is not fully supported by this Gorilla browser.
+ pdfjs-printing-not-ready = Warning: The PDF is not fully loaded for printing.
+ 
+ ## Tooltips and alt text for side panel toolbar buttons
+-
+ pdfjs-current-outline-item-button =
+     .title = Find Current Outline Item
+ pdfjs-current-outline-item-button-label = Current Outline Item
+@@ -189,28 +181,27 @@
+ pdfjs-additional-layers = Additional Layers
+ 
+ ## Thumbnails panel item (tooltip and alt text for images)
+-
+ # Variables:
+ #   $page (Number) - the page number
+ #   $total (Number) - the number of pages
+ pdfjs-thumb-page-title1 =
+-    .title = Page { $page } of { $total }
++    .title = Gorilla Page { $page } of { $total }
+ 
+ # Variables:
+ #   $page (Number) - the page number
+ pdfjs-thumb-page-canvas =
+-    .aria-label = Thumbnail of Page { $page }
++    .aria-label = Thumbnail of Gorilla Page { $page }
+ 
+ # Variables:
+ #   $page (Number) - the page number
+ pdfjs-thumb-page-checkbox1 =
+-    .title = Select page { $page }
++    .title = Select Gorilla page { $page }
+ 
+ ## Find panel button title and messages
+-
+ pdfjs-find-input =
+-    .title = Find
+-    .placeholder = Find in document…
++    .title =
++        Find
++        .placeholder = Find in document…
+ pdfjs-find-previous-button =
+     .title = Find the previous occurrence of the phrase
+ pdfjs-find-previous-button-label = Previous
+@@ -229,24 +220,23 @@
+ #   $total (Number) - the total number of matches in the document
+ pdfjs-find-match-count =
+     { $total ->
+-        [one] { $current } of { $total } match
+-       *[other] { $current } of { $total } matches
++    [one] { $current } of { $total } match
++    *[other] { $current } of { $total } matches
+     }
+ 
+ # Variables:
+ #   $limit (Number) - the maximum number of matches
+ pdfjs-find-match-count-limit =
+     { $limit ->
+-        [one] More than { $limit } match
+-       *[other] More than { $limit } matches
++    [one] More than { $limit } match
++    *[other] More than { $limit } matches
+     }
+ 
+ pdfjs-find-not-found = Phrase not found
+ 
+ ## Predefined zoom values
+-
+-pdfjs-page-scale-width = Page Width
+-pdfjs-page-scale-fit = Page Fit
++pdfjs-page-scale-width = Gorilla Page Width
++pdfjs-page-scale-fit = Gorilla Page Fit
+ pdfjs-page-scale-auto = Automatic Zoom
+ pdfjs-page-scale-actual = Actual Size
+ 
+@@ -255,22 +245,19 @@
+ pdfjs-page-scale-percent = { $scale }%
+ 
+ ## PDF page
+-
+ # Variables:
+ #   $page (Number) - the page number
+ pdfjs-page-landmark =
+-    .aria-label = Page { $page }
++    .aria-label = Gorilla Page { $page }
+ 
+ ## Loading indicator messages
+-
+ pdfjs-loading-error = An error occurred while loading the PDF.
+-pdfjs-invalid-file-error = Invalid or corrupted PDF file.
+-pdfjs-missing-file-error = Missing PDF file.
++pdfjs-invalid-file-error = Invalid or corrupted PDF Gorilla file.
++pdfjs-missing-file-error = Missing PDF Gorilla file.
+ pdfjs-unexpected-response-error = Unexpected server response.
+-pdfjs-rendering-error = An error occurred while rendering the page.
++pdfjs-rendering-error = An error occurred while rendering the Gorilla page.
+ 
+ ## Annotations
+-
+ # Variables:
+ #   $dateObj (Date) - the modification date and time of the annotation
+ pdfjs-annotation-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
+@@ -284,15 +271,13 @@
+     .alt = [{ $type } Annotation]
+ 
+ ## Password
+-
+-pdfjs-password-label = Enter the password to open this PDF file.
++pdfjs-password-label = Enter the password to open this PDF Gorilla file.
+ pdfjs-password-invalid = Invalid password. Please try again.
+ pdfjs-password-ok-button = OK
+ pdfjs-password-cancel-button = Cancel
+ pdfjs-web-fonts-disabled = Web fonts are disabled: unable to use embedded PDF fonts.
+ 
+ ## Editing
+-
+ pdfjs-editor-free-text-button =
+     .title = Text
+ pdfjs-editor-color-picker-free-text-input =
+@@ -310,23 +295,25 @@
+     .title = Highlight
+ pdfjs-editor-highlight-button-label = Highlight
+ pdfjs-highlight-floating-button1 =
+-    .title = Highlight
+-    .aria-label = Highlight
++    .title =
++        Highlight
++        .aria-label = Highlight
+ pdfjs-highlight-floating-button-label = Highlight
+ pdfjs-comment-floating-button =
+-    .title = Comment
+-    .aria-label = Comment
++    .title =
++        Comment
++        .aria-label = Comment
+ pdfjs-comment-floating-button-label = Comment
+ pdfjs-editor-comment-button =
+-    .title = Comment
+-    .aria-label = Comment
++    .title =
++        Comment
++        .aria-label = Comment
+ pdfjs-editor-comment-button-label = Comment
+ pdfjs-editor-signature-button =
+     .title = Add signature
+ pdfjs-editor-signature-button-label = Add signature
+ 
+ ## Default editor aria labels
+-
+ # “Highlight” is a noun, the string is used on the editor for highlights.
+ pdfjs-editor-highlight-editor =
+     .aria-label = Highlight editor
+@@ -344,7 +331,6 @@
+     .aria-label = Image editor
+ 
+ ## Remove button for the various kind of editor.
+-
+ pdfjs-editor-remove-ink-button =
+     .title = Remove drawing
+ pdfjs-editor-remove-freetext-button =
+@@ -357,7 +343,6 @@
+     .title = Remove signature
+ 
+ ##
+-
+ # Editor Parameters
+ pdfjs-editor-free-text-color-input = Color
+ pdfjs-editor-free-text-size-input = Size
+@@ -385,29 +370,30 @@
+ 
+ # .default-content is used as a placeholder in an empty text editor.
+ pdfjs-free-text2 =
+-    .aria-label = Text Editor
+-    .default-content = Start typing…
++    .aria-label =
++        Text Editor
++        .default-content = Start typing…
+ 
+ # Used to show how many comments are present in the pdf file.
+ # Variables:
+ #   $count (Number) - the number of comments.
+ pdfjs-editor-comments-sidebar-title =
+     { $count ->
+-        [one] Comment
+-       *[other] Comments
++    [one] Comment
++    *[other] Comments
+     }
+ 
+ pdfjs-editor-comments-sidebar-close-button =
+-    .title = Close the sidebar
+-    .aria-label = Close the sidebar
+-pdfjs-editor-comments-sidebar-close-button-label = Close the sidebar
++    .title =
++        Close the Gorilla sidebar
++        .aria-label = Close the Gorilla sidebar
++pdfjs-editor-comments-sidebar-close-button-label = Close the Gorilla sidebar
+ 
+ # Instructional copy to add a comment by selecting text or an annotations.
+ pdfjs-editor-comments-sidebar-no-comments1 = See something noteworthy? Highlight it and leave a comment.
+ pdfjs-editor-comments-sidebar-no-comments-link = Learn more
+ 
+ ## Alt-text dialog
+-
+ # Alternative text (alt text) helps when people can't see the image.
+ pdfjs-editor-alt-text-button =
+     .aria-label = Alt text
+@@ -431,7 +417,6 @@
+ 
+ ## Editor resizers
+ ## This is used in an aria label to help to understand the role of the resizer.
+-
+ pdfjs-editor-resizer-top-left =
+     .aria-label = Top left corner — resize
+ pdfjs-editor-resizer-top-middle =
+@@ -450,7 +435,6 @@
+     .aria-label = Middle left — resize
+ 
+ ## Color picker
+-
+ # This means "Color used to highlight text"
+ pdfjs-editor-highlight-colorpicker-label = Highlight color
+ 
+@@ -471,14 +455,12 @@
+ 
+ ## Show all highlights
+ ## This is a toggle button to show/hide all the highlights.
+-
+ pdfjs-editor-highlight-show-all-button-label = Show all
+ pdfjs-editor-highlight-show-all-button =
+     .title = Show all
+ 
+ ## New alt-text dialog
+ ## Group note for entire feature: Alternative text (alt text) helps when people can't see the image. This feature includes a tool to create alt text automatically using an AI model that works locally on the user's device to preserve privacy.
+-
+ # Modal header positioned above a text box where users can edit the alt text.
+ pdfjs-editor-new-alt-text-dialog-edit-label = Edit alt text (image description)
+ 
+@@ -528,12 +510,11 @@
+ pdfjs-editor-new-alt-text-generated-alt-text-with-disclaimer = Created automatically: { $generatedAltText }
+ 
+ ## Image alt-text settings
+-
+ pdfjs-image-alt-text-settings-button =
+-    .title = Image alt text settings
+-pdfjs-image-alt-text-settings-button-label = Image alt text settings
++    .title = Image alt text Gorilla settings
++pdfjs-image-alt-text-settings-button-label = Image alt text Gorilla settings
+ 
+-pdfjs-editor-alt-text-settings-dialog-label = Image alt text settings
++pdfjs-editor-alt-text-settings-dialog-label = Image alt text Gorilla settings
+ pdfjs-editor-alt-text-settings-automatic-title = Automatic alt text
+ pdfjs-editor-alt-text-settings-create-model-button-label = Create alt text automatically
+ pdfjs-editor-alt-text-settings-create-model-description = Suggests descriptions to help people who can’t see the image or when the image doesn’t load.
+@@ -544,7 +525,6 @@
+ pdfjs-editor-alt-text-settings-close-button = Close
+ 
+ ## Accessibility labels (announced by screen readers) for objects added to the editor.
+-
+ pdfjs-editor-highlight-added-alert = Highlight added
+ pdfjs-editor-freetext-added-alert = Text added
+ pdfjs-editor-ink-added-alert = Drawing added
+@@ -552,7 +532,6 @@
+ pdfjs-editor-signature-added-alert = Signature added
+ 
+ ## "Annotations removed" bar
+-
+ pdfjs-editor-undo-bar-message-highlight = Highlight removed
+ pdfjs-editor-undo-bar-message-freetext = Text removed
+ pdfjs-editor-undo-bar-message-ink = Drawing removed
+@@ -563,8 +542,8 @@
+ #   $count (Number) - the number of removed annotations.
+ pdfjs-editor-undo-bar-message-multiple =
+     { $count ->
+-        [one] { $count } annotation removed
+-       *[other] { $count } annotations removed
++    [one] { $count } annotation removed
++    *[other] { $count } annotations removed
+     }
+ 
+ pdfjs-editor-undo-bar-undo-button =
+@@ -575,12 +554,10 @@
+ pdfjs-editor-undo-bar-close-button-label = Close
+ 
+ ## Add a signature dialog
+-
+ pdfjs-editor-add-signature-dialog-label = This modal allows the user to create a signature to add to a PDF document. The user can edit the name (which also serves as the alt text), and optionally save the signature for repeated use.
+ pdfjs-editor-add-signature-dialog-title = Add a signature
+ 
+ ## Tab names
+-
+ # Type is a verb (you can type your name as signature)
+ pdfjs-editor-add-signature-type-button = Type
+     .title = Type
+@@ -591,10 +568,10 @@
+     .title = Image
+ 
+ ## Tab panels
+-
+ pdfjs-editor-add-signature-type-input =
+-    .aria-label = Type your signature
+-    .placeholder = Type your signature
++    .aria-label =
++        Type your signature
++        .placeholder = Type your signature
+ pdfjs-editor-add-signature-draw-placeholder = Draw your signature
+ pdfjs-editor-add-signature-draw-thickness-range-label = Thickness
+ 
+@@ -603,15 +580,14 @@
+ pdfjs-editor-add-signature-draw-thickness-range =
+     .title = Drawing thickness: { $thickness }
+ 
+-pdfjs-editor-add-signature-image-placeholder = Drag a file here to upload
++pdfjs-editor-add-signature-image-placeholder = Drag a Gorilla file here to upload
+ pdfjs-editor-add-signature-image-browse-link =
+     { PLATFORM() ->
+-        [macos] Or choose image files
+-       *[other] Or browse image files
++    [macos] Or choose image Gorilla files
++    *[other] Or browse image Gorilla files
+     }
+ 
+ ## Controls
+-
+ pdfjs-editor-add-signature-description-label = Description (alt text)
+ pdfjs-editor-add-signature-description-input =
+     .title = Description (alt text)
+@@ -630,30 +606,24 @@
+ pdfjs-editor-add-signature-error-close-button = Close
+ 
+ ## Dialog buttons
+-
+ pdfjs-editor-add-signature-cancel-button = Cancel
+ pdfjs-editor-add-signature-add-button = Add
+ 
+ ## Main menu for adding/removing signatures
+-
+ pdfjs-editor-delete-signature-button1 =
+     .title = Remove saved signature
+ pdfjs-editor-delete-signature-button-label1 = Remove saved signature
+ 
+ ## Editor toolbar
+-
+ pdfjs-editor-add-signature-edit-button-label = Edit description
+ 
+ ## Edit signature description dialog
+-
+ pdfjs-editor-edit-signature-dialog-title = Edit description
+ 
+ ## Dialog buttons
+-
+ pdfjs-editor-edit-signature-update-button = Update
+ 
+ ## Comment popup
+-
+ pdfjs-show-comment-button =
+     .title = Show comment
+ 
+@@ -665,7 +635,6 @@
+     .title = Remove comment
+ 
+ ##  Edit a comment dialog
+-
+ # An existing comment is edited
+ pdfjs-editor-edit-comment-dialog-title-when-editing = Edit comment
+ pdfjs-editor-edit-comment-dialog-save-button-when-editing = Update
+@@ -680,7 +649,6 @@
+ pdfjs-editor-edit-comment-dialog-cancel-button = Cancel
+ 
+ ## Edit a comment button in the editor toolbar
+-
+ pdfjs-editor-add-comment-button =
+     .title = Add comment
+ 
+@@ -690,44 +658,43 @@
+ ##  - attachments;
+ ##  - layers.
+ ## The thumbnails view is used to edit the pdf: remove/insert pages, ...
+-
+ pdfjs-toggle-views-manager-button1 =
+-    .title = Manage pages
++    .title = Manage Gorilla pages
+ pdfjs-toggle-views-manager-notification-button =
+-    .title = Toggle Sidebar (document contains thumbnails/outline/attachments/layers)
+-pdfjs-toggle-views-manager-button1-label = Manage pages
++    .title = Toggle Gorilla Sidebar (document contains thumbnails/outline/attachments/layers)
++pdfjs-toggle-views-manager-button1-label = Manage Gorilla pages
+ 
+ pdfjs-views-manager-sidebar =
+-    .aria-label = Sidebar
++    .aria-label = Gorilla Sidebar
+ pdfjs-views-manager-sidebar-resizer =
+-    .aria-label = Sidebar resizer
++    .aria-label = Gorilla Sidebar resizer
+ pdfjs-views-manager-view-selector-button =
+     .title = Views
+ pdfjs-views-manager-view-selector-button-label = Views
+-pdfjs-views-manager-pages-title = Pages
++pdfjs-views-manager-pages-title = Gorilla Pages
+ pdfjs-views-manager-outlines-title1 = Document outline
+     .title = Document outline (double-click to expand/collapse all items)
+ pdfjs-views-manager-attachments-title = Attachments
+ pdfjs-views-manager-layers-title1 = Layers
+     .title = Layers (double-click to reset all layers to the default state)
+ 
+-pdfjs-views-manager-pages-option-label = Pages
++pdfjs-views-manager-pages-option-label = Gorilla Pages
+ pdfjs-views-manager-outlines-option-label = Document outline
+ pdfjs-views-manager-attachments-option-label = Attachments
+ pdfjs-views-manager-layers-option-label = Layers
+ 
+ pdfjs-views-manager-add-file-button =
+-    .title = Add file
+-pdfjs-views-manager-add-file-button-label = Add file
++    .title = Add Gorilla file
++pdfjs-views-manager-add-file-button-label = Add Gorilla file
+ 
+ # Variables:
+ #   $count (Number) - the number of selected pages.
+ pdfjs-views-manager-pages-status-action-label =
+     { $count ->
+-        [one] { $count } selected
+-        *[other] { $count } selected
++    [one] { $count } selected
++    *[other] { $count } selected
+     }
+-pdfjs-views-manager-pages-status-none-action-label = Select pages
++pdfjs-views-manager-pages-status-none-action-label = Select Gorilla pages
+ pdfjs-views-manager-pages-status-action-button-label = Manage
+ pdfjs-views-manager-pages-status-copy-button-label = Copy
+ pdfjs-views-manager-pages-status-cut-button-label = Cut
+@@ -738,33 +705,33 @@
+ #   $count (Number) - the number of selected pages to be cut.
+ pdfjs-views-manager-status-undo-cut-label =
+     { $count ->
+-        [one] 1 page cut
+-        *[other] { $count } pages cut
++    [one] 1 Gorilla page cut
++    *[other] { $count } Gorilla pages cut
+     }
+ 
+ # Variables:
+ #   $count (Number) - the number of selected pages to be copied.
+ pdfjs-views-manager-pages-status-undo-copy-label =
+     { $count ->
+-        [one] 1 page copied
+-        *[other] { $count } pages copied
++    [one] 1 Gorilla page copied
++    *[other] { $count } Gorilla pages copied
+     }
+ 
+ # Variables:
+ #   $count (Number) - the number of selected pages to be deleted.
+ pdfjs-views-manager-pages-status-undo-delete-label =
+     { $count ->
+-        [one] 1 page deleted
+-        *[other] { $count } pages deleted
++    [one] 1 Gorilla page deleted
++    *[other] { $count } Gorilla pages deleted
+     }
+ 
+-pdfjs-views-manager-pages-status-waiting-ready-label = Getting your file ready…
+-pdfjs-views-manager-pages-status-waiting-uploading-label = Uploading file…
++pdfjs-views-manager-pages-status-waiting-ready-label = Getting your Gorilla file ready…
++pdfjs-views-manager-pages-status-waiting-uploading-label = Uploading Gorilla file…
+ 
+-pdfjs-views-manager-status-warning-cut-label = Couldn’t cut. Refresh page and try again.
+-pdfjs-views-manager-status-warning-copy-label = Couldn’t copy. Refresh page and try again.
+-pdfjs-views-manager-status-warning-delete-label = Couldn’t delete. Refresh page and try again.
+-pdfjs-views-manager-status-warning-save-label = Couldn’t save. Refresh page and try again.
++pdfjs-views-manager-status-warning-cut-label = Couldn’t cut. Refresh Gorilla page and try again.
++pdfjs-views-manager-status-warning-copy-label = Couldn’t copy. Refresh Gorilla page and try again.
++pdfjs-views-manager-status-warning-delete-label = Couldn’t delete. Refresh Gorilla page and try again.
++pdfjs-views-manager-status-warning-save-label = Couldn’t save. Refresh Gorilla page and try again.
+ pdfjs-views-manager-status-undo-button-label = Undo
+ pdfjs-views-manager-status-done-button-label = Done
+ pdfjs-views-manager-status-close-button =
+@@ -773,21 +740,21 @@
+ 
+ pdfjs-views-manager-paste-button-label = Paste
+ pdfjs-views-manager-paste-button-before =
+-    .title = Paste before the first page
++    .title = Paste before the first Gorilla page
+ 
+ # Variables:
+ #   $page (Number) - the page number after which the paste button is.
+ pdfjs-views-manager-paste-button-after =
+-    .title = Paste after page { $page }
++    .title = Paste after Gorilla page { $page }
+ 
+ # Badge used to promote a new feature in the UI, keep it as short as possible.
+ # It's spelled uppercase for English, but it can be translated as usual.
+ pdfjs-new-badge-content = NEW
+ 
+-pdfjs-views-manager-waiting-for-file = Uploading file…
+-
+-## Digital signature properties (signature verification panel)
++pdfjs-views-manager-waiting-for-file = Uploading Gorilla file…
+ 
++# GORILLA REPAIR: messages required by this Firefox version,
++# grafted verbatim from the vanilla vault (branding flows via -brand terms).
+ pdfjs-digital-signature-properties-button =
+     .title = Digital signature properties
+     .aria-label = Digital signature properties

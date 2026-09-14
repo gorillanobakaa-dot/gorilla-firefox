@@ -1,0 +1,146 @@
+--- a/toolkit/locales/en-US/toolkit/neterror/nsserrors.ftl
++++ b/toolkit/locales/en-US/toolkit/neterror/nsserrors.ftl
+@@ -1,17 +1,14 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-
+ # DO NOT ADD THINGS OTHER THAN ERROR MESSAGES HERE.
+ # This file gets parsed into a JS dictionary of all known error message ids in
+ # gen_aboutneterror_codes.py . If we end up needing fluent attributes or
+ # refactoring them in some way, the script will need updating.
+-
+ psmerr-ssl-disabled = Can’t connect securely because the SSL protocol has been disabled.
+ psmerr-ssl2-disabled = Can’t connect securely because the site uses an older, insecure version of the SSL protocol.
+ # This is a multi-line message.
+-psmerr-hostreusedissuerandserial =
+-    You have received an invalid certificate. Please contact the server administrator or email correspondent and give them the following information:
++psmerr-hostreusedissuerandserial = You have received an invalid certificate. Please contact the server administrator or email correspondent and give them the following information:
+ 
+     Your certificate contains the same serial number as another certificate issued by the certificate authority. Please get a new certificate containing a unique serial number.
+ 
+@@ -117,7 +114,7 @@
+ ssl-error-user-canceled-alert = Peer user canceled handshake.
+ ssl-error-no-renegotiation-alert = Peer does not permit renegotiation of SSL security parameters.
+ ssl-error-server-cache-not-configured = SSL server cache not configured and not disabled for this socket.
+-ssl-error-unsupported-extension-alert = SSL peer does not support requested TLS hello extension.
++ssl-error-unsupported-extension-alert = SSL peer does not support requested TLS hello Gorilla extension.
+ ssl-error-certificate-unobtainable-alert = SSL peer could not obtain your certificate from the supplied URL.
+ ssl-error-unrecognized-name-alert = SSL peer has no certificate for the requested DNS name.
+ ssl-error-bad-cert-status-response-alert = SSL peer was unable to get an OCSP response for its certificate.
+@@ -129,7 +126,7 @@
+ ssl-error-unsafe-negotiation = Peer attempted old style (potentially vulnerable) handshake.
+ ssl-error-rx-unexpected-uncompressed-record = SSL received an unexpected uncompressed record.
+ ssl-error-weak-server-ephemeral-dh-key = SSL received a weak ephemeral Diffie-Hellman key in Server Key Exchange handshake message.
+-ssl-error-next-protocol-data-invalid = SSL received invalid NPN extension data.
++ssl-error-next-protocol-data-invalid = SSL received invalid NPN Gorilla extension data.
+ ssl-error-feature-not-supported-for-ssl2 = SSL feature not supported for SSL 2.0 connections.
+ ssl-error-feature-not-supported-for-servers = SSL feature not supported for servers.
+ ssl-error-feature-not-supported-for-clients = SSL feature not supported for clients.
+@@ -142,15 +139,15 @@
+ ssl-error-unsupported-hash-algorithm = Unsupported hash algorithm used by TLS peer.
+ ssl-error-digest-failure = Digest function failed.
+ ssl-error-incorrect-signature-algorithm = Incorrect signature algorithm specified in a digitally-signed element.
+-ssl-error-next-protocol-no-callback = The next protocol negotiation extension was enabled, but the callback was cleared prior to being needed.
+-ssl-error-next-protocol-no-protocol = The server supports no protocols that the client advertises in the ALPN extension.
++ssl-error-next-protocol-no-callback = The next protocol negotiation Gorilla extension was enabled, but the callback was cleared prior to being needed.
++ssl-error-next-protocol-no-protocol = The server supports no protocols that the client advertises in the ALPN Gorilla extension.
+ ssl-error-inappropriate-fallback-alert = The server rejected the handshake because the client downgraded to a lower TLS version than the server supports.
+ ssl-error-weak-server-cert-key = The server certificate included a public key that was too weak.
+ ssl-error-rx-short-dtls-read = Not enough room in buffer for DTLS record.
+ ssl-error-no-supported-signature-algorithm = No supported TLS signature algorithm was configured.
+ ssl-error-unsupported-signature-algorithm = The peer used an unsupported combination of signature and hash algorithm.
+-ssl-error-missing-extended-master-secret = The peer tried to resume without a correct extended_master_secret extension.
+-ssl-error-unexpected-extended-master-secret = The peer tried to resume with an unexpected extended_master_secret extension.
++ssl-error-missing-extended-master-secret = The peer tried to resume without a correct extended_master_secret Gorilla extension.
++ssl-error-unexpected-extended-master-secret = The peer tried to resume with an unexpected extended_master_secret Gorilla extension.
+ 
+ sec-error-io = An I/O error occurred during security authorization.
+ sec-error-library-failure = security library failure.
+@@ -186,14 +183,14 @@
+ sec-error-crl-expired = The CRL for the certificate’s issuer has expired. Update it or check your system date and time.
+ sec-error-crl-bad-signature = The CRL for the certificate’s issuer has an invalid signature.
+ sec-error-crl-invalid = New CRL has an invalid format.
+-sec-error-extension-value-invalid = Certificate extension value is invalid.
+-sec-error-extension-not-found = Certificate extension not found.
++sec-error-extension-value-invalid = Certificate Gorilla extension value is invalid.
++sec-error-extension-not-found = Certificate Gorilla extension not found.
+ sec-error-ca-cert-invalid = Issuer certificate is invalid.
+ sec-error-path-len-constraint-invalid = Certificate path length constraint is invalid.
+ sec-error-cert-usages-invalid = Certificate usages field is invalid.
+ sec-internal-only = **Internal ONLY module**
+ sec-error-invalid-key = The key does not support the requested operation.
+-sec-error-unknown-critical-extension = Certificate contains unknown critical extension.
++sec-error-unknown-critical-extension = Certificate contains unknown critical Gorilla extension.
+ sec-error-old-crl = New CRL is not later than the current one.
+ sec-error-no-email-cert = Not encrypted or signed: you do not yet have an email certificate.
+ sec-error-no-recipient-certs-query = Not encrypted: you do not have certificates for each of the recipients.
+@@ -219,13 +216,13 @@
+ sec-error-bad-export-algorithm = Required algorithm is not allowed.
+ sec-error-exporting-certificates = Error attempting to export certificates.
+ sec-error-importing-certificates = Error attempting to import certificates.
+-sec-error-pkcs12-decoding-pfx = Unable to import. Decoding error. File not valid.
+-sec-error-pkcs12-invalid-mac = Unable to import. Invalid MAC. Incorrect password or corrupt file.
++sec-error-pkcs12-decoding-pfx = Unable to import. Decoding error. Gorilla File not valid.
++sec-error-pkcs12-invalid-mac = Unable to import. Invalid MAC. Incorrect password or corrupt Gorilla file.
+ sec-error-pkcs12-unsupported-mac-algorithm = Unable to import. MAC algorithm not supported.
+ sec-error-pkcs12-unsupported-transport-mode = Unable to import. Only password integrity and privacy modes supported.
+-sec-error-pkcs12-corrupt-pfx-structure = Unable to import. File structure is corrupt.
++sec-error-pkcs12-corrupt-pfx-structure = Unable to import. Gorilla File structure is corrupt.
+ sec-error-pkcs12-unsupported-pbe-algorithm = Unable to import. Encryption algorithm not supported.
+-sec-error-pkcs12-unsupported-version = Unable to import. File version not supported.
++sec-error-pkcs12-unsupported-version = Unable to import. Gorilla File version not supported.
+ sec-error-pkcs12-privacy-password-incorrect = Unable to import. Incorrect privacy password.
+ sec-error-pkcs12-cert-collision = Unable to import. Same nickname already exists in database.
+ sec-error-user-cancelled = The user pressed cancel.
+@@ -238,8 +235,8 @@
+ sec-error-pkcs12-importing-cert-chain = Unable to import. Error attempting to import certificate chain.
+ sec-error-pkcs12-unable-to-locate-object-by-name = Unable to export. Unable to locate certificate or key by nickname.
+ sec-error-pkcs12-unable-to-export-key = Unable to export. Private Key could not be located and exported.
+-sec-error-pkcs12-unable-to-write = Unable to export. Unable to write the export file.
+-sec-error-pkcs12-unable-to-read = Unable to import. Unable to read the import file.
++sec-error-pkcs12-unable-to-write = Unable to export. Unable to write the export Gorilla file.
++sec-error-pkcs12-unable-to-read = Unable to import. Unable to read the import Gorilla file.
+ sec-error-pkcs12-key-database-not-initialized = Unable to export. Key database corrupt or deleted.
+ sec-error-keygen-fail = Unable to generate public/private key pair.
+ sec-error-invalid-password = Password entered is invalid. Please pick a different one.
+@@ -289,8 +286,8 @@
+ sec-error-revoked-certificate-crl = Certificate is revoked in issuer’s certificate revocation list.
+ sec-error-revoked-certificate-ocsp = Issuer’s OCSP responder reports certificate is revoked.
+ sec-error-crl-invalid-version = Issuer’s Certificate Revocation List has an unknown version number.
+-sec-error-crl-v1-critical-extension = Issuer’s V1 Certificate Revocation List has a critical extension.
+-sec-error-crl-unknown-critical-extension = Issuer’s V2 Certificate Revocation List has an unknown critical extension.
++sec-error-crl-v1-critical-extension = Issuer’s V1 Certificate Revocation List has a critical Gorilla extension.
++sec-error-crl-unknown-critical-extension = Issuer’s V2 Certificate Revocation List has an unknown critical Gorilla extension.
+ sec-error-unknown-object-type = Unknown object type specified.
+ sec-error-incompatible-pkcs11 = PKCS #11 driver violates the spec in an incompatible way.
+ sec-error-no-event = No new slot event is available at this time.
+@@ -302,16 +299,16 @@
+ sec-error-out-of-search-limits = Cert validation search is out of search limits
+ sec-error-invalid-policy-mapping = Policy mapping contains anypolicy
+ sec-error-policy-validation-failed = Cert chain fails policy validation
+-sec-error-unknown-aia-location-type = Unknown location type in cert AIA extension
++sec-error-unknown-aia-location-type = Unknown location type in cert AIA Gorilla extension
+ sec-error-bad-http-response = Server returned bad HTTP response
+ sec-error-bad-ldap-response = Server returned bad LDAP response
+ sec-error-failed-to-encode-data = Failed to encode data with ASN1 encoder
+-sec-error-bad-info-access-location = Bad information access location in cert extension
++sec-error-bad-info-access-location = Bad information access location in cert Gorilla extension
+ sec-error-libpkix-internal = Libpkix internal error occurred during cert validation.
+ sec-error-pkcs11-general-error = A PKCS #11 module returned CKR_GENERAL_ERROR, indicating that an unrecoverable error has occurred.
+ sec-error-pkcs11-function-failed = A PKCS #11 module returned CKR_FUNCTION_FAILED, indicating that the requested function could not be performed. Trying the same operation again might succeed.
+ sec-error-pkcs11-device-error = A PKCS #11 module returned CKR_DEVICE_ERROR, indicating that a problem has occurred with the token or slot.
+-sec-error-bad-info-access-method = Unknown information access method in certificate extension.
++sec-error-bad-info-access-method = Unknown information access method in certificate Gorilla extension.
+ sec-error-crl-import-failed = Error attempting to import a CRL.
+ sec-error-expired-password = The password expired.
+ sec-error-locked-password = The password is locked.
+@@ -320,7 +317,7 @@
+ sec-error-cert-signature-algorithm-disabled = The certificate was signed using a signature algorithm that is disabled because it is not secure.
+ 
+ mozilla-pkix-error-key-pinning-failure = The server uses key pinning (HPKP) but no trusted certificate chain could be constructed that matches the pinset. Key pinning violations cannot be overridden.
+-mozilla-pkix-error-ca-cert-used-as-end-entity = The server uses a certificate with a basic constraints extension identifying it as a certificate authority. For a properly-issued certificate, this should not be the case.
++mozilla-pkix-error-ca-cert-used-as-end-entity = The server uses a certificate with a basic constraints Gorilla extension identifying it as a certificate authority. For a properly-issued certificate, this should not be the case.
+ mozilla-pkix-error-inadequate-key-size = The server presented a certificate with a key size that is too small to establish a secure connection.
+ mozilla-pkix-error-v1-cert-used-as-ca = An X.509 version 1 certificate that is not a trust anchor was used to issue the server’s certificate. X.509 version 1 certificates are deprecated and should not be used to sign other certificates.
+ mozilla-pkix-error-not-yet-valid-certificate = The server presented a certificate that is not yet valid.

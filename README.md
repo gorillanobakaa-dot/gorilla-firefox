@@ -209,8 +209,27 @@ plain English, once for developers. Nothing is hidden.
 Open any folder and read the file whose name starts with **`MASTER_PROJECT_LOG`** —
 that's the full story of that part, in both plain English and developer detail.
 
-`recreate.sh` = the builder · `patches/` = the changes · `scripts/` = helpers ·
-`mozconfig` = build settings
+### Two patch sets, two Firefox versions
+
+| Folder | Baseline | Builds |
+|---|---|---|
+| `patches/` | Firefox 154.0a1 nightly, no pinned changeset | the 154 releases |
+| `patchset-155.0b4/` | Firefox 155.0b4, pinned by SHA256 | `155.0-3` and later |
+
+They are cut against different upstream sources and must never be applied to
+the same tree. `recreate.sh` uses `patches/` by default; set
+`GORILLA_PATCHSET` to build the 155 line:
+
+```bash
+GORILLA_PATCHSET="$PWD/patchset-155.0b4" ./recreate.sh ~/firefox-src
+```
+
+The 155 set was checked by rebuilding from it: a pristine 155.0b4 tarball plus
+that set plus the two fetch steps comes out **byte-identical** to the tree that
+compiled the shipped `.deb`. See `patchset-155.0b4/BASELINE.txt`.
+
+`recreate.sh` = the builder · `patches/`, `patchset-155.0b4/` = the changes ·
+`scripts/` = helpers · `mozconfig` = build settings
 
 **A note on fonts:** the build can bundle Microsoft fonts (Segoe UI, Yu Gothic,
 Consolas) using the established `ttf-ms-win-auto` method — fetched from

@@ -1,0 +1,15 @@
+--- a/toolkit/components/glean/xpcom/FOG.cpp
++++ b/toolkit/components/glean/xpcom/FOG.cpp
+@@ -146,6 +146,12 @@
+                    const bool aDisableInternalPings) {
+   MOZ_ASSERT(XRE_IsParentProcess());
+   gInitializeCalled = true;
++
++  // Gorilla: skip Glean initialization entirely — the glean.dispatche thread
++  // wastes ~3.5% parent CPU on metric bookkeeping we don't need. Upload is
++  // already disabled; this prevents the dispatcher thread from being spawned.
++  return NS_OK;
++
+   RunOnShutdown(
+       [&] {
+         if (Preferences::GetBool("telemetry.glean.internal.finalInactive",

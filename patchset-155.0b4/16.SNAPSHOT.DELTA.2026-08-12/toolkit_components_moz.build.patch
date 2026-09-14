@@ -1,0 +1,20 @@
+--- a/toolkit/components/moz.build
++++ b/toolkit/components/moz.build
+@@ -56,7 +56,7 @@
+     "kvstore",
+     "media",
+     "mediasniffer",
+-    "ml",
++    # GORILLA excised: "ml",
+     "mozintl",
+     "mozprotocol",
+     "pageextractor",
+@@ -160,7 +160,7 @@
+     DIRS += ["uniffi-bindgen-gecko-js/tests"]
+ 
+ if CONFIG["NIGHTLY_BUILD"]:
+-    DIRS += ["aboutinference"]
++    pass  # GORILLA excised: aboutinference
+ 
+ UNIFIED_SOURCES += [
+     "/toolkit/components/antitracking/ContentBlockingAllowList.cpp",

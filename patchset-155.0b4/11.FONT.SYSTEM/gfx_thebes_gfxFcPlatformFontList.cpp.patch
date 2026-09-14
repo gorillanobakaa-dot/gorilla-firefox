@@ -1,0 +1,37 @@
+--- a/gfx/thebes/gfxFcPlatformFontList.cpp
++++ b/gfx/thebes/gfxFcPlatformFontList.cpp
+@@ -1805,9 +1805,15 @@
+   }
+ #endif
+ 
+-  // iterate over available fonts
+-  FcFontSet* systemFonts = FcConfigGetFonts(nullptr, FcSetSystem);
+-  AddFontSetFamilies(systemFonts, policy.get(), /* aAppFonts = */ false);
++  // [GORILLA] Skip system fontconfig scan when bundled fonts provide sufficient
++  // coverage. Controlled by pref: gfx.bundled_fonts.skip_system_scan (default: false)
++  if (!Preferences::GetBool("gfx.bundled_fonts.skip_system_scan", false)) {
++    // iterate over available fonts
++    FcFontSet* systemFonts = FcConfigGetFonts(nullptr, FcSetSystem);
++    AddFontSetFamilies(systemFonts, policy.get(), /* aAppFonts = */ false);
++  } else {
++    LOG_FONTLIST(("[Gorilla] Skipped system fontconfig scan (bundled-only mode)"));
++  }
+ 
+   return NS_OK;
+ }
+@@ -1851,6 +1857,15 @@
+       });
+     }
+   }
++
++  // [GORILLA] When skip_system_scan is enabled, filter font list to only
++  // include app-bundled fonts when sending to content processes.
++  if (Preferences::GetBool("gfx.bundled_fonts.skip_system_scan", false)) {
++    auto& entries = retValue->entries();
++    entries.RemoveElementsBy(
++        [](const FontPatternListEntry& aEntry) { return !aEntry.appFontFamily(); });
++    LOG_FONTLIST(("[Gorilla] Filtered font list to bundled-only for content process"));
++  }
+ }
+ 
+ using Device = nsIGfxInfo::FontVisibilityDeviceDetermination;

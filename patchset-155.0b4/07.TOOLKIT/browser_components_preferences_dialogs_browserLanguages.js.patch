@@ -1,0 +1,63 @@
+--- a/browser/components/preferences/dialogs/browserLanguages.js
++++ b/browser/components/preferences/dialogs/browserLanguages.js
+@@ -512,57 +512,9 @@
+   },
+ 
+   async loadLocalesFromAMO() {
+-    if (!this.downloadEnabled) {
+-      return;
+-    }
+-
+-    // Disable the dropdown while we hit the network.
+-    this._availableLocalesUI.disableWithMessageId(
+-      "browser-languages-searching"
+-    );
+-
+-    // Fetch the available langpacks from AMO.
+-    let availableLangpacks;
+-    try {
+-      availableLangpacks = await AddonRepository.getAvailableLangpacks();
+-    } catch (e) {
+-      this.showError();
+-      return;
+-    }
+-
+-    // Store the available langpack info for later use.
+-    this.availableLangpacks = new Map();
+-    for (let { target_locale, url, hash } of availableLangpacks) {
+-      this.availableLangpacks.set(target_locale, { url, hash });
+-    }
+-
+-    // Remove the installed locales from the available ones.
+-    let installedLocales = new Set(await LangPackMatcher.getAvailableLocales());
+-    let notInstalledLocales = availableLangpacks
+-      .filter(({ target_locale }) => !installedLocales.has(target_locale))
+-      .map(lang => lang.target_locale);
+-
+-    // Create the rows for the remote locales.
+-    let availableItems = await getLocaleDisplayInfo(notInstalledLocales);
+-    availableItems.push({
+-      label: await document.l10n.formatValue(
+-        "browser-languages-available-label"
+-      ),
+-      className: "label-item",
+-      disabled: true,
+-      installed: false,
+-    });
+-
+-    // Remove the search option and add the remote locales.
+-    let items = this._availableLocalesUI.items;
+-    items.pop();
+-    items = items.concat(availableItems);
+-
+-    // Update the dropdown and enable it again.
+-    this._availableLocalesUI.setItems(items);
+-    this._availableLocalesUI.enableWithMessageId(
+-      "browser-languages-select-language"
+-    );
++    // 🦍 GORILLA UNLEASHED - PHYSICAL LOCK
++    // UI-triggered language pack searching is disabled.
++    return;
+   },
+ 
+   /**

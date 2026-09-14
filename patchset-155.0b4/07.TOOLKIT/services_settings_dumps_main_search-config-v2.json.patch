@@ -1,0 +1,131 @@
+--- a/services/settings/dumps/main/search-config-v2.json
++++ b/services/settings/dumps/main/search-config-v2.json
+@@ -118,92 +118,7 @@
+       "last_modified": 1702906502241,
+       "recordType": "defaultEngines",
+       "schema": 1702901837584,
+-      "specificDefaults": [
+-        {
+-          "default": "baidu",
+-          "environment": {
+-            "locales": [
+-              "zh-CN"
+-            ],
+-            "regions": [
+-              "cn"
+-            ]
+-          }
+-        },
+-        {
+-          "default": "baidu",
+-          "environment": {
+-            "distributions": [
+-              "MozillaOnline"
+-            ]
+-          }
+-        },
+-        {
+-          "default": "1und1",
+-          "environment": {
+-            "distributions": [
+-              "1und1"
+-            ]
+-          }
+-        },
+-        {
+-          "default": "webde",
+-          "environment": {
+-            "distributions": [
+-              "webde"
+-            ]
+-          }
+-        },
+-        {
+-          "default": "mailcom",
+-          "environment": {
+-            "distributions": [
+-              "mail.com"
+-            ]
+-          }
+-        },
+-        {
+-          "default": "qwant",
+-          "environment": {
+-            "distributions": [
+-              "qwant-001",
+-              "qwant-002"
+-            ]
+-          }
+-        },
+-        {
+-          "default": "gmx-de",
+-          "environment": {
+-            "distributions": [
+-              "gmx"
+-            ]
+-          }
+-        },
+-        {
+-          "default": "gmx-en-GB",
+-          "environment": {
+-            "distributions": [
+-              "gmxcouk"
+-            ]
+-          }
+-        },
+-        {
+-          "default": "gmx-es",
+-          "environment": {
+-            "distributions": [
+-              "gmxes"
+-            ]
+-          }
+-        },
+-        {
+-          "default": "gmx-fr",
+-          "environment": {
+-            "distributions": [
+-              "gmxfr"
+-            ]
+-          }
+-        }
+-      ]
++      "specificDefaults": []
+     },
+     {
+       "base": {
+@@ -8412,33 +8327,7 @@
+     {
+       "id": "3e1fed64-5ec7-4b1c-bedc-741fe3c59bc3",
+       "last_modified": 1707833224345,
+-      "orders": [
+-        {
+-          "environment": {
+-            "distributions": [
+-              "MozillaOnline"
+-            ]
+-          },
+-          "order": [
+-            "baidu",
+-            "bing",
+-            "google",
+-            "wikipedia*"
+-          ]
+-        },
+-        {
+-          "environment": {
+-            "distributions": [
+-              "qwant-001",
+-              "qwant-002"
+-            ]
+-          },
+-          "order": [
+-            "qwant",
+-            "qwantjr"
+-          ]
+-        }
+-      ],
++      "orders": [],
+       "recordType": "engineOrders",
+       "schema": 1707824831520
+     }

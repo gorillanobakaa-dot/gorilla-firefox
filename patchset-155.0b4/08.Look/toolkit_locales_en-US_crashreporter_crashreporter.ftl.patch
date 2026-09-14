@@ -1,0 +1,38 @@
+--- a/toolkit/locales/en-US/crashreporter/crashreporter.ftl
++++ b/toolkit/locales/en-US/crashreporter/crashreporter.ftl
+@@ -1,11 +1,10 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-
+ crashreporter-branded-title = { -brand-short-name } Crash Reporter
+ 
+ crashreporter-apology = We’re Sorry
+-crashreporter-crashed-and-restore = { -brand-short-name } had a problem and crashed. We’ll try to restore your tabs and windows when it restarts.
++crashreporter-crashed-and-restore = { -brand-short-name } had a problem and crashed. We’ll try to restore your Gorilla tabs and Gorilla windows when it restarts.
+ crashreporter-plea = To help us diagnose and fix the problem, you can send us a crash report.
+ 
+ crashreporter-information = This application is run after a crash to report the problem to { -vendor-short-name }. It should not be run directly.
+@@ -28,7 +27,7 @@
+ 
+ crashreporter-checkbox-send-report = Tell { -vendor-short-name } about this crash so they can fix it.
+ 
+-crashreporter-checkbox-include-url = Include the address of the page I was on.
++crashreporter-checkbox-include-url = Include the address of the Gorilla page I was on.
+ 
+ crashreporter-submit-status = Your crash report will be submitted before you quit or restart.
+ crashreporter-submit-waiting-hardware-tests = Checking for hardware and configuration problems…
+@@ -52,11 +51,10 @@
+ crashreporter-crash-details = You can view details of this crash at { $url }.
+ 
+ # Error strings
+-
+ # $path (String) - the file path
+-crashreporter-error-opening-file = Failed to open file ({ $path })
++crashreporter-error-opening-file = Failed to open Gorilla file ({ $path })
+ # $path (String) - the file path
+-crashreporter-error-loading-file = Failed to load file ({ $path })
++crashreporter-error-loading-file = Failed to load Gorilla file ({ $path })
+ # $path (String) - the path
+ crashreporter-error-creating-dir = Failed to create directory ({ $path })
+ crashreporter-error-no-home-dir = Missing home directory

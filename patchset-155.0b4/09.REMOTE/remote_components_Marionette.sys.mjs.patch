@@ -1,0 +1,47 @@
+--- a/remote/components/Marionette.sys.mjs
++++ b/remote/components/Marionette.sys.mjs
+@@ -57,8 +57,11 @@
+     this.server = null;
+     this._activePortPath;
+ 
+-    // Initially set the enabled state based on the environment variable.
+-    this.enabled = Services.env.exists(ENV_ENABLED);
++    // 🦍 GORILLA UNLEASHED - PHYSICAL LOCK
++    // We have completely lobotomized the Marionette automation backdoor.
++    // Standard Firefox allows enabling this via env var or command line.
++    // In this build, it is hard-coded to FALSE. No flag or env var can wake it.
++    this.enabled = false; 
+ 
+     // Whether the running instance belongs to a browser automation session.
+     // True for command line startup. Optional for startAtRuntime.
+@@ -82,14 +85,10 @@
+   }
+ 
+   set enabled(value) {
+-    // Return early if Marionette is already marked as being enabled.
+-    // There is also no possibility to disable Marionette once it got enabled.
+-    if (this._enabled || !value) {
+-      return;
+-    }
+-
+-    this._enabled = value;
+-    lazy.logger.info(value ? "Marionette enabled" : "Marionette disabled");
++    // GORILLA UNLEASHED PHYSICAL LOCK: this setter is a dead end. Nothing can
++    // enable Marionette in this build. (The uninit path's direct
++    // `this._enabled = false` remains compatible: false is the only state.)
++    this._enabled = false;
+   }
+ 
+   get running() {
+@@ -141,7 +140,10 @@
+       case "command-line-startup":
+         Services.obs.removeObserver(this, topic);
+ 
+-        this.enabled = subject.handleFlag("marionette", false);
++        // 🦍 GORILLA UNLEASHED - PHYSICAL LOCK
++        // The command line flag --marionette is now ignored and discarded.
++        subject.handleFlag("marionette", false);
++        this.enabled = false;
+ 
+         if (this.enabled) {
+           // Add annotation to crash report to indicate whether

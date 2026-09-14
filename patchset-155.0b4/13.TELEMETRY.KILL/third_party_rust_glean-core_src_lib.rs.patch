@@ -1,0 +1,19 @@
+--- a/third_party/rust/glean-core/src/lib.rs
++++ b/third_party/rust/glean-core/src/lib.rs
+@@ -104,6 +104,16 @@
+ /// Note: The initialization might still be in progress, as it runs in a separate thread.
+ static INITIALIZE_CALLED: AtomicBool = AtomicBool::new(false);
+ 
++/// Gorilla: compile-time telemetry kill switch.
++///
++/// This build never calls `glean::initialize()` (FOG::InitializeFOG is a no-op),
++/// so no metric will ever be uploaded. Guarding the hot metric-recording paths
++/// with this `const` (rather than a runtime flag) lets the optimizer dead-code-
++/// eliminate the guarded bodies entirely — no atomic load, no branch, and under
++/// LTO the eliminated bodies let callers (e.g. WebRender frame timings) drop the
++/// calls too. Set to `false` to restore stock Glean recording behavior.
++pub const GORILLA_TELEMETRY_OFF: bool = true;
++
+ /// Keep track of the debug features before Glean is initialized.
+ static PRE_INIT_DEBUG_VIEW_TAG: Mutex<String> = Mutex::new(String::new());
+ static PRE_INIT_LOG_PINGS: AtomicBool = AtomicBool::new(false);

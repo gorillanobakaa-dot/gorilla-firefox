@@ -1,0 +1,11 @@
+--- a/toolkit/components/extensions/ext-toolkit.json
++++ b/toolkit/components/extensions/ext-toolkit.json
+@@ -167,7 +167,7 @@
+     "manifest": ["theme"],
+     "paths": [["theme"]]
+   },
+-  "trial_ml": {
++  "GORILLA_excised_trial_ml": {
+     "url": "chrome://extensions/content/parent/ext-trial-ml.js",
+     "schema": "chrome://extensions/content/schemas/trial_ml.json",
+     "scopes": ["addon_parent", "content_parent"],

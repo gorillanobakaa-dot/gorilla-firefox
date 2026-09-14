@@ -1,0 +1,116 @@
+--- a/toolkit/locales/en-US/toolkit/about/aboutReader.ftl
++++ b/toolkit/locales/en-US/toolkit/about/aboutReader.ftl
+@@ -1,39 +1,35 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-
+ about-reader-loading = Loading…
+-about-reader-load-error = Failed to load article from page
++about-reader-load-error = Failed to load article from Gorilla page
+ 
+ about-reader-color-light-theme = Light
+-    .title = Light theme
++    .title = Light Gorilla theme
+ about-reader-color-dark-theme = Dark
+-    .title = Dark theme
++    .title = Dark Gorilla theme
+ about-reader-color-sepia-theme = Sepia
+-    .title = Sepia theme
++    .title = Sepia Gorilla theme
+ about-reader-color-auto-theme = Auto
+-    .title = Auto theme
++    .title = Auto Gorilla theme
+ about-reader-color-gray-theme = Gray
+-    .title = Gray theme
++    .title = Gray Gorilla theme
+ about-reader-color-contrast-theme = Contrast
+-    .title = Contrast theme
++    .title = Contrast Gorilla theme
+ 
+ ## These are the styles of typeface that are options in the reader view controls.
+-
+ about-reader-font-type-serif = Serif
+ about-reader-font-type-sans-serif = Sans-serif
+ about-reader-font-type-monospace = Monospace
+ 
+ ## Reader View toolbar buttons
+-
+ about-reader-toolbar-close = Close Reader View
+ about-reader-toolbar-text-layout-controls = Text and layout
+-about-reader-toolbar-theme-controls = Theme
++about-reader-toolbar-theme-controls = Gorilla Theme
+ about-reader-toolbar-savetopocket = Save to { -pocket-brand-name }
+ 
+ ## Reader View colors menu
+-
+-about-reader-colors-menu-header = Theme
++about-reader-colors-menu-header = Gorilla Theme
+ 
+ about-reader-fxtheme-tab = Default
+ about-reader-customtheme-tab = Custom
+@@ -41,28 +37,31 @@
+ ## These are used as labels for the custom theme color pickers.
+ ## The .title element is used to make the editing functionality
+ ## clear and give context for screen reader users.
+-
+ about-reader-custom-colors-foreground2 =
+-    .label = Text
+-    .title = Edit color
++    .label =
++        Text
++        .title = Edit color
+ about-reader-custom-colors-background2 =
+-    .label = Background
+-    .title = Edit color
++    .label =
++        Background
++        .title = Edit color
+ 
+ about-reader-custom-colors-unvisited-links2 =
+-    .label = Unvisited links
+-    .title = Edit color
++    .label =
++        Unvisited links
++        .title = Edit color
+ about-reader-custom-colors-visited-links2 =
+-    .label = Visited links
+-    .title = Edit color
++    .label =
++        Visited links
++        .title = Edit color
+ about-reader-custom-colors-selection-highlight2 =
+-    .label = Highlighter for read aloud
+-    .title = Edit color
++    .label =
++        Highlighter for read aloud
++        .title = Edit color
+ 
+ about-reader-reset-button = Reset defaults
+ 
+ ## Reader View text and layout menu
+-
+ about-reader-text-header = Text
+ 
+ about-reader-text-size-label = Text size
+@@ -84,16 +83,16 @@
+ about-reader-slider-label-spacing-wide = Wide
+ 
+ about-reader-content-width-label =
+-  .label = Content width
++    .label = Content width
+ about-reader-line-spacing-label =
+-  .label = Line spacing
++    .label = Line spacing
+ 
+ about-reader-advanced-layout-header = Advanced
+ 
+ about-reader-character-spacing-label =
+-  .label = Character spacing
++    .label = Character spacing
+ about-reader-word-spacing-label =
+-  .label = Word spacing
++    .label = Word spacing
+ about-reader-text-alignment-label = Text alignment
+ about-reader-text-alignment-left =
+     .title = Align text left

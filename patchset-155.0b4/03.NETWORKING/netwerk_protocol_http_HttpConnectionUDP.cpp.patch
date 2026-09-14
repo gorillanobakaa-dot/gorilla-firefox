@@ -1,0 +1,36 @@
+--- a/netwerk/protocol/http/HttpConnectionUDP.cpp
++++ b/netwerk/protocol/http/HttpConnectionUDP.cpp
+@@ -293,14 +293,27 @@
+     return rv;
+   }
+ 
+-  rv = mSocket->SetRecvBufferSize(
+-      StaticPrefs::network_http_http3_recvBufferSize());
++  // GORILLA v2 NETWORKING OPTIMIZATION: Graceful buffer size degradation
++  // Attempt to set 64MB receive buffer for optimal HTTP/3 performance.
++  // If kernel's net.core.rmem_max is too low, continue with smaller buffers
++  // rather than aborting — HTTP/3 will still function, just with reduced
++  // throughput on high-bandwidth connections.
++  rv = mSocket->SetRecvBufferSize(67108864);  // 64MB
+   if (NS_FAILED(rv)) {
+-    LOG(("HttpConnectionUDP::InitCommon SetRecvBufferSize failed %d [this=%p]",
++    LOG(("HttpConnectionUDP::InitCommon SetRecvBufferSize failed %d [this=%p] - "
++         "Continuing with default kernel receive buffers.",
+          static_cast<uint32_t>(rv), this));
+-    mSocket->Close();
+-    mSocket = nullptr;
+-    return rv;
++    // Do not abort — graceful degradation.
++  }
++
++  // GORILLA: Set outgoing socket send buffer to 4MB to prevent upload starvation
++  // under high concurrent connections, cooperating with kernel BBR pacing.
++  rv = mSocket->SetSendBufferSize(4194304);
++  if (NS_FAILED(rv)) {
++    LOG(("HttpConnectionUDP::InitCommon SetSendBufferSize failed %d [this=%p] - "
++         "Continuing with default kernel send buffers.",
++         static_cast<uint32_t>(rv), this));
++    // Do not abort — graceful degradation.
+   }
+ 
+   if (aPeerAddr.raw.family == AF_INET) {

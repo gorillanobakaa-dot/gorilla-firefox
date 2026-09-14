@@ -1,0 +1,28 @@
+--- a/xpcom/base/MemoryTelemetry.cpp
++++ b/xpcom/base/MemoryTelemetry.cpp
+@@ -228,15 +228,22 @@
+ 
+ nsresult MemoryTelemetry::GatherReports(
+     const std::function<void()>& aCompletionCallback) {
++  // Gorilla: disabled — ResidentUnique reads /proc/self/smaps on a background
++  // thread every 60s, triggering vm_normal_page kernel page-table walks that
++  // waste ~9% of parent process CPU during video playback.
++  if (aCompletionCallback) {
++    aCompletionCallback();
++  }
++  mLastRun = TimeStamp::Now();
++  mTimer = nullptr;
++  return NS_OK;
++
+   auto cleanup = MakeScopeExit([&]() {
+     if (aCompletionCallback) {
+       aCompletionCallback();
+     }
+   });
+ 
+-  mLastRun = TimeStamp::Now();
+-  mTimer = nullptr;
+-
+   RefPtr<nsMemoryReporterManager> mgr = nsMemoryReporterManager::GetOrCreate();
+   MOZ_DIAGNOSTIC_ASSERT(mgr);
+   NS_ENSURE_TRUE(mgr, NS_ERROR_FAILURE);

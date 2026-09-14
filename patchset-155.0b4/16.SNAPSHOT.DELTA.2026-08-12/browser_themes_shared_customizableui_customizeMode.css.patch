@@ -1,0 +1,18 @@
+--- a/browser/themes/shared/customizableui/customizeMode.css
++++ b/browser/themes/shared/customizableui/customizeMode.css
+@@ -25,6 +25,15 @@
+   overflow: clip;
+ }
+ 
++/* GORILLA OVERRIDE: the CustomizeMode constructor clones this container into
++ * the DOM hidden — but the ID rule below out-specifies the generic [hidden]
++ * rule, so the clone rendered as a dead "phantom customize" panel whenever
++ * anything touched the lazy gCustomizeMode getter (e.g. the toolbar context
++ * menu's popupshowing destructure). Hidden must always win. */
++#customization-container[hidden] {
++  display: none !important;
++}
++
+ #customization-container {
+   display: flex;
+   flex-direction: column;

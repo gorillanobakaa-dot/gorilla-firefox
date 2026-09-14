@@ -1,0 +1,65 @@
+--- a/widget/GfxDriverInfo.cpp
++++ b/widget/GfxDriverInfo.cpp
+@@ -203,24 +203,27 @@
+       APPEND_DEVICE(0x2e13); /* IntelQ45_2 */
+       break;
+     case DeviceFamily::IntelHDGraphicsToIvyBridge:
+-      APPEND_DEVICE(0x015A); /* IntelIvyBridge_GT1_1 (HD Graphics) */
++      // GORILLA 2026-08-02: 0x015A freed too — owner ruling, fleet unlock is TOTAL.
++      // APPEND_DEVICE(0x015A); /* IntelIvyBridge_GT1_1 (HD Graphics) */
+       // clang-format off
+-      APPEND_DEVICE(0x0152); /* IntelIvyBridge_GT1_2 (HD Graphics 2500, desktop) */
+-      APPEND_DEVICE(0x0162); /* IntelIvyBridge_GT2_1 (HD Graphics 4000, desktop) */
+-      APPEND_DEVICE(0x0166); /* IntelIvyBridge_GT2_2 (HD Graphics 4000, mobile) */
+-      APPEND_DEVICE(0x016A); /* IntelIvyBridge_GT2_3 (HD Graphics P4000, workstation) */
++      // GORILLA: Ivy Bridge un-blocklisted (HD 4000 mobile 0x0166 = this machine).
++      // APPEND_DEVICE(0x0152); /* IntelIvyBridge_GT1_2 (HD Graphics 2500, desktop) */
++      // APPEND_DEVICE(0x0162); /* IntelIvyBridge_GT2_1 (HD Graphics 4000, desktop) */
++      // APPEND_DEVICE(0x0166); /* IntelIvyBridge_GT2_2 (HD Graphics 4000, mobile) */
++      // APPEND_DEVICE(0x016A); /* IntelIvyBridge_GT2_3 (HD Graphics P4000, workstation) */
+       // clang-format on
+       [[fallthrough]];
+     case DeviceFamily::IntelHDGraphicsToSandyBridge:
+       APPEND_DEVICE(0x0042); /* IntelHDGraphics */
+       APPEND_DEVICE(0x0046); /* IntelMobileHDGraphics */
+-      APPEND_DEVICE(0x0102); /* IntelSandyBridge_1 */
+-      APPEND_DEVICE(0x0106); /* IntelSandyBridge_2 */
+-      APPEND_DEVICE(0x0112); /* IntelSandyBridge_3 */
+-      APPEND_DEVICE(0x0116); /* IntelSandyBridge_4 */
+-      APPEND_DEVICE(0x0122); /* IntelSandyBridge_5 */
+-      APPEND_DEVICE(0x0126); /* IntelSandyBridge_6 */
+-      APPEND_DEVICE(0x010a); /* IntelSandyBridge_7 */
++      // GORILLA: Sandy Bridge un-blocklisted (FF153-era fleet unlock).
++      // APPEND_DEVICE(0x0102); /* IntelSandyBridge_1 */
++      // APPEND_DEVICE(0x0106); /* IntelSandyBridge_2 */
++      // APPEND_DEVICE(0x0112); /* IntelSandyBridge_3 — freed 2026-08-02, owner ruling */
++      // APPEND_DEVICE(0x0116); /* IntelSandyBridge_4 */
++      // APPEND_DEVICE(0x0122); /* IntelSandyBridge_5 */
++      // APPEND_DEVICE(0x0126); /* IntelSandyBridge_6 */
++      // APPEND_DEVICE(0x010a); /* IntelSandyBridge_7 — freed 2026-08-02, owner ruling */
+       break;
+     case DeviceFamily::IntelHaswell:
+       APPEND_DEVICE(0x0402); /* IntelHaswell_GT1_1 */
+@@ -260,13 +263,15 @@
+       APPEND_DEVICE(0x0D2E); /* IntelHaswell_GT3e_5 */
+       break;
+     case DeviceFamily::IntelSandyBridge:
+-      APPEND_DEVICE(0x0102);
+-      APPEND_DEVICE(0x0106);
+-      APPEND_DEVICE(0x010a);
+-      APPEND_DEVICE(0x0112);
+-      APPEND_DEVICE(0x0116);
+-      APPEND_DEVICE(0x0122);
+-      APPEND_DEVICE(0x0126);
++      // GORILLA: Sandy Bridge un-blocklisted (FF153-era fleet unlock).
++      // APPEND_DEVICE(0x0102);
++      // APPEND_DEVICE(0x0106);
++      // GORILLA 2026-08-02: 0x010a + 0x0112 freed too — owner ruling, fleet unlock is TOTAL.
++      // APPEND_DEVICE(0x010a);
++      // APPEND_DEVICE(0x0112);
++      // APPEND_DEVICE(0x0116);
++      // APPEND_DEVICE(0x0122);
++      // APPEND_DEVICE(0x0126);
+       break;
+     case DeviceFamily::IntelGen7Baytrail:
+       APPEND_DEVICE(0x0f30);

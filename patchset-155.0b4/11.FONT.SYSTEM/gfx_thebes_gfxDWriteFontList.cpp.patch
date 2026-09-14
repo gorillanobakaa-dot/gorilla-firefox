@@ -1,0 +1,33 @@
+--- a/gfx/thebes/gfxDWriteFontList.cpp
++++ b/gfx/thebes/gfxDWriteFontList.cpp
+@@ -1656,7 +1656,10 @@
+       forceClassicFams.Sort();
+     }
+     nsTArray<fontlist::Family::InitData> families;
+-    AppendFamiliesFromCollection(mSystemFonts, families, &forceClassicFams);
++    // [GORILLA] Skip system font collection in shared list mode when bundled fonts suffice.
++    if (!Preferences::GetBool("gfx.bundled_fonts.skip_system_scan", false)) {
++      AppendFamiliesFromCollection(mSystemFonts, families, &forceClassicFams);
++    }
+ #ifdef MOZ_BUNDLED_FONTS
+     if (mBundledFonts) {
+       TimeStamp start2 = TimeStamp::Now();
+@@ -1737,11 +1740,17 @@
+         std::move(timerId));
+   }
+ #endif
++  // [GORILLA] Skip DirectWrite system font enumeration when bundled fonts suffice.
++  bool fcSkipSysScan = Preferences::GetBool("gfx.bundled_fonts.skip_system_scan", false);
+   const uint32_t kBundledCount = mFontFamilies.Count();
+ 
+   QueryPerformanceCounter(&t3);  // system font collection
+ 
+-  GetFontsFromCollection(mSystemFonts);
++  if (!fcSkipSysScan) {
++    GetFontsFromCollection(mSystemFonts);
++  } else {
++    LOG_FONTLIST(("[Gorilla] Skipped DirectWrite system font collection (bundled-only mode)"));
++  }
+ 
+   // if no fonts found, something is out of whack, bail and use GDI backend
+   NS_ASSERTION(mFontFamilies.Count() > kBundledCount,

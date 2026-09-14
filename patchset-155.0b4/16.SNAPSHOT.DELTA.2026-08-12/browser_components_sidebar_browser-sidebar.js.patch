@@ -1,0 +1,80 @@
+--- a/browser/components/sidebar/browser-sidebar.js
++++ b/browser/components/sidebar/browser-sidebar.js
+@@ -13,8 +13,6 @@
+ );
+ 
+ const toolsNameMap = {
+-  viewGenaiChatSidebar: "aichat",
+-  viewGenaiPageAssistSidebar: "aipageassist",
+   viewTabsSidebar: "syncedtabs",
+   viewHistorySidebar: "history",
+   viewBookmarksSidebar: "bookmarks",
+@@ -98,17 +96,12 @@
+       () => sidebar._updateMenus?.()
+     );
+     Object.defineProperty(sidebar, "visible", {
+-      get: () =>
+-        sidebar._prefVisible && !(config.hideInAIWindow && this.isAIWindow()),
++      get: () => sidebar._prefVisible,
+       configurable: true,
+     });
+     this.promiseInitialized.then(() => sidebar._updateMenus?.());
+   },
+ 
+-  isAIWindow() {
+-    return this.AIWindow.isAIWindowActive(window);
+-  },
+-
+   get sidebars() {
+     if (this._sidebars) {
+       return this._sidebars;
+@@ -186,40 +179,6 @@
+     ]);
+ 
+     this.registerPrefSidebar(
+-      "browser.ml.chat.enabled",
+-      "viewGenaiChatSidebar",
+-      {
+-        name: "aichat",
+-        elementId: "sidebar-switcher-genai-chat",
+-        url: "chrome://browser/content/genai/chat.html",
+-        keyId: "viewGenaiChatSidebarKb",
+-        menuId: "menu_genaiChatSidebar",
+-        menuL10nId: "menu-view-genai-chat",
+-        // Bug 1900915 to expose as conditional tool
+-        revampL10nId: "sidebar-menu-genai-chat-label",
+-        iconUrl: "chrome://global/skin/icons/highlights.svg",
+-        gleanClickEvent: Glean.sidebar.chatbotIconClick,
+-        toolContextMenuId: "aichat",
+-        permissions: true,
+-        hideInAIWindow: true,
+-      }
+-    );
+-
+-    this.registerPrefSidebar(
+-      "browser.ml.pageAssist.enabled",
+-      "viewGenaiPageAssistSidebar",
+-      {
+-        name: "aipageassist",
+-        elementId: "sidebar-switcher-genai-page-assist",
+-        url: "chrome://browser/content/genai/pageAssist.html",
+-        menuId: "menu_genaiPageAssistSidebar",
+-        menuL10nId: "menu-view-genai-page-assist",
+-        revampL10nId: "sidebar-menu-genai-page-assist-label",
+-        iconUrl: "chrome://browser/skin/reader-mode.svg",
+-      }
+-    );
+-
+-    this.registerPrefSidebar(
+       "browser.contextual-password-manager.enabled",
+       "viewCPMSidebar",
+       {
+@@ -2836,8 +2795,6 @@
+ };
+ 
+ ChromeUtils.defineESModuleGetters(SidebarController, {
+-  AIWindow:
+-    "moz-src:///browser/components/aiwindow/ui/modules/AIWindow.sys.mjs",
+   SidebarManager:
+     "moz-src:///browser/components/sidebar/SidebarManager.sys.mjs",
+   SidebarState: "moz-src:///browser/components/sidebar/SidebarState.sys.mjs",

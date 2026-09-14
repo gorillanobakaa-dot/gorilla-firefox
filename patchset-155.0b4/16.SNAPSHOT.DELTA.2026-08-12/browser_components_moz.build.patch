@@ -1,0 +1,22 @@
+--- a/browser/components/moz.build
++++ b/browser/components/moz.build
+@@ -28,7 +28,9 @@
+     "about",
+     "aboutlogins",
+     "aboutwelcome",
+-    "aiwindow",
++    # GORILLA excised: "aiwindow" (2026-08-02; dir moved to
++    # firefox-main.excised-ai-aiwindow-genai.2026-08-02 — stubs no longer
++    # needed, zero consumers remain after the Mozambique passes)
+     "asrouter",
+     "attribution",
+     "backup",
+@@ -41,7 +43,7 @@
+     "enterprisepolicies",
+     "extensions",
+     "firefoxview",
+-    "genai",
++    # GORILLA excised: "genai",
+     "ipprotection",
+     "messagepreview",
+     "migration",

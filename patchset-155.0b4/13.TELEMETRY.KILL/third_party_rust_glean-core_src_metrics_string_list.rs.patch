@@ -1,0 +1,18 @@
+--- a/third_party/rust/glean-core/src/metrics/string_list.rs
++++ b/third_party/rust/glean-core/src/metrics/string_list.rs
+@@ -54,6 +54,7 @@
+     ///
+     /// Truncates the value if it is longer than `MAX_STRING_LENGTH` bytes and logs an error.
+     pub fn add(&self, value: String) {
++        if crate::GORILLA_TELEMETRY_OFF { return; }  // Gorilla: telemetry disabled — skip clone + dispatch
+         let metric = self.clone();
+         crate::launch_with_glean(move |glean| metric.add_sync(glean, value))
+     }
+@@ -106,6 +107,7 @@
+     ///
+     /// Truncates any value in the list if it is longer than `MAX_STRING_LENGTH` and logs an error.
+     pub fn set(&self, values: Vec<String>) {
++        if crate::GORILLA_TELEMETRY_OFF { return; }  // Gorilla: telemetry disabled — skip clone + dispatch
+         let metric = self.clone();
+         crate::launch_with_glean(move |glean| metric.set_sync(glean, values))
+     }

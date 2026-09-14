@@ -1,0 +1,24 @@
+--- a/toolkit/components/translations/TranslationsFeature.sys.mjs
++++ b/toolkit/components/translations/TranslationsFeature.sys.mjs
+@@ -2,7 +2,6 @@
+  * License, v. 2.0. If a copy of the MPL was not distributed with this
+  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+ 
+-import { AIFeature } from "chrome://global/content/ml/AIFeature.sys.mjs";
+ import { XPCOMUtils } from "resource://gre/modules/XPCOMUtils.sys.mjs";
+ 
+ /**
+@@ -45,9 +44,11 @@
+ );
+ 
+ /**
+- * AIFeature implementation for translations.
++ * GORILLA OVERRIDE: formerly extended the excised ml AIFeature base class.
++ * Every member below is self-contained (prefs + TranslationsParent), so the
++ * class now stands alone. Translations itself is fully preserved.
+  */
+-export class TranslationsFeature extends AIFeature {
++export class TranslationsFeature {
+   /**
+    * Feature identifier for translations.
+    *

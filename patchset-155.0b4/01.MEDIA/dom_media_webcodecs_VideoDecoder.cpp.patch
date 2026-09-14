@@ -1,0 +1,44 @@
+--- a/dom/media/webcodecs/VideoDecoder.cpp
++++ b/dom/media/webcodecs/VideoDecoder.cpp
+@@ -26,6 +26,7 @@
+ #include "mozilla/dom/VideoDecoderBinding.h"
+ #include "mozilla/dom/VideoFrameBinding.h"
+ #include "mozilla/dom/WebCodecsUtils.h"
++#include "mozilla/StaticPrefs_media.h"
+ #include "nsPrintfCString.h"
+ 
+ #ifdef XP_MACOSX
+@@ -198,6 +199,16 @@
+     return false;
+   }
+ 
++  // GORILLA OVERRIDE 2026-08-11: the container fallback below consults the
++  // HTMLMediaElement Layer-1 gate (DecoderTraits), which answers CANPLAY_NO
++  // for VP8/WebM by design (YouTube steering). The WebCodecs-only software
++  // VP8 opt-in must not be vetoed by that gate; DecoderAgent's own
++  // Purpose::WebCodecs factory decides actual decodability.
++  if (StaticPrefs::media_gorilla_webcodecs_software_vp8() &&
++      aConfig.mCodec.EqualsLiteral("vp8")) {
++    return true;
++  }
++
+   // TODO (1880326): code below is wrongly using the logic of HTMLMediaElement
+   // for determining if a codec can be played, and incorrect codec string for
+   // h264 are accepted for HTMLMediaElement for compat reasons. Perform stricter
+@@ -718,6 +729,16 @@
+     return false;
+   }
+ 
++  // GORILLA OVERRIDE 2026-08-11: the hardware-only codec check was REMOVED from
++  // here. Validate() failure means "config is malformed" and surfaces as
++  // TypeError; a valid-but-unsupported codec must instead resolve
++  // isConfigSupported() with {supported:false} (spec: #check-configuration-support).
++  // Enforcement is unchanged and still absolute — IsSupportedVideoCodec() returns
++  // H.264-only under hardware-only mode, and CanDecode() already consults it. This
++  // only restores a CLEAN refusal, matching Layer 1's canPlayType()=CANPLAY_NO
++  // pattern that lets sites fall back to H.264 instead of aborting.
++  // Cause of: WhatsApp Web calls hanging forever (WEBCODECS-CALL-PATH.DEVELOPER.md).
++
+   if (aConfig.mCodedWidth.WasPassed() != aConfig.mCodedHeight.WasPassed()) {
+     aErrorMessage.AppendPrintf(
+         "Missing coded %s",

@@ -1,0 +1,45 @@
+--- a/browser/components/customizableui/CustomizeMode.sys.mjs
++++ b/browser/components/customizableui/CustomizeMode.sys.mjs
+@@ -350,6 +350,7 @@
+ 
+     gTab = aTab;
+ 
++    console.warn(`CustomizeMode.setTab claiming tab uri=${aTab.linkedBrowser?.currentURI?.spec} stack=${new Error().stack}`);
+     gTab.setAttribute("customizemode", "true");
+ 
+     if (gTab.linkedPanel) {
+@@ -386,6 +387,7 @@
+    * window.
+    */
+   enter() {
++    console.warn(`CustomizeMode.enter called, customizing=${this.#customizing} stack=${new Error().stack}`);
+     if (
+       !this.#window.toolbar.visible ||
+       this.#window.document.documentElement.hasAttribute("taskbartab")
+@@ -584,23 +586,18 @@
+     this._wantToBeInCustomizeMode = false;
+ 
+     if (!this.#customizing || this.#handler.isExitingCustomizeMode) {
++      console.warn(`CustomizeMode.exit early-return #1: customizing=${this.#customizing} isExiting=${this.#handler.isExitingCustomizeMode} stack=${new Error().stack}`);
+       return;
+     }
+ 
+     // Entering; want to exit once we've done that.
+     if (this.#handler.isEnteringCustomizeMode) {
+-      lazy.log.debug(
+-        "Attempted to exit while we're in the middle of entering. " +
+-          "We'll exit after we've entered"
+-      );
++      console.warn("CustomizeMode.exit early-return #2: still entering — enter never completed");
+       return;
+     }
+ 
+     if (this.resetting) {
+-      lazy.log.debug(
+-        "Attempted to exit while we're resetting. " +
+-          "We'll exit after resetting has finished."
+-      );
++      console.warn("CustomizeMode.exit early-return #3: resetting still true");
+       return;
+     }
+ 

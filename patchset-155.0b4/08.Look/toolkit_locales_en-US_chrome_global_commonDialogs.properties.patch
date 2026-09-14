@@ -1,0 +1,23 @@
+--- a/toolkit/locales/en-US/chrome/global/commonDialogs.properties
++++ b/toolkit/locales/en-US/chrome/global/commonDialogs.properties
+@@ -1,7 +1,6 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-
+ Alert=Alert
+ Confirm=Confirm
+ ConfirmCheck=Confirm
+@@ -19,9 +18,9 @@
+ Revert=&Revert
+ DontSave=Do&n’t Save
+ ScriptDlgGenericHeading=[JavaScript Application]
+-ScriptDlgHeading=The page at %S says:
+-ScriptDlgNullPrincipalHeading=This page says:
+-ScriptDialogLabel=Prevent this page from creating additional dialogs
++ScriptDlgHeading=The Gorilla page at %S says:
++ScriptDlgNullPrincipalHeading=This Gorilla page says:
++ScriptDialogLabel=Prevent this Gorilla page from creating additional dialogs
+ ScriptDialogLabelNullPrincipal=Don’t allow this site to prompt you again
+ # LOCALIZATION NOTE (ScriptDialogLabelContentPrincipal):
+ # %S is either the domain and port of the site prompting, or the name of

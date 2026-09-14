@@ -1,0 +1,38 @@
+--- a/browser/locales/en-US/browser/preferences/formAutofill.ftl
++++ b/browser/locales/en-US/browser/preferences/formAutofill.ftl
+@@ -24,22 +24,26 @@
+ address-capture-edit-doorhanger-header = Edit address
+ 
+ address-capture-save-button =
+-    .label = Save
+-    .accessKey = S
++    .label =
++        Save
++        .accessKey = S
+ address-capture-not-now-button =
+-    .label = Not now
+-    .accessKey = N
++    .label =
++        Not now
++        .accessKey = N
+ address-capture-never-save-button =
+     .label = Never save
+     .accessKey = v
+ address-capture-cancel-button =
+-    .label = Cancel
+-    .accessKey = C
++    .label =
++        Cancel
++        .accessKey = C
+ address-capture-update-button =
+-    .label = Update
+-    .accessKey = U
++    .label =
++        Update
++        .accessKey = U
+ address-capture-manage-address-button =
+-    .label = Address settings
++    .label = Address Gorilla settings
+ address-capture-learn-more-button =
+     .label = Learn more
+ address-capture-open-menu-button =

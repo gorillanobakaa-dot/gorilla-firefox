@@ -1,0 +1,367 @@
+--- a/toolkit/components/translations/actors/TranslationsParent.sys.mjs
++++ b/toolkit/components/translations/actors/TranslationsParent.sys.mjs
+@@ -559,8 +559,19 @@
+ const VERIFY_SIGNATURES_FROM_FS = false;
+ 
+ /**
+- * Implementation exists at toolkit/content/widgets/findbar.js
++ * @typedef {import("../translations").TranslationModelRecord} TranslationModelRecord
++ * @typedef {import("../translations").RemoteSettingsClient} RemoteSettingsClient
++ * @typedef {import("../translations").TranslationModelPayload} TranslationModelPayload
++ * @typedef {import("../translations").TranslationsEnginePayload} TranslationsEnginePayload
++ * @typedef {import("../translations").LanguageTranslationModelFiles} LanguageTranslationModelFiles
++ * @typedef {import("../translations").WasmRecord} WasmRecord
++ * @typedef {import("../translations").LangTags} LangTags
++ * @typedef {import("../translations").LanguagePair} LanguagePair
++ * @typedef {import("../translations").ModelLanguages} ModelLanguages
++ * @typedef {import("../translations").SupportedLanguages} SupportedLanguages
++ * @typedef {import("../translations").TranslationErrors} TranslationErrors
+  *
++ * // Implementation exists at toolkit/content/widgets/findbar.js
+  * @typedef {any} MozFindbar
+  */
+ 
+@@ -3212,7 +3223,7 @@
+    *
+    * @param {RemoteSettingsClient} client
+    *  - The Remote Settings client for which to handle deleted records.
+-   * @param {TranslationsRecord[]} deletedRecords
++   * @param {TranslationModelRecord[]} deletedRecords
+    *  - The list of records that were deleted from the client's database.
+    */
+   static async #handleDeletedRecords(client, deletedRecords) {
+@@ -3251,7 +3262,7 @@
+    *
+    * @param {RemoteSettingsClient} client
+    *  - The Remote Settings client for which to handle updated records.
+-   * @param {{old: TranslationsRecord, new: TranslationsRecord}[]} updatedRecords
++   * @param {{old: TranslationModelRecord, new: TranslationModelRecord}[]} updatedRecords
+    *  - The list of records that were updated in the client's database.
+    */
+   static async #handleUpdatedRecords(client, updatedRecords) {
+@@ -3373,11 +3384,11 @@
+    *
+    * @param {object} event - The sync event.
+    * @param {object} event.data - The data associated with the sync event.
+-   * @param {WasmRecord[]} event.data.created
++   * @param {TranslationModelRecord[]} event.data.created
+    *  - The list of Remote Settings records that were created in the sync event.
+-   * @param {{old: WasmRecord, new: WasmRecord}[]} event.data.updated
++   * @param {{old: TranslationModelRecord, new: TranslationModelRecord}[]} event.data.updated
+    *  - The list of Remote Settings records that were updated in the sync event.
+-   * @param {WasmRecord[]} event.data.deleted
++   * @param {TranslationModelRecord[]} event.data.deleted
+    *  - The list of Remote Settings records that were deleted in the sync event.
+    */
+   static async #handleTranslationsWasmSync({
+@@ -3398,7 +3409,7 @@
+     });
+ 
+     // Invalidate cached data.
+-    TranslationsParent.#bergamotWasmRecordPromise = null;
++    TranslationsParent.#bergamotWasmRecord = null;
+ 
+     if (deleted.length) {
+       await TranslationsParent.#handleDeletedRecords(client, deleted);
+@@ -3453,7 +3464,7 @@
+    *     This function should take a record as input and return a string that represents the lookup key for the record.
+    *     For most record types, the name (default) is sufficient, however if a collection contains records with
+    *     non-unique name values, it may be necessary to provide an alternative function here.
+-   * @returns {Promise<Array<TranslationsRecord>>}
++   * @returns {Array<TranslationModelRecord | WasmRecord>}
+    */
+   static async getMaxSupportedVersionRecords(
+     remoteSettingsClient,
+@@ -3793,7 +3804,7 @@
+   }
+ 
+   /** @type {Promise<WasmRecord> | null} */
+-  static #bergamotWasmRecordPromise = null;
++  static #bergamotWasmRecord = null;
+ 
+   /** @type {boolean} */
+   static #lookForLocalWasmBuild = true;
+@@ -3830,73 +3841,6 @@
+     return null;
+   }
+ 
+-  static async #getBergamotWasmRecord() {
+-    if (this.#bergamotWasmRecordPromise) {
+-      return this.#bergamotWasmRecordPromise;
+-    }
+-
+-    const fetchWasmRecord = async () => {
+-      lazy.console.log(`Getting remote bergamot-translator wasm records.`);
+-
+-      const getWasmRecords = () =>
+-        TranslationsParent.getMaxSupportedVersionRecords(
+-          TranslationsParent.#getTranslationsWasmRemoteClient(),
+-          {
+-            filters: { name: "bergamot-translator" },
+-            minSupportedMajorVersion: TranslationsParent.BERGAMOT_MAJOR_VERSION,
+-            maxSupportedMajorVersion: TranslationsParent.BERGAMOT_MAJOR_VERSION,
+-          }
+-        );
+-
+-      /** @type {WasmRecord[]} */
+-      let wasmRecords = await getWasmRecords();
+-
+-      if (wasmRecords.length === 0) {
+-        lazy.console.log(
+-          "No wasm records found, syncing the wasm and models clients."
+-        );
+-        const wasmClient =
+-          TranslationsParent.#getTranslationsWasmRemoteClient();
+-        const modelsClient =
+-          TranslationsParent.#getTranslationModelsRemoteClient();
+-        await Promise.all([wasmClient.sync(), modelsClient.sync()]);
+-
+-        wasmRecords = await getWasmRecords();
+-
+-        if (wasmRecords.length === 0) {
+-          throw new Error(
+-            "No bergamot-translators were found that matched the major version: " +
+-              TranslationsParent.BERGAMOT_MAJOR_VERSION
+-          );
+-        }
+-      }
+-
+-      if (wasmRecords.length > 1) {
+-        TranslationsParent.reportError(
+-          new Error("Expected the bergamot-translator to only have 1 record."),
+-          wasmRecords
+-        );
+-      }
+-
+-      const [record] = wasmRecords;
+-      lazy.console.log(
+-        `Using ${record.name}@${record.release} release version ${record.version}`,
+-        record
+-      );
+-      return record;
+-    };
+-
+-    const guardedPromise = fetchWasmRecord().catch(error => {
+-      if (this.#bergamotWasmRecordPromise === guardedPromise) {
+-        this.#bergamotWasmRecordPromise = null;
+-      }
+-      throw error;
+-    });
+-
+-    this.#bergamotWasmRecordPromise = guardedPromise;
+-    return guardedPromise;
+-  }
+-
+   /**
+    * Bergamot is the translation engine that has been compiled to wasm. It is shipped
+    * to the user via Remote Settings.
+@@ -3916,30 +3860,86 @@
+       return localCopy;
+     }
+ 
++    if (!TranslationsParent.#bergamotWasmRecord) {
++      // Place the records into a promise to prevent any races.
++      TranslationsParent.#bergamotWasmRecord = (async () => {
++        // Load the wasm binary from remote settings, if it hasn't been already.
++        lazy.console.log(`Getting remote bergamot-translator wasm records.`);
++
++        const getWasmRecords = () =>
++          TranslationsParent.getMaxSupportedVersionRecords(client, {
++            filters: { name: "bergamot-translator" },
++            minSupportedMajorVersion: TranslationsParent.BERGAMOT_MAJOR_VERSION,
++            maxSupportedMajorVersion: TranslationsParent.BERGAMOT_MAJOR_VERSION,
++          });
++
++        /** @type {WasmRecord[]} */
++        let wasmRecords = await getWasmRecords();
++
++        if (wasmRecords.length === 0) {
++          // No matching client was found, we need to sync to get the latest one.
++          lazy.console.log("No wasm records found, syncing the wasm client.");
++          const wasmClient =
++            await TranslationsParent.#getTranslationsWasmRemoteClient();
++          await wasmClient.sync();
++
++          lazy.console.log("Syncing the models as well.");
++          const modelsClient =
++            await TranslationsParent.#getTranslationModelsRemoteClient();
++          await modelsClient.sync();
++
++          wasmRecords = await getWasmRecords();
++
++          if (wasmRecords.length === 0) {
++            // The remote settings client provides an empty list of records when there is
++            // an error.
++            throw new Error(
++              "No bergamot-translators were found that matched the major version: " +
++                TranslationsParent.BERGAMOT_MAJOR_VERSION
++            );
++          }
++        }
++
++        if (wasmRecords.length > 1) {
++          TranslationsParent.reportError(
++            new Error(
++              "Expected the bergamot-translator to only have 1 record."
++            ),
++            wasmRecords
++          );
++        }
++        const [record] = wasmRecords;
++        lazy.console.log(
++          `Using ${record.name}@${record.release} release version ${record.version} first released on Fx${record.fx_release}`,
++          record
++        );
++        return record;
++      })();
++    }
+     // Unlike the models, greedily download the wasm. It will pull it from a locale
+     // cache on disk if it's already been downloaded. Do not retain a copy, as
+     // this will be running in the parent process. It's not worth holding onto
+     // this much memory, so reload it every time it is needed.
+ 
+-    await chaosModeError(1 / 3);
+-
+-    const record = await this.#getBergamotWasmRecord();
+-    let payload;
+     try {
+-      payload = await client.attachments.download(record);
+-    } catch (error) {
+-      this.#bergamotWasmRecordPromise = null;
+-      throw error;
+-    }
++      await chaosModeError(1 / 3);
+ 
+-    const blob = payload.blob ?? new Blob([payload.buffer]);
++      const payload = await client.attachments.download(
++        await TranslationsParent.#bergamotWasmRecord
++      );
+ 
+-    const duration = Date.now() - start;
+-    lazy.console.log(
+-      `"bergamot-translator" wasm binary loaded in ${duration / 1000} seconds`
+-    );
++      const blob = payload.blob ?? new Blob([payload.buffer]);
++
++      const duration = Date.now() - start;
++      lazy.console.log(
++        `"bergamot-translator" wasm binary loaded in ${duration / 1000} seconds`
++      );
+ 
+-    return blob;
++      return blob;
++    } catch (error) {
++      TranslationsParent.#bergamotWasmRecord = null;
++      throw error;
++    }
+   }
+ 
+   /**
+@@ -3986,56 +3986,14 @@
+     );
+   }
+ 
+-  /**
+-   * Download language files that match a language.
+-   *
+-   * @param {string} language The BCP 47 language tag.
+-   */
+   static async downloadLanguageFiles(language) {
+-    const client = TranslationsParent.#getTranslationModelsRemoteClient();
+-
+-    const queue = [];
+-
+-    for (const record of await TranslationsParent.getRecordsForTranslatingToAndFromAppLanguage(
+-      language,
+-      /* includePivotRecords */ true
+-    )) {
+-      await chaosMode(1 / 6);
+-      const download = () => {
+-        lazy.console.log("Downloading record", record.name, record.id);
+-        return client.attachments.download(record);
+-      };
+-      queue.push({ download });
+-    }
+-
+-    return downloadManager(queue);
++    // 🦍 GORILLA UNLEASHED - PHYSICAL LOCK
++    throw new Error("Translation downloads are strictly disabled on this build.");
+   }
+ 
+-  /**
+-   * Download all files used for translations.
+-   */
+   static async downloadAllFiles() {
+-    const client = TranslationsParent.#getTranslationModelsRemoteClient();
+-
+-    const queue = [];
+-
+-    for (const record of (
+-      await TranslationsParent.#getTranslationModelRecords()
+-    ).values()) {
+-      queue.push({
+-        // The download may be attempted multiple times.
+-        onFailure: () => {
+-          console.error("Failed to download", record.name);
+-        },
+-        download: () => client.attachments.download(record),
+-      });
+-    }
+-
+-    queue.push({
+-      download: () => TranslationsParent.#getBergamotWasmBlob(),
+-    });
+-
+-    return downloadManager(queue);
++    // 🦍 GORILLA UNLEASHED - PHYSICAL LOCK
++    throw new Error("Translation downloads are strictly disabled on this build.");
+   }
+ 
+   /**
+@@ -4115,7 +4073,14 @@
+       languageB,
+       /* includePivotRecords */ true
+     )) {
+-      if (await client.attachments.isDownloaded(record)) {
++      let isDownloaded = false;
++      if (TranslationsParent.isInAutomation()) {
++        isDownloaded = record.attachment.isDownloaded;
++      } else {
++        isDownloaded = await client.attachments.isDownloaded(record);
++      }
++
++      if (isDownloaded) {
+         downloadedPairs.add(
+           TranslationsParent.nonPivotKey(
+             record.sourceLanguage,
+@@ -4522,7 +4487,7 @@
+    */
+   static clearCache() {
+     // Records.
+-    TranslationsParent.#bergamotWasmRecordPromise = null;
++    TranslationsParent.#bergamotWasmRecord = null;
+     TranslationsParent.#invalidateTranslationModelRecords();
+ 
+     // Clients.
+@@ -4694,18 +4659,15 @@
+   /**
+    * Called when the browser's location changes. This is only invoked for location
+    * changes in the currently selected browser, not for background tabs.
++   *
++   * @param {object} browser
+    */
+-  static onLocationChange(_window, _locationURI, webProgress, _flags) {
++  static onLocationChange(browser) {
+     if (!TranslationsParent.AIFeature.isEnabled) {
+       // The pref isn't enabled, so don't attempt to get the actor.
+       return;
+     }
+ 
+-    const browser = webProgress.browsingContext.embedderElement;
+-    if (!browser) {
+-      return;
+-    }
+-
+     const tabState = StatePerTab.getOrCreate(browser);
+     if (tabState.needsReloadBeforeTranslation) {
+       tabState.needsReloadBeforeTranslation = false;

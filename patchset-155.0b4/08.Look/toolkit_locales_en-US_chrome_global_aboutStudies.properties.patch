@@ -1,0 +1,45 @@
+--- a/toolkit/locales/en-US/chrome/global/aboutStudies.properties
++++ b/toolkit/locales/en-US/chrome/global/aboutStudies.properties
+@@ -2,29 +2,28 @@
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ 
+-
+-pageTitle = Studies
+-removeButton = Remove
++pageTitle =  Studies
++removeButton =  Remove
+ 
+ # LOCALIZATION NOTE (activeStudiesList): Title above a list of active studies
+-activeStudiesList = Active studies
++activeStudiesList =  Active studies
+ # LOCALIZATION NOTE (activeStudiesList): Title above a list of completed studies
+-completedStudiesList = Completed studies
++completedStudiesList =  Completed studies
+ # LOCALIZATION NOTE (activeStatus): Displayed for an active study
+-activeStatus = Active
++activeStatus =  Active
+ # LOCALIZATION NOTE (completeStatus): Displayed for a study that is already complete
+-completeStatus = Complete
++completeStatus =  Complete
+ 
+-updateButtonWin = Update Options
+-updateButtonUnix = Update Preferences
+-learnMore = Learn more
+-noStudies = You have not participated in any studies.
+-disabledList = This is a list of studies that you have participated in. No new studies will run.
++updateButtonWin =  Update Options
++updateButtonUnix =  Update Preferences
++learnMore =  Learn more
++noStudies =  We do not do studies… We refuse to be test subjects.
++disabledList =  We do not do studies… We refuse to be test subjects. No studies have run, no studies will run.
+ # LOCALIZATION NOTE (enabledList): %S is brandShortName (e.g. Firefox)
+-enabledList = What’s this? %S may install and run studies from time to time.
++enabledList =  What’s this? %S may install and run studies from time to time.
+ 
+ # LOCALIZATION NOTE (preferenceStudyDescription) $1%S will be replaced with the
+ # name of a preference (such as "stream.improvesearch.topSiteSearchShortcuts")
+ # and $2%S will be replaced with the value of that preference. Both values will
+ # be formatted differently than the surrounding text.
+-preferenceStudyDescription = This study sets %1$S to %2$S.
++preferenceStudyDescription =  This study sets %1$S to %2$S.

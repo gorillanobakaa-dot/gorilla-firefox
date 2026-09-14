@@ -1,0 +1,10 @@
+--- a/browser/components/tabbrowser/moz.build
++++ b/browser/components/tabbrowser/moz.build
+@@ -22,7 +22,6 @@
+     "GroupsList.sys.mjs",
+     "NewTabPagePreloading.sys.mjs",
+     "OpenInTabsUtils.sys.mjs",
+-    "SmartTabGrouping.sys.mjs",
+     "TabMetrics.sys.mjs",
+     "TabsList.sys.mjs",
+     "TabUnloader.sys.mjs",

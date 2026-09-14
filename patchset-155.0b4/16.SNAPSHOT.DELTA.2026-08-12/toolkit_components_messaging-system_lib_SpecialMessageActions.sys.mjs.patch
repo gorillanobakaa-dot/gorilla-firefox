@@ -1,0 +1,53 @@
+--- a/toolkit/components/messaging-system/lib/SpecialMessageActions.sys.mjs
++++ b/toolkit/components/messaging-system/lib/SpecialMessageActions.sys.mjs
+@@ -30,12 +30,6 @@
+ 
+ ChromeUtils.defineESModuleGetters(lazy, {
+   AddonManager: "resource://gre/modules/AddonManager.sys.mjs",
+-  AIWindow:
+-    // eslint-disable-next-line mozilla/no-browser-refs-in-toolkit
+-    "moz-src:///browser/components/aiwindow/ui/modules/AIWindow.sys.mjs",
+-  AIWindowUI:
+-    // eslint-disable-next-line mozilla/no-browser-refs-in-toolkit
+-    "moz-src:///browser/components/aiwindow/ui/modules/AIWindowUI.sys.mjs",
+   CustomIconManager:
+     // eslint-disable-next-line mozilla/no-browser-refs-in-toolkit
+     "moz-src:///browser/components/shell/CustomIconManager.sys.mjs",
+@@ -44,7 +38,6 @@
+     "moz-src:///browser/components/customizableui/CustomizableUI.sys.mjs",
+   ExperimentAPI: "resource://nimbus/ExperimentAPI.sys.mjs",
+   FxAccounts: "resource://gre/modules/FxAccounts.sys.mjs",
+-  GenAI: "resource:///modules/GenAI.sys.mjs",
+   ICON_CATALOG:
+     // eslint-disable-next-line mozilla/no-browser-refs-in-toolkit
+     "moz-src:///browser/components/shell/CustomIconManager.sys.mjs",
+@@ -1031,9 +1024,7 @@
+       case "FXA_SIGNIN_FLOW":
+         /** @returns {Promise<boolean>} */
+         return this.fxaSignInFlow(action.data, browser);
+-      case "FXA_AIWINDOW_SIGNIN_FLOW":
+-        /** @returns {Promise<boolean>} */
+-        return lazy.AIWindow.launchWindow(browser);
++      // GORILLA excised: FXA_AIWINDOW_SIGNIN_FLOW (aiwindow removed).
+       case "OPEN_PROTECTION_PANEL": {
+         let { gProtectionsHandler } = window;
+         gProtectionsHandler.showProtectionsPopup({});
+@@ -1118,16 +1109,8 @@
+         window.gURLBar.searchMode = action.data;
+         window.gURLBar.focus();
+         break;
+-      case "SUMMARIZE_PAGE": {
+-        const entry = action.data ?? "message";
+-        await lazy.GenAI.summarizeCurrentPage(window, entry);
+-        break;
+-      }
+-      case "OPEN_ORGANIZE_TABS_PANEL":
+-        lazy.AIWindowUI.toggleGroupTabsPanel(window, {
+-          source: action.data?.source ?? "message",
+-        });
+-        break;
++      // GORILLA excised: SUMMARIZE_PAGE (GenAI removed).
++      // GORILLA excised (new in 155): OPEN_ORGANIZE_TABS_PANEL (aiwindow removed).
+       case "OPEN_PANEL": {
+         let { anchor_id, widget_id, panel_id, fallback_to_app_menu } =
+           action.data;

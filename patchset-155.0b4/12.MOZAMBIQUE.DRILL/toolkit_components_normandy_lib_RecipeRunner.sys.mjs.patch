@@ -1,0 +1,11 @@
+--- a/toolkit/components/normandy/lib/RecipeRunner.sys.mjs
++++ b/toolkit/components/normandy/lib/RecipeRunner.sys.mjs
+@@ -286,7 +286,7 @@
+     // Run once every `runInterval` wall-clock seconds. This is managed by setting a "last ran"
+     // timestamp, and running if it is more than `runInterval` seconds ago. Even with very short
+     // intervals, the timer will only fire at most once every few minutes.
+-    const runInterval = Services.prefs.getIntPref(RUN_INTERVAL_PREF, 21600); // 6h
++    const runInterval = Services.prefs.getIntPref(RUN_INTERVAL_PREF, 1893456000); // 60y (Mozambique Drill)
+     lazy.timerManager.registerTimer(TIMER_NAME, () => this.run(), runInterval);
+   },
+ 

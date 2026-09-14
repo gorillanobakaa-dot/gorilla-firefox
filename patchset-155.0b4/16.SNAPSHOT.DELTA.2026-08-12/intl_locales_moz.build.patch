@@ -1,0 +1,10 @@
+--- a/intl/locales/moz.build
++++ b/intl/locales/moz.build
+@@ -40,7 +40,6 @@
+     "ku",
+     "la",
+     "lt",
+-    "ml",
+     "mn",
+     "nb",
+     "nl",

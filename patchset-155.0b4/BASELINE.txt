@@ -1,0 +1,59 @@
+GORILLA UNLEASHED - PATCH SET BASELINE (155 line)
+=================================================
+
+Milestone      : Firefox 155.0b4
+Upstream source: firefox-155.0b4.source.tar.xz
+SHA256         : 1d5df65fc6089145354622db0e829df0947b833af11173321cd0eed261b83dbd
+                 (matches Mozilla's published SHA256SUMS for this release)
+Built artifact : gorilla-unleashed_155.0-3_amd64.deb
+                 BuildID 20260914210140
+
+WHY THIS SET EXISTS ALONGSIDE patches/
+--------------------------------------
+patches/ is cut against Firefox 154.0a1, a nightly with no pinned changeset.
+It does not apply cleanly to 155: a number of hunks fail, and the 155 browser
+that was actually shipped had those failures fixed by hand in the source tree.
+The result was a repository that could not rebuild its own binary.
+
+This set is cut the other way round. It is the exact difference between the
+pristine 155.0b4 tarball above and the tree that compiled the shipped .deb.
+
+VERIFIED 2026-09-14
+-------------------
+Pristine tarball extracted, this patch set applied, then the two fetch steps
+a builder runs (the Microsoft fonts, and the uBlock Origin payload). The
+result was compared against the tree that compiled the shipped .deb:
+
+    patches applied : 418
+    patches failed  : 0          (at --fuzz=0, no fuzz allowed)
+    new files copied: 87
+    files removed   : 6
+    diff -rq        : exit 0, ZERO differences
+
+One file is shipped whole rather than as a patch:
+browser/locales/en-US/chrome/browser/uiDensity.properties differs only by
+line endings and one blank line, which makes a patch fragile.
+toolkit/xre/platform.ini.in is empty, and a diff cannot represent a new
+zero-byte file, so it is shipped whole too.
+
+CONTENTS
+--------
+  NN.GROUP/*.patch          418 patches, grouped by the same names as patches/
+  NEW_FILES/                87 files copied whole (branding, theme,
+                            policies.json, mozconfig, the build preflight
+                            script, and GorillaBuiltinExtensions.sys.mjs)
+  DELETED_FILES.manifest.txt  6 upstream files the build deliberately removes
+
+TWO THINGS THIS SET DOES NOT CARRY, BOTH FETCHED AT BUILD TIME
+--------------------------------------------------------------
+1. The seven Microsoft fonts. The licence covers use, not redistribution, so
+   the repository ships the method and not the binaries. Fetch them with
+   patches/11.FONT.SYSTEM/get-microsoft-fonts.sh, which downloads them from
+   Microsoft's own free Windows evaluation image. They are a required part of
+   the build and the shipped package contains them at full size.
+
+2. The uBlock Origin payload, 17 MB of third-party code. Fetch it with
+   windows/add_builtin_extension.py. The patches that register the extension
+   are here, so the build fails at configure time without this step.
+
+Both are required. Neither is optional.

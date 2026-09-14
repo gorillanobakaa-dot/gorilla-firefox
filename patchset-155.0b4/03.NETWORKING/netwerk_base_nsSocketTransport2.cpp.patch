@@ -1,0 +1,39 @@
+--- a/netwerk/base/nsSocketTransport2.cpp
++++ b/netwerk/base/nsSocketTransport2.cpp
+@@ -1521,6 +1521,36 @@
+   }
+ #endif
+ 
++  // GORILLA v2: Apply aggressive keepalive unconditionally for all TCP connections.
++  // Ensures WebRTC, STUN, TURN, and all connections get 15s idle / 5s interval
++  // keepalive (vs default 300s) for quick failure detection under BBR + FQ-CoDel.
++  {
++    PRFileDesc* bottom = PR_GetIdentitiesLayer(fd, PR_NSPR_IO_LAYER);
++    if (bottom) {
++      PROsfd sock = PR_FileDesc2NativeHandle(bottom);
++      if (sock != -1) {
++        int32_t keepIdle = 15;
++        int32_t keepIntvl = 5;
++        int32_t keepCnt = 3;
++#if defined(ANDROID) || defined(TCP_KEEPIDLE)
++        if (setsockopt(sock, IPPROTO_TCP, TCP_KEEPIDLE, &keepIdle, sizeof(keepIdle)) < 0) {
++          SOCKET_LOG(("nsSocketTransport: TCP_KEEPIDLE failed\n"));
++        }
++#endif
++#if defined(ANDROID) || defined(TCP_KEEPINTVL)
++        if (setsockopt(sock, IPPROTO_TCP, TCP_KEEPINTVL, &keepIntvl, sizeof(keepIntvl)) < 0) {
++          SOCKET_LOG(("nsSocketTransport: TCP_KEEPINTVL failed\n"));
++        }
++#endif
++#if defined(ANDROID) || defined(TCP_KEEPCNT)
++        if (setsockopt(sock, IPPROTO_TCP, TCP_KEEPCNT, &keepCnt, sizeof(keepCnt)) < 0) {
++          SOCKET_LOG(("nsSocketTransport: TCP_KEEPCNT failed\n"));
++        }
++#endif
++      }
++    }
++  }
++
+   // up to here, mFD will only be accessed by us
+ 
+   // assign mFD so that we can properly handle OnSocketDetached before we've

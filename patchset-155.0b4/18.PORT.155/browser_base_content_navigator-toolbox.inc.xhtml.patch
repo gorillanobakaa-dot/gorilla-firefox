@@ -1,0 +1,30 @@
+--- a/browser/base/content/navigator-toolbox.inc.xhtml
++++ b/browser/base/content/navigator-toolbox.inc.xhtml
+@@ -518,6 +518,8 @@
+     <toolbarbutton id="taskbar-tabs-audio" class="toolbarbutton-1 chromeclass-toolbar-additional"
+                     removable="false" overflows="false"/>
+ 
++      <!-- GORILLA excised 2026-08-27 (155): AI row. Its l10n strings were removed with the AI stack, so it rendered as a BLANK line.
++           smartwindow group-tabs toolbaritem
+     <toolbaritem id="smartwindow-group-tabs-button"
+                  class="chromeclass-toolbar-additional"
+                  hidden="true"
+@@ -530,7 +532,10 @@
+                       data-l10n-id="smartwindow-organize-tabs-button">
+       </toolbarbutton>
+     </toolbaritem>
++      -->
+ 
++      <!-- GORILLA excised 2026-08-27 (155): AI row. Its l10n strings were removed with the AI stack, so it rendered as a BLANK line.
++           smartwindow ask toolbaritem
+     <toolbaritem id="smartwindow-ask-button"
+                  class="chromeclass-toolbar-additional"
+                  hidden="true"
+@@ -542,6 +547,7 @@
+                       data-l10n-id="smartwindow-ask-button">
+       </toolbarbutton>
+     </toolbaritem>
++      -->
+ 
+     <toolbarbutton id="nav-bar-overflow-button"
+                    class="toolbarbutton-1 chromeclass-toolbar-additional"

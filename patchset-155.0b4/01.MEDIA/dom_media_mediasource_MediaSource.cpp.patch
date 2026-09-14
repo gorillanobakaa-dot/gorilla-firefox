@@ -1,0 +1,15 @@
+--- a/dom/media/mediasource/MediaSource.cpp
++++ b/dom/media/mediasource/MediaSource.cpp
+@@ -65,6 +65,12 @@
+ //   * Some Linux Desktop.
+ // 2. If H264 hardware acceleration is not available.
+ static bool IsVP9Forced(DecoderDoctorDiagnostics* aDiagnostics) {
++  // GORILLA: Under the hardware-only H.264 policy we must NEVER force-enable
++  // VP9/WebM. Doing so would otherwise open a (typically software) VP9 decode
++  // path when H.264 hardware decode is unavailable, defeating the policy.
++  if (StaticPrefs::media_gorilla_hardware_only_mode()) {
++    return false;
++  }
+   bool mp4supported = MP4Decoder::IsSupportedType(
+       MediaContainerType(MEDIAMIMETYPE(VIDEO_MP4)), aDiagnostics);
+   bool hwsupported = gfx::gfxVars::CanUseHardwareVideoDecoding();

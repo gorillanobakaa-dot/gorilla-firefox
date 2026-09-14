@@ -1,0 +1,21 @@
+{
+  "policies": {
+    "Preferences": {
+      "app.normandy.enabled": {
+        "Value": false,
+        "Status": "locked",
+        "Type": "boolean"
+      },
+      "app.normandy.api_url": {
+        "Value": "",
+        "Status": "locked",
+        "Type": "string"
+      },
+      "app.normandy.run_interval_seconds": {
+        "Value": 1893456000,
+        "Status": "locked",
+        "Type": "number"
+      }
+    }
+  }
+}

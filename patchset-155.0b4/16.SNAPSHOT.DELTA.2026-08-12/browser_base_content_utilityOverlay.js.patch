@@ -1,0 +1,23 @@
+--- a/browser/base/content/utilityOverlay.js
++++ b/browser/base/content/utilityOverlay.js
+@@ -12,8 +12,6 @@
+ 
+ ChromeUtils.defineESModuleGetters(this, {
+   AboutNewTab: "resource:///modules/AboutNewTab.sys.mjs",
+-  AIWindow:
+-    "moz-src:///browser/components/aiwindow/ui/modules/AIWindow.sys.mjs",
+   BrowserUtils: "resource://gre/modules/BrowserUtils.sys.mjs",
+   BrowserWindowTracker: "resource:///modules/BrowserWindowTracker.sys.mjs",
+   ContainerCreationPanel:
+@@ -67,9 +65,6 @@
+         return "about:privatebrowsing";
+       }
+     }
+-    if (AIWindow.isAIWindowActive(window)) {
+-      return AIWindow.newTabURL;
+-    }
+     return AboutNewTab.newTabURL;
+   },
+ });
+Binary files pristine-155.0b4/firefox-155.0/browser/branding/gorilla/Assets.car and firefox-src/browser/branding/gorilla/Assets.car differ
+Binary files pristine-155.0b4/firefox-155.0/browser/branding/gorilla/background.png and firefox-src/browser/branding/gorilla/background.png differ

@@ -1,0 +1,15 @@
+--- a/gfx/thebes/gfxPlatformFontList.cpp
++++ b/gfx/thebes/gfxPlatformFontList.cpp
+@@ -783,6 +783,12 @@
+ 
+   InitializeCodepointsWithNoFonts();
+ 
++  // [GORILLA] Check if we are in bundled-fonts-only mode to skip system scan.
++  bool bundledFontsOnly = Preferences::GetBool("gfx.bundled_fonts.skip_system_scan", false);
++  if (bundledFontsOnly) {
++    LOG_FONTINIT(("[Gorilla] Bundled-fonts-only mode active, system font scan will be skipped"));
++  }
++
+   // Try to initialize the cross-process shared font list if enabled by prefs.
+   if (StaticPrefs::gfx_e10s_font_list_shared_AtStartup()) {
+     for (const auto& entry : mFontEntries.Values()) {

@@ -1,0 +1,22 @@
+--- a/browser/components/urlbar/content/UrlbarInput.mjs
++++ b/browser/components/urlbar/content/UrlbarInput.mjs
+@@ -50,8 +50,6 @@
+  */
+ 
+ const lazy = XPCOMUtils.declareLazy({
+-  AIWindow:
+-    "moz-src:///browser/components/aiwindow/ui/modules/AIWindow.sys.mjs",
+   BrowserUIUtils: "resource:///modules/BrowserUIUtils.sys.mjs",
+   CustomizableUI:
+     "moz-src:///browser/components/customizableui/CustomizableUI.sys.mjs",
+@@ -669,9 +667,7 @@
+     if (this.isPrivate) {
+       return "private";
+     }
+-    return lazy.AIWindow.isAIWindowActive(this.window)
+-      ? "smartwindow"
+-      : "classic";
++    return "classic";
+   }
+ 
+   blur() {

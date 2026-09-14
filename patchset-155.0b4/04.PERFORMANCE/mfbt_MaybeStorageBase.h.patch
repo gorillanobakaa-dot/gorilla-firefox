@@ -1,0 +1,44 @@
+--- a/mfbt/MaybeStorageBase.h
++++ b/mfbt/MaybeStorageBase.h
+@@ -13,11 +13,27 @@
+ 
+ namespace mozilla::detail {
+ 
++template <typename U, typename = void>
++struct IsComplete : std::false_type {};
++
++template <typename U>
++struct IsComplete<U, std::void_t<decltype(sizeof(U))>> : std::true_type {};
++
++template <typename T>
++constexpr bool IsTriviallyDestructibleAndCopyableHelper() {
++  if constexpr (IsComplete<T>::value) {
++    return std::is_trivially_destructible_v<T> &&
++           (std::is_trivially_copy_constructible_v<T> ||
++            !std::is_copy_constructible_v<T>);
++  } else {
++    return false;
++  }
++}
++
+ template <typename T>
+ constexpr bool IsTriviallyDestructibleAndCopyable =
+-    std::is_trivially_destructible_v<T> &&
+-    (std::is_trivially_copy_constructible_v<T> ||
+-     !std::is_copy_constructible_v<T>);
++    IsTriviallyDestructibleAndCopyableHelper<T>();
++
+ 
+ template <typename T, bool TriviallyDestructibleAndCopyable =
+                           IsTriviallyDestructibleAndCopyable<T>>
+@@ -31,8 +47,8 @@
+   union Union {
+     constexpr Union() : empty{} {}
+     explicit Union(const T& aVal) : val{aVal} {}
+-    template <typename U,
+-              typename = std::enable_if_t<std::is_move_constructible_v<U>>>
++    template <typename U>
++      requires(std::is_constructible_v<NonConstT, U>)
+     explicit Union(U&& aVal) : val{std::forward<U>(aVal)} {}
+     template <typename... Args>
+     explicit Union(std::in_place_t, Args&&... aArgs)

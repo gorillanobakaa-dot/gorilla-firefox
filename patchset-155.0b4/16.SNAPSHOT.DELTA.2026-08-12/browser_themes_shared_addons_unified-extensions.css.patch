@@ -1,0 +1,52 @@
+--- a/browser/themes/shared/addons/unified-extensions.css
++++ b/browser/themes/shared/addons/unified-extensions.css
+@@ -315,3 +315,49 @@
+     }
+   }
+ }
++
++/* Custom Pure Black Unified Extensions Panel Styling */
++#unified-extensions-panel {
++  --panel-background: #000000 !important;
++  background-color: #000000 !important;
++}
++
++#unified-extensions-view {
++  background-color: #000000 !important;
++  color: #ffffff !important;
++}
++
++/* Swap the empty state illustration image with our Gorilla branding logo */
++#unified-extensions-empty-state > img {
++  content: url("chrome://branding/content/about-logo.png") !important;
++  width: 240px !important;
++  height: 240px !important;
++  display: block !important;
++  margin: 20px auto 10px !important;
++}
++
++/* Make text and subheaders highly readable on pure black */
++#unified-extensions-empty-state > h2 {
++  color: #ffffff !important;
++  font-weight: 600 !important;
++  text-align: center !important;
++  margin-top: 15px !important;
++}
++
++#unified-extensions-empty-state > description {
++  color: #b0b0b8 !important;
++  text-align: center !important;
++}
++
++/* Style the discover extensions button */
++#unified-extensions-discover-extensions {
++  background-color: #121214 !important;
++  color: #ffffff !important;
++  border: 1px solid #2b2b2e !important;
++  border-radius: 8px !important;
++  margin: 10px auto !important;
++}
++
++#unified-extensions-discover-extensions:hover {
++  background-color: #1c1c1f !important;
++}

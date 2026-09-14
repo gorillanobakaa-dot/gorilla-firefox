@@ -1,0 +1,78 @@
+--- a/browser/base/content/browser-sets.js
++++ b/browser/base/content/browser-sets.js
+@@ -8,8 +8,6 @@
+     const lazy = {};
+     ChromeUtils.defineESModuleGetters(lazy, {
+       TranslationsParent: "resource://gre/actors/TranslationsParent.sys.mjs",
+-      AIWindowUI:
+-        "moz-src:///browser/components/aiwindow/ui/modules/AIWindowUI.sys.mjs",
+       ContainerCreationPanel:
+         "chrome://browser/content/usercontext/ContainerCreationPanel.mjs",
+       Referrals: "resource:///modules/referrals/Referrals.sys.mjs",
+@@ -22,15 +20,9 @@
+       .addEventListener("command", event => {
+         switch (event.target.id) {
+           case "cmd_newNavigator":
+-            if (AIWindow.isDefaultWindow) {
+-              AIWindow.launchWindow(
+-                gBrowser?.selectedBrowser,
+-                true,
+-                "keyboard_shortcut"
+-              );
+-            } else {
+-              OpenBrowserWindow();
+-            }
++            // GORILLA OVERRIDE: pre-AI behavior restored — Ctrl+N always
++            // opens a normal browser window, never an AI window.
++            OpenBrowserWindow();
+             break;
+           case "cmd_handleBackspace":
+             BrowserCommands.handleBackspace();
+@@ -276,15 +268,9 @@
+           case "cmd_openUnifiedExtensionsPanel":
+             gUnifiedExtensions.openPanel(event);
+             break;
+-          case "Tools:ClassicWindow":
+-            OpenBrowserWindow({ aiWindow: false });
+-            break;
+-          case "Tools:AIWindow":
+-            AIWindow.launchWindow(gBrowser?.selectedBrowser, true, "menu");
+-            break;
+-          case "Tools:ChatsHistory":
+-            FirefoxViewHandler.openTab("chats");
+-            break;
++          // GORILLA OVERRIDE: Tools:AIWindow / Tools:ClassicWindow /
++          // Tools:ChatsHistory command cases removed with the AI Window
++          // excision (their <command> elements are gone from browser-sets.inc.xhtml).
+           case "Tools:Sanitize":
+             Sanitizer.showUI(window);
+             break;
+@@ -343,26 +329,8 @@
+         case "viewBookmarksToolbarKb":
+           BookmarkingUI.toggleBookmarksToolbar("shortcut");
+           break;
+-        case "viewGenaiChatSidebarKb": {
+-          const currentURI = window.gBrowser.selectedBrowser.currentURI;
+-          const isSmartWindowFullPageMode =
+-            AIWindow.isAIWindowContentPage(currentURI);
+-          if (AIWindow.isAIWindowActive(window) && !isSmartWindowFullPageMode) {
+-            lazy.AIWindowUI.toggleSidebar(window);
+-            break;
+-          }
+-
+-          const pref = "browser.ml.chat.enabled";
+-          const enabled = Services.prefs.getBoolPref(pref);
+-          Glean.genaiChatbot.keyboardShortcut.record({
+-            enabled,
+-            sidebar: SidebarController.currentID,
+-          });
+-          if (enabled) {
+-            SidebarController.toggle("viewGenaiChatSidebar");
+-          }
+-          break;
+-        }
++        // GORILLA OVERRIDE: viewGenaiChatSidebarKb case removed with genai
++        // (its Glean category genai.chatbot left the metrics registry).
+         case "toggleSidebarKb":
+           if (SIDEBAR_REVAMP_ENABLED) {
+             SidebarController.handleToolbarButtonClick();

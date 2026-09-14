@@ -1,0 +1,10 @@
+--- a/dom/security/nsContentSecurityUtils.cpp
++++ b/dom/security/nsContentSecurityUtils.cpp
+@@ -1345,7 +1345,6 @@
+     "about:editprofile"_ns,
+     "about:firefoxview"_ns,
+     "about:home"_ns,
+-    "about:inference"_ns,
+     "about:logins"_ns,
+     "about:newprofile"_ns,
+     "about:newtab"_ns,

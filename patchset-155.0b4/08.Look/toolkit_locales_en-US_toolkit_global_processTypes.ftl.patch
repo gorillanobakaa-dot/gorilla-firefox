@@ -1,0 +1,60 @@
+--- a/toolkit/locales/en-US/toolkit/global/processTypes.ftl
++++ b/toolkit/locales/en-US/toolkit/global/processTypes.ftl
+@@ -1,11 +1,9 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-
+ ##
+ ## Localization for remote types defined in RemoteType.h
+ ##
+-
+ process-type-web = Web Content
+ 
+ # process used to run privileged about pages,
+@@ -14,12 +12,12 @@
+ 
+ # process used to run privileged mozilla pages,
+ # such as accounts.firefox.com
+-process-type-privilegedmozilla = Privileged Mozilla Content
++process-type-privilegedmozilla = Privileged Gorilla Content
+ 
+-process-type-extension = Extension
++process-type-extension = Gorilla Extension
+ 
+ # process used to open file:// URLs
+-process-type-file = Local File
++process-type-file = Local Gorilla File
+ 
+ # process used to instantiate new child processes
+ process-type-forkserver = Fork Server
+@@ -38,9 +36,8 @@
+ ##
+ ## Localization for Gecko process types defined in GeckoProcessTypes.h
+ ##
+-
+ process-type-default = Main
+-process-type-tab = Tab
++process-type-tab = Gorilla Tab
+ 
+ # process used to communicate with the GPU for
+ # graphics acceleration
+@@ -59,15 +56,14 @@
+ process-type-utility = Sandboxed IPC Actor
+ process-type-utility-actor-audio-decoder-generic = Utility Generic Audio Decoder
+ process-type-utility-actor-audio-decoder-applemedia = Utility AppleMedia
+-process-type-utility-actor-audio-decoder-wmf = Utility Windows Media Foundation
++process-type-utility-actor-audio-decoder-wmf = Utility Gorilla Windows Media Foundation
+ process-type-utility-actor-mf-media-engine = Utility Media Foundation Engine
+ process-type-utility-actor-js-oracle = Utility JavaScript Oracle
+-process-type-utility-actor-windows-utils = Utility Windows Utils
+-process-type-utility-actor-windows-file-dialog = Utility Windows File Dialog
++process-type-utility-actor-windows-utils = Utility Gorilla Windows Utils
++process-type-utility-actor-windows-file-dialog = Utility Gorilla Windows Gorilla File Dialog
+ 
+ ##
+ ## Other
+ ##
+-
+ # fallback
+ process-type-unknown = Unknown

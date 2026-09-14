@@ -1,0 +1,45 @@
+--- a/widget/gtk/GfxInfo.cpp
++++ b/widget/gtk/GfxInfo.cpp
+@@ -1485,6 +1485,42 @@
+ 
+   GetData();
+ 
++  // GORILLA OVERRIDE: Short-circuit blocklist and platform tests for
++  // Intel/AMD/NVIDIA, so Sandy/Ivy Bridge never hits
++  // FEATURE_BLOCKED_PLATFORM_TEST for general features (WebRender, layers,
++  // HARDWARE_VIDEO_DECODING, ...).
++  //
++  // Per-codec feature queries are answered HONESTLY for the target hardware
++  // (HD 4000 ASIC = H.264 only): H.264 reports OK unconditionally — NOT
++  // probe-based, so a broken vaapitest run (e.g. LIBVA_DRIVER_NAME=i965 lost)
++  // can never block it — while VP8/VP9/AV1/HEVC report blocked. This keeps
++  // 02.GPU safe even without 01.MEDIA's codec gates: the browser never
++  // believes in hardware codec support that does not exist.
++  if (mVendorId.LowerCaseEqualsLiteral("0x8086") ||
++      mVendorId.LowerCaseEqualsLiteral("0x1002") ||
++      mVendorId.LowerCaseEqualsLiteral("0x10de")) {
++    switch (aFeature) {
++      case nsIGfxInfo::FEATURE_H264_HW_DECODE:
++      case nsIGfxInfo::FEATURE_H264_HW_ENCODE:
++        *aStatus = nsIGfxInfo::FEATURE_STATUS_OK;
++        return NS_OK;
++      case nsIGfxInfo::FEATURE_VP8_HW_DECODE:
++      case nsIGfxInfo::FEATURE_VP8_HW_ENCODE:
++      case nsIGfxInfo::FEATURE_VP9_HW_DECODE:
++      case nsIGfxInfo::FEATURE_VP9_HW_ENCODE:
++      case nsIGfxInfo::FEATURE_AV1_HW_DECODE:
++      case nsIGfxInfo::FEATURE_AV1_HW_ENCODE:
++      case nsIGfxInfo::FEATURE_HEVC_HW_DECODE:
++      case nsIGfxInfo::FEATURE_HEVC_HW_ENCODE:
++        *aStatus = nsIGfxInfo::FEATURE_BLOCKED_PLATFORM_TEST;
++        aFailureId = "FEATURE_FAILURE_GORILLA_NO_HW_CODEC";
++        return NS_OK;
++      default:
++        *aStatus = nsIGfxInfo::FEATURE_STATUS_OK;
++        return NS_OK;
++    }
++  }
++
+   if (mGlxTestError) {
+     // If glxtest failed, block most features by default.
+     if (OnlyAllowFeatureOnKnownConfig(aFeature)) {

@@ -1,0 +1,99 @@
+--- a/toolkit/locales/en-US/toolkit/printing/printDialogs.ftl
++++ b/toolkit/locales/en-US/toolkit/printing/printDialogs.ftl
+@@ -1,9 +1,8 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-
+ print-setup =
+-    .title = Page Setup
++    .title = Gorilla Page Setup
+ custom-prompt-title = Custom…
+ custom-prompt-prompt = Enter your custom header/footer text
+ basic-tab =
+@@ -15,46 +14,55 @@
+ orientation-label =
+     .value = Orientation:
+ portrait =
+-    .label = Portrait
+-    .accesskey = P
++    .label =
++        Portrait
++        .accesskey = P
+ landscape =
+-    .label = Landscape
+-    .accesskey = L
++    .label =
++        Landscape
++        .accesskey = L
+ scale =
+-    .label = Scale:
+-    .accesskey = S
++    .label =
++        Scale:
++        .accesskey = S
+ scale-percent =
+     .value = %
+ shrink-to-fit =
+-    .label = Shrink to fit Page Width
+-    .accesskey = W
++    .label =
++        Shrink to fit Gorilla Page Width
++        .accesskey = W
+ options-group-label =
+     .value = Options
+ print-bg =
+-    .label = Print Background (colors & images)
+-    .accesskey = B
++    .label =
++        Print Background (colors & images)
++        .accesskey = B
+ margin-group-label-inches =
+     .value = Margins (inches)
+ margin-group-label-metric =
+     .value = Margins (millimeters)
+ margin-top =
+-    .value = Top:
+-    .accesskey = T
++    .value =
++        Top:
++        .accesskey = T
+ margin-top-invisible =
+     .value = Top:
+ margin-bottom =
+-    .value = Bottom:
+-    .accesskey = B
++    .value =
++        Bottom:
++        .accesskey = B
+ margin-bottom-invisible =
+     .value = Bottom:
+ margin-left =
+-    .value = Left:
+-    .accesskey = L
++    .value =
++        Left:
++        .accesskey = L
+ margin-left-invisible =
+     .value = Left:
+ margin-right =
+-    .value = Right:
+-    .accesskey = R
++    .value =
++        Right:
++        .accesskey = R
+ margin-right-invisible =
+     .value = Right:
+ header-footer-label =
+@@ -86,9 +94,9 @@
+ hf-date-and-time =
+     .label = Date/Time
+ hf-page =
+-    .label = Page #
++    .label = Gorilla Page #
+ hf-page-and-total =
+-    .label = Page # of #
++    .label = Gorilla Page # of #
+ hf-custom =
+     .label = Custom…
+ print-preview-window =

@@ -1,0 +1,23 @@
+--- a/browser/components/aboutwelcome/content/aboutwelcome.css
++++ b/browser/components/aboutwelcome/content/aboutwelcome.css
+@@ -4763,3 +4763,20 @@
+   padding: 0 4px;
+   gap: 8px;
+ }
++
++/* GORILLA OVERRIDE 2026-07-31: lesson Fixing_the_about_welcome_Onboarding_Logo_Sizing
++   (.brand-logo hardcoded 25px in split layout -> force 300px). */
++.welcome-logo, .onboardingContainer .brand-logo,
++.onboardingContainer .screen[pos=split] .section-main .main-content .brand-logo {
++  width: 300px !important;
++  height: 300px !important;
++}
++/* GORILLA OVERRIDE 2026-07-31: split-screen art = gorilla, not the fox (author call). */
++.onboardingContainer .screen[pos=split] .section-secondary {
++  background: #000000 url("chrome://branding/content/about-logo.svg") no-repeat center / min(80%, 500px) !important;
++}
++.onboardingContainer .screen[pos=split] .section-secondary picture,
++.onboardingContainer .screen[pos=split] .section-secondary img,
++.onboardingContainer .screen[pos=split] .section-secondary .sr-only ~ * {
++  visibility: hidden !important;
++}

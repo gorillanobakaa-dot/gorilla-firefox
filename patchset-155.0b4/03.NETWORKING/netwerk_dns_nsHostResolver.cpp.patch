@@ -1,0 +1,28 @@
+--- a/netwerk/dns/nsHostResolver.cpp
++++ b/netwerk/dns/nsHostResolver.cpp
+@@ -64,7 +64,10 @@
+ 
+ // None of our implementations expose a TTL for negative responses, so we use a
+ // constant always.
+-static const unsigned int NEGATIVE_RECORD_LIFETIME = 60;
++// GORILLA v2: NEGATIVE_RECORD_LIFETIME is lowered to 3s. For dynamic WebRTC
++// signalling hosts that change IPs frequently, this accelerates stale-DNS
++// reconnection recovery.
++static const unsigned int NEGATIVE_RECORD_LIFETIME = 3;
+ 
+ //----------------------------------------------------------------------------
+ 
+@@ -182,8 +185,11 @@
+   LOG(("Native HTTPS records supported=%d", bool(sNativeHTTPSSupported)));
+ 
+   nsCOMPtr<nsIThreadPool> threadPool = new nsThreadPool();
+-  MOZ_ALWAYS_SUCCEEDS(threadPool->SetThreadLimit(MaxResolverThreads()));
+-  MOZ_ALWAYS_SUCCEEDS(threadPool->SetIdleThreadLimit(8));
++  // GORILLA v2: Raise thread pool limits for high-concurrency workloads.
++  // Hardcoding 16 threads / 12 idle handles peak burst from simultaneous
++  // WebRTC sessions + many tabs without thrashing thread create/destroy.
++  MOZ_ALWAYS_SUCCEEDS(threadPool->SetThreadLimit(16));
++  MOZ_ALWAYS_SUCCEEDS(threadPool->SetIdleThreadLimit(12));
+   MOZ_ALWAYS_SUCCEEDS(threadPool->SetIdleThreadMaximumTimeout(poolTimeoutMs));
+   MOZ_ALWAYS_SUCCEEDS(threadPool->SetIdleThreadGraceTimeout(100));
+   MOZ_ALWAYS_SUCCEEDS(

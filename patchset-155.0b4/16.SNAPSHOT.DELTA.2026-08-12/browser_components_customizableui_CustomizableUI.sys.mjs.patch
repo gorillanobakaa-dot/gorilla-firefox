@@ -1,0 +1,44 @@
+--- a/browser/components/customizableui/CustomizableUI.sys.mjs
++++ b/browser/components/customizableui/CustomizableUI.sys.mjs
+@@ -2001,6 +2001,7 @@
+     gNavToolbox.palette = document.getElementById(
+       "BrowserToolbarPalette"
+     ).content;
++    console.warn(`CustomizableUI.handleNewBrowserWindow: palette assigned, ${gNavToolbox.palette?.childElementCount} widgets`);
+ 
+     let isVerticalTabs = Services.prefs.getBoolPref(
+       kPrefSidebarVerticalTabsEnabled,
+@@ -3211,6 +3212,22 @@
+    * @returns {Array<WidgetGroupWrapper|XULWidgetGroupWrapper>}
+    */
+   getUnusedWidgets(aWindowPalette) {
++    // GORILLA OVERRIDE (suspected nightly customize-tab bug): the palette
++    // fragment can go null mid-session; self-heal from the template rather
++    // than crashing reset/populatePalette (which left customize mode stuck).
++    if (!aWindowPalette) {
++      let win = Services.wm.getMostRecentBrowserWindow();
++      aWindowPalette = win?.document.getElementById(
++        "BrowserToolbarPalette"
++      )?.content;
++      if (win?.gNavToolbox && aWindowPalette) {
++        win.gNavToolbox.palette = aWindowPalette;
++        console.warn(`CustomizableUI: palette was null — re-grabbed from template, ${aWindowPalette.childElementCount} widgets, win=${win.document.documentURI}`);
++      }
++      if (!aWindowPalette) {
++        return [];
++      }
++    }
+     let window = aWindowPalette.documentGlobal;
+     let isWindowPrivate = lazy.PrivateBrowsingUtils.isWindowPrivate(window);
+     // We use a Set because there can be overlap between the widgets in
+@@ -7342,7 +7359,9 @@
+     if (!instance) {
+       // Toolbar palettes aren't part of the document, so elements in there
+       // won't be found via document.getElementById().
+-      instance = aWindow.gNavToolbox.palette.getElementsByAttribute(
++      // GORILLA OVERRIDE: palette can be null (nightly customize-tab bug);
++      // a missing instance is already handled by callers.
++      instance = aWindow.gNavToolbox.palette?.getElementsByAttribute(
+         "id",
+         aWidgetId
+       )[0];

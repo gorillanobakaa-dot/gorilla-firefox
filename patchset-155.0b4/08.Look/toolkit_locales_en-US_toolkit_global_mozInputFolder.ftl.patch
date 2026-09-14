@@ -1,0 +1,24 @@
+--- a/toolkit/locales/en-US/toolkit/global/mozInputFolder.ftl
++++ b/toolkit/locales/en-US/toolkit/global/mozInputFolder.ftl
+@@ -1,15 +1,15 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-
+ choose-folder-button =
+     .label =
++        
+         { PLATFORM() ->
+-            [macos] Choose…
+-           *[other] Browse…
++        [macos] Choose…
++        *[other] Browse…
+         }
+-    .accesskey =
++        .accesskey =
+         { PLATFORM() ->
+-            [macos] e
+-           *[other] o
++        [macos] e
++        *[other] o
+         }

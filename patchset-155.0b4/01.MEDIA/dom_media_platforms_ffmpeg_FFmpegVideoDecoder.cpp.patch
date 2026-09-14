@@ -1,0 +1,72 @@
+--- a/dom/media/platforms/ffmpeg/FFmpegVideoDecoder.cpp
++++ b/dom/media/platforms/ffmpeg/FFmpegVideoDecoder.cpp
+@@ -647,6 +647,7 @@
+   AdjustHWDecodeLogging();
+ 
+   FFMPEG_LOG("  VA-API FFmpeg init successful");
++  // GORILLA FIX: Release scope guard AFTER all error checks to prevent leak
+   releaseVAAPIdecoder.release();
+   return NS_OK;
+ }
+@@ -1056,6 +1057,15 @@
+   if (IsHardwareAccelerated()) {
+     return InitPromise::CreateAndResolve(TrackInfo::kVideoTrack, __func__);
+   }
++  // GORILLA HW-ONLY: If H.264 cannot be decoded in hardware, reject loudly
++  // instead of silently falling back to software decode.
++  if (mCodecID == AV_CODEC_ID_H264) {
++    return InitPromise::CreateAndReject(
++        MediaResult(NS_ERROR_DOM_MEDIA_FATAL_ERR,
++                    RESULT_DETAIL("Gorilla policy: H.264 hardware decode "
++                                  "required but unavailable.")),
++        __func__);
++  }
+   MediaResult rv = InitSWDecoder(nullptr);
+   if (NS_FAILED(rv)) {
+     return InitPromise::CreateAndReject(rv, __func__);
+@@ -2029,7 +2039,8 @@
+   if (mUploadSWDecodeToDMABuf) {
+     MOZ_DIAGNOSTIC_ASSERT(!v);
+     if (!mVideoFramePool) {
+-      mVideoFramePool = MakeUnique<VideoFramePool<LIBAV_VER>>(10);
++      // ASIC Optimization: Exactly 16 to prevent RAM starvation on Ivy Bridge UMA
++      mVideoFramePool = MakeUnique<VideoFramePool<LIBAV_VER>>(16);
+     }
+     const auto yuvData = layers::PlanarYCbCrData::From(b);
+     if (yuvData) {
+@@ -2129,10 +2140,8 @@
+ 
+   MOZ_ASSERT(mTaskQueue->IsOnCurrentThread());
+   if (!mVideoFramePool) {
+-    AVHWFramesContext* context =
+-        (AVHWFramesContext*)mCodecContext->hw_frames_ctx->data;
+-    mVideoFramePool =
+-        MakeUnique<VideoFramePool<LIBAV_VER>>(context->initial_pool_size);
++    // ASIC Optimization: Exactly 16 to prevent RAM starvation on Ivy Bridge UMA
++    mVideoFramePool = MakeUnique<VideoFramePool<LIBAV_VER>>(16);
+   }
+   auto surface = mVideoFramePool->GetVideoFrameSurface(
+       vaDesc, mFrame->width, mFrame->height, mCodecContext, mFrame, mLib);
+@@ -2280,10 +2289,8 @@
+ 
+   MOZ_ASSERT(mTaskQueue->IsOnCurrentThread());
+   if (!mVideoFramePool) {
+-    AVHWFramesContext* context =
+-        (AVHWFramesContext*)mCodecContext->hw_frames_ctx->data;
+-    mVideoFramePool =
+-        MakeUnique<VideoFramePool<LIBAV_VER>>(context->initial_pool_size);
++    // ASIC Optimization: Exactly 16 to prevent RAM starvation on Ivy Bridge UMA
++    mVideoFramePool = MakeUnique<VideoFramePool<LIBAV_VER>>(16);
+   }
+ 
+   int32_t vulkanCopyBufIdx = -1;
+@@ -2418,7 +2425,8 @@
+     // But, this value is only used for deciding when we are running out of
+     // free buffers and so should start copying them.  So a rough estimate
+     // is sufficient, and the codec defaults to 20 capture buffers.
+-    mVideoFramePool = MakeUnique<VideoFramePool<LIBAV_VER>>(20);
++    // ASIC Optimization: Exactly 16 to prevent RAM starvation on Ivy Bridge UMA
++    mVideoFramePool = MakeUnique<VideoFramePool<LIBAV_VER>>(16);
+   }
+ 
+   auto surface = mVideoFramePool->GetVideoFrameSurface(

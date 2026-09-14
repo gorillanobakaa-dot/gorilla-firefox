@@ -1,0 +1,69 @@
+--- a/browser/base/content/nsContextMenu.sys.mjs
++++ b/browser/base/content/nsContextMenu.sys.mjs
+@@ -5,8 +5,6 @@
+ const lazy = {};
+ 
+ ChromeUtils.defineESModuleGetters(lazy, {
+-  AIWindow:
+-    "moz-src:///browser/components/aiwindow/ui/modules/AIWindow.sys.mjs",
+   BrowserSearchTelemetry:
+     "moz-src:///browser/components/search/BrowserSearchTelemetry.sys.mjs",
+   BrowserUtils: "resource://gre/modules/BrowserUtils.sys.mjs",
+@@ -15,8 +13,6 @@
+     "moz-src:///toolkit/components/contextualidentity/ContextualIdentityService.sys.mjs",
+   DevToolsShim: "chrome://devtools-startup/content/DevToolsShim.sys.mjs",
+   E10SUtils: "resource://gre/modules/E10SUtils.sys.mjs",
+-  GenAI: "resource:///modules/GenAI.sys.mjs",
+-  LinkPreview: "moz-src:///browser/components/genai/LinkPreview.sys.mjs",
+   LoginHelper: "resource://gre/modules/LoginHelper.sys.mjs",
+   LoginManagerContextMenu:
+     "resource://gre/modules/LoginManagerContextMenu.sys.mjs",
+@@ -511,7 +507,8 @@
+       "browser.tabs.splitView.enabled"
+     );
+     let currentTabInSplitView = !!window.gBrowser?.selectedTab?.splitview;
+-    let showSmartWindow = lazy.AIWindow.isAIWindowEnabled();
++    // GORILLA OVERRIDE: AI Window excised — smart-window link item never shows.
++    let showSmartWindow = false;
+     this.showItem("context-openlink", shouldShow && !isWindowPrivate);
+     this.showItem(
+       "context-openlinkprivate",
+@@ -528,10 +525,7 @@
+       shouldShow && !isWindowPrivate && showContainers
+     );
+     this.showItem("context-openlinkincurrent", this.onPlainTextLink);
+-    this.showItem(
+-      "context-previewlink",
+-      lazy.LinkPreview.shouldShowContextMenu(this)
+-    );
++    this.showItem("context-previewlink", false);
+     let isHiddenTab = !!window.gBrowser?.getTabForBrowser(this.browser)?.hidden;
+     let isPinnedTab = !!window.gBrowser?.getTabForBrowser(this.browser)?.pinned;
+     this.showItem(
+@@ -906,12 +900,7 @@
+ 
+     this.showAndFormatSearchContextItem();
+     this.showTranslateSelectionItem();
+-    lazy.GenAI.buildAskChatMenu(document.getElementById("context-ask-chat"), {
+-      browser: this.browser,
+-      selectionInfo: this.selectionInfo,
+-      showItem: this.showItem.bind(this),
+-      source: "page",
+-    });
++    // GORILLA: EXCISED — no GenAI ask-chat item (genai module removed).
+ 
+     // srcdoc cannot be opened separately due to concerns about web
+     // content with about:srcdoc in location bar masquerading as trusted
+@@ -2273,10 +2262,8 @@
+     );
+   }
+ 
+-  previewLink(url = this.linkURL) {
+-    // If we're in a view-source tab, remove the view-source: prefix
+-    url = url.replace(/^view-source:/, "");
+-    lazy.LinkPreview.handleContextMenuClick(url, this);
++  previewLink() {
++    // GORILLA OVERRIDE: genai excised — the preview item never shows.
+   }
+ 
+   /**

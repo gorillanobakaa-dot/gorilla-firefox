@@ -1,0 +1,28 @@
+--- a/gfx/thebes/gfxPlatform.cpp
++++ b/gfx/thebes/gfxPlatform.cpp
+@@ -3024,8 +3024,11 @@
+   if (status == nsIGfxInfo::FEATURE_BLOCKED_PLATFORM_TEST) {
+     featureDec.ForceDisable(FeatureStatus::Unavailable,
+                             "Force disabled by gfxInfo", failureId);
+-  } else if (Preferences::GetBool("media.hardware-video-decoding.failed",
++  } else if (false &&
++             Preferences::GetBool("media.hardware-video-decoding.failed",
+                                   false)) {
++    // GORILLA: sticky sanity-test kill-switch dead-coded. One bad boot must
++    // never permanently disable VA-API decode / QuickSync encode.
+     featureDec.ForceDisable(FeatureStatus::Unavailable,
+                             "Force disabled by failed sanity test",
+                             "FEATURE_FAILURE_SANITY_TEST_FAILED"_ns);
+@@ -3073,8 +3076,11 @@
+   if (status == nsIGfxInfo::FEATURE_BLOCKED_PLATFORM_TEST) {
+     featureEnc.ForceDisable(FeatureStatus::Unavailable,
+                             "Force disabled by gfxInfo", failureId);
+-  } else if (Preferences::GetBool("media.hardware-video-decoding.failed",
++  } else if (false &&
++             Preferences::GetBool("media.hardware-video-decoding.failed",
+                                   false)) {
++    // GORILLA: sticky sanity-test kill-switch dead-coded. One bad boot must
++    // never permanently disable VA-API decode / QuickSync encode.
+     featureEnc.ForceDisable(FeatureStatus::Unavailable,
+                             "Force disabled by failed sanity test",
+                             "FEATURE_FAILURE_SANITY_TEST_FAILED"_ns);

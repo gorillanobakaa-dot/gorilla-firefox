@@ -1,0 +1,22 @@
+--- a/browser/base/content/browser-sync.js
++++ b/browser/base/content/browser-sync.js
+@@ -16,8 +16,6 @@
+ );
+ 
+ ChromeUtils.defineESModuleGetters(this, {
+-  AIWindow:
+-    "moz-src:///browser/components/aiwindow/ui/modules/AIWindow.sys.mjs",
+   ASRouter: "resource:///modules/asrouter/ASRouter.sys.mjs",
+   EnsureFxAccountsWebChannel:
+     "resource://gre/modules/FxAccountsWebChannel.sys.mjs",
+@@ -3290,9 +3288,7 @@
+       deleteLocalData: false,
+     };
+ 
+-    const bodyId = AIWindow.hasActiveAIWindows()
+-      ? "fxa-signout-dialog-body-aiwindow"
+-      : "fxa-signout-dialog-body";
++    const bodyId = "fxa-signout-dialog-body";
+ 
+     let [title, body, button, checkbox] = await document.l10n.formatValues([
+       { id: "fxa-signout-dialog-title2" },

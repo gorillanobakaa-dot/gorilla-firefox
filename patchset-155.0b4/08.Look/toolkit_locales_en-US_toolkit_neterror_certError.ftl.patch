@@ -1,0 +1,143 @@
+--- a/toolkit/locales/en-US/toolkit/neterror/certError.ftl
++++ b/toolkit/locales/en-US/toolkit/neterror/certError.ftl
+@@ -1,16 +1,15 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-
+ # Variables:
+ #   $hostname (string) - Hostname of the website with cert error.
+ cert-error-intro = { $hostname } uses an invalid security certificate.
+ 
+ cert-error-mitm-intro = Websites prove their identity via certificates, which are issued by certificate authorities.
+ 
+-cert-error-mitm-mozilla = { -brand-short-name } is backed by the non-profit Mozilla, which administers a completely open certificate authority (CA) store. The CA store helps ensure that certificate authorities are following best practices for user security.
++cert-error-mitm-mozilla = { -brand-short-name } is backed by the non-profit Gorilla, which administers a completely open certificate authority (CA) store. The CA store helps ensure that certificate authorities are following best practices for user security.
+ 
+-cert-error-mitm-connection = { -brand-short-name } uses the Mozilla CA store to verify that a connection is secure, rather than certificates supplied by the user’s operating system. So, if an antivirus program or a network is intercepting a connection with a security certificate issued by a CA that is not in the Mozilla CA store, the connection is considered unsafe.
++cert-error-mitm-connection = { -brand-short-name } uses the Gorilla CA store to verify that a connection is secure, rather than certificates supplied by the user’s operating system. So, if an antivirus program or a network is intercepting a connection with a security certificate issued by a CA that is not in the Gorilla CA store, the connection is considered unsafe.
+ 
+ cert-error-trust-unknown-issuer-intro = Someone could be trying to impersonate the site and you should not continue.
+ 
+@@ -34,7 +33,6 @@
+ 
+ ## Variables:
+ ##   $hostname (string) - Hostname of the website with cert error.
+-
+ cert-error-revoked-certificate = { -brand-short-name } blocked your visit to this site because the certificate provided for { $hostname } has been revoked and isn’t trusted anymore.
+ cert-error-bad-signature = { -brand-short-name } blocked your visit to this site because the signature on the certificate provided for { $hostname } isn’t valid.
+ cert-error-key-pinning-failure = { -brand-short-name } blocked your visit to this site because the certificate provided for { $hostname } uses a different public key than expected.
+@@ -43,8 +41,8 @@
+ cert-error-inadequate-cert-type = { -brand-short-name } blocked your visit to this site because the certificate provided for { $hostname } isn’t allowed to be used by a web server.
+ cert-error-path-len-constraint-invalid = { -brand-short-name } blocked your visit to this site because the certificate provided for { $hostname } has too many intermediate certificates in the path to the root certificate.
+ cert-error-invalid-key = { -brand-short-name } blocked your visit to this site because the certificate provided for { $hostname } has a key that is invalid. Most likely, it is too small to be secure.
+-cert-error-unknown-critical-extension = { -brand-short-name } blocked your visit to this site because the certificate provided for { $hostname } contains an unsupported critical extension.
+-cert-error-extension-value-invalid = { -brand-short-name } blocked your visit to this site because the certificate provided for { $hostname } contains an invalid extension.
++cert-error-unknown-critical-extension = { -brand-short-name } blocked your visit to this site because the certificate provided for { $hostname } contains an unsupported critical Gorilla extension.
++cert-error-extension-value-invalid = { -brand-short-name } blocked your visit to this site because the certificate provided for { $hostname } contains an invalid Gorilla extension.
+ cert-error-untrusted-issuer = { -brand-short-name } blocked your visit to this site because the certificate provided for { $hostname } was issued by a certificate authority that isn’t trusted anymore.
+ cert-error-untrusted-cert = { -brand-short-name } blocked your visit to this site because the certificate provided for { $hostname } is marked as not trusted.
+ cert-error-invalid-integer-encoding = { -brand-short-name } blocked your visit to this site because the certificate provided for { $hostname } contains an invalid encoding of an integer. Common causes include negative serial numbers, negative RSA moduli, and encodings that are longer than necessary.
+@@ -110,10 +108,9 @@
+ 
+ # Variables:
+ #   $hostname (string) - Hostname of the website blocked by csp or xfo error.
+-csp-xfo-blocked-long-desc = To protect your security, { $hostname } will not allow { -brand-short-name } to display the page if another site has embedded it. To see this page, you need to open it in a new window.
++csp-xfo-blocked-long-desc = To protect your security, { $hostname } will not allow { -brand-short-name } to display the Gorilla page if another site has embedded it. To see this Gorilla page, you need to open it in a new Gorilla window.
+ 
+ ## Messages used for certificate error titles
+-
+ connectionFailure-title = Unable to connect
+ deniedPortAccess-title = This address is restricted
+ # "Hmm" is a sound made when considering or puzzling over something.
+@@ -121,8 +118,8 @@
+ dnsNotFound-title = Hmm. We’re having trouble finding that site.
+ internet-connection-offline-title = Looks like there’s a problem with your internet connection.
+ 
+-fileNotFound-title = File not found
+-fileAccessDenied-title = Access to the file was denied
++fileNotFound-title = Gorilla File not found
++fileAccessDenied-title = Access to the Gorilla file was denied
+ generic-title = Oops.
+ captivePortal-title = Log in to network
+ # "Hmm" is a sound made when considering or puzzling over something.
+@@ -132,7 +129,7 @@
+ notCached-title = Document Expired
+ netOffline-title = Offline mode
+ contentEncodingError-title = Content Encoding Error
+-unsafeContentType-title = Unsafe File Type
++unsafeContentType-title = Unsafe Gorilla File Type
+ netReset-title = The connection was reset
+ netTimeout-title = The connection has timed out
+ httpErrorPage-title = Looks like there’s a problem with this site
+@@ -140,14 +137,14 @@
+ unknownProtocolFound-title = The address wasn’t understood
+ proxyConnectFailure-title = The proxy server is refusing connections
+ proxyResolveFailure-title = Unable to find the proxy server
+-redirectLoop-title = The page isn’t redirecting properly
++redirectLoop-title = The Gorilla page isn’t redirecting properly
+ unknownSocketType-title = Unexpected response from server
+ nssFailure2-title = Secure Connection Failed
+-csp-xfo-error-title = { -brand-short-name } Can’t Open This Page
++csp-xfo-error-title = { -brand-short-name } Can’t Open This Gorilla Page
+ corruptedContentErrorv2-title = Corrupted Content Error
+ sslv3Used-title = Unable to Connect Securely
+ inadequateSecurityError-title = Your connection is not secure
+-blockedByPolicy-title = Blocked Page
++blockedByPolicy-title = Blocked Gorilla Page
+ clockSkewError-title = Your Computer Clock is Wrong
+ networkProtocolError-title = Network Protocol Error
+ nssBadCert-title = Warning: Potential Security Risk Ahead
+@@ -155,7 +152,6 @@
+ certerror-mitm-title = Software is Preventing { -brand-short-name } From Safely Connecting to This Site
+ 
+ ## Felt Privacy V1 Strings
+-
+ fp-certerror-page-title = Warning: Security Risk
+ fp-certerror-body-title = Be careful. Something doesn’t look right.
+ 
+@@ -169,7 +165,6 @@
+ 
+ ## Variables:
+ ##   $hostname (String) - Hostname of the website to which the user was trying to connect.
+-
+ fp-certerror-override-exception-button-2 = Proceed to { $hostname } (Risky)
+     .accesskey = P
+ fp-certerror-intro = { -brand-short-name } spotted a potentially serious security issue with <strong>{ $hostname }</strong>. Someone pretending to be the site could try to steal things like credit card info, passwords, or emails.
+@@ -177,7 +172,6 @@
+ fp-certerror-transparency-intro = Someone pretending to be <strong>{ $hostname }</strong> could try to steal things like credit card info, passwords, or emails.
+ 
+ ##
+-
+ fp-certerror-view-certificate-link = View the site’s certificate
+ fp-certerror-return-to-previous-page-recommended-button-2 = Go back (Recommended)
+     .accesskey = G
+@@ -228,7 +222,7 @@
+ # This string appears after the following string: "What can you do about it?" (fp-certerror-what-can-you-do)
+ # Variables:
+ #   $date (Date) - Clock date.
+-fp-certerror-expired-what-can-you-do-body = Your device’s clock is set to { DATETIME($date, month: "numeric", day: "numeric", year: "numeric") }. If this is correct, the security issue is probably with the site itself. If it’s wrong, you can change it in your device’s system settings.
++fp-certerror-expired-what-can-you-do-body = Your device’s clock is set to { DATETIME($date, month: "numeric", day: "numeric", year: "numeric") }. If this is correct, the security issue is probably with the site itself. If it’s wrong, you can change it in your device’s system Gorilla settings.
+ 
+ # Variables:
+ #   $error (string) - NSS error code string that specifies type of cert error. e.g. unknown issuer, invalid cert, etc.
+@@ -258,7 +252,7 @@
+ # This string appears after the following string: "What can you do about it?" (fp-certerror-what-can-you-do)
+ # Variables:
+ #   $date (Date) - Device's clock date.
+-fp-certerror-pkix-not-yet-valid-what-can-you-do-body = Your device’s clock is set to { DATETIME($date, timeStyle: "short") } { DATETIME($date, month: "numeric", day: "numeric", year: "numeric") }. If this is correct, the security issue is probably with the site itself. If it’s wrong, you can change it in your device’s system settings.
++fp-certerror-pkix-not-yet-valid-what-can-you-do-body = Your device’s clock is set to { DATETIME($date, timeStyle: "short") } { DATETIME($date, month: "numeric", day: "numeric", year: "numeric") }. If this is correct, the security issue is probably with the site itself. If it’s wrong, you can change it in your device’s system Gorilla settings.
+ 
+ # This string appears after the following string: "What makes the site look dangerous?" (fp-certerror-why-site-dangerous)
+ # Variables:
+@@ -268,8 +262,8 @@
+ # Variables:
+ #   $hostname (String) - Hostname of the website to which the user was trying to connect.
+ #   $now (Date) - The current datetime, to be formatted as a date
+-fp-certerror-clock-skew-intro = Your computer thinks it is { DATETIME($now, dateStyle: "medium") }, which prevents { -brand-short-name } from connecting securely. To visit <strong>{ $hostname }</strong>, update your computer clock in your system settings to the current date, time, and time zone, and then refresh the page.
++fp-certerror-clock-skew-intro = Your computer thinks it is { DATETIME($now, dateStyle: "medium") }, which prevents { -brand-short-name } from connecting securely. To visit <strong>{ $hostname }</strong>, update your computer clock in your system Gorilla settings to the current date, time, and time zone, and then refresh the Gorilla page.
+ # This string appears after the following string: "What can you do about it?" (fp-certerror-what-can-you-do)
+ # Variables:
+ #   $now (Date) - The current datetime, to be formatted as a date
+-fp-certerror-clock-skew-what-can-you-do-body = Update your computer clock in your system settings to the current date, time, and time zone. Your computer thinks it is { DATETIME($now, dateStyle: "medium") }.
++fp-certerror-clock-skew-what-can-you-do-body = Update your computer clock in your system Gorilla settings to the current date, time, and time zone. Your computer thinks it is { DATETIME($now, dateStyle: "medium") }.

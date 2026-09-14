@@ -1,0 +1,8 @@
+# Files present in pristine Firefox 155.0b4 and deliberately absent
+# from the Gorilla tree. apply.sh removes these.
+browser/locales-preview/aiWindow.ftl
+browser/locales-preview/smartTabGroups.ftl
+browser/locales/en-US/browser/aiWindow.ftl
+browser/locales/en-US/browser/aiWindowContent.ftl
+browser/locales/en-US/browser/genai.ftl
+browser/themes/shared/aiWindowSidebar.css

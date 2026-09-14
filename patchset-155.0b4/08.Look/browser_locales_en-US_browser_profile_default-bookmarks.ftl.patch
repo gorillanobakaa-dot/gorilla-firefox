@@ -1,0 +1,56 @@
+--- a/browser/locales/en-US/browser/profile/default-bookmarks.ftl
++++ b/browser/locales/en-US/browser/profile/default-bookmarks.ftl
+@@ -1,22 +1,20 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-
+ # This file intentionally uses hard-coded brand names instead of Fluent terms.
+ # This approach minimizes issues across multiple release channels and rebranded
+ # versions.
+-
+-default-bookmarks-title = Bookmarks
+-default-bookmarks-heading = Bookmarks
++default-bookmarks-title = Gorilla Bookmarks
++default-bookmarks-heading = Gorilla Bookmarks
+ 
+ # Firefox links folder name
+-default-bookmarks-firefox-heading = Mozilla Firefox
++default-bookmarks-firefox-heading = Gorilla Unleashed
+ 
+ # link title for https://www.mozilla.org/firefox/help/
+ default-bookmarks-firefox-get-help = Get Help
+ 
+ # link title for https://www.mozilla.org/firefox/customize/
+-default-bookmarks-firefox-customize = Customize Firefox
++default-bookmarks-firefox-customize = Customize Gorilla Unleashed
+ 
+ # link title for https://www.mozilla.org/contribute/
+ default-bookmarks-firefox-community = Get Involved
+@@ -25,16 +23,16 @@
+ default-bookmarks-firefox-about = About Us
+ 
+ # Firefox Nightly links folder name
+-default-bookmarks-nightly-heading = Firefox Nightly Resources
++default-bookmarks-nightly-heading = Gorilla Unleashed Nightly Resources
+ 
+ # Nightly builds only, link title for https://blog.nightly.mozilla.org/
+-default-bookmarks-nightly-blog = Firefox Nightly blog
++default-bookmarks-nightly-blog = Gorilla Unleashed Nightly blog
+ 
+ # Nightly builds only, link title for https://bugzilla.mozilla.org/
+-default-bookmarks-bugzilla = Mozilla Bug Tracker
++default-bookmarks-bugzilla = Gorilla Bug Tracker
+ 
+ # Nightly builds only, link title for https://developer.mozilla.org/
+-default-bookmarks-mdn = Mozilla Developer Network
++default-bookmarks-mdn = Gorilla Developer Network
+ 
+ # Nightly builds only, link title for https://addons.mozilla.org/firefox/addon/nightly-tester-tools/
+ default-bookmarks-nightly-tester-tools = Nightly Tester Tools
+@@ -43,4 +41,4 @@
+ default-bookmarks-crashes = All your crashes
+ 
+ # Nightly builds only, link title for https://planet.mozilla.org/
+-default-bookmarks-planet = Planet Mozilla
++default-bookmarks-planet = Planet Gorilla

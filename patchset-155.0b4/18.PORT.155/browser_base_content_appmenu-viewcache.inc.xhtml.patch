@@ -1,0 +1,59 @@
+--- a/browser/base/content/appmenu-viewcache.inc.xhtml
++++ b/browser/base/content/appmenu-viewcache.inc.xhtml
+@@ -74,6 +74,8 @@
+                      data-l10n-id="appmenuitem-new-window"
+                      key="key_newNavigator"
+                      command="cmd_newNavigator"/>
++      <!-- GORILLA excised 2026-08-27 (155): AI row, its l10n strings are removed so it rendered as a BLANK menu line.
++           new-ai-window (and the stray BETA badge)
+       <toolbarbutton id="appMenu-new-ai-window-button"
+                      class="subviewbutton"
+                      command="Tools:AIWindow"
+@@ -83,10 +85,14 @@
+         <html:moz-badge id="appMenu-new-ai-window-badge"
+                         type="beta"/>
+       </toolbarbutton>
++      -->
++      <!-- GORILLA excised 2026-08-27 (155): AI row, its l10n strings are removed so it rendered as a BLANK menu line.
++           new-classic-window (only meaningful beside the AI window)
+       <toolbarbutton id="appMenu-new-classic-window-button"
+                      class="subviewbutton"
+                      data-l10n-id="appmenuitem-new-classic-window"
+                      command="Tools:ClassicWindow"/>
++      -->
+       <toolbarbutton id="appMenu-new-private-window-button2"
+                      class="subviewbutton"
+                      data-l10n-id="appmenuitem-new-private-window"
+@@ -109,10 +115,13 @@
+                      closemenu="none"
+                      hidden="true"
+                      />
++      <!-- GORILLA excised 2026-08-27 (155): AI row, its l10n strings are removed so it rendered as a BLANK menu line.
++           chats-history
+       <toolbarbutton id="appMenu-chats-history-button"
+                      class="subviewbutton"
+                      data-l10n-id="menu-history-chats"
+                      command="Tools:ChatsHistory"/>
++      -->
+       <toolbarbutton id="appMenu-downloads-button"
+                      class="subviewbutton"
+                      data-l10n-id="appmenuitem-downloads"
+@@ -1066,7 +1075,9 @@
+     <vbox id="PanelUI-ipprotection-locations-content" class="panel-subview-body"/>
+   </panelview>
+ 
+-  <panelview id="ai-window-toggle-view" class="PanelUI-subView">
++  <!-- GORILLA excised 2026-08-27 (155): AI row. Its l10n strings were removed with the AI stack, so it rendered as a BLANK line.
++     the entire ai-window toggle subview
++<panelview id="ai-window-toggle-view" class="PanelUI-subView">
+     <vbox class="panel-subview-body">
+       <toolbarbutton id="ai-window-switch-classic"
+                     class="subviewbutton"
+@@ -1101,6 +1112,7 @@
+       </toolbarbutton>
+     </vbox>
+   </panelview>
++-->
+ 
+   <panelview id="appMenu-tabGroupsListView" class="PanelUI-subView">
+     <vbox class="panel-subview-body">

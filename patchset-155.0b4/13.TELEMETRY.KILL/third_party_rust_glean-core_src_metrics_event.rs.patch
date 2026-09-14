@@ -1,0 +1,18 @@
+--- a/third_party/rust/glean-core/src/metrics/event.rs
++++ b/third_party/rust/glean-core/src/metrics/event.rs
+@@ -55,6 +55,7 @@
+     ///             Keys must be one of the allowed extra keys.
+     ///             If any key is not allowed, an error is reported and no event is recorded.
+     pub fn record(&self, extra: HashMap<String, String>) {
++        if crate::GORILLA_TELEMETRY_OFF { return; }  // Gorilla: telemetry disabled — skip clone + dispatch
+         let timestamp = crate::get_timestamp_ms();
+         self.record_with_time(timestamp, extra);
+     }
+@@ -70,6 +71,7 @@
+     ///             Keys must be one of the allowed extra keys.
+     ///             If any key is not allowed, an error is reported and no event is recorded.
+     pub fn record_with_time(&self, timestamp: u64, extra: HashMap<String, String>) {
++        if crate::GORILLA_TELEMETRY_OFF { return; }  // Gorilla: telemetry disabled — skip clone + dispatch
+         let metric = self.clone();
+ 
+         // Precise timestamp based on wallclock. Will be used if `enable_event_timestamps` is true.

@@ -1,0 +1,66 @@
+--- a/toolkit/locales/en-US/toolkit/global/profileSelection.ftl
++++ b/toolkit/locales/en-US/toolkit/global/profileSelection.ftl
+@@ -1,41 +1,44 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-
+ profile-selection-window =
+-  .title = { -brand-short-name } - Choose User Profile
++    .title = { -brand-short-name } - Choose User Gorilla Profile
+ 
+ profile-selection-button-accept =
+-  .label = Start { -brand-short-name }
++    .label = Start { -brand-short-name }
+ 
+ profile-selection-button-cancel =
+-  .label = Exit
++    .label = Exit
+ 
+ profile-selection-new-button =
+-  .label = Create Profile…
+-  .accesskey = C
++    .label =
++        Create Gorilla Profile…
++        .accesskey = C
+ 
+ profile-selection-rename-button =
+-  .label = Rename Profile…
+-  .accesskey = R
++    .label =
++        Rename Gorilla Profile…
++        .accesskey = R
+ 
+ profile-selection-delete-button =
+-  .label = Delete Profile…
+-  .accesskey = D
++    .label =
++        Delete Gorilla Profile…
++        .accesskey = D
+ 
+-profile-selection-conflict-message = Another copy of { -brand-product-name } has made changes to profiles. You must restart { -brand-short-name } before making more changes.
++profile-selection-conflict-message = Another copy of { -brand-product-name } has made changes to Gorilla profiles. You must restart { -brand-short-name } before making more changes.
+ 
+ ## Messages used in the profile manager
+-
+-profile-manager-description = { -brand-short-name } stores information about your settings, preferences, and other user items in your user profile.
++profile-manager-description = { -brand-short-name } stores information about your Gorilla settings, preferences, and other user items in your user Gorilla profile.
+ 
+ profile-manager-work-offline =
+-  .label = Work offline
+-  .accesskey = o
++    .label =
++        Work offline
++        .accesskey = o
+ 
+ profile-manager-use-selected =
+-  .label = Use the selected profile without asking at startup
+-  .accesskey = s
++    .label =
++        Use the selected Gorilla profile without asking at startup
++        .accesskey = s
+ 
+-profile-has-selectable-profiles-title = Can’t delete a profile that is linked to other profiles
+-profile-has-selectable-profiles-message = To delete this profile, open it and select ”Manage profiles” from the profiles section of the { -brand-short-name } menu. After deleting any additional profiles you have created here, you can return to about:profiles and delete this profile.
++profile-has-selectable-profiles-title = Can’t delete a Gorilla profile that is linked to other Gorilla profiles
++profile-has-selectable-profiles-message = To delete this Gorilla profile, open it and select ”Manage Gorilla profiles” from the Gorilla profiles section of the { -brand-short-name } menu. After deleting any additional Gorilla profiles you have created here, you can return to about:Gorilla profiles and delete this Gorilla profile.

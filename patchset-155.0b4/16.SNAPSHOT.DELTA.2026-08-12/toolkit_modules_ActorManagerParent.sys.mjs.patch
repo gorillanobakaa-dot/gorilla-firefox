@@ -1,0 +1,21 @@
+--- a/toolkit/modules/ActorManagerParent.sys.mjs
++++ b/toolkit/modules/ActorManagerParent.sys.mjs
+@@ -64,17 +64,7 @@
+     },
+   },
+ 
+-  // A single process (shared with translations) that manages machine learning engines.
+-  MLEngine: {
+-    remoteTypes: ["inference"],
+-    parent: {
+-      esModuleURI: "resource://gre/actors/MLEngineParent.sys.mjs",
+-    },
+-    child: {
+-      esModuleURI: "resource://gre/actors/MLEngineChild.sys.mjs",
+-    },
+-    enablePreference: "browser.ml.enable",
+-  },
++  // GORILLA excised: MLEngine actor (ml component removed).
+ 
+   ProcessConduits: {
+     // "parent" remoteTypes is currently needed to support MV3 background service workers

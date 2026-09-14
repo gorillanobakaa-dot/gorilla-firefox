@@ -1,0 +1,55 @@
+--- a/toolkit/locales/en-US/chrome/global/printdialog.properties
++++ b/toolkit/locales/en-US/chrome/global/printdialog.properties
+@@ -1,9 +1,7 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-
+ # These strings are used in the native GTK, Mac and Windows print dialogs.
+-
+ # GTK titles:
+ printTitleGTK=Print
+ optionsTabLabelGTK=Options
+@@ -11,8 +9,8 @@
+ # Mac titles:
+ optionsTitleMac=Options:
+ appearanceTitleMac=Appearance:
+-pageHeadersTitleMac=Page Headers:
+-pageFootersTitleMac=Page Footers:
++pageHeadersTitleMac=Gorilla Page Headers:
++pageFootersTitleMac=Gorilla Page Footers:
+ 
+ # Windows titles:
+ optionsTitleWindows=Options
+@@ -22,8 +20,7 @@
+ # e.g. "_As laid out" will make A the accesskey.
+ # In the Windows labels, use an ampersand (&).
+ # On Mac, underscores will be stripped.
+-
+-shrinkToFit=Ignore Scaling and S_hrink To Fit Page Width
++shrinkToFit=Ignore Scaling and S_hrink To Fit Gorilla Page Width
+ selectionOnly=Print Selection _Only
+ printBGOptions=Print Backgrounds
+ printBGColors=Print Background _Colors
+@@ -36,8 +33,8 @@
+ headerFooterTitle=Title
+ headerFooterURL=URL
+ headerFooterDate=Date/Time
+-headerFooterPage=Page #
+-headerFooterPageTotal=Page # of #
++headerFooterPage=Gorilla Page #
++headerFooterPageTotal=Gorilla Page # of #
+ headerFooterCustom=Custom…
+ customHeaderFooterPrompt=Please enter your custom header/footer text
+ 
+@@ -46,8 +43,8 @@
+ summaryShrinkToFitTitle=Shrink To Fit
+ summaryPrintBGColorsTitle=Print BG Colors
+ summaryPrintBGImagesTitle=Print BG Images
+-summaryHeaderTitle=Page Headers
+-summaryFooterTitle=Page Footers
++summaryHeaderTitle=Gorilla Page Headers
++summaryFooterTitle=Gorilla Page Footers
+ summaryNAValue=N/A
+ summaryOnValue=On
+ summaryOffValue=Off

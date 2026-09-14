@@ -1,0 +1,16 @@
+--- a/browser/themes/shared/jar.inc.mn
++++ b/browser/themes/shared/jar.inc.mn
+@@ -16,10 +16,12 @@
+   skin/classic/browser/tab-list-tree.css                       (../shared/tab-list-tree.css)
+   skin/classic/browser/addon-notification.css                  (../shared/addon-notification.css)
+   skin/classic/browser/autocomplete.css                        (../shared/autocomplete.css)
+-  skin/classic/browser/aiWindowSidebar.css                     (../shared/aiWindowSidebar.css)
++# GORILLA excised 2026-08-27 (155): skin/classic/browser/aiWindowSidebar.css                     (../shared/aiWindowSidebar.css)
+   skin/classic/browser/blockedSite.css                         (../shared/blockedSite.css)
+   skin/classic/browser/browser-colors.css                      (../shared/browser-colors.css)
+   skin/classic/browser/browser-shared.css                      (../shared/browser-shared.css)
++  skin/classic/browser/master-redirect.css                     (../shared/master-redirect.css)
++  skin/classic/browser/nebula.jpg                              (../shared/nebula.jpg)
+   skin/classic/browser/formautofill-notification.css           (../shared/formautofill-notification.css)
+   skin/classic/browser/identity-credential-notification.css    (../shared/identity-credential-notification.css)
+   skin/classic/browser/menupanel.css                           (../shared/menupanel.css)

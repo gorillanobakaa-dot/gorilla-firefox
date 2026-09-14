@@ -1,0 +1,30 @@
+--- a/browser/base/content/browser-init.js
++++ b/browser/base/content/browser-init.js
+@@ -165,15 +165,6 @@
+         );
+         window.document.documentElement.id = "taskbartab-" + taskbarTabId;
+       }
+-      if (extraOptions.hasKey("ai-window")) {
+-        document.documentElement.setAttribute("ai-window", true);
+-      }
+-      if (extraOptions.hasKey("aiwindow-immersive-view")) {
+-        document.documentElement.setAttribute("aiwindow-immersive-view", true);
+-      }
+-      if (extraOptions.hasKey("aiwindow-new-window")) {
+-        document.documentElement.setAttribute("aiwindow-new-window", true);
+-      }
+     }
+ 
+     // Run menubar initialization first, to avoid CustomTitlebar code picking
+@@ -1124,11 +1115,6 @@
+       gBrowser.removeTabsProgressListener(window.TabsProgressListener);
+     } catch (ex) {}
+ 
+-    // Bug 1952900 to allow switching to unload category without leaking
+-    ChromeUtils.importESModule(
+-      "moz-src:///browser/components/genai/LinkPreview.sys.mjs"
+-    ).LinkPreview.teardown(window);
+-
+     BrowserUtils.callModulesFromCategory(
+       { categoryName: "browser-window-unload", jsGlobal: globalThis },
+       window

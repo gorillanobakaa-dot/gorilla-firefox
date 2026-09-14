@@ -1,0 +1,26 @@
+--- a/toolkit/locales/en-US/toolkit/payments/payments.ftl
++++ b/toolkit/locales/en-US/toolkit/payments/payments.ftl
+@@ -2,7 +2,6 @@
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ 
+-
+ # This value isn't used directly, but is defined to avoid duplication
+ # in the "credit-card-label-*" strings.
+ #
+@@ -15,7 +14,6 @@
+ ## The description must include a credit card number, and may optionally
+ ## include a cardholder name, an expiration date, or both, so we have
+ ## four variations.
+-
+ # Label for a credit card with a number only
+ #
+ # Variables:
+@@ -47,6 +45,5 @@
+ #   $number (String): Partially-redacted credit card number
+ #   $name (String): Cardholder name
+ #   $type (String): Credit card type
+-credit-card-label-number-name-expiration-2 =
+-  { $number }, { $name }, { credit-card-expiration }
++credit-card-label-number-name-expiration-2 = { $number }, { $name }, { credit-card-expiration }
+     .aria-label = { $type } { credit-card-label-number-name-expiration-2 }

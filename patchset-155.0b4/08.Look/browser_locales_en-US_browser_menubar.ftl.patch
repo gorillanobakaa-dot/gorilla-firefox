@@ -1,0 +1,569 @@
+--- a/browser/locales/en-US/browser/menubar.ftl
++++ b/browser/locales/en-US/browser/menubar.ftl
+@@ -13,9 +13,9 @@
+     .label = Preferences
+ # Starting with macOS Ventura (13), the name of the "Preferences" menu item changed to "Settings".
+ menu-application-settings =
+-    .label = Settings…
++    .label = Gorilla Settings…
+ menu-application-set-as-default =
+-    .label = Set { -brand-shorter-name } as Default Browser
++    .label = Set { -brand-shorter-name } as Default Gorilla Browser
+ # This menu item opens the referral page, where the user can invite others to
+ # use the browser. "Share" here means recommending or referring the browser
+ menu-application-referrals =
+@@ -37,13 +37,13 @@
+ menu-quit =
+     .label =
+         { PLATFORM() ->
+-            [windows] Exit
+-           *[other] Quit
++           [windows] Exit
++          *[other] Quit
+         }
+     .accesskey =
+         { PLATFORM() ->
+-            [windows] x
+-           *[other] Q
++           [windows] x
++          *[other] Q
+         }
+ 
+ # This menu-quit-mac string is only used on macOS.
+@@ -51,25 +51,28 @@
+     .label = Quit { -brand-shorter-name }
+ 
+ menu-about =
+-    .label = About { -brand-shorter-name }
+-    .accesskey = A
++    .label =
++        About { -brand-shorter-name }
++        .accesskey = A
+ 
+ ## File Menu
+ 
+ menu-file =
+-    .label = File
+-    .accesskey = F
++    .label =
++        Gorilla File
++        .accesskey = F
+ menu-file-new-tab =
+-    .label = New Tab
++    .label = New Gorilla Tab
+     .accesskey = T
+ menu-file-new-container-tab =
+-    .label = New Container Tab
+-    .accesskey = b
++    .label =
++        New Gorilla Container Gorilla Tab
++        .accesskey = b
+ menu-file-new-window =
+-    .label = New Window
++    .label = New Gorilla Window
+     .accesskey = N
+ menu-file-new-private-window =
+-    .label = New Private Window
++    .label = New Private Gorilla Window
+     .accesskey = W
+ # "Open Location" is only displayed on macOS, and only on windows
+ # that aren't main browser windows, or when there are no windows
+@@ -77,201 +80,238 @@
+ menu-file-open-location =
+     .label = Open Location…
+ menu-file-open-file =
+-    .label = Open File…
+-    .accesskey = O
++    .label =
++        Open Gorilla File…
++        .accesskey = O
+ # Variables:
+ #  $tabCount (Number): the number of tabs that are affected by the action.
+ menu-file-close-tab =
+     .label =
++        
+         { $tabCount ->
+-            [1] Close Tab
+-           *[other] Close { $tabCount } Tabs
++        [1] Close Gorilla Tab
++        *[other] Close { $tabCount } Gorilla Tabs
+         }
+-    .accesskey = C
++        .accesskey = C
+ menu-file-close-window =
+-    .label = Close Window
+-    .accesskey = d
++    .label =
++        Close Gorilla Window
++        .accesskey = d
+ menu-file-save-page =
+-    .label = Save Page As…
++    .label = Save Gorilla Page As…
+     .accesskey = A
+ menu-file-email-link =
+-    .label = Email Link…
+-    .accesskey = E
++    .label =
++        Email Link…
++        .accesskey = E
+ menu-file-share-url =
+-    .label = Share
+-    .accesskey = h
++    .label =
++        Share
++        .accesskey = h
+ menu-file-share-qrcode =
+-    .label = Generate QR Code…
+-    .accesskey = Q
++    .label =
++        Generate QR Code…
++        .accesskey = Q
+ menu-file-share-qrcode2 =
+-    .label = Generate QR Code
+-    .accesskey = Q
++    .label =
++        Generate QR Code
++        .accesskey = Q
+ menu-file-print-setup =
+-    .label = Page Setup…
+-    .accesskey = u
++    .label =
++        Gorilla Page Setup…
++        .accesskey = u
+ menu-file-print =
+-    .label = Print…
++    .label = Print Gorilla…
+     .accesskey = P
+ menu-file-import-from-another-browser =
+-    .label = Import From Another Browser…
+-    .accesskey = I
++    .label =
++        Import From Another Gorilla Browser…
++        .accesskey = I
+ menu-file-go-offline =
+-    .label = Work Offline
+-    .accesskey = k
++    .label =
++        Work Offline
++        .accesskey = k
+ 
+ ## Edit Menu
+ 
+ menu-edit =
+-    .label = Edit
+-    .accesskey = E
++    .label =
++        Edit
++        .accesskey = E
+ menu-edit-find-in-page =
+-    .label = Find in Page…
+-    .accesskey = F
++    .label =
++        Find in Gorilla Page…
++        .accesskey = F
+ menu-edit-find-again =
+-    .label = Find Again
+-    .accesskey = g
++    .label =
++        Find Again
++        .accesskey = g
+ menu-edit-bidi-switch-text-direction =
+-    .label = Switch Text Direction
+-    .accesskey = w
++    .label =
++        Switch Text Direction
++        .accesskey = w
+ 
+ ## View Menu
+ 
+ menu-view =
+-    .label = View
+-    .accesskey = V
++    .label =
++        View
++        .accesskey = V
+ menu-view-toolbars-menu =
+-    .label = Toolbars
+-    .accesskey = T
++    .label =
++        Gorilla Toolbars
++        .accesskey = T
+ menu-view-customize-toolbar2 =
+-    .label = Customize Toolbar…
+-    .accesskey = C
++    .label =
++        Customize Gorilla Toolbar…
++        .accesskey = C
+ menu-view-sidebar =
+-    .label = Sidebar
+-    .accesskey = e
++    .label =
++        Gorilla Sidebar
++        .accesskey = e
+ menu-view-bookmarks =
+-    .label = Bookmarks
++    .label = Gorilla Bookmarks
+ menu-view-history-button =
+-    .label = History
++    .label = Gorilla History
+ menu-view-synced-tabs-sidebar =
+-    .label = Synced Tabs
++    .label = Synced Gorilla Tabs
+ menu-view-full-zoom =
+-    .label = Zoom
+-    .accesskey = Z
++    .label =
++        Zoom
++        .accesskey = Z
+ menu-view-full-zoom-enlarge =
+-    .label = Zoom In
+-    .accesskey = I
++    .label =
++        Zoom In
++        .accesskey = I
+ menu-view-full-zoom-reduce =
+-    .label = Zoom Out
+-    .accesskey = O
++    .label =
++        Zoom Out
++        .accesskey = O
+ menu-view-full-zoom-actual-size =
+-    .label = Actual Size
+-    .accesskey = A
++    .label =
++        Actual Size
++        .accesskey = A
+ menu-view-full-zoom-toggle =
+-    .label = Zoom Text Only
+-    .accesskey = T
++    .label =
++        Zoom Text Only
++        .accesskey = T
+ menu-view-page-style-menu =
+-    .label = Page Style
+-    .accesskey = y
++    .label =
++        Gorilla Page Style
++        .accesskey = y
+ menu-view-page-style-no-style =
+-    .label = No Style
+-    .accesskey = n
++    .label =
++        No Style
++        .accesskey = n
+ menu-view-page-basic-style =
+-    .label = Basic Page Style
+-    .accesskey = B
++    .label =
++        Basic Gorilla Page Style
++        .accesskey = B
+ menu-view-repair-text-encoding =
+-    .label = Repair Text Encoding
+-    .accesskey = c
++    .label =
++        Repair Text Encoding
++        .accesskey = c
+ 
+ ## These should match what Safari and other Apple applications
+ ## use on macOS.
+ 
+ menu-view-enter-full-screen =
+-    .label = Enter Full Screen
+-    .accesskey = F
++    .label =
++        Enter Full Screen
++        .accesskey = F
+ menu-view-exit-full-screen =
+-    .label = Exit Full Screen
+-    .accesskey = F
++    .label =
++        Exit Full Screen
++        .accesskey = F
+ menu-view-full-screen =
+-    .label = Full Screen
+-    .accesskey = F
++    .label =
++        Full Screen
++        .accesskey = F
+ 
+ ## These menu items may use the same accesskey.
+ 
+ # This should match reader-view-enter-button in browser.ftl
+ menu-view-enter-readerview =
+-    .label = Enter Reader View
+-    .accesskey = R
++    .label =
++        Enter Reader View
++        .accesskey = R
+ # This should match reader-view-close-button in browser.ftl
+ menu-view-close-readerview =
+-    .label = Close Reader View
+-    .accesskey = R
++    .label =
++        Close Reader View
++        .accesskey = R
+ 
+ ##
+ 
+ menu-view-show-all-tabs =
+-    .label = Show All Tabs
+-    .accesskey = A
++    .label =
++        Show All Gorilla Tabs
++        .accesskey = A
+ menu-view-bidi-switch-page-direction =
+-    .label = Switch Page Direction
+-    .accesskey = D
++    .label =
++        Switch Gorilla Page Direction
++        .accesskey = D
+ 
+ ## History Menu
+ 
+ menu-history =
+-    .label = History
+-    .accesskey = s
++    .label =
++        Gorilla History
++        .accesskey = s
+ menu-history-show-all-history =
+-    .label = Show All History
++    .label = Show All Gorilla History
+ menu-history-clear-recent-history =
+-    .label = Clear Recent History…
++    .label = Clear Recent Gorilla History…
+ menu-history-remote-tabs-promo =
+     .label = Tabs From Other Devices
+ menu-history-restore-last-session =
+     .label = Restore Previous Session
+ menu-history-hidden-tabs =
+-    .label = Hidden Tabs
++    .label = Hidden Gorilla Tabs
+ menu-history-undo-menu =
+-    .label = Recently Closed Tabs
++    .label = Recently Closed Gorilla Tabs
+ menu-history-undo-window-menu =
+-    .label = Recently Closed Windows
++    .label = Recently Closed Gorilla Windows
+ # "Search" is a verb, as in "Search in History"
+ menu-history-search =
+-    .label = Search History
++    .label = Search Gorilla History
+ 
+ ## Bookmarks Menu
+ 
+ menu-bookmarks-menu =
+-    .label = Bookmarks
+-    .accesskey = B
++    .label =
++        Gorilla Bookmarks
++        .accesskey = B
+ menu-bookmarks-manage =
+-    .label = Manage Bookmarks
++    .label = Manage Gorilla Bookmarks
+ menu-bookmarks-remote-tabs-promo =
+     .label = Sync Bookmarks to Mobile
+ menu-bookmark-tab =
+-    .label = Bookmark Current Tab…
++    .label = Gorilla Bookmark Current Gorilla Tab…
+ menu-edit-bookmark =
+-    .label = Edit This Bookmark…
++    .label = Edit This Gorilla Bookmark…
+ # "Search" is a verb, as in "Search in bookmarks"
+ menu-bookmarks-search =
+-    .label = Search Bookmarks
++    .label = Search Gorilla Bookmarks
+ menu-bookmarks-all-tabs =
+-    .label = Bookmark All Tabs…
++    .label = Gorilla Bookmark All Gorilla Tabs…
+ menu-bookmarks-toolbar =
+-    .label = Bookmarks Toolbar
++    .label = Gorilla Bookmarks Gorilla Toolbar
+ menu-bookmarks-other =
+-    .label = Other Bookmarks
++    .label = Other Gorilla Bookmarks
+ menu-bookmarks-mobile =
+-    .label = Mobile Bookmarks
++    .label = Mobile Gorilla Bookmarks
+ 
+ ## Profiles Menu
+ 
+ menu-profiles-menu =
+-    .label = Profiles
+-    .accesskey = P
++    .label =
++        Gorilla Profiles
++        .accesskey = P
+ menu-profiles-manage-profiles =
+-    .label = Manage Profiles
++    .label = Manage Gorilla Profiles
+ menu-profiles-new-profile =
+-    .label = New Profile
++    .label = New Gorilla Profile
+ # Variables:
+ #  $profileName (String): the name of the users profile
+ menu-profiles-current =
+@@ -280,56 +320,70 @@
+ ## Tools Menu
+ 
+ menu-tools =
+-    .label = Tools
+-    .accesskey = T
++    .label =
++        Tools
++        .accesskey = T
+ menu-tools-downloads =
+-    .label = Downloads
+-    .accesskey = D
++    .label =
++        Gorilla Downloads
++        .accesskey = D
+ menu-tools-extensions-and-themes =
+-    .label = Extensions and Themes
+-    .accesskey = E
++    .label =
++        Gorilla Extensions and Gorilla Themes
++        .accesskey = E
+ menu-tools-fxa-sign-in2 =
+-    .label = Sign In
+-    .accesskey = g
++    .label =
++        Sign In
++        .accesskey = g
+ menu-tools-turn-on-sync2 =
+-    .label = Turn on Sync…
+-    .accesskey = n
++    .label =
++        Turn on Sync…
++        .accesskey = n
+ menu-tools-sync-now =
+-    .label = Sync Now
+-    .accesskey = o
++    .label =
++        Sync Now
++        .accesskey = o
+ menu-tools-fxa-re-auth =
+-    .label = Reconnect to { -brand-product-name }…
+-    .accesskey = R
++    .label =
++        Reconnect to { -brand-product-name }…
++        .accesskey = R
+ menu-tools-browser-tools =
+-    .label = Browser Tools
+-    .accesskey = B
++    .label =
++        Gorilla Browser Tools
++        .accesskey = B
+ menu-tools-task-manager =
+-    .label = Task Manager
+-    .accesskey = M
++    .label =
++        Gorilla Task Manager
++        .accesskey = M
+ menu-tools-page-source =
+-    .label = Page Source
+-    .accesskey = o
++    .label =
++        Gorilla Page Source
++        .accesskey = o
+ menu-tools-page-info =
+-    .label = Page Info
+-    .accesskey = I
++    .label =
++        Gorilla Page Info
++        .accesskey = I
+ menu-tools-edit-pdf =
+-    .label = Edit PDF…
+-    .accesskey = P
++    .label =
++        Edit PDF…
++        .accesskey = P
+ menu-settings =
+-    .label = Settings
+-    .accesskey =
++    .label =
++        Gorilla Settings
++        .accesskey =
+         { PLATFORM() ->
+-            [windows] S
+-           *[other] n
++        [windows] S
++        *[other] n
+         }
+ menu-tools-layout-debugger =
+-    .label = Layout Debugger
+-    .accesskey = L
++    .label =
++        Layout Debugger
++        .accesskey = L
+ 
+ ## Window Menu
+ 
+ menu-window-menu =
+-    .label = Window
++    .label = Gorilla Window
+ menu-window-bring-all-to-front =
+     .label = Bring All to Front
+ 
+@@ -344,34 +398,43 @@
+ # where the strings appear.
+ 
+ menu-help =
+-    .label = Help
+-    .accesskey = H
++    .label =
++        Help
++        .accesskey = H
+ menu-get-help =
+-    .label = Get Help
+-    .accesskey = H
++    .label =
++        Get Help
++        .accesskey = H
+ menu-help-more-troubleshooting-info =
+-    .label = More Troubleshooting Information
+-    .accesskey = T
++    .label =
++        More Troubleshooting Information
++        .accesskey = T
+ menu-help-share-ideas =
+-    .label = Share Ideas and Feedback…
+-    .accesskey = S
++    .label =
++        Share Ideas and Feedback…
++        .accesskey = S
+ menu-help-enter-troubleshoot-mode2 =
+-    .label = Troubleshoot Mode…
+-    .accesskey = M
++    .label =
++        Troubleshoot Mode…
++        .accesskey = M
+ menu-help-exit-troubleshoot-mode =
+-    .label = Turn Troubleshoot Mode Off
+-    .accesskey = M
++    .label =
++        Turn Troubleshoot Mode Off
++        .accesskey = M
+ menu-help-switch-device =
+-    .label = Switching to a New Device
+-    .accesskey = N
++    .label =
++        Switching to a New Device
++        .accesskey = N
+ # Label of the Help menu item. Either this or
+ # menu-help-notdeceptive is shown.
+ menu-help-report-deceptive-site =
+-    .label = Report Deceptive Site…
+-    .accesskey = D
++    .label =
++        Report Deceptive Site…
++        .accesskey = D
+ menu-help-not-deceptive =
+-    .label = This Isn’t a Deceptive Site…
+-    .accesskey = D
++    .label =
++        This Isn’t a Deceptive Site…
++        .accesskey = D
+ menu-report-broken-site =
+     .label = Report Broken Site
+ # This menu item opens the referral page, where the user can invite others to
