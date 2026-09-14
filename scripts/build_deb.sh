@@ -38,6 +38,47 @@ BUILDID=$(sed -n 's/^BuildID=//p' "$DIST_BIN/application.ini" | head -1)
 PKG="gorilla-unleashed_${VERSION}_amd64"
 STAGE="$OUT_DIR/$PKG"
 
+# =============================================================================
+# RELEASE GATE - refuse to package a browser that has lost a proven fix
+#
+# LAYMAN: before wrapping the browser into an installable file, check that the
+#    fixes that took days to find are still in it. Each one is invisible when
+#    missing: the browser looks perfectly normal until a call fails.
+#
+# DEVELOPER: scripts/release_gate.py checks the BUILT ARTIFACT and cross-checks
+#    it against the source. It lives in this repository and needs nothing
+#    outside it, so a clone and a future version port inherit it.
+#
+#    WHY THIS EXISTS: on 2026-09-14 the published source could not rebuild the
+#    published browser. The .deb on disk was packaged from a stale objdir, and
+#    the only working browser existed as files copied into place by hand. The
+#    pref that makes WhatsApp calls work was 8 in the patch set and 512 in the
+#    running browser, and nothing detected it. A source-only check would have
+#    passed.
+#
+#    Skip deliberately with GORILLA_SKIP_RELEASE_GATE=1, never silently.
+# =============================================================================
+GATE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/release_gate.py"
+if [ "${GORILLA_SKIP_RELEASE_GATE:-0}" = "1" ]; then
+  echo "   release gate: SKIPPED by GORILLA_SKIP_RELEASE_GATE=1"
+elif [ ! -f "$GATE" ]; then
+  echo "FATAL: release gate missing: $GATE" >&2
+  echo "       Refusing to package. Restore it or set GORILLA_SKIP_RELEASE_GATE=1." >&2
+  exit 1
+elif ! command -v python3 >/dev/null 2>&1; then
+  echo "FATAL: python3 is required to run the release gate." >&2; exit 1
+else
+  echo "== release gate =="
+  GATE_SRC="${SRC_TREE:-$(cd "$DIST_BIN/../../.." 2>/dev/null && pwd)}"
+  if [ -n "$GATE_SRC" ] && [ -f "$GATE_SRC/browser/app/profile/firefox.js" ]; then
+    python3 "$GATE" --dist "$DIST_BIN" --src "$GATE_SRC" || {
+      echo "Refusing to build a package that has lost a proven fix." >&2; exit 1; }
+  else
+    python3 "$GATE" --dist "$DIST_BIN" || {
+      echo "Refusing to build a package that has lost a proven fix." >&2; exit 1; }
+  fi
+fi
+
 echo "== Gorilla Unleashed .deb builder =="
 echo "   version : $VERSION   (buildid $BUILDID)"
 echo "   dist    : $DIST_BIN"
@@ -148,4 +189,12 @@ echo "== dpkg-deb --info =="
 dpkg-deb --info "$DEB" | sed 's/^/   /'
 echo "== lint: contents sanity =="
 dpkg-deb --contents "$DEB" | grep -E ' \./usr/lib/gorilla-unleashed/firefox$| \./usr/share/applications/| \./usr/share/icons/hicolor/1024' | sed 's/^/   /'
+# The staged tree passed. Verify the FINISHED package as well: the thing that
+# actually gets uploaded is the .deb, not the directory it was made from.
+if [ "${GORILLA_SKIP_RELEASE_GATE:-0}" != "1" ] && [ -f "$GATE" ]; then
+  echo "== release gate, on the finished package =="
+  python3 "$GATE" --deb "$DEB" || {
+    echo "The packaged .deb failed the release gate. Not fit to publish." >&2
+    exit 1; }
+fi
 echo "DONE"

@@ -228,6 +228,36 @@ The 155 set was checked by rebuilding from it: a pristine 155.0b4 tarball plus
 that set plus the two fetch steps comes out **byte-identical** to the tree that
 compiled the shipped `.deb`. See `patchset-155.0b4/BASELINE.txt`.
 
+### The release gate
+
+Some fixes in this browser are invisible when they are missing. It looks
+completely normal without them, right up until a WhatsApp call fails. That is
+exactly how they get dropped during an upgrade to a new Firefox version, and
+it has already happened once.
+
+`scripts/release_gate.py` checks the finished browser for them and is wired
+into `scripts/build_deb.sh`, so a package that has lost one **cannot be built
+by accident**. It needs nothing outside this repository, so a clone and a
+future port inherit it.
+
+```bash
+scripts/release_gate.py --deb gorilla-unleashed_155.0-3_amd64.deb
+scripts/release_gate.py --dist <objdir>/dist/bin --src <source tree>
+```
+
+| gate | refuses to ship when |
+|---|---|
+| `PREF-001` | a proven pref is missing or wrong **in the package** |
+| `PREF-002` | the package and the source disagree, so the build is stale |
+| `CODE-001` | an explicitly requested audio sample rate is not honoured |
+| `STALE-001` | `libxul.so` is older than the source it claims to contain |
+| `EXT-001` | uBlock Origin is not bundled |
+| `FONT-001` | a required font is missing |
+
+Every entry is a real failure that cost real time, and the gate prints what it
+cost when it fires. Override with `GORILLA_SKIP_RELEASE_GATE=1`, never
+silently.
+
 `recreate.sh` = the builder · `patches/`, `patchset-155.0b4/` = the changes ·
 `scripts/` = helpers · `mozconfig` = build settings
 
