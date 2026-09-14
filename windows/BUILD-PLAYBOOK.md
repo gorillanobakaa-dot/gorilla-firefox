@@ -121,7 +121,7 @@ Each entry below carries its full investigation, wrong turns included.
 
 ## The failure catalogue
 
-60 checks: 37 blocking, 23 advisory. `build` refuses to start while any blocker fails.
+61 checks: 37 blocking, 24 advisory. `build` refuses to start while any blocker fails.
 
 
 ### Blocking
@@ -1908,6 +1908,134 @@ LESSON
 
 **Fix:** Run: python "working scripts/verify_address_bar.py" - it warns you before it takes the keyboard for ~60s, then types about:robots, a bare hostname and a search term into a real window and reads the window title to prove each one navigated. Do not touch the keyboard while it runs. The result is recorded against this build only.
 
+#### `call-proof` - Calls proven on this build
+
+**What went wrong:** 2026-09-13: release notes said WhatsApp and WebRTC calls now work. The evidence was one pref found inside omni.ja; no call had been placed on Windows. The next morning the user tried several times and calls still failed, with nothing to tell the browser, the network and WhatsApp apart. A pref in a file is evidence about a file.
+
+**Fix:** Tell the user first, then run: python "working scripts/webrtc_selftest.py" (hidden browser, throwaway profile, fake camera and microphone, no network, about a minute). Then ask the user to run python "working scripts/capture_call_log.py" and make one short real call - it logs the call and names the layer that failed. Never write that calls work anywhere until both have passed on this build.
+
+<details><summary>How this was diagnosed (including the wrong hypotheses)</summary>
+
+```
+THE CLAIM
+    Release notes, v155.0.1-win64.3, 2026-09-13: "WhatsApp and WebRTC calls now
+    work." The next morning, from the user: "you claim that the new settings
+    were implemented and that webrtc works. It does not. I have tried several
+    times."
+
+WHAT HAD ACTUALLY BEEN VERIFIED
+    That media.peerconnection.dtls.version.max = 771 was inside the installed
+    browser/omni.ja. That part was true, and was re-checked on 2026-09-14 three
+    ways: the installed omni.ja; the published installer, unpacked and found
+    byte-identical to the install; and the profile - no user.js, and nothing in
+    prefs.js overriding the value.
+
+    The Linux handover said plainly that the cap had never been tested on
+    Windows, that it was carried across on reasoning, and that its PART 6.2 and
+    6.3 - a live check and a logged real call - were the proof. Both steps were
+    skipped, and the sentence was written anyway.
+
+THE TEMPTING WRONG HYPOTHESES, IN THE ORDER THEY CAME UP
+    1. "The fix was hallucinated and never shipped."  No. The pref is in the
+       installed omni.ja, the installer matches GitHub's asset digest, and the
+       profile's compatibility.ini names the fixed BuildID and install path.
+    2. "An old binary is still what runs."  No. One firefox.exe on disk,
+       BuildID 20260913203633, and the profile was last used by that path.
+    3. "Platform audio processing puts the Windows microphone into
+       communications mode and breaks it."  Said too early, then withdrawn after
+       reading further. Every cubeb input stream opens with processing NONE
+       (CubebInputStream.cpp:53, GraphDriver.cpp:597), and
+       wasapi_set_input_processing_params always returns NOT_SUPPORTED
+       (cubeb_wasapi.cpp:3683). Firefox records the error and falls back to
+       software processing. The pref is inert on Windows as well as Linux.
+    4. "Firefox 155 uses dcsctp where the Linux build used usrsctp."  Probably
+       not a difference: in the 155 source the handover's SendPacketWithStatus
+       marker exists only in DataChannelDcSctp.cpp. That is INFERENCE - the 154
+       source is not on this machine.
+
+WHAT DID TURN UP
+    - javascript.options.mem.max: Windows .3 ships 1024, Linux and Windows .2
+      ship 2048. The difference came from the 2026-09-13 "nine defeated privacy
+      prefs" repair, which copied an all.js value no build had ever run with.
+      It is a JavaScript heap cap, not a privacy setting. Reverted to 2048 in
+      the source on 2026-09-14 by the user's decision; it ships with the next
+      rebuild, and fix_prefs_last_wins.py now lists it as NOT_HARDENING.
+    - The laptop was on a phone hotspot (carrier NAT, IPv4 only). The Linux
+      proof was taken on a different network. Build and network stay
+      confounded until a control call is made from another browser on the same
+      network.
+    - Two handover instructions do not hold for Firefox 155 (see
+      analyze_call_log.py): the SCTP INIT line needs mtransport:5, and the
+      DTLS 1.3 line proves something only when Firefox is the DTLS client.
+    - Marionette is physically locked out of this build, so the self-test uses
+      a local page that reports over HTTP instead.
+
+THE LESSON
+    The presence of a setting is evidence about a file. Behaviour needs a
+    measurement of behaviour, on the build being described. The harness had a
+    gate for the address bar - because the user demanded one after it broke -
+    and nothing for calls, so nothing stopped the sentence being published.
+
+WHAT EXISTS NOW
+    webrtc_selftest.py      hidden-browser loopback call: ICE, DTLS with the cap
+                            proven live, SCTP data channel, audio and video RTP.
+                            No network, no person.
+    capture_call_log.py     one real call, logged, read, confirmed by a person.
+    analyze_call_log.py     names the first layer that failed; regression-tested
+                            by test_analyze_call_log.py.
+    publish_gate.py 8, 9    no release without the self-test, and the notes may
+                            not mention calls without a confirmed call.
+    preflight call-proof    reports both against the installed build id.
+
+FIRST MEASUREMENT, 2026-09-14
+    webrtc_selftest.py on BuildID 20260913203633: PASS. ICE connected, two DTLS
+    handshakes, the 1.2 cap proven live (a client setup and no 1.3 offer), data
+    channel round-trip, 200 audio and 118 video RTP packets, AudioContext 16000.
+    The browser's WebRTC stack works on this machine and the cap is in effect.
+
+    What a loopback cannot exercise is where the remaining fault lies: real
+    microphone and camera, TURN relays and the network path to WhatsApp (a
+    phone hotspot here), or WhatsApp-specific negotiation. Next: a control call
+    from another browser on the same network, and one logged real call.
+
+HOW IT WAS ACTUALLY FOUND, 2026-09-14 - AND THE WRONG TURNS ON THE WAY
+    09:42  logged call: relay legs up, DTLS 1.2 proven live, 11 data-channel
+           messages, then silence. Seven legs had failed ICE, all offered only
+           IPv6 relays on an IPv4-only hotspot. Concluded "network" and told the
+           user to enable IPv6 on the phone. WRONG.
+    09:52  same laptop, same hotspot, web.whatsapp.com in Edge: video both ways.
+           The network was never the problem.
+    10:00  hidden side-by-side test (compare_browsers_media.py): camera fine in
+           both; Gorilla's WebCodecs could not decode Opus or VP8 because
+           media.webm.enabled / media.ogg.enabled are false (a Linux "H.264
+           hard-lock"). Proven in a throwaway profile that flipping them fixes
+           WebCodecs. Then a real call with them flipped: SAME failure. Not the
+           cause, or not the only one.
+    10:12  logged call with page messages (console + PageMessages MOZ_LOG
+           modules): "A Worker could not be started immediately because other
+           documents in the same origin are already using the maximum number of
+           workers" - 16 ms before the call's first PeerConnection, and five more
+           in the next 12 seconds. Gorilla ships dom.workers.maxPerDomain = 8;
+           upstream is 512 ("effectively infinite").
+    10:18  logged call with only that pref raised to 512: zero workers queued,
+           793 data-channel messages in within 21 seconds (against 11-12), the
+           call connected with audio and video. A second call, to the user's
+           brother, worked too.
+
+    Still true of the IPv6 legs: they fail on this network, and they are
+    harmless - the working call had three of them.
+
+    NOT YET DONE: all three prefs were set in the tester's profile, not the
+    build. The publish gate refuses a call pass that depends on profile-only
+    settings. Linux ships the same worker limit of 8 and its calls work - why
+    is not established.
+
+    The cheap lesson: the transport logs were clean from the first capture. The
+    answer was in the page's own warnings, which nobody was logging.
+```
+
+</details>
+
 #### `builtin-ext-updates` - Bundled extensions are current
 
 **What went wrong:** A bundled extension is frozen at build time, so it goes stale while the browser does not. This reports when the add-ons site has a newer version. It does NOT fetch it: every other input to this build is hash-pinned, and an extension with access to every page the user visits is the last thing that should update itself unreviewed.
@@ -2596,12 +2724,14 @@ LESSONS
 ## Tools
 
 - `add_builtin_extension.py` - Bundle a WebExtension INTO the browser, as a visible built-in add-on.
+- `analyze_call_log.py` - Read a Firefox MOZ_LOG capture of a WebRTC call and name the layer that failed.
 - `analyze_prefs_portability.py` - Which Linux Gorilla prefs transfer to Windows, and what already ships?
 - `apply_partial_for_rebase.py` - Half-apply the failing patches on purpose, to generate .rej files.
 - `audit_fix_coverage.py` - Audit: is every fix from this session actually reproducible?
 - `audit_harness_wiring.py` - Are the checks and tools actually WIRED INTO the build, or just present?
 - `audit_privacy_claims.py` - Verify the privacy claims against the SHIPPED package, not the source.
 - `brand_installer_stub.py` - Put this build's icon on the installer's outer self-extractor.
+- `capture_call_log.py` - Record one real call in the installed browser, then say which layer failed.
 - `capture_chrome.py` - Screenshot the browser CHROME, and iterate on chrome CSS without rebuilding.
 - `check_deleted_file_refs.py` - Find build files that still reference deleted sources.
 - `check_dropped_imports.py` - Find upstream @import rules that a patch REPLACED instead of adding to.
@@ -2610,6 +2740,7 @@ LESSONS
 - `check_lazy_getters.py` - Find `lazy.Foo` used in a module that never declares a getter for Foo.
 - `check_logo_provenance.py` - Is the internal-pages logo crisp, and can we even tell?
 - `close_privacy_gap.py` - Land the Column A close-list prefs that only ever existed in a user.js.
+- `compare_browsers_media.py` - Run the same media test page in Gorilla and in Edge, and show what differs.
 - `css_override_from_rejects.py` - Turn rejected CSS hunks into an appended override block.
 - `diff_mozconfig.py` - Diff the ported mozconfig against the original it was derived from.
 - `dump_icons.py` - Extract the main icon from PE files so we can LOOK at them.
@@ -2631,6 +2762,7 @@ LESSONS
 - `repair_fluent_attrs.py` - Repair Fluent attributes mangled into multiline values.
 - `shell_icon.py` - Ask the Windows shell what icon it resolves for a file, at a given size.
 - `tally_failed_hunks.py` - Turn "39 patches failed" into the number that actually matters.
+- `test_analyze_call_log.py` - Regression test for analyze_call_log.py - every rung of the ladder.
 - `test_decode_detection.py` - Failure test for make_decode_profile.py's GPU tier detection.
 - `triage_build_failure.py` - Classify a build failure and draft the check that would have caught it.
 - `triage_patch_groups.py` - Triage a Gorilla patch group against a Firefox source tree.
@@ -2644,3 +2776,4 @@ LESSONS
 - `verify_no_phone_home.py` - Watch the browser start on a clean profile and record every host it contacts.
 - `verify_patches_apply.py` - Prove the exported patches apply to a PRISTINE upstream tree.
 - `watch_thermals.py` - Watch CPU temperature during a build, and stop it before it cooks.
+- `webrtc_selftest.py` - Prove this build's WebRTC works - no network, no keyboard, no second person.

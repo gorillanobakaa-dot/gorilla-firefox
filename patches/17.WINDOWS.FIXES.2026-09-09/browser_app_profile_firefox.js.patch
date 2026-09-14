@@ -1,5 +1,5 @@
 diff --git a/browser/app/profile/firefox.js b/browser/app/profile/firefox.js
-index 4b5f0562be..441f9b62d3 100644
+index 4b5f0562be..9ecb2c1ef7 100644
 --- a/browser/app/profile/firefox.js
 +++ b/browser/app/profile/firefox.js
 @@ -40,7 +40,7 @@ pref("extensions.getAddons.cache.enabled", true);
@@ -737,7 +737,7 @@ index 4b5f0562be..441f9b62d3 100644
  
  // Forward Rust component logs to the JS console (comma separate list of crate names)
  // The empty string defaults to forwarding error-level messages.
-@@ -3717,13 +3763,249 @@ pref("browser.referrals.enabled", false);
+@@ -3717,13 +3763,262 @@ pref("browser.referrals.enabled", false);
  // Set on first run after the referral code has been submitted via the
  // referrals ping.
  pref("browser.referrals.pingSubmitted", false);
@@ -840,7 +840,12 @@ index 4b5f0562be..441f9b62d3 100644
 +pref("dom.suspend_inactive.enabled",                true);
 +pref("dom.timeout.background_throttling_max_budget", 50);
 +pref("dom.timeout.throttling_delay",                15000);
-+pref("dom.workers.maxPerDomain",                    8);
++// GORILLA/WIN 2026-09-14: was 8. WhatsApp Web runs more workers than that, and
++// the one its call engine needs was QUEUED ("A Worker could not be started
++// immediately...") - the far phone never rang, the call sat on "Connecting".
++// 512 is upstream's value (all.js: "effectively infinite, while preventing
++// abuse"). Proven by a logged real call. Preflight check call-prefs guards it.
++pref("dom.workers.maxPerDomain",                    512);
 +pref("extensions.getAddons.showPane",               false);
 +pref("extensions.htmlaboutaddons.recommendations.enabled", false);
 +pref("extensions.pocket.enabled", false, locked);
@@ -885,7 +890,10 @@ index 4b5f0562be..441f9b62d3 100644
 +pref("media.navigator.video.default_fps",            30);
 +pref("media.navigator.video.max_fr", 30);
 +pref("media.navigator.video.max_fs", 8160);
-+pref("media.ogg.enabled",                           false);
++// GORILLA/WIN 2026-09-14: was false. WebCodecs decides Opus support by checking
++// the Ogg container (dom/media/webcodecs/WebCodecsUtils.cpp GuessContainers), so
++// false meant no WebCodecs Opus decoding. Linux compensates in 01.MEDIA code.
++pref("media.ogg.enabled",                           true);
 +pref("media.opus.enabled",                          true);
 +pref("media.peerconnection.enabled",                true);
 +pref("media.peerconnection.ice.default_address_only", true);
@@ -987,5 +995,10 @@ index 4b5f0562be..441f9b62d3 100644
 +pref("browser.urlbar.groupLabels.enabled", false);
 +pref("browser.urlbar.suggest.weather", false);
 +pref("identity.fxaccounts.enabled", false, locked);
-+pref("javascript.options.mem.max", 1024);
++// javascript.options.mem.max is NOT restated here, deliberately. From
++// 2026-09-13 to 2026-09-14 it was: the repair treated it as hardening and
++// copied all.js's 1024 over the 2048 set earlier in this file, halving the JS
++// heap cap on Windows only. It is a memory cap, not a privacy setting, and
++// 2048 is what every Linux build ships. See NOT_HARDENING in
++// working scripts/fix_prefs_last_wins.py.
 +pref("network.captive-portal-service.enabled", false, locked);

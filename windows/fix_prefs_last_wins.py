@@ -9,17 +9,18 @@ THE BUG THIS FIXES
   A pref hardened in all.js is undone by any later definition in firefox.js.
   Nothing fails. Nothing logs. The browser ships with the opposite value.
 
-  2026-09-13: nine did, in a browser whose release notes say telemetry and
-  sponsored content are removed - captive-portal polling of
+  2026-09-13: eight privacy prefs did, in a browser whose release notes say
+  telemetry and sponsored content are removed - captive-portal polling of
   detectportal.firefox.com, Google Safe Browsing for malware and phishing,
   Firefox Accounts, two sponsored-content settings, urlbar weather and group
-  labels, and the JS memory cap. It was noticed because the Firefox Accounts
-  icon was visible in a screenshot, not by any check.
+  labels. It was noticed because the Firefox Accounts icon was visible in a
+  screenshot, not by any check.
 
   The fix is to restate them at the END of firefox.js, where they win.
 
-TWO MISTAKES THIS SCRIPT EXISTS TO PREVENT
-  Both were made by the throwaway version of it, within ten minutes.
+THREE MISTAKES THIS SCRIPT EXISTS TO PREVENT
+  The first two were made by the throwaway version of it, within ten minutes.
+  The third shipped.
 
   1. IT READ PREFS FROM INSIDE #if BLOCKS.
      security.sandbox.content.level appears four times in firefox.js, each in a
@@ -32,11 +33,22 @@ TWO MISTAKES THIS SCRIPT EXISTS TO PREVENT
      to 1. HIGHER IS STRONGER. It would have shipped a materially weaker
      sandbox in the name of hardening the browser.
 
-  So preprocessor blocks are skipped entirely, and anything in DO_NOT_WEAKEN is
-  refused with an explanation rather than "repaired".
+  3. IT TREATED EVERY all.js DIFFERENCE AS HARDENING.
+     The 2026-09-13 run "repaired" nine prefs. One of them,
+     javascript.options.mem.max, is a JavaScript heap cap, not a privacy
+     setting. firefox.js's 2048 is what every Linux build and Windows .2
+     shipped; the repair copied all.js's 1024 over it and halved the cap on
+     Windows .3 alone, in a build whose release notes then called all nine
+     "privacy settings". Found 2026-09-14 while auditing why WhatsApp calls
+     still failed on that build. Not proven to be the cause - but a change
+     nobody decided, to a value the working Linux setup does not have.
+
+  So preprocessor blocks are skipped entirely, anything in DO_NOT_WEAKEN is
+  refused with an explanation, and anything in NOT_HARDENING is left alone.
 
   Same class as the 2026-09-11 GPU-process regression: a value that is correct
-  on Linux is not automatically correct on Windows.
+  on Linux is not automatically correct on Windows - and a value in all.js is
+  not automatically a hardening decision.
 
 USAGE
     python "working scripts/fix_prefs_last_wins.py" --check
@@ -71,6 +83,16 @@ DO_NOT_WEAKEN = {
         "default) and all.js has 1. Copying all.js would gut the content "
         "sandbox. It is also platform-gated, so any reading of it from "
         "outside a guard is meaningless.",
+}
+
+# Set in all.js by the patch set, but NOT hardening. firefox.js winning is the
+# intended, shipped behaviour; "repairing" it changes the browser for no reason.
+NOT_HARDENING = {
+    "javascript.options.mem.max":
+        "a JavaScript heap cap in MB (nsJSEnvironment.cpp, JSGC_MAX_BYTES), not "
+        "a privacy setting. firefox.js sets 2048, which every Linux build and "
+        "Windows .2 shipped. Copying all.js's 1024 over it (2026-09-13) halved "
+        "the cap on Windows .3 only. Reverted 2026-09-14.",
 }
 
 
@@ -125,15 +147,17 @@ def analyse(root):
     if not ours:
         raise SystemExit("no all.js hardening patch found - nothing to compare")
 
-    beaten, refused = [], []
+    beaten, refused, ignored = [], [], []
     for k in sorted(ours):
         if k not in a or k not in f or a[k].lower() == f[k].lower():
             continue
-        if k in DO_NOT_WEAKEN:
+        if k in NOT_HARDENING:
+            ignored.append((k, a[k], f[k], NOT_HARDENING[k]))
+        elif k in DO_NOT_WEAKEN:
             refused.append((k, a[k], f[k], DO_NOT_WEAKEN[k]))
         else:
             beaten.append((k, a[k], f[k]))
-    return ffj, beaten, refused, len(ours)
+    return ffj, beaten, refused, ignored, len(ours)
 
 
 def block(beaten):
@@ -166,9 +190,9 @@ def main():
     args = ap.parse_args()
     root = Path(args.root)
 
-    ffj, beaten, refused, total = analyse(root)
-    print("prefs the patch set hardens in all.js : %d" % total)
-    print("overridden later by firefox.js        : %d" % len(beaten))
+    ffj, beaten, refused, ignored, total = analyse(root)
+    print("prefs the patch set sets in all.js       : %d" % total)
+    print("hardening overridden later by firefox.js : %d" % len(beaten))
     print("")
     for k, want, had in beaten:
         print("   %-56s ships=%-6s -> %s%s"
@@ -177,6 +201,13 @@ def main():
         print("")
         print("REFUSED - repairing these would WEAKEN the browser:")
         for k, aval, fval, why in refused:
+            print("   %s" % k)
+            print("      all.js=%s   firefox.js=%s" % (aval, fval))
+            print("      %s" % why)
+    if ignored:
+        print("")
+        print("NOT HARDENING - firefox.js's value is the intended one, left alone:")
+        for k, aval, fval, why in ignored:
             print("   %s" % k)
             print("      all.js=%s   firefox.js=%s" % (aval, fval))
             print("      %s" % why)

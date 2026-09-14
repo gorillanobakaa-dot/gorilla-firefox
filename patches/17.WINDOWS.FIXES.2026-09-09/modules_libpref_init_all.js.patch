@@ -1,5 +1,5 @@
 diff --git a/modules/libpref/init/all.js b/modules/libpref/init/all.js
-index 29ff922cb7..546904d6c5 100644
+index 29ff922cb7..a358383712 100644
 --- a/modules/libpref/init/all.js
 +++ b/modules/libpref/init/all.js
 @@ -1,3 +1,13 @@
@@ -31,7 +31,7 @@ index 29ff922cb7..546904d6c5 100644
  
  // Whether we should play videos opened in a "video document", i.e. videos
  // opened as top-level documents, as opposed to inside a media element.
-@@ -539,14 +555,23 @@ pref("toolkit.tabbox.switchByScrolling", false);
+@@ -539,14 +555,27 @@ pref("toolkit.tabbox.switchByScrolling", false);
  
  // Telemetry settings.
  // Server to submit telemetry pings to.
@@ -46,7 +46,11 @@ index 29ff922cb7..546904d6c5 100644
 +// 🛡️ GORILLA UNLEASHED - H.264 HARD-LOCK
 +// Rationale: Ensure hardware decoding on legacy Intel hardware.
 +pref("media.av1.enabled", false);
-+pref("media.webm.enabled", false);
++// GORILLA/WIN 2026-09-14: webm must stay ON. WebCodecs decides VP8 support by
++// checking the WebM/Ogg containers (dom/media/webcodecs/WebCodecsUtils.cpp
++// GuessContainers), and WhatsApp Web decodes call video with WebCodecs VP8.
++// Linux compensates with a 01.MEDIA code override; Windows has no such patch.
++pref("media.webm.enabled", true);
 +pref("media.vp9.enabled", false);
 +
 +// 🛡️ GORILLA UNLEASHED - TELEMETRY STARVATION
@@ -63,7 +67,7 @@ index 29ff922cb7..546904d6c5 100644
  
  // DAP related preferences
  pref("toolkit.telemetry.dap.logLevel", "Warn");
-@@ -791,8 +816,8 @@ pref("dom.storage.snapshot_gradual_prefill", 4096);
+@@ -791,8 +820,8 @@ pref("dom.storage.snapshot_gradual_prefill", 4096);
  pref("dom.storage.snapshot_reusing", true);
  pref("dom.storage.client_validation", true);
  
@@ -74,7 +78,7 @@ index 29ff922cb7..546904d6c5 100644
  
  // Enable search in <select> dropdowns (more than 40 options)
  pref("dom.forms.selectSearch", false);
-@@ -868,9 +893,6 @@ pref("privacy.purge_trackers.max_purge_count", 100);
+@@ -868,9 +897,6 @@ pref("privacy.purge_trackers.max_purge_count", 100);
  // interaction directly).
  pref("privacy.purge_trackers.consider_entity_list", false);
  
@@ -84,7 +88,7 @@ index 29ff922cb7..546904d6c5 100644
  pref("dom.event.contextmenu.enabled",       true);
  
  pref("javascript.enabled",                  true);
-@@ -2889,7 +2911,7 @@ pref("font.size.monospace.x-math", 13);
+@@ -2889,7 +2915,7 @@ pref("font.size.monospace.x-math", 13);
  #if defined(ANDROID)
    // We use the bundled Charis SIL Compact as serif font for Firefox for Android
  
@@ -93,7 +97,7 @@ index 29ff922cb7..546904d6c5 100644
  
    pref("font.name-list.serif.ar", "Noto Naskh Arabic, Noto Serif, Droid Serif");
    pref("font.name-list.sans-serif.ar", "Noto Naskh Arabic, Roboto, Google Sans, Droid Sans");
-@@ -3040,6 +3062,20 @@ pref("signon.storage.rust.migrationAttempts", 0);
+@@ -3040,6 +3066,20 @@ pref("signon.storage.rust.migrationAttempts", 0);
  pref("signon.storage.rust.restoreAttempts", 0);
  pref("signon.storage.rust.restoreDone", false);
  
@@ -114,7 +118,7 @@ index 29ff922cb7..546904d6c5 100644
  // Satchel (Form Manager) prefs
  pref("browser.formfill.debug",            false);
  pref("browser.formfill.enable",           true);
-@@ -4035,13 +4071,6 @@ pref("dom.postMessage.sharedArrayBuffer.bypassCOOP_COEP.insecure.enabled", false
+@@ -4035,13 +4075,6 @@ pref("dom.postMessage.sharedArrayBuffer.bypassCOOP_COEP.insecure.enabled", false
  pref("dom.postMessage.sharedArrayBuffer.bypassCOOP_COEP.insecure.enabled", false, locked);
  #endif
  
@@ -128,7 +132,7 @@ index 29ff922cb7..546904d6c5 100644
  // Preferences for the form autofill toolkit component.
  // The truthy values of "extensions.formautofill.addresses.available"
  // is "on" and "detect",
-@@ -4061,16 +4090,8 @@ pref("extensions.formautofill.available", "detect");
+@@ -4061,16 +4094,8 @@ pref("extensions.formautofill.available", "detect");
  pref("extensions.formautofill.addresses.supported", "detect");
  #endif
  
@@ -146,7 +150,7 @@ index 29ff922cb7..546904d6c5 100644
  // Set at runtime once we have asked the inference process whether the native
  // ONNX runtime is available. Until then we stay on the regex heuristics.
  pref("extensions.formautofill.useml.nativeOnnxAvailable", false);
-@@ -4167,3 +4188,123 @@ pref("general.smoothScroll", true, sticky);
+@@ -4167,3 +4192,123 @@ pref("general.smoothScroll", true, sticky);
  #ifdef MOZ_ARTIFACT_BUILDS
    pref("telemetry.fog.artifact_build", true);
  #endif
