@@ -428,6 +428,9 @@ tools exist so that a claim about calls needs a call behind it.
 | `test_analyze_call_log.py` | 14 fixtures from the real log strings, one per rung | run after any analyzer change |
 | `compare_browsers_media.py` | the same test page in Gorilla and Edge; `--gorilla-pref` tests a fix in a throwaway profile before a rebuild | — |
 | `supersede_releases.py` | puts an accurate SUPERSEDED banner on older release pages, UTF-8-safe | — |
+| `call_forensics.py` | read-only evidence in 10 seconds: installed build, profile, call prefs in the installed package vs the profile, site and Windows camera/mic access, IPv6, crashes | first step when calls fail |
+| `profile_prefs.py` | stops Firefox, backs up prefs.js, sets/removes prefs, lists real overrides (ignores Firefox's bookkeeping) | used by the recorder |
+| `verify_published_release.py` | GitHub's installer digest vs local vs a fresh download, and the installer unpacked and compared byte-for-byte with the installed browser | after every upload |
 
 What they encode, each learned by getting it wrong:
 

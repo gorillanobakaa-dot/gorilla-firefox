@@ -1244,6 +1244,41 @@ LESSON
 
 **Fix:** Add pref("media.peerconnection.dtls.version.max", 771) to browser/app/profile/firefox.js - it loads after all.js and wins. Put it in BOTH patches/05.PREFS/ and patches/17.WINDOWS.FIXES.../ browser_app_profile_firefox.js.patch: they are separate full copies, not a base and a delta.
 
+<details><summary>How this was diagnosed (including the wrong hypotheses)</summary>
+
+```
+SYMPTOM
+    WhatsApp Web calls ring forever and never connect. No error in the
+    browser, the page or the server; WhatsApp eventually blames the network.
+
+WHAT THE LINUX SIDE MEASURED (2026-08-25/26)
+    Camera, signaling, ICE and the network itself all clean. DTLS handshake
+    completes. Then 223 SCTP INIT writes into the tunnel and zero replies:
+    Meta's relays accept DTLS 1.3 and silently drop its application data.
+    Capping DTLS at 1.2 (media.peerconnection.dtls.version.max = 771) cleared
+    it on Linux.
+
+HOW IT REACHED TWO WINDOWS RELEASES
+    The fix lived in one Linux profile's user.js and in a document that was
+    never committed. A correct clone built a broken browser. Then the Linux
+    side added the cap to patches/05.PREFS only - but 17.WINDOWS.FIXES carries
+    its OWN full copy of the pref block, so Windows stayed at 772 while the diff
+    looked like a fix (see pref-block-divergence).
+
+THE TRAP AFTER THE FIX
+    With the cap in the build, the v155.0.1-win64.3 notes said calls worked. No
+    call had been placed. Calls still failed, for a second reason: see
+    call-prefs. The cap was necessary and not sufficient.
+
+HOW TO PROVE IT IS LIVE
+    Not from about:config or the source: from a call log. Firefox writes
+    "Setting DTLS1.3 supported_versions workaround" only on the DTLS CLIENT
+    path, so its absence counts only next to "Setting up DTLS as client".
+    analyze_call_log.py reports it as "DTLS cap PROVEN live".
+```
+
+</details>
+
 #### `call-prefs` - Worker limit and WebCodecs containers allow calls
 
 **What went wrong:** 2026-09-14: three logged WhatsApp calls failed - the far phone never rang. WhatsApp's page had its call worker queued because Gorilla capped workers per site at 8 (upstream 512). Raising it gave a working call at once. WebM and Ogg were off as well, which stops WebCodecs decoding VP8 and Opus.
@@ -1286,6 +1321,37 @@ HOW IT WAS SEEN
 **What went wrong:** 2026-09-13: nine prefs the patch set hardened in all.js shipped with the opposite value because upstream firefox.js redefines them later and the last definition wins. Among them: captive-portal polling of detectportal.firefox.com, Google Safe Browsing for malware and phishing, Firefox Accounts, and two sponsored-content settings - in a browser whose release notes say telemetry and sponsored content are removed. Nothing failed, nothing logged, and the privacy audit had already passed. It was noticed because the account icon was visible in a screenshot.
 
 **Fix:** Move the affected prefs into the Gorilla block at the END of browser/app/profile/firefox.js, where they win, and mark them locked where the value must not be changeable. Hardening all.js alone is not enough - firefox.js loads after it.
+
+<details><summary>How this was diagnosed (including the wrong hypotheses)</summary>
+
+```
+SYMPTOM
+    The Firefox Accounts icon was visible in a screenshot of a browser whose
+    notes said accounts were disabled.
+
+CAUSE
+    greprefs.js (built from all.js) loads BEFORE firefox.js, and the last
+    definition wins. Prefs hardened in all.js were silently undone by upstream
+    defaults later in firefox.js: captive-portal polling, Safe Browsing for
+    malware and phishing, Firefox Accounts, two sponsored-content settings,
+    urlbar weather and group labels. Nothing failed, nothing logged, and the
+    privacy audit had already passed.
+
+TWO NEAR-MISSES IN THE REPAIR TOOL, SAME DAY
+    1. It read security.sandbox.content.level from inside #if XP_OPENBSD and
+       would have set the Windows content sandbox from 4 to 1 - higher is
+       stronger. Now skips #if blocks and refuses DO_NOT_WEAKEN prefs.
+    2. It counted javascript.options.mem.max as defeated hardening and
+       "repaired" it from 2048 to 1024, on Windows only, under the label
+       "nine privacy prefs". It is a JavaScript heap cap. Found the next day
+       while auditing broken calls; reverted and listed as NOT_HARDENING.
+
+THE LESSON
+    A value that differs between two files is not automatically a hardening
+    decision. Check what the pref does before "repairing" it.
+```
+
+</details>
 
 #### `local-only` - Repository stays local-only
 
@@ -1944,6 +2010,33 @@ LESSON
 **What went wrong:** 2026-09-13: a browser shipped in which typing in the address bar was reported to do nothing, and every check in the harness passed - green build, all tracked fixes installed, theme rendering, 122 search engines with google as global default, 20 of 20 network prefs. Nothing had ever tried to type an address and go somewhere. A browser whose address bar does not navigate is not a browser.
 
 **Fix:** Run: python "working scripts/verify_address_bar.py" - it warns you before it takes the keyboard for ~60s, then types about:robots, a bare hostname and a search term into a real window and reads the window title to prove each one navigated. Do not touch the keyboard while it runs. The result is recorded against this build only.
+
+<details><summary>How this was diagnosed (including the wrong hypotheses)</summary>
+
+```
+SYMPTOM
+    User report: "we shipped a browser that when you type in both the URL bar
+    and the pill-shaped search field nothing happens." Every check had passed.
+
+THE FIRST TEST WAS WRONG IN A WAY THAT TEACHES
+    verify_address_bar.py drives a real window with the keyboard. It was run
+    without telling the user, who was typing into the same browser at that
+    moment. Keystrokes interleaved ("hatwww.go ogle.co"), and the test
+    reported two failures that were not real. It now prints a stop banner and
+    requires a yes, and every tool that takes input does the same.
+
+    The address bar itself was fine. What had been broken was the BORDER:
+    theme rules targeted #urlbar-background, an ID that Firefox 155 had
+    renamed to a class, so the rule matched nothing (theme-dead-selectors).
+
+THE DEADLOCK
+    First wired as a BLOCKER at preflight - which refused every build until an
+    address-bar test on a build had passed. No build could ever run. It is WARN
+    at preflight and enforced by publish_gate.py: stop a bad browser on the way
+    out, not on the way in.
+```
+
+</details>
 
 #### `call-proof` - Calls proven on this build
 
@@ -2774,6 +2867,7 @@ LESSONS
 - `audit_harness_wiring.py` - Are the checks and tools actually WIRED INTO the build, or just present?
 - `audit_privacy_claims.py` - Verify the privacy claims against the SHIPPED package, not the source.
 - `brand_installer_stub.py` - Put this build's icon on the installer's outer self-extractor.
+- `call_forensics.py` - First sixty seconds of a "calls don't work" report: collect the evidence.
 - `capture_call_log.py` - Record one real call in the installed browser, then say which layer failed.
 - `capture_chrome.py` - Screenshot the browser CHROME, and iterate on chrome CSS without rebuilding.
 - `check_deleted_file_refs.py` - Find build files that still reference deleted sources.
@@ -2799,6 +2893,7 @@ LESSONS
 - `generate_windows_branding_assets.py` - Generate the Windows-only branding assets from the real icon artwork.
 - `guard_linux_prefs.py` - Platform-gate the Linux-only Gorilla prefs so they stop firing on Windows.
 - `make_decode_profile.py` - Emit a per-machine hardware-decode pref file for a Gorilla Unleashed install.
+- `profile_prefs.py` - Read and change prefs in the Gorilla profile - the mechanical part, done safely.
 - `publish_gate.py` - Refuse to publish a browser nobody has proven works.
 - `rebuild_about_logo.py` - Rebuild about-logo.svg from a canonical master, the way the doctrine says.
 - `regen_branding_pngs.py` - Regenerate the branding PNG ladder from the canonical master.
@@ -2819,5 +2914,6 @@ LESSONS
 - `verify_installer.py` - Verify the packaged installer: right icon, and payload still intact.
 - `verify_no_phone_home.py` - Watch the browser start on a clean profile and record every host it contacts.
 - `verify_patches_apply.py` - Prove the exported patches apply to a PRISTINE upstream tree.
+- `verify_published_release.py` - Prove the installer on GitHub is the build that was tested - and is installed.
 - `watch_thermals.py` - Watch CPU temperature during a build, and stop it before it cooks.
 - `webrtc_selftest.py` - Prove this build's WebRTC works - no network, no keyboard, no second person.

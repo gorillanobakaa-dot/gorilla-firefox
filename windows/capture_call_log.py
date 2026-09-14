@@ -12,16 +12,26 @@ WHY THIS EXISTS
   one call count. The browser starts with WebRTC logging, and when it is closed
   the log is read for you.
 
-  It is the Linux handover's PART 6.3 turned into a tool, with the two
-  Firefox 155 corrections described in analyze_call_log.py.
+  It is the Linux handover's PART 6.3 turned into a tool, with the Firefox 155
+  corrections described in analyze_call_log.py.
+
+WHAT IT LEARNED IN USE (2026-09-14)
+  - It used to REFUSE while Firefox was running and tell the user to close it.
+    The user: "make sure you kill every instance of the firefox and stop
+    asking ME to do that." It now closes Firefox itself (gracefully first),
+    unless --no-kill.
+  - The first call that worked had three prefs hand-set in the PROFILE. That
+    was recorded as a pass for a build that did not carry them. It now reads
+    the profile, compares it with the installed package, and records every
+    watched override in profile_overrides - which publish_gate.py refuses.
+  - The cause was found only in the page's own warnings, so console and
+    PageMessages are logged by default.
 
 WHAT IT ASKS OF YOU
-  1. close every Gorilla Unleashed window first. It refuses otherwise: MOZ_LOG
-     never reaches a browser that is already running (handover trap 1)
-  2. say yes
-  3. place ONE short call. 30 seconds is enough; voice-only uses the least data
-  4. close the browser completely
-  5. answer two questions: did it connect, could you both hear each other
+  1. say yes
+  2. place ONE short call. 30 seconds is enough; voice-only uses the least data
+  3. close the browser completely
+  4. answer two questions: did it connect, could you both hear each other
 
   Nothing is typed or clicked for you. The log stays on this machine.
 
@@ -44,6 +54,7 @@ ROOT = Path(os.environ.get("GORILLA_ROOT")
             or Path(__file__).resolve().parent.parent)
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import analyze_call_log as acl      # noqa: E402
+import profile_prefs as pp          # noqa: E402  find_profile(), overrides(), stop_firefox()
 import verify_address_bar as vab    # noqa: E402  find_install(), build_id()
 
 # mtransport at 5, not the handover's 4: Firefox 155 writes the SCTP INIT lines
@@ -102,6 +113,8 @@ def main():
     ap.add_argument("--analyze", metavar="DIR", default=None,
                     help="only read an existing capture")
     ap.add_argument("--yes", action="store_true", help="skip the start confirmation")
+    ap.add_argument("--no-kill", action="store_true",
+                    help="refuse instead of closing a running Firefox")
     ap.add_argument("--install", default=None)
     args = ap.parse_args()
 
@@ -117,11 +130,26 @@ def main():
 
     pids = running_firefox()
     if pids:
-        print("REFUSED: firefox.exe is still running (pid %s)." % ", ".join(pids))
-        print("Close every Gorilla Unleashed window and check Task Manager shows no")
-        print("firefox.exe, then run this again. A browser that is already running")
-        print("never sees the logging switch, and the capture would be empty.")
-        return 1
+        if args.no_kill:
+            print("REFUSED: firefox.exe is running (pid %s) and --no-kill was given."
+                  % ", ".join(pids))
+            return 1
+        print("Closing Firefox (pid %s): a browser that is already running never "
+              "sees the logging switch, and the capture would be empty." % ", ".join(pids))
+        pp.stop_firefox()
+        if running_firefox():
+            print("could not close Firefox - close it, then run this again")
+            return 1
+
+    profile = pp.find_profile(install)
+    before = pp.overrides(install, profile, pp.CALL_PREFIXES) if profile else {}
+    if before:
+        print("")
+        print("NOTE: the profile overrides %d watched pref(s) the build does not ship:" % len(before))
+        for k, v in before.items():
+            print("   %-44s profile=%s build=%s" % (k, v["profile"], v["build"]))
+        print("A call that passes like this proves the PROFILE, not the installer.")
+        print('Remove them with: python "working scripts/profile_prefs.py" --unset <name>')
 
     print(BANNER)
     if not args.yes:
@@ -175,31 +203,39 @@ def main():
         if r["passed"] and not audio:
             print("")
             print("The network path was healthy, so the fault is in media: the")
-            print("microphone or speaker device, or a codec. Look at the AUDIO line")
-            print("above and at cubeb / MediaManager lines in the log.")
+            print("microphone or speaker device, or a codec. Look at the AUDIO and PAGE")
+            print("lines above and at cubeb / MediaManager lines in the log.")
 
+    overrides = pp.overrides(install, profile, pp.CALL_PREFIXES) if profile else {}
     passed = bool(r["passed"] and connected and audio)
     record = {
         "passed": passed,
         "layer": r["layer"],
         "detail": r["detail"],
         "dtls_cap": r["dtls_cap"],
+        "data_flowed": r["data_flowed"],
         "user_connected": connected,
         "user_audio_both_ways": audio,
         "build_id": vab.build_id(install),
         "install": str(install),
+        "profile": str(profile) if profile else None,
+        "profile_overrides": overrides,
+        "ships_in_build": not overrides,
         "when": datetime.datetime.now().isoformat(timespec="seconds"),
         "minutes": round((time.time() - t0) / 60, 1),
         "log_dir": str(logdir),
         "counts": r["counts"],
-        "local_candidate_types": r["local_candidate_types"],
-        "remote_candidate_types": r["remote_candidate_types"],
-        "pair_states": r["pair_states"],
+        "legs": r["legs"],
+        "page_problems": r.get("page_problems", []),
     }
     out = ROOT / "state" / "call_test_result.json"
     out.write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
     print("")
     print("RESULT: %s   (recorded: %s)" % ("PASS" if passed else "FAIL", out))
+    if passed and overrides:
+        print("        but it depended on %d profile override(s) - the publish gate will"
+              % len(overrides))
+        print("        refuse it until they are in the build and the call is repeated")
     if not passed and connected is None:
         print("        not confirmed by a person, so it cannot count as a pass")
     return 0 if passed else 1

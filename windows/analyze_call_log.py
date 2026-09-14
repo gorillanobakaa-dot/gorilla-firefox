@@ -40,8 +40,8 @@ WHAT THE REAL CAPTURES TAUGHT IT (2026-09-14)
 
   So a leg's failure is not the verdict; whether the call's data FLOWED is.
   Failed legs are reported, but they only fail the call when nothing flowed.
-  And the worker-queue warning - visible only with PageMessages logged - has
-  its own rung, because it is the one that actually broke calls here.
+  And the page's own warnings - where the cause actually was - are summarised
+  under PAGE, because they were the last place anyone looked.
 
 THE LADDER - the first layer that failed, in the order a call is built
     capture       no log at all
@@ -62,6 +62,7 @@ THE LADDER - the first layer that failed, in the order a call is built
     healthy       the call's data flowed. Failed side legs are noted, not fatal
 
   Regression test: working scripts/test_analyze_call_log.py
+  What to do with each verdict: RUNBOOK.md PART E.
 
 USAGE
     python "working scripts/analyze_call_log.py" state/call_logs/20260914-101500
@@ -84,7 +85,7 @@ GATHER_STATES = ["new", "gathering", "complete"]
 
 # Data-channel messages received that mean the call really carried data.
 # Measured 2026-09-14: failed WhatsApp calls 11 and 12 in two minutes; the
-# working call 793 in 21 seconds.
+# working calls 793 in 21 seconds and 620 in about a minute.
 MEDIA_FLOW_MESSAGES = 100
 
 RX_WRITE = re.compile(r"Wrote (\d+) bytes to SSL Layer")
@@ -96,6 +97,10 @@ RX_PAIR = re.compile(r"setting pair to state (\w+)")
 # One PeerConnection per uuid in the socket process's mtransport lines.
 RX_PC = re.compile(r"PC:\{([0-9a-fA-F-]{36})\}")
 RX_CAND_ADDR = re.compile(r"candidate:\S+ \d+ (?:udp|tcp|UDP|TCP) \d+ (\S+) \d+ typ (\w+)")
+# nsConsoleService -> MOZ_LOG "PageMessages" carries the browser's own chrome
+# errors as well as the web page's. These are the browser's, not the page's.
+CHROME_NOISE = re.compile(r"resource://|chrome://|moz-src://|\.ftl\b|"
+                          r"Attempt to override an existing")
 
 # Plain substring tests. A two-minute call at mtransport:5 is hundreds of
 # thousands of lines; they must not each go through a dozen regexes.
@@ -146,6 +151,7 @@ def analyze(path):
     local_types = collections.Counter()
     remote_types = collections.Counter()
     pairs = collections.Counter()
+    page = collections.Counter()
     ice = collections.defaultdict(list)
     pc_remote = collections.defaultdict(set)     # PC uuid -> {"v4", "v6"}
     pc_checks = {}                                # PC uuid -> [best success, last fail]
@@ -165,6 +171,22 @@ def analyze(path):
                         c[key] += 1
                         if key not in samples and key not in NO_SAMPLE:
                             samples[key] = line.strip()[:240]
+                # The web page's own warnings and errors. On 2026-09-14 the cause
+                # of the broken calls was in here and nowhere else. Browser-chrome
+                # noise (chrome://, resource://, .ftl) is left out.
+                # Filtered on the WHOLE line: messages quote their own subject
+                # ("sidebar-resize-splitter") so a quote-delimited parse of the
+                # text or the {file: ...} part breaks, and the first version
+                # ranked the browser's own .ftl and GenAI noise above the
+                # worker warning that was the real cause.
+                if ("E/PageMessages [JavaScript " in line
+                        or "W/PageMessages [JavaScript " in line) and not CHROME_NOISE.search(line):
+                    body = line.split("PageMessages [JavaScript ", 1)[1]
+                    kind, _, text = body.partition(": ")
+                    text = text.lstrip('"')
+                    cut = text.find('" {file:')
+                    text = text[:cut] if cut >= 0 else text.rstrip().rstrip("]").rstrip('"')
+                    page[("%s: %s" % (kind, re.sub(r"\d{2,}", "N", text)))[:180]] += 1
                 # Cipher-suite lines are ML_DEBUG (Verbose) and written on every
                 # DTLS setup, so they show whether the capture reached level 5
                 # without depending on the log line's level letter.
@@ -243,6 +265,7 @@ def analyze(path):
             "remote_families_by_leg": {k[:8]: sorted(v) for k, v in pc_remote.items()},
         },
         "data_flowed": c["dc_messages_in"] >= MEDIA_FLOW_MESSAGES,
+        "page_problems": [[n, t] for t, n in page.most_common(8)],
         "samples": samples,
     }
     r["ice_up"] = bool(
@@ -289,7 +312,7 @@ def ladder(r):
         return "signaling", (
             "No PeerConnection gathered candidates or changed ICE state. The call "
             "never reached WebRTC: the page did not start one, or microphone or "
-            "camera access stopped it first.")
+            "camera access stopped it first. Read the PAGE lines.")
     if not r["ice_up"]:
         if local == 0:
             return "gathering", (
@@ -352,11 +375,11 @@ def ladder(r):
                     "leg(s) connected; the %d that failed were offered only IPv6 relay "
                     "addresses and this machine has no IPv6. That is NOT proven to be "
                     "the cause - on 2026-09-14 a working call had the same failed "
-                    "legs. Look for page errors first."
+                    "legs. Read the PAGE lines first."
                     % (c["dc_messages_in"], legs["connected"], legs["failed"]))
             return "partial", (
-                "The call's data never flowed; %d leg(s) connected and %d failed ICE."
-                % (legs["connected"], legs["failed"]))
+                "The call's data never flowed; %d leg(s) connected and %d failed ICE. "
+                "Read the PAGE lines." % (legs["connected"], legs["failed"]))
     note = "" if c["dc_open"] else (
         " No data channel opened - fine if the page does not use one.")
     if legs["failed"]:
@@ -402,6 +425,10 @@ def render(r):
     if c["audio_errors"]:
         out.append("AUDIO     %d audio stream error(s): %s"
                    % (c["audio_errors"], r["samples"].get("audio_errors", "")))
+    if r.get("page_problems"):
+        out.append("PAGE      what the web pages themselves reported, most frequent first:")
+        for n, t in r["page_problems"]:
+            out.append("          %4dx %s" % (n, t[:110]))
     out.append("")
     out.append("LAYER     %s" % r["layer"].upper())
     for line in textwrap.wrap(r["detail"], 66):
