@@ -1,8 +1,8 @@
 """Prove the address bar WORKS - not that it renders.
 
 WHY THIS EXISTS
-  2026-09-13, reported by the user: "when you type stuff in both of the search
-  fields nothing happens."
+  2026-09-13: a build shipped where typing into the address bar or the search
+  field did nothing.
 
   Every check in this project passed at the time. The build was green, the
   installed browser carried every tracked fix, the theme rendered, the search

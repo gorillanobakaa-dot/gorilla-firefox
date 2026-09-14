@@ -1,42 +1,39 @@
 """Read a Firefox MOZ_LOG capture of a WebRTC call and name the layer that failed.
 
 WHY THIS EXISTS
-  2026-09-13: the Windows release notes said "WhatsApp and WebRTC calls now
-  work". What had actually been verified was that
+  A Windows release of this build said "WhatsApp and WebRTC calls now work".
+  What had actually been verified was that
   media.peerconnection.dtls.version.max = 771 sat inside the installed
-  omni.ja. Nobody had placed a call on Windows. On 2026-09-14 the user reported
-  calls still failing, and there was no way to say whether the browser, the
-  phone-hotspot network or WhatsApp was at fault.
+  omni.ja. No call had been placed, and calls did not work. With nothing but
+  "it doesn't connect" to go on, the browser, the network and WhatsApp could
+  not be told apart.
 
   A pref in a file is evidence about a file. A call connecting is evidence
   about a browser. This reads the second kind.
 
-TWO CORRECTIONS TO THE LINUX HANDOVER, CHECKED AGAINST THE 155 SOURCE
-  The markers come from firefox-whatsapp-call-handover-to-windows-26-09-13.md,
-  PART 6.3. Two of its instructions do not hold for Firefox 155:
-
+TWO LOGGING TRAPS IN FIREFOX 155, CHECKED AGAINST THE SOURCE
   1. "Wrote 28 bytes to SSL Layer" is logged at ML_DEBUG, and
      dom/media/webrtc/transport/logging.h maps ML_DEBUG to LogLevel::Verbose.
-     The handover captures mtransport at 4, where that line is never written -
-     so "no long runs of 28-byte writes" passes on the very blackhole it is
-     meant to catch. Capture mtransport at 5. This tool refuses to call a
-     below-5 capture with no open data channel healthy: it says "unverified".
+     A capture with mtransport at 4 never writes that line - so "no long runs
+     of 28-byte writes" passes on the very blackhole it is meant to catch.
+     Capture mtransport at 5. This tool refuses to call a below-5 capture with
+     no open data channel healthy: it says "unverified".
 
   2. "Setting DTLS1.3 supported_versions workaround" is written only on the
      DTLS CLIENT path (transportlayerdtls.cpp:489-506). A DTLS server never
      writes it, whatever the cap. Its absence proves the cap only when
      "Setting up DTLS as client" is present too.
 
-WHAT THE REAL CAPTURES TAUGHT IT (2026-09-14)
-  09:42  The first version said HEALTHY about a call that never connected,
-         because 2 of 11 PeerConnections came up. Every leg is now counted.
-  10:12  All the failed legs had been offered only IPv6 relays on a hotspot
-         with no IPv6, so the tool blamed that. It was WRONG as a cause:
-  10:18  the call that worked had IPv6-only legs failing too. The difference
-         was elsewhere - WhatsApp's page had its workers queued by
-         dom.workers.maxPerDomain = 8 (upstream 512), at the second the call
-         started. With the limit at 512: no worker queued, 793 data-channel
-         messages in within 21 seconds, against 11-12 in the failed calls.
+WHAT REAL CAPTURES TAUGHT IT
+  - An early version said HEALTHY about a call that never connected, because
+    2 of 11 PeerConnections came up. Every leg is now counted.
+  - All the failed legs had been offered only IPv6 relays, on a network with
+    no IPv6, so the tool blamed that. It was WRONG as a cause: a call that
+    worked had IPv6-only legs failing too. The difference was elsewhere -
+    WhatsApp's page had its workers queued by dom.workers.maxPerDomain = 8
+    (upstream 512), at the moment the call started. With the limit at 512: no
+    worker queued, 793 data-channel messages within 21 seconds, against 11-12
+    in the failed calls.
 
   So a leg's failure is not the verdict; whether the call's data FLOWED is.
   Failed legs are reported, but they only fail the call when nothing flowed.
@@ -51,7 +48,7 @@ THE LADDER - the first layer that failed, in the order a call is built
     DTLS          ICE connected, no handshake completed
     DTLS cap      Firefox offered DTLS 1.3: the 771 cap is not in effect
     SCTP          handshakes done, no data channel opened, SCTP INITs unanswered
-                  (the 2026-08-26 Linux blackhole signature)
+                  (the DTLS 1.3 blackhole signature)
     unverified    handshakes done, no data channel, and the capture was below
                   mtransport:5 - the SCTP layer cannot be judged from it
     worker limit  data never flowed and the page had workers QUEUED by the
@@ -61,12 +58,11 @@ THE LADDER - the first layer that failed, in the order a call is built
     partial       data never flowed; some legs connected, others failed ICE
     healthy       the call's data flowed. Failed side legs are noted, not fatal
 
-  Regression test: working scripts/test_analyze_call_log.py
-  What to do with each verdict: RUNBOOK.md PART E.
+  Regression test: test_analyze_call_log.py
 
 USAGE
-    python "working scripts/analyze_call_log.py" state/call_logs/20260914-101500
-    python "working scripts/analyze_call_log.py" <dir-or-file> --json out.json
+    python analyze_call_log.py <capture-dir>
+    python analyze_call_log.py <dir-or-file> --json out.json
 """
 import argparse
 import collections
@@ -306,7 +302,7 @@ def ladder(r):
         return "capture", (
             "No log was written. MOZ_LOG only reaches a browser started AFTER it "
             "is set; if a window was already open, the launch just handed over to "
-            "it (handover trap 1).")
+            "it.")
     local = sum(r["local_candidate_types"].values())
     if c["ice_state"] == 0 and c["gather_state"] == 0 and local == 0:
         return "signaling", (
@@ -331,7 +327,7 @@ def ladder(r):
         return "ICE", (
             "Candidates were exchanged but no connectivity check ever succeeded. "
             "Local: %s. Remote: %s. Pair states: %s%s. Usual cause: no path between "
-            "the two sides - carrier-grade NAT (a phone hotspot) without a working "
+            "the two sides - carrier-grade NAT (common on mobile data) without a working "
             "TURN relay, or UDP blocked on the network."
             % (fmt(r["local_candidate_types"]),
                fmt(remote) if remote else "none trickled (may be inside the SDP)",

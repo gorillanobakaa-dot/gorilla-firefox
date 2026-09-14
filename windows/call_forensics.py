@@ -196,8 +196,8 @@ def main():
              "(($_.Message -split \"`n\" | Select-String 'Event Name|P1:' | "
              "ForEach-Object { $_.Line.Trim() }) -join ' ') }") or "  none")
     print("")
-    print("Next: python \"working scripts/webrtc_selftest.py\" (hidden, no data), then a "
-          "logged call with capture_call_log.py. RUNBOOK PART E has the full order.")
+    print("Next: python webrtc_selftest.py (hidden, no data), then a "
+          "logged call with capture_call_log.py.")
     return 0
 
 

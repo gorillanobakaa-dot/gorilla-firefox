@@ -222,10 +222,12 @@ browser that argues with a user who deliberately removed the button.
 
 ### Windows
 
+From a MozillaBuild shell in the Firefox source tree:
+
 ```bash
-python harness/gorilla_build.py build
-python harness/gorilla_build.py package
-python "working scripts/verify_builtin_extension.py"
+./mach build
+./mach package
+python windows/verify_builtin_extension.py
 ```
 
 Then install and check with a **real window**, as in Trap 2.
@@ -266,7 +268,7 @@ bash scripts/build_deb.sh
 | | Linux | Windows |
 |---|---|---|
 | source changes | identical | identical |
-| driver | `./mach build` | `gorilla_build.py build` |
+| driver | `./mach build` | `./mach build` from MozillaBuild |
 | objdir | in-tree by default | `C:/gfobj` (MAX_PATH headroom) |
 | package | `.deb` via `scripts/build_deb.sh` | NSIS installer inside a 7-Zip SFX |
 | verify | `./mach run --temp-profile` | install, then launch a real window |
@@ -281,10 +283,10 @@ the same five pieces work on the other.
 All of the above is automated:
 
 ```bash
-python "working scripts/add_builtin_extension.py" --amo ublock-origin
-python harness/gorilla_build.py build
-python harness/gorilla_build.py package
-python "working scripts/verify_builtin_extension.py"
+python windows/add_builtin_extension.py --amo ublock-origin
+./mach build
+./mach package
+python windows/verify_builtin_extension.py
 ```
 
 `--amo <slug>` downloads from the add-ons site; `--xpi <file>` uses a local
@@ -340,11 +342,11 @@ The obvious answer is "re-fetch the latest on every build". Resist it:
 So the version is pinned by SHA-256 in `state/builtin_extensions.json`, and:
 
 ```bash
-# does a newer version exist?  (also run automatically by preflight)
-python "working scripts/add_builtin_extension.py" --check-updates
+# does a newer version exist?
+python windows/add_builtin_extension.py --check-updates
 
 # take it, deliberately
-python "working scripts/add_builtin_extension.py" --amo ublock-origin --update
+python windows/add_builtin_extension.py --amo ublock-origin --update
 ```
 
 Re-running without `--update` **refuses** if the pinned version is no longer

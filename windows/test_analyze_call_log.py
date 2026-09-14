@@ -2,7 +2,7 @@
 
 WHY
   The analyzer decides which layer of a call failed. If it misreads a log, the
-  next session chases the wrong layer with complete confidence - the exact
+  next person chases the wrong layer with complete confidence - the exact
   failure this tool family exists to stop.
 
   Every fixture line below uses the log strings as they appear in the Firefox
@@ -12,7 +12,7 @@ WHY
     - ICE state integers are WebIDL positions: 0 is "closed", not "new"
     - below mtransport:5 the SCTP blackhole is invisible, so "no data channel
       and no errors" must not read as healthy
-    - 2026-09-14, first real capture: the analyzer said HEALTHY about a call
+    - on the first real capture, the analyzer said HEALTHY about a call
       that never connected, because two of eleven legs came up. A failed leg
       must be reported whatever else worked
     - the legs that failed had been offered only IPv6 relays on a machine with
@@ -104,7 +104,7 @@ CASES = [
     ("healthy call",                      WORKING + [OPEN],                        "healthy",      "PROVEN"),
     ("one leg up is not a working call",  WORKING + V4_OK + V4_FAIL,               "partial",      "PROVEN"),
     ("IPv6-only relays, no local IPv6",   WORKING + V4_OK + V6_FAIL + V6_FAIL,     "IPv6 relays",  "PROVEN"),
-    # 2026-09-14 10:12 vs 10:18: same failed IPv6 legs both times. What differed
+    # Two real captures had the same failed IPv6 legs. What differed
     # was the worker queue, and whether data flowed.
     ("worker limit stalls the call",      WORKING + V4_OK + V6_FAIL + [WORKERQ],   "worker limit", "PROVEN"),
     ("IPv6 legs fail, call data flows",   WORKING + V4_OK + V6_FAIL + [MSG] * 120, "healthy",      "PROVEN"),

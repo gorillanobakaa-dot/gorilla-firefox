@@ -89,7 +89,7 @@ All correct, and all irrelevant. Dropping a file into `extensions/` is a
 exact function containing the block. The test exercised a path no user takes
 and declared the path every user takes to be working.
 
-This is the same mistake catalogued a dozen times in `BUILD-PLAYBOOK.md`:
+This is a mistake that recurs throughout build work:
 **testing something adjacent to the property that matters.** A green result on
 the wrong route is worse than no test, because it gets written into
 documentation.

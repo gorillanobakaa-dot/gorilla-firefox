@@ -338,7 +338,7 @@ def main():
          st3(c.get("dtls_client", 0) > 0 and not c.get("dtls13_offered")),
          log["dtls_cap"]),
     ]
-    # Handover PART 6.2. 01.MEDIA, which forced 48000 on Linux, is disabled on
+    # 01.MEDIA, which forced 48000 on Linux, is disabled on
     # Windows, so 16000 is expected. A headless run may be unable to build an
     # AudioContext at all; that is "n/a", not a pass and not a failure.
     if rate is not None:

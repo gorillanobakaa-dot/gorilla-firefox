@@ -171,12 +171,8 @@ The Windows-specific source changes are in
 [`../patches/17.WINDOWS.FIXES.2026-09-09/`](../patches/17.WINDOWS.FIXES.2026-09-09/).
 That group's README explains each one.
 
-`BUILD-PLAYBOOK.md` catalogues every build and runtime failure hit while
-porting this to Windows, with the cause and the fix for each. It is generated
-from the build harness's check registry. The harness itself is not published
-here; the playbook is included because the failures and their causes are
-useful on their own — most of them are not Gorilla-specific, they are what
-happens when you build Firefox on Windows.
+The scripts in this folder are listed, with what each one checks, in
+[WORKING-SCRIPTS.md](WORKING-SCRIPTS.md).
 
 `test_decode_detection.py` is the test suite for the GPU detection. Run it
 after changing any detection pattern. It exists because the first version got

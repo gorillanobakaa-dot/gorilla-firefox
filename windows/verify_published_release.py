@@ -1,17 +1,17 @@
 """Prove the installer on GitHub is the build that was tested - and is installed.
 
 WHY THIS EXISTS
-  2026-09-14, from the user: "you claim ... webrtc works. It does not. ... If you
-  hallucinated that, chances are that the last stuff you pushed on the online
-  github is hallucinated as well."
+  A release of this build once shipped a claim that turned out to be untested.
+  The fair next question is whether anything else published is what it says
+  it is - starting with the installer itself.
 
-  That was answerable only by measurement, done by hand that day:
+  That is answerable only by measurement, first done by hand:
     1. GitHub's asset digest for the installer
     2. the local deploy/ installer's sha256
     3. the installer UNPACKED, and its omni.ja / browser/omni.ja /
        application.ini compared byte-for-byte with the installed browser
-  Later the same day the user asked for the published file to be downloaded
-  and installed - the strongest version of the same check.
+  The strongest version of the same check is downloading the published file
+  and installing it.
 
   "Uploaded" and "the file people get is the file that was tested" are
   different claims. This checks the second.

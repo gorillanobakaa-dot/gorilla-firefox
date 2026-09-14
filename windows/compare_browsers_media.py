@@ -1,14 +1,13 @@
 """Run the same media test page in Gorilla and in Edge, and show what differs.
 
 WHY THIS EXISTS
-  2026-09-14, 09:42: a WhatsApp video call from Gorilla on a phone hotspot sat
-  on "Connecting..." at both ends. The capture showed two legs reaching Meta's
-  IPv4 relays with DTLS and data channels up - and then nothing but keepalive
-  traffic for two minutes. The call's own camera preview was black although
-  the camera light was on.
+  A WhatsApp video call from Gorilla sat on "Connecting..." at both ends. The
+  capture showed two legs reaching Meta's IPv4 relays with DTLS and data
+  channels up - and then nothing but keepalive traffic for two minutes. The
+  call's own camera preview was black although the camera light was on.
 
-  09:52: same laptop, same hotspot, no changes to the phone, web.whatsapp.com
-  in Edge - video both ways.
+  Minutes later, on the same machine and network with nothing changed,
+  web.whatsapp.com in Edge made the call with video both ways.
 
   So the network carries WhatsApp calls, and the analyzer's "IPv6 relays"
   verdict, true as a description of seven failed legs, was not the reason the

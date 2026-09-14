@@ -1,7 +1,7 @@
 """Find theme rules that select an element which does not exist.
 
 THE BUG THIS FINDS
-  2026-09-13. The user reported, twice, that the address bar had no cyan
+  2026-09-13. The address bar was reported, twice, to have no cyan
   border. master-redirect.css styled it three times:
 
       #urlbar-background { border: 1px solid #00FFFF !important; }

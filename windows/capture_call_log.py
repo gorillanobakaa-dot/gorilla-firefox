@@ -1,10 +1,9 @@
 """Record one real call in the installed browser, then say which layer failed.
 
 WHY THIS EXISTS
-  2026-09-13: "WhatsApp and WebRTC calls now work" was published without a
-  call ever being placed on Windows. 2026-09-14: calls still failed, and there
-  was nothing to tell the browser, the phone-hotspot network and WhatsApp
-  apart.
+  "WhatsApp and WebRTC calls now work" was once published for this build
+  without a call ever being placed on Windows. Calls failed, and there was
+  nothing to tell the browser, the network and WhatsApp apart.
 
   webrtc_selftest.py answers "does this browser's WebRTC work at all" with no
   one involved. It cannot answer "does a WhatsApp call work from here": that
@@ -12,13 +11,12 @@ WHY THIS EXISTS
   one call count. The browser starts with WebRTC logging, and when it is closed
   the log is read for you.
 
-  It is the Linux handover's PART 6.3 turned into a tool, with the Firefox 155
-  corrections described in analyze_call_log.py.
+  It applies the Firefox 155 logging corrections described in
+  analyze_call_log.py.
 
-WHAT IT LEARNED IN USE (2026-09-14)
-  - It used to REFUSE while Firefox was running and tell the user to close it.
-    The user: "make sure you kill every instance of the firefox and stop
-    asking ME to do that." It now closes Firefox itself (gracefully first),
+WHAT IT LEARNED IN USE
+  - It used to REFUSE while Firefox was running and ask for it to be closed by
+    hand. That is busywork. It now closes Firefox itself (gracefully first),
     unless --no-kill.
   - The first call that worked had three prefs hand-set in the PROFILE. That
     was recorded as a pass for a build that did not carry them. It now reads
@@ -36,8 +34,8 @@ WHAT IT ASKS OF YOU
   Nothing is typed or clicked for you. The log stays on this machine.
 
 USAGE
-    python "working scripts/capture_call_log.py"
-    python "working scripts/capture_call_log.py" --analyze state/call_logs/<stamp>
+    python capture_call_log.py
+    python capture_call_log.py --analyze <capture-dir>
 """
 import argparse
 import csv
@@ -57,7 +55,7 @@ import analyze_call_log as acl      # noqa: E402
 import profile_prefs as pp          # noqa: E402  find_profile(), overrides(), stop_firefox()
 import verify_address_bar as vab    # noqa: E402  find_install(), build_id()
 
-# mtransport at 5, not the handover's 4: Firefox 155 writes the SCTP INIT lines
+# mtransport at 5, not 4: Firefox 155 writes the SCTP INIT lines
 # at Verbose. MediaManager and cubeb so a device or audio failure shows too.
 #
 # console and PageMessages: the WEB PAGE's own voice. 2026-09-14, two captures
