@@ -57,10 +57,26 @@ If you cannot or would rather not use an administrator account, install it just
 for yourself:
 
 ```
-GorillaUnleashed-155.0.1-win64-setup.exe -ms /InstallDirectoryPath="%LOCALAPPDATA%\Gorilla Unleashed"
+GorillaUnleashed-155.0.1.4-win64-setup.exe -ms /InstallDirectoryPath="%LOCALAPPDATA%\Gorilla Unleashed"
 ```
 
 Shortcuts are still created. Nothing is written outside your own user folder.
+
+---
+
+## 📞 WhatsApp Web calls
+
+**Voice and video calls on web.whatsapp.com work from v155.0.1-win64.4.** Every
+earlier Windows release has broken calls: you hear ringing, the other phone
+never rings and shows "Connecting…", and the call drops. If you have an older
+build, update.
+
+Two separate faults were behind it — Meta's call relays dropping DTLS 1.3
+traffic, and a limit of 8 background workers per website that left WhatsApp's
+call engine waiting in a queue. The release notes for .3 said calls worked when
+they had not been tested; that page now carries a correction.
+
+**[The full account, and how it was found →](WHATSAPP-CALLS-ON-WINDOWS.md)**
 
 ---
 

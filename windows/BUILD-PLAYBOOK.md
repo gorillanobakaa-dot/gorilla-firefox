@@ -121,7 +121,7 @@ Each entry below carries its full investigation, wrong turns included.
 
 ## The failure catalogue
 
-61 checks: 37 blocking, 24 advisory. `build` refuses to start while any blocker fails.
+62 checks: 38 blocking, 24 advisory. `build` refuses to start while any blocker fails.
 
 
 ### Blocking
@@ -1244,6 +1244,43 @@ LESSON
 
 **Fix:** Add pref("media.peerconnection.dtls.version.max", 771) to browser/app/profile/firefox.js - it loads after all.js and wins. Put it in BOTH patches/05.PREFS/ and patches/17.WINDOWS.FIXES.../ browser_app_profile_firefox.js.patch: they are separate full copies, not a base and a delta.
 
+#### `call-prefs` - Worker limit and WebCodecs containers allow calls
+
+**What went wrong:** 2026-09-14: three logged WhatsApp calls failed - the far phone never rang. WhatsApp's page had its call worker queued because Gorilla capped workers per site at 8 (upstream 512). Raising it gave a working call at once. WebM and Ogg were off as well, which stops WebCodecs decoding VP8 and Opus.
+
+**Fix:** In browser/app/profile/firefox.js set dom.workers.maxPerDomain to 512 (upstream) and media.ogg.enabled to true; in modules/libpref/init/all.js set media.webm.enabled to true. Then export_session_fixes.py and rebuild.
+
+<details><summary>How this was diagnosed (including the wrong hypotheses)</summary>
+
+```
+SYMPTOM
+    WhatsApp Web call from Gorilla on Windows: you hear ringing, the far phone
+    never rings and shows "Connecting...", your camera light is on but the call
+    never uses it, and the call drops.
+
+THE FALSE TRAILS (each looked right, each was measured and dropped)
+    DTLS 1.3 blackhole  - real on Linux, capped here; proven live, calls still failed
+    the network          - IPv6-only relay legs fail on a phone hotspot; Edge on
+                           the same hotspot made the call; the legs are harmless
+    the camera           - hidden test: right camera, bright frames, encodes fine
+    WebCodecs codecs     - webm/ogg off stopped Opus/VP8 decode; fixed in a
+                           throwaway profile, then a real call still failed
+    48 kHz AudioContext  - the Linux fault; measured 16000 on Windows twice
+
+WHAT IT WAS
+    dom.workers.maxPerDomain = 8. WhatsApp's page logged "A Worker could not be
+    started immediately because other documents in the same origin are already
+    using the maximum number of workers" 16 ms before the call's first
+    PeerConnection. Upstream sets 512. With 512 the next call worked.
+
+HOW IT WAS SEEN
+    Only by logging the page itself: MOZ_LOG modules console and PageMessages.
+    Every transport log was clean from the first capture - the defect was never
+    in the transport. capture_call_log.py now logs them by default.
+```
+
+</details>
+
 #### `prefs-last-wins` - Hardening is not overridden later
 
 **What went wrong:** 2026-09-13: nine prefs the patch set hardened in all.js shipped with the opposite value because upstream firefox.js redefines them later and the last definition wins. Among them: captive-portal polling of detectportal.firefox.com, Google Safe Browsing for malware and phishing, Firefox Accounts, and two sponsored-content settings - in a browser whose release notes say telemetry and sponsored content are removed. Nothing failed, nothing logged, and the privacy audit had already passed. It was noticed because the account icon was visible in a screenshot.
@@ -2025,10 +2062,16 @@ HOW IT WAS ACTUALLY FOUND, 2026-09-14 - AND THE WRONG TURNS ON THE WAY
     Still true of the IPv6 legs: they fail on this network, and they are
     harmless - the working call had three of them.
 
-    NOT YET DONE: all three prefs were set in the tester's profile, not the
-    build. The publish gate refuses a call pass that depends on profile-only
-    settings. Linux ships the same worker limit of 8 and its calls work - why
-    is not established.
+    DONE IN THE BUILD, same day: all three prefs moved into the Windows pref
+    blocks (patch group 17), preflight BLOCKER call-prefs added, rebuilt as
+    BuildID 20260914135622, installed with the profile overrides REMOVED, and a
+    real logged call passed on shipped defaults alone (0 workers queued, 620
+    messages in). All nine publish gates passed; released as v155.0.1-win64.4,
+    and the older release pages corrected.
+
+    STILL OPEN: Linux ships the same worker limit of 8 and its calls work - why
+    is not established. The question is recorded for the Linux side in
+    windows/WHATSAPP-CALLS-ON-WINDOWS.md.
 
     The cheap lesson: the transport logs were clean from the first capture. The
     answer was in the page's own warnings, which nobody was logging.
@@ -2761,6 +2804,7 @@ LESSONS
 - `regen_branding_pngs.py` - Regenerate the branding PNG ladder from the canonical master.
 - `repair_fluent_attrs.py` - Repair Fluent attributes mangled into multiline values.
 - `shell_icon.py` - Ask the Windows shell what icon it resolves for a file, at a given size.
+- `supersede_releases.py` - Put an accurate SUPERSEDED banner on every older Windows release page.
 - `tally_failed_hunks.py` - Turn "39 patches failed" into the number that actually matters.
 - `test_analyze_call_log.py` - Regression test for analyze_call_log.py - every rung of the ladder.
 - `test_decode_detection.py` - Failure test for make_decode_profile.py's GPU tier detection.

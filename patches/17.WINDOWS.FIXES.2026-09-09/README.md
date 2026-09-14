@@ -23,7 +23,7 @@ exact line ran:
 ## Patches
 
 - `browser/app/profile/firefox.js`  
-  same gating for the 4 Linux-only prefs that land in this file; both pref files ship on every platform, so an unguarded Linux value is a Windows regression
+  same gating for the 4 Linux-only prefs that land in this file; both pref files ship on every platform, so an unguarded Linux value is a Windows regression. 2026-09-13: the DTLS 1.2 cap for WhatsApp calls. 2026-09-14: dom.workers.maxPerDomain 8 -> 512 (WhatsApp's call worker was queued, the far phone never rang) and media.ogg.enabled true (WebCodecs Opus)
 - `browser/base/content/browser.js`  
   restores the AIWindow ESModule getter, pointed at the stub
 - `browser/base/content/navigator-toolbox.js`  
@@ -47,7 +47,7 @@ exact line ran:
 - `browser/themes/shared/browser-shared.css`  
   restores the tabs-navbar.tokens.css import the theme patch replaced rather than added
 - `modules/libpref/init/all.js`  
-  wraps 9 Linux-only prefs in #ifndef XP_WIN. Four of them (the gpu-process group) INVERT upstream's deliberate Windows defaults - StaticPrefList.yaml sets them true on XP_WIN - which disabled Media Foundation hardware decode and parent-process-ed the compositor
+  wraps 9 Linux-only prefs in #ifndef XP_WIN. Four of them (the gpu-process group) INVERT upstream's deliberate Windows defaults - StaticPrefList.yaml sets them true on XP_WIN - which disabled Media Foundation hardware decode and parent-process-ed the compositor; and (2026-09-14) media.webm.enabled back to true - WebCodecs checks VP8 against the WebM container, and WhatsApp Web decodes call video with it
 
 ## New files
 

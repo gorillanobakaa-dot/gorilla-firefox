@@ -50,6 +50,7 @@ and that is a fair conclusion to reach.
 - **[Using uBlock Origin here](windows/USING-UBLOCK-ORIGIN.md)** — where it is, what you can change
 - **[Why add-ons are blocked](THE-SEALED-APPLIANCE.md)** — the reasoning and the cost
 - **[How to bundle an extension yourself](docs/HOWTO-BUNDLE-AN-EXTENSION.md)** — Linux + Windows, for developers and LLMs
+- **[WhatsApp calls on Windows](windows/WHATSAPP-CALLS-ON-WINDOWS.md)** — broken before v155.0.1-win64.4; what was wrong and how it was found
 
 ---
 

@@ -411,3 +411,37 @@ exists to catch.
 Each of these was written after the corresponding defect shipped once. The
 reasoning, including the wrong hypotheses, is in `BUILD-PLAYBOOK.md` under the
 check id in the right-hand column.
+
+---
+
+## Call verification (added 2026-09-14)
+
+The v155.0.1-win64.3 notes said WhatsApp calls worked because one pref was
+found inside `omni.ja`. No call had been made, and calls did not work. These
+tools exist so that a claim about calls needs a call behind it.
+
+| tool | what it does | check / gate |
+|---|---|---|
+| `webrtc_selftest.py` | hidden browser, throwaway profile, fake camera and mic, no network: ICE, DTLS with the 1.2 cap proven live, data channel, RTP | publish gate 8, preflight `call-proof` |
+| `capture_call_log.py` | starts the real browser with call logging, including the page's own console and `PageMessages`; reads the log when it closes | publish gate 9, preflight `call-proof` |
+| `analyze_call_log.py` | names the first failing layer, judging the call by whether data flowed | used by both above |
+| `test_analyze_call_log.py` | 14 fixtures from the real log strings, one per rung | run after any analyzer change |
+| `compare_browsers_media.py` | the same test page in Gorilla and Edge; `--gorilla-pref` tests a fix in a throwaway profile before a rebuild | — |
+| `supersede_releases.py` | puts an accurate SUPERSEDED banner on older release pages, UTF-8-safe | — |
+
+What they encode, each learned by getting it wrong:
+
+- **A pref in a file is evidence about a file.** Only a call proves a call.
+- **The page's warnings were the answer.** Every transport log was clean; the
+  cause (`dom.workers.maxPerDomain = 8`, WhatsApp's call worker queued) showed
+  up only in `PageMessages`.
+- **One leg up is not a working call, and one leg down is not a failed one.**
+  WhatsApp opens many connections; IPv6-only relay legs fail on an IPv4-only
+  network in working calls too. Judge by whether data flowed.
+- **Two handover instructions do not hold for Firefox 155:** capture
+  `mtransport:5`, and the DTLS 1.3 line means something only on the client
+  side.
+- **Marionette is locked out of this build**, so the self-test reports over
+  localhost instead of being driven.
+
+Full account: [WHATSAPP-CALLS-ON-WINDOWS.md](WHATSAPP-CALLS-ON-WINDOWS.md).
