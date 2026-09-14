@@ -177,11 +177,52 @@ LESSON
 
 **Fix:** gorilla deps --install (installs Windows11SDK.22621).
 
+<details><summary>How this was diagnosed (including the wrong hypotheses)</summary>
+
+```
+WHAT IT GUARDS
+    Gecko compiles against the Windows 11 SDK headers and import libraries.
+    Without them configure does not fail at the start - it fails when the
+    first translation unit that needs a Windows header is compiled, deep in
+    the build, with an include error that does not say "install the SDK".
+
+STATUS
+    Pre-emptive. It has not fired on this machine: `deps --install` put
+    Windows11SDK.22621 in place on 2026-09-08 before the first build.
+
+WHY IT IS A BLOCKER
+    There is no partial success without it, and discovering it an hour in
+    costs a full thermal-capped build cycle for a one-command fix.
+```
+
+</details>
+
 #### `mozillabuild` - MozillaBuild shell
 
 **What went wrong:** mach must run inside MozillaBuild's bash; nothing builds without it.
 
 **Fix:** gorilla deps --install
+
+<details><summary>How this was diagnosed (including the wrong hypotheses)</summary>
+
+```
+WHAT IT GUARDS
+    mach on Windows runs inside MozillaBuild's MSYS bash. Every harness stage
+    that calls mach writes a small shell script and runs it through that
+    bash, because MozillaBuild's login profile rebuilds PATH.
+
+THE RELATED LESSON THAT DID HAPPEN
+    "Present is not reachable": clang-cl was installed and findable from
+    Python, but the build shell could not see it, because MozillaBuild's
+    profile discarded the PATH injected from outside (see clang-cl). This
+    check only proves MozillaBuild exists; clang-cl proves the shell can use
+    the compiler.
+
+STATUS
+    Pre-emptive. Present since 2026-09-08.
+```
+
+</details>
 
 #### `long-paths` - Long path support
 
@@ -189,11 +230,63 @@ LESSON
 
 **Fix:** Set LongPathsEnabled=1 in HKLM\SYSTEM\CurrentControlSet\Control\FileSystem AND git config --global core.longpaths true.
 
+<details><summary>How this was diagnosed (including the wrong hypotheses)</summary>
+
+```
+SYMPTOM
+    2026-09-08: `git clone` of the Firefox source exited 0. The tree was about
+    three-quarters populated.
+
+CAUSE
+    Paths under testing/web-platform run to roughly 270 characters, against
+    Windows' MAX_PATH of 260. Without long-path support both at the OS level
+    and in git, those files are silently skipped. The clone reports success.
+
+WHY THIS ONE IS NASTY
+    Nothing downstream says "files are missing". The build fails - or worse,
+    parts of it quietly don't exist - with errors about the missing pieces,
+    not about path length. An exit code of 0 was the only evidence offered,
+    and it was false.
+
+FIX
+    LongPathsEnabled=1 under HKLM\SYSTEM\CurrentControlSet\Control\FileSystem
+    AND `git config --global core.longpaths true`. Both are needed; either
+    alone still truncates.
+
+RELATED
+    objdir-path: the same 260-character limit is why the objdir lives at
+    C:/gfobj rather than inside the source tree.
+```
+
+</details>
+
 #### `autocrlf` - Line endings
 
 **What went wrong:** CRLF breaks Firefox build scripts and makes every patch fuzz.
 
 **Fix:** git -C src config core.autocrlf false, then re-checkout.
+
+<details><summary>How this was diagnosed (including the wrong hypotheses)</summary>
+
+```
+WHAT IT GUARDS
+    git on Windows defaults to converting LF to CRLF on checkout. Firefox's
+    build scripts are shell and Python that break on CRLF, and every patch in
+    gorilla-patchset was cut against LF files - so under CRLF every hunk fuzzes
+    or fails.
+
+STATUS
+    Pre-emptive; set to false before the first checkout.
+
+THE SAME CLASS OF BUG THAT DID HAPPEN
+    Encoding, not line endings: export_session_fixes.py once decoded git's
+    UTF-8 output through the Windows code page and corrupted one em-dash,
+    which made one exported patch fail to re-apply (verify_patches_apply.py
+    caught it). Windows defaults silently rewriting bytes is a recurring
+    theme; this check covers the line-ending half.
+```
+
+</details>
 
 #### `source` - Source tree
 
@@ -201,17 +294,76 @@ LESSON
 
 **Fix:** gorilla source
 
+<details><summary>How this was diagnosed (including the wrong hypotheses)</summary>
+
+```
+WHAT IT GUARDS
+    That src/ exists and is a Firefox tree before anything tries to patch or
+    build it.
+
+STATUS
+    Pre-emptive and obvious - and worth it, because the alternative is mach
+    or the patch stage failing with a message about some file inside the tree
+    rather than "there is no tree".
+
+SEE ALSO
+    long-paths: a tree can exist and still be incomplete. This check does not
+    prove completeness.
+```
+
+</details>
+
 #### `mozconfig` - mozconfig
 
 **What went wrong:** Without it the build silently uses upstream defaults - unbranded, untrimmed.
 
 **Fix:** Restore config/mozconfig.win64.
 
+<details><summary>How this was diagnosed (including the wrong hypotheses)</summary>
+
+```
+WHAT IT GUARDS
+    config/mozconfig.win64 is what makes this Gorilla rather than Firefox:
+    branding, the objdir location, sccache, the trimmed feature set.
+
+WHY A MISSING ONE IS DANGEROUS
+    mach does not fail without a mozconfig. It builds upstream Firefox with
+    upstream defaults - unbranded, untrimmed, objdir inside the source tree -
+    and succeeds. A green build of the wrong browser.
+
+STATUS
+    Pre-emptive. Its contents are guarded separately by mozconfig-drift,
+    staged-options and capability-guards.
+```
+
+</details>
+
 #### `branding` - Branding directory
 
 **What went wrong:** The mozconfig names a branding dir. If the patches did not land it, configure fails on a path that does not exist.
 
 **Fix:** Run gorilla patches - 08.Look/NEW_FILES supplies browser/branding/gorilla.
+
+<details><summary>How this was diagnosed (including the wrong hypotheses)</summary>
+
+```
+WHAT IT GUARDS
+    The mozconfig says --with-branding=browser/branding/gorilla. That
+    directory does not exist upstream; it arrives with the patches
+    (08.Look/NEW_FILES).
+
+FAILURE MODE
+    If the patch stage did not land it, configure fails on a path that does
+    not exist - after the tree, the toolchain and bootstrap have all been
+    prepared. The fix is simply to run the patch stage.
+
+STATUS
+    Pre-emptive. What goes INSIDE the branding directory was hit many times
+    and is covered elsewhere: branding-icons, icon-artwork, png-sharpness,
+    logo-provenance, win-branding-assets, branding-nsi.
+```
+
+</details>
 
 #### `mozbuild-toolchain` - mach bootstrap artifacts
 
@@ -500,17 +652,102 @@ LESSON
 
 **Fix:** Remove the offending --disable-* from the mozconfig, or re-enable 02.GPU.
 
+<details><summary>How this was diagnosed (including the wrong hypotheses)</summary>
+
+```
+WHAT IT GUARDS
+    The build must still do what it exists to do. The stated priorities for
+    the first build were WebRTC calls (WhatsApp, Meet, Discord), video
+    playback and unblocked GPUs.
+
+WHY
+    The Linux mozconfig recorded the traps only as comments:
+        --disable-eme            breaks Netflix, Prime, Disney+, Spotify
+        --disable-webrtc         breaks WhatsApp, Meet, Discord, Telegram calls
+        --disable-safe-browsing  removes phishing protection
+    A comment stops nobody trimming for build time or size, and the damage
+    would surface only when someone tried a video call. It also requires the
+    02.GPU patch group to stay enabled.
+
+WHAT 2026-09-14 ADDED TO ITS MEANING
+    This check proves WebRTC is COMPILED IN. It cannot prove calls WORK. On
+    2026-09-13 and 14 WebRTC was compiled in, the DTLS cap was in place, and
+    WhatsApp calls still failed - because of a pref (dom.workers.maxPerDomain =
+    8). Compiled in, configured right and actually working are three
+    different claims: capability-guards, call-prefs and call-proof.
+```
+
+</details>
+
 #### `mozconfig-drift` - No unexplained mozconfig drops
 
 **What went wrong:** The Windows mozconfig was written from memory rather than diffed against the Linux original. sccache and six other options went missing. No behavioural check can catch that - an absent option produces no error - so the guarantee has to be structural: every drop is a written decision.
 
 **Fix:** Run: python "working scripts/diff_mozconfig.py" and either carry each dropped option or document why it is not carried.
 
+<details><summary>How this was diagnosed (including the wrong hypotheses)</summary>
+
+```
+SYMPTOM
+    Builds kept recompiling everything from scratch, taking the full thermal-
+    capped build time each time.
+
+CAUSE
+    config/mozconfig.win64 was written by reading the Linux mozconfig and
+    reproducing what seemed to apply - from memory, not by diffing. sccache
+    and six other options went missing. Eight builds ran without a compiler
+    cache.
+
+WHY NO BEHAVIOURAL CHECK COULD CATCH IT
+    An absent option produces no error. The build is correct, just slower or
+    subtly different. The only possible guarantee is structural: every option
+    in the original must be carried, staged, or named in the port with a
+    written reason.
+
+WHAT HAPPENED NEXT (2026-09-13)
+    sccache and the carried options were enabled in one batch
+    (disable-default-browser-agent, disable-webspeech, disable-necko-wifi,
+    enable-rust-simd, enable-jemalloc), with a 30 GB cache. The payoff was measured on 2026-09-14:
+    a prefs-only rebuild took 1 min 17 s.
+
+TOOL
+    working scripts/diff_mozconfig.py
+```
+
+</details>
+
 #### `package-manifest` - Package manifest resolves
 
 **What went wrong:** 2026-09-09: mach package failed with 'Missing file(s): bin/onnxruntime.dll'. The entry sits behind #ifdef ONNX_RUNTIME, which configure defined because mach bootstrap fetched the toolchain - while the AI/ML excision meant the DLL was never built. Enumerating such cases individually would need a hundred checks; evaluating the manifest covers all of them.
 
 **Fix:** Run: python "working scripts/validate_package_manifest.py" - then either build the missing file or put its manifest entry behind a condition that is false for this configuration.
+
+<details><summary>How this was diagnosed (including the wrong hypotheses)</summary>
+
+```
+SYMPTOM
+    2026-09-09: `mach package` failed with "Missing file(s):
+    bin/onnxruntime.dll", after a complete, successful compile.
+
+CAUSE
+    browser/installer/package-manifest.in lists onnxruntime.dll behind
+    #ifdef ONNX_RUNTIME. configure defined ONNX_RUNTIME because mach bootstrap
+    had fetched the ONNX toolchain - but the AI/ML excision meant the DLL was
+    never built. Configuration said "this exists", the build said otherwise,
+    and only the packager compared the two.
+
+THE TEMPTING WRONG FIX
+    A check for onnxruntime.dll. The manifest has about 178 entries behind
+    about 138 preprocessor directives; checking known failures one by one ends
+    in a hundred brittle checks that still miss the hundred-and-first.
+
+WHAT WAS DONE
+    validate_package_manifest.py EVALUATES the manifest the way the packager
+    does and reports every absent file. Only meaningful after a build, so it
+    passes trivially before one.
+```
+
+</details>
 
 #### `win-branding-assets` - Windows installer artwork
 
@@ -1359,6 +1596,35 @@ THE LESSON
 
 **Fix:** Remove the remote: git remote remove <name>. To publish, copy what you mean to share into gorilla-patchset/ and push that - it is the curated, reviewed subset. If the pre-push hook went missing this check reinstalls it from harness/hooks/ automatically.
 
+<details><summary>How this was diagnosed (including the wrong hypotheses)</summary>
+
+```
+WHAT IT GUARDS
+    Gorilla.firefox has been a git repository since 2026-09-13 - as a safety
+    net, not a publication channel. It holds thermal calibration measured on
+    one laptop, an artifact ledger of local absolute paths and an unreviewed
+    history. Only gorilla-patchset/ is published, deliberately curated.
+
+TWO SILENT FAILURES
+    1. A remote gets added - by a person or a tool - and a later push sends
+       the whole tree somewhere public.
+    2. .git/hooks/ is not tracked by git, so the pre-push guard disappears on
+       any re-init or clone. A guard that silently vanishes is worse than
+       none, because it is still believed in.
+
+HOW THE GUARD WAS TESTED
+    Twice the test was invalid: once there was no commit to push, once DNS
+    failed before the hook could run - both "passed" without the hook being
+    exercised. It was finally proven against a local bare repository, where
+    the hook had to be what refused the push.
+
+FIX
+    Remove any remote. The check reinstalls the hook from harness/hooks/
+    automatically. BLOCKER, because a publication cannot be un-published.
+```
+
+</details>
+
 #### `builtin-extensions` - Bundled extensions are visible
 
 **What went wrong:** 2026-09-13: uBlock Origin was bundled under builtin-addons/, which gen_built_in_addons.py globs into built_in_addons.json - the app-builtin-addons location, whose class hard-codes hidden() -> true. It loaded, ran, downloaded 181,551 filters and blocked ads with a toolbar badge, while being completely absent from about:addons. An ad blocker with no reachable settings or off switch. Nothing logged it.
@@ -1557,11 +1823,46 @@ LESSON
 
 **Fix:** Install whatever is missing.
 
+<details><summary>How this was diagnosed (including the wrong hypotheses)</summary>
+
+```
+WHAT IT GUARDS
+    git, rustc, cargo, node and python on the path the harness uses.
+
+STATUS
+    Pre-emptive. None has been missing on this machine.
+
+THE LESSON FROM A NEIGHBOUR
+    Being on Python's PATH is not the same as being on the build shell's PATH
+    (clang-cl, mozillabuild). This check proves the tools exist, not that mach
+    will find them.
+```
+
+</details>
+
 #### `disk` - Disk space
 
 **What went wrong:** Running out mid-link wastes the whole build.
 
 **Fix:** Free space on C: - objdir alone runs tens of GB.
+
+<details><summary>How this was diagnosed (including the wrong hypotheses)</summary>
+
+```
+WHAT IT GUARDS
+    Free space for the objdir (tens of GB), sccache (capped at 30 GB since
+    2026-09-13) and packaging.
+
+WHY FAIL FAST
+    Running out during the final link or packaging throws away the whole
+    build, and the resulting error is an I/O failure in whatever tool happened
+    to be writing - not "disk full".
+
+STATUS
+    Pre-emptive; the build machine has ample space.
+```
+
+</details>
 
 #### `thermal-profile` - Thermal profile
 
@@ -1569,11 +1870,73 @@ LESSON
 
 **Fix:** gorilla calibrate
 
+<details><summary>How this was diagnosed (including the wrong hypotheses)</summary>
+
+```
+SYMPTOM
+    2026-09-09: calibration produced a confident thermal profile claiming
+    71.1 C at every clock cap, idle or loaded.
+
+CAUSE
+    MSAcpi_ThermalZoneTemperature on this machine is readable but STATIC - a
+    raw 3442 (71.05 C) regardless of load. The calibration measured a constant
+    and fitted a profile to it.
+
+WHAT IT WOULD HAVE COST
+    Building on that profile would have run the i7-1255U at about 96 C while
+    the harness believed it was capped - against the user's explicit 75 C
+    ceiling for an ultra-thin laptop.
+
+WHAT WAS DONE
+    A missing OR INVALID profile blocks the build. The temperature source is
+    chosen by checking that it varies (temp-source). The working sources are
+    the Thermal Zone performance counter and, since 2026-09-13, Core Temp's
+    per-core shared memory, which reads the die sensors without elevation.
+    Calibrated result: 100% of base clock with turbo off, peak 62.9 C in the
+    soak test. Real builds have since peaked at 74.8 C (the old margin
+    warning, thermal-margin) and at 57.5 C and 65.5 C on the sccache
+    rebuilds of 2026-09-14.
+
+LESSON
+    Readable is not working. Verify a sensor moves before trusting it.
+```
+
+</details>
+
 #### `build-graph` - Build graph consistency
 
 **What went wrong:** 2026-09-09: the AI excision deleted third_party/llama.cpp's sources but left toolkit/components/ml/backends/llama compiling against them. That fails about an hour in, with an error pointing nowhere near the cause.
 
 **Fix:** Run: python "working scripts/check_deleted_file_refs.py" and fix what it lists.
+
+<details><summary>How this was diagnosed (including the wrong hypotheses)</summary>
+
+```
+SYMPTOM
+    A failure about an hour into a build, in toolkit/components/ml/backends/
+    llama, with an error nowhere near its cause.
+
+CAUSE
+    The AI/ML excision deleted third_party/llama.cpp's sources and left the
+    llama backend in the build graph, still compiling against them.
+
+HOW THE DETECTOR WAS GOT RIGHT - THREE VERSIONS
+    1. Matching deleted basenames as substrings: 610 hits, all noise. moz.build
+       and jar.mn are themselves deleted basenames, so every
+       JAR_MANIFESTS += ["jar.mn"] in the tree matched.
+    2. Matching quoted paths scoped to each build file's directory: 7 hits.
+       All in build files nothing reached any more - but a one-level check
+       still called them live, because the orphaned file itself held the
+       reference.
+    3. A transitive walk of the DIRS graph from the root: 0 live, 7 orphaned.
+       The real answer, and it found the llama.cpp landmine before it cost a
+       build.
+
+TOOL
+    working scripts/check_deleted_file_refs.py
+```
+
+</details>
 
 #### `fluent-attrs` - Fluent attributes intact
 
@@ -1634,6 +1997,33 @@ LESSON
 **What went wrong:** Options held back pending a single rebuild. Batching avoids paying for several full rebuilds; this check exists so they are not forgotten.
 
 **Fix:** Uncomment them and rebuild once. They are batched because each changes configure flags and invalidates the objdir.
+
+<details><summary>How this was diagnosed (including the wrong hypotheses)</summary>
+
+```
+WHAT IT GUARDS
+    Options deliberately commented out in the mozconfig, waiting for ONE
+    rebuild. Each changes configure flags and invalidates the objdir, so they
+    are batched rather than paid for one full rebuild at a time. Batching is
+    sensible; forgetting is not. As of 2026-09-14 the staged set is
+    --enable-lto=cross, MOZ_PGO=1 and AUTOCLOBBER=0.
+
+STAGED IS NOT DECLINED
+    An option considered and rejected on the merits is a settled decision. If
+    it were reported forever, the warning would be skimmed past - which is how
+    the genuinely forgotten ones get missed. A commented option preceded by a
+    line containing DELIBERATELY NOT ENABLED is reported as decided.
+
+THE DECISION IT RECORDS
+    2026-09-13: --without-wasm-sandboxed-libraries was declined for Windows.
+    It is in the Linux mozconfig. Carrying it would remove RLBox sandboxing
+    from the media, font and spell-check parsers - graphite, ogg, hunspell,
+    woff2, expat, all fed untrusted bytes by every page - to save build time,
+    in a browser presented as a security appliance. It remains enabled on
+    Linux; UNPROVEN.md records that inconsistency as a decision still to make.
+```
+
+</details>
 
 #### `sccache` - Compilation cache
 
@@ -1815,11 +2205,67 @@ LESSON
 
 **Fix:** python harness/gorilla_build.py defender --enable-realtime  (elevated, via UAC). The build-path exclusions stay in place, so builds are not slowed by turning it back on.
 
+<details><summary>How this was diagnosed (including the wrong hypotheses)</summary>
+
+```
+SYMPTOM
+    None visible - which is the problem.
+
+WHAT HAPPENED
+    2026-09-09: Defender real-time protection was switched off by hand for the
+    first build, because builds were crawling and the exclusions looked
+    useless. They were incomplete: the objdir had moved to C:/gfobj and was
+    never added, so Defender was still scanning 4.4 GB of build output. The
+    exclusions were then fixed - and protection stayed off, with nothing that
+    would ever mention it again.
+
+LESSON
+    Turning protection off is remembered; turning it back on is not. Windows
+    re-enables it eventually, but "eventually" is not a security policy.
+
+FIX
+    python harness/gorilla_build.py defender --enable-realtime (elevated). The
+    build-path exclusions stay, so builds are not slowed.
+```
+
+</details>
+
 #### `icon-resource-fresh` - Compiled icon resource is current
 
 **What went wrong:** 2026-09-09: after fixing the branding icons, a rebuild shipped the OLD icon anyway. make does not track the .ico as a dependency of splash.rc, so the compiled .res was never regenerated - silently, with a green build. Caught only by counting icon images in the PE (5 expected, 4 present).
 
 **Fix:** Delete <objdir>/browser/app/firefox.exe.res (and desktop-launcher/pbproxy ones) and rebuild.
+
+<details><summary>How this was diagnosed (including the wrong hypotheses)</summary>
+
+```
+SYMPTOM
+    2026-09-09: after the branding icons were fixed, a rebuild shipped
+    firefox.exe with the OLD icon. Green build, no warning.
+
+CAUSE
+    make does not track the branding .ico as a dependency of splash.rc. The
+    icon changed, the compiled firefox.exe.res did not, and the linker happily
+    embedded the stale resource.
+
+HOW IT WAS FOUND - AFTER A FALSE PASS
+    check_embedded_icon.py byte-matched a 512-byte slice and reported every
+    gorilla icon as embedded when none was: the slice was not distinctive and
+    matched the old globe artwork. That false pass was used to dismiss a
+    correct signal for several hours. What finally settled it was counting
+    icon images in the PE resource directory by hand (dump_pe_icons.py): the
+    new firefox.ico had five images, the shipped binary four.
+
+FIX
+    Delete <objdir>/browser/app/firefox.exe.res (and the desktop-launcher and
+    pbproxy ones) and rebuild. The check compares timestamps of .res and .ico.
+
+LESSON
+    A green build proves the build system was satisfied with its own
+    dependency graph - not that the graph was right.
+```
+
+</details>
 
 #### `logo-provenance` - Internal-pages logo is crisp
 
@@ -1993,17 +2439,116 @@ LESSON
 
 **Fix:** Repoint each one at <install>/<exe>. The installed browser is under %USERPROFILE%/Gorilla Unleashed. A shortcut into C:/gfobj launches an unpackaged build and dies the next time the objdir is clobbered.
 
+<details><summary>How this was diagnosed (including the wrong hypotheses)</summary>
+
+```
+SYMPTOM
+    2026-09-13: the "Gorilla Unleashed Private Browsing" Start Menu entry
+    pointed at C:/gfobj/dist/bin/private_browsing.exe.
+
+WHY THAT IS WORSE THAN A BROKEN SHORTCUT
+    It worked. The objdir existed, so it launched something that looked right
+    - an unpackaged build from the build directory, not the installed browser.
+    Anyone testing "the browser" through it tested neither the installed nor
+    the shipped build, and it would die silently at the next clobber.
+
+CAUSE
+    Not the installer (NSIS uses $INSTDIR correctly). Firefox itself wrote the
+    shortcut when private browsing was used during objdir testing. Running the
+    browser from dist/bin leaves real, user-visible shortcuts behind.
+
+THE CHECK'S OWN FIRST BUG
+    Its first version matched shortcut targets inside PowerShell and reported
+    a deliberately planted bad shortcut as CLEAN. Matching moved to Python and
+    was proven against the planted shortcut before being trusted.
+
+WHAT ELSE THE SWEEP TURNED UP
+    A dead LibreHardwareMonitor shortcut, deleted; and nine shortcuts whose
+    working directory belongs to a different user profile from another
+    machine. Their targets resolve, so they were left alone.
+```
+
+</details>
+
 #### `pref-block-divergence` - The two pref blocks agree
 
 **What went wrong:** 2026-09-13: patches/05.PREFS and patches/17.WINDOWS.FIXES each carry a FULL copy of the Gorilla pref block (253 and 240 added pref lines), not a base and a delta. The DTLS 1.2 cap was added to the Linux one alone, so Windows stayed broken while the diff looked like a fix. Any pref edited in one file and not the other silently diverges the platforms.
 
 **Fix:** For each pref listed, decide deliberately whether the platforms should differ. If they should not, add it to whichever patch is missing it. If they should - a Linux-only GPU workaround, say - that is fine, but it must be a decision rather than an omission.
 
+<details><summary>How this was diagnosed (including the wrong hypotheses)</summary>
+
+```
+SYMPTOM
+    A fix for WhatsApp calls was committed, and Windows calls stayed broken.
+
+CAUSE
+    patches/05.PREFS and patches/17.WINDOWS.FIXES.2026-09-09 each carry a FULL
+    copy of the Gorilla pref block for browser/app/profile/firefox.js - 253
+    and 240 added pref lines - not a base and a delta. The Linux side added
+    the DTLS 1.2 cap to 05.PREFS only. The diff looked exactly like a fix.
+
+WHY WARN, NOT BLOCKER
+    The platforms legitimately differ: Linux-only GPU workarounds must not fire
+    on Windows (2026-09-11 proved that the hard way, see linux-prefs-guarded),
+    and since 2026-09-14 Windows deliberately ships dom.workers.maxPerDomain =
+    512 and media.ogg.enabled = true, which Linux does not. The point is that
+    every difference should be a decision someone made, not an edit someone
+    forgot.
+
+HOW TO USE IT
+    Read every listed pref. If the platforms should not differ, add it to the
+    patch that lacks it. If they should, it is a decision - consider recording
+    why in the pref's comment.
+```
+
+</details>
+
 #### `theme-dead-selectors` - Theme selectors match real elements
 
 **What went wrong:** 2026-09-13: the address bar's cyan edge was written as #urlbar-background. FF155 creates that element with class= and no id, so all three rules were dead code and the field drew no border at all. A comment at the bottom of the very same file already recorded the ID-to-CLASS rename; a later rescue block was written against the ID anyway. Dead CSS throws nothing and renders fine - only a human noticing a missing colour ever finds it.
 
 **Fix:** For each id reported, find how FF155 actually builds that element (grep the .mjs/.xhtml that creates it) and use the selector it really has. If it is a class now, use the class - and prefer outline over border, which is this project's CSS invariant.
+
+<details><summary>How this was diagnosed (including the wrong hypotheses)</summary>
+
+```
+SYMPTOM
+    The user reported, twice, that the address bar had no cyan border.
+
+CAUSE
+    master-redirect.css styled #urlbar-background three times. Firefox 155
+    builds that element as <html:div class="urlbar-background"/>
+    (UrlbarInput.mjs:101) - a class, no id. Every rule matched nothing.
+
+THE CRUEL PART
+    A comment near the bottom of the same file already recorded the rename.
+    A later rescue block was written against the id anyway. Knowing is not
+    checking.
+
+WHY IT NEEDS A CHECK
+    Dead CSS fails silently by construction: no error, no console warning, the
+    page renders. Only a human noticing an absent colour ever finds it.
+
+THE CHECK'S OWN FIRST BUG
+    It searched the tree for ="urlbar-background", which class= satisfies, so
+    it reported the known dead selector as RESOLVED - the exact defect it
+    exists to catch. It now requires id="...". Verified by reintroducing the
+    bug: 4 dead selectors with it, 3 without.
+
+STILL REPORTED
+    #browser-window, #extensions-empty-illustration and #urlbar-input. The last
+    is harmless (its rule also lists .urlbar-input). Fix each by reading the
+    code that builds the element, never by bulk rewrite - and prefer outline
+    over border, this project's CSS invariant.
+
+RELATED MISTAKE
+    The pink outline on the active tab was assumed to be a regression and
+    nearly "fixed". It is the user-approved palette (THEME_FIX_LOG section 5).
+    Read the project's history before changing its look.
+```
+
+</details>
 
 #### `address-bar` - Address bar proven to navigate
 
@@ -2344,6 +2889,38 @@ LESSON
 
 **Fix:** Run on the target machine: python "working scripts/make_decode_profile.py" --detect --apply, then --verify.
 
+<details><summary>How this was diagnosed (including the wrong hypotheses)</summary>
+
+```
+WHAT IT GUARDS
+    The build ships an H.264-only codec policy, chosen for the oldest machine
+    in the fleet: a Sony VAIO with Ivy Bridge HD 4000 graphics, which has no
+    VP9, HEVC or AV1 hardware decoder at all. On anything newer than Kaby Lake
+    that leaves real hardware decoders idle and caps YouTube at 1080p.
+
+HOW IT IS SOLVED WITHOUT A PER-MACHINE BUILD
+    The codec prefs are deliberately unlocked. make_decode_profile.py detects
+    every GPU, takes the WEAKEST (switchable graphics means no script can know
+    which decodes), and writes <install>/defaults/pref/gorilla-decode.js.
+
+WRONG ANSWERS IT ENCODES
+    WMI names contain trademark noise ("Intel(R) Iris(R) Xe") that defeated a
+    plain pattern; "UHD" is a brand, not a generation (UHD 620 has no AV1, UHD
+    770 does); and a wrong tier is worse than none, because enabling a codec
+    the GPU cannot decode moves decoding onto a thermally capped CPU. It
+    refuses to guess.
+
+DOES NOT CONFLICT WITH THE CALL FIX
+    2026-09-14 turned media.webm.enabled and media.ogg.enabled back on for
+    WebCodecs (call-prefs). Those are containers; VP9 and AV1 stay off unless
+    the profile enables them, so YouTube behaviour is unchanged.
+
+WHY WARN
+    A machine without a profile works, with less of its hardware.
+```
+
+</details>
+
 #### `installed-build` - Installed browser carries the fixes
 
 **What went wrong:** 2026-09-11: nothing in the harness looked at what was actually INSTALLED. A fix can be perfectly present in src/, exported to the patchset, covered by a check - and absent from the browser you are about to test, because the install predates it. WARN rather than BLOCKER: a stale install does not make the next build wrong, it makes the next test session wrong.
@@ -2503,11 +3080,60 @@ LESSON
 
 **Fix:** gorilla bootstrap (fetches NSIS into ~/.mozbuild/nsis).
 
+<details><summary>How this was diagnosed (including the wrong hypotheses)</summary>
+
+```
+WHAT IT GUARDS
+    `mach package` builds the Windows installer with NSIS, which only
+    `mach bootstrap` provides (in ~/.mozbuild/nsis).
+
+WHY WARN, NOT BLOCKER
+    Without NSIS the compile succeeds and only packaging fails, an hour later.
+    A compiled browser without an installer is still a usable result for
+    testing, so this reports instead of refusing.
+
+STATUS
+    Not hit.
+
+RELATED THINGS THAT WERE HIT AT PACKAGING
+    There is no `mach installer` command - mach guessed `install` and ran a
+    target Windows rejects (mach-installer). `mach package` already builds the
+    installer. And the installer's outer self-extractor wore Firefox's icon
+    until it was patched (sfx-stub-icon).
+```
+
+</details>
+
 #### `dev-drive-probe` - Get-Volume probe
 
 **What went wrong:** 2026-09-09: mach bootstrap died with IndexError because Get-Volume returned nothing - its dev-drive check takes line [2] unconditionally. Get-Volume needs defragsvc and vds, both disabled on this machine.
 
 **Fix:** Nothing to fix - the bootstrap stage patches mach temporarily and reverts it. Re-enabling defragsvc/vds would work too but is not needed to build.
+
+<details><summary>How this was diagnosed (including the wrong hypotheses)</summary>
+
+```
+SYMPTOM
+    2026-09-09: `mach bootstrap` died with IndexError before fetching
+    anything.
+
+CAUSE
+    mozboot's _check_for_dev_drive runs Get-Item | Get-Volume | Select-Object
+    FileSystem and takes line [2] of the output unconditionally. Get-Volume
+    needs the Storage Management provider, which needs the defragsvc and vds
+    services. Both are stopped and disabled on this machine, so the probe
+    returns nothing and indexing it crashes.
+
+THE TEMPTING WRONG FIX
+    Re-enable the services. It works, but it changes system configuration to
+    satisfy a purely cosmetic piece of advice about Dev Drives.
+
+WHAT WAS DONE
+    The bootstrap stage patches mach temporarily and reverts it. WARN keeps
+    the situation visible without blocking.
+```
+
+</details>
 
 #### `agent-env` - Coding-agent env markers
 
