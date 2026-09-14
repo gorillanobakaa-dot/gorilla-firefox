@@ -46,6 +46,30 @@ REQUIRED_PREFS = [
 REQUIRED_FONTS = ["segoeui.ttf", "segoeuib.ttf", "seguisb.ttf", "SegUIVar.ttf",
                   "consola.ttf", "YuGothB.ttc", "YuGothR.ttc"]
 
+# Fixes that are not prefs. Same standing as REQUIRED_PREFS: each was proven
+# live, each is invisible when absent, each has already been lost once.
+REQUIRED_FIXES = {
+ "audiocontext":
+    "AudioContext must honour an explicitly requested sample rate. The old "
+    "form forced 48000 Hz for every realtime context, so WhatsApp's 16 kHz "
+    "WASM call audio was silently resampled and the other person heard "
+    "nothing. Convicted live 2026-08-26 by a WebAudioAPI:5 capture. The rule "
+    "is honor or throw, NEVER silently substitute a page-requested rate.",
+ "ublock":
+    "uBlock Origin must be bundled AND registered in the VISIBLE built-in "
+    "location. This build blocks every add-on install route on purpose, so a "
+    "user cannot add one back. A first attempt registered it via "
+    "built_in_addons.json: it loaded and ran, and was invisible in "
+    "about:addons with no toolbar button, so its settings, filter lists and "
+    "on/off switch were unreachable. Working and invisible is not working. "
+    "The 155 line then shipped with no blocker at all until 155.0-3, while "
+    "the README promised one.",
+}
+
+UBLOCK_ID = "uBlock0@raymondhill.net"
+
+REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 FAILS = []
 PASSES = []
 
@@ -106,13 +130,15 @@ def gate_audiocontext(src):
         return
     body = m.group(1)
     early = re.search(r"if\s*\(\s*aIsOffline\s*\|\|\s*aSampleRate\s*!=\s*0\.0\s*\)\s*\{?\s*return\s+aSampleRate", body)
-    if early and body.index(early.group(0)) < (body.index("48000") if "48000" in body else len(body)):
-        ok("CODE-001", "explicit sample rates are honoured before any override")
-    else:
-        bad("CODE-001", "an explicitly requested sample rate is NOT honoured first",
-            "The old form forced 48000 for every realtime context and silently "
-            "broke WhatsApp's 16 kHz call audio. Convicted live 2026-08-26 by "
-            "WebAudioAPI:5 capture. Honor or throw, never substitute.")
+    if not early:
+        bad("CODE-001", "an explicitly requested sample rate is NOT honoured at all",
+            REQUIRED_FIXES["audiocontext"])
+        return
+    if "48000" in body and body.index("48000") < body.index(early.group(0)):
+        bad("CODE-001", "48000 is forced BEFORE the explicit-rate check",
+            REQUIRED_FIXES["audiocontext"])
+        return
+    ok("CODE-001", "explicit sample rates are honoured before any override")
 
 def gate_stale_binary(dist, src):
     """STALE-001: libxul must not predate the code it claims to contain."""
@@ -132,14 +158,66 @@ def gate_stale_binary(dist, src):
     ok("STALE-001", "libxul.so is newer than the source it is gated on")
 
 def gate_ublock(dist, label):
-    """EXT-001: the bundled ad blocker is actually in the package."""
-    p = os.path.join(dist, "browser/chrome/browser/gorilla-addons/ublock-origin/manifest.json")
-    if os.path.exists(p):
-        ok("EXT-001", "uBlock Origin is bundled")
-    else:
-        bad("EXT-001", "uBlock Origin is missing from %s" % label,
-            "The README promises a built-in ad blocker. The 155 line shipped "
-            "without one until 155.0-3 because the fetch step was skipped.")
+    """EXT-001: uBlock is bundled, registered, and in the VISIBLE location.
+
+    Presence is not enough. Registered in the wrong built-in location it runs
+    but cannot be seen or switched off, which in a browser that blocks add-on
+    installs is worse than absent.
+    """
+    man = os.path.join(dist, "browser/chrome/browser/gorilla-addons/ublock-origin/manifest.json")
+    reg = os.path.join(dist, "browser/modules/GorillaBuiltinExtensions.sys.mjs")
+
+    if not os.path.exists(man):
+        bad("EXT-001", "uBlock Origin is not bundled in %s" % label,
+            REQUIRED_FIXES["ublock"]); return
+    ok("EXT-001", "uBlock Origin payload is bundled")
+
+    if not os.path.exists(reg):
+        bad("EXT-001", "the payload is there but nothing registers it in %s" % label,
+            REQUIRED_FIXES["ublock"]); return
+    rtxt = read(reg)
+    if UBLOCK_ID not in rtxt:
+        bad("EXT-001", "the registration module does not mention %s" % UBLOCK_ID,
+            REQUIRED_FIXES["ublock"]); return
+    if "maybeInstallBuiltinAddon" not in rtxt:
+        bad("EXT-001", "uBlock is not registered in the VISIBLE built-in location",
+            REQUIRED_FIXES["ublock"]); return
+    ok("EXT-001", "registered via maybeInstallBuiltinAddon, so it appears in about:addons")
+
+    # the version the payload actually is, against the version that was pinned
+    try:
+        import json
+        mv = json.load(open(man, encoding="utf-8")).get("version")
+    except Exception:
+        mv = None
+    if mv:
+        ok("EXT-001", "bundled uBlock Origin version %s" % mv)
+    return mv
+
+def gate_ublock_pin(dist, repo_root, bundled_version):
+    """EXT-002: the bundled payload matches the version this repo pinned."""
+    if not (repo_root and bundled_version):
+        return
+    pin = os.path.join(repo_root, "state/builtin_extensions.json")
+    if not os.path.exists(pin):
+        return
+    try:
+        import json
+        d = json.load(open(pin, encoding="utf-8"))
+    except Exception:
+        return
+    for e in d.get("extensions", []):
+        if e.get("id") == UBLOCK_ID:
+            want = e.get("version")
+            if want and want != bundled_version:
+                bad("EXT-002",
+                    "package has uBlock %s but this repo pins %s" % (bundled_version, want),
+                    "The payload is fetched, not committed. A silent version "
+                    "drift means the published source and the published "
+                    "package describe different browsers.")
+            else:
+                ok("EXT-002", "bundled version matches the pin in state/")
+            return
 
 def gate_fonts(dist, label):
     """FONT-001: the fonts the look depends on are in the package."""
@@ -154,9 +232,10 @@ def gate_fonts(dist, label):
         ok("FONT-001", "all %d Microsoft fonts present" % len(REQUIRED_FONTS))
 
 # ----------------------------------------------------------------- main ----
-def run(dist, src, label):
+def run(dist, src, label, repo_root=None):
     gate_prefs(dist, label)
-    gate_ublock(dist, label)
+    bundled = gate_ublock(dist, label)
+    gate_ublock_pin(dist, repo_root, bundled)
     gate_fonts(dist, label)
     if src:
         gate_source_agrees(dist, src)
@@ -182,11 +261,11 @@ def main():
             dist = os.path.join(tmp, "usr/lib/gorilla-unleashed")
             if not os.path.isdir(dist):
                 print("FATAL: %s does not contain usr/lib/gorilla-unleashed" % a.deb); return 2
-            run(dist, a.src, os.path.basename(a.deb))
+            run(dist, a.src, os.path.basename(a.deb), REPO_ROOT)
         else:
             if not os.path.isdir(a.dist):
                 print("FATAL: no such dist/bin: %s" % a.dist); return 2
-            run(a.dist, a.src, "the build")
+            run(a.dist, a.src, "the build", REPO_ROOT)
     finally:
         if tmp: shutil.rmtree(tmp, ignore_errors=True)
 

@@ -251,7 +251,8 @@ scripts/release_gate.py --dist <objdir>/dist/bin --src <source tree>
 | `PREF-002` | the package and the source disagree, so the build is stale |
 | `CODE-001` | an explicitly requested audio sample rate is not honoured |
 | `STALE-001` | `libxul.so` is older than the source it claims to contain |
-| `EXT-001` | uBlock Origin is not bundled |
+| `EXT-001` | uBlock Origin is missing, unregistered, or registered where it cannot be seen |
+| `EXT-002` | the bundled uBlock version drifts from the one this repo pins |
 | `FONT-001` | a required font is missing |
 
 Every entry is a real failure that cost real time, and the gate prints what it
