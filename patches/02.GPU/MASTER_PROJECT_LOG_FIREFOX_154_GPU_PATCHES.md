@@ -408,7 +408,7 @@ Migrated into FF154 flat structure as `patches/02.GPU`.
 #### 2026-07-05
 **This deep-audit:**
 - All 6 files reviewed
-- All in-sync with deployed tree at `$HOME/firefox-source`
+- All in-sync with deployed tree at `the source tree`
 - Live GPU confirmed `8086:0166`
 - This document written
 
@@ -574,7 +574,7 @@ This build targets exactly one machine.
 | gfxPlatform.cpp | 4300 lines | ✅ Conformant | Sticky kill-switch dead-coded; encoder-side residual documented |
 
 **Sync Check:**
-All files byte-identical to deployed counterparts in `$HOME/firefox-source` (gfx/thebes/, widget/, widget/gtk/). Widget unified objects in objdir are newer than file timestamps — patched code compiles.
+All files byte-identical to deployed counterparts in `the source tree` (gfx/thebes/, widget/, widget/gtk/). Widget unified objects in objdir are newer than file timestamps — patched code compiles.
 
 ---
 
@@ -874,7 +874,7 @@ This roadmap combines findings from the GPU blocklist unlock audit:
 #### Verification:
 ```bash
 # Verify deploy.sh does not contain GfxInfo.h or gfxPlatform.h mappings
-grep -E "GfxInfo.h|gfxPlatform.h" $HOME/Documents/FIrefox.154.Work/patches/deploy.sh
+grep -E "GfxInfo.h|gfxPlatform.h" patches/deploy.sh
 # Should return nothing for 02.GPU mappings
 ```
 
@@ -966,7 +966,7 @@ intel_gpu_top
 ## Part 4: Source Code Audit Report (2026-07-08)
 *(Originally from SOURCE_CODE_AUDIT_2026-07-08_11-15-00.md)*
 
-**Scope:** `$HOME/Documents/FIrefox.154.Work/patches/02.GPU/*.cpp`  
+**Scope:** `patches/02.GPU/*.cpp`  
 **Documents Audited Against:** `00_GPU_HISTORY_AND_ROADMAP.md`, `COMPREHENSIVE_ROADMAP.md`
 
 ### Summary
@@ -1146,7 +1146,7 @@ Four-layer override of Firefox's GPU blocklist plus dead-coding of the sticky ha
 ## Architecture
 
 - **Pattern:** Layered override at every point the blocklist is consulted. Failure mode being defended against is asymmetric: any one un-patched layer silently re-blocklists the GPU. So blocking is fixed at all layers, and one true force-enable is the entry point.
-- **Trust Boundary:** The `FeatureState` machinery decides at runtime whether a graphics feature is enabled. Priority order (documented in CLAUDE.md): `mRuntime > mUser(ForceEnabled) > mEnvironment > mUser(Enabled) > mDefault`. Only `UserForceEnable()` sits above `mEnvironment` (which is where gfxInfo's blocklist verdict lives). `UserEnable()` sits BELOW it and is therefore overridable by the blocklist — a footgun that historically caused many well-intentioned fixes to silently no-op.
+- **Trust Boundary:** The `FeatureState` machinery decides at runtime whether a graphics feature is enabled. Priority order (documented in the project rules file): `mRuntime > mUser(ForceEnabled) > mEnvironment > mUser(Enabled) > mDefault`. Only `UserForceEnable()` sits above `mEnvironment` (which is where gfxInfo's blocklist verdict lives). `UserEnable()` sits BELOW it and is therefore overridable by the blocklist — a footgun that historically caused many well-intentioned fixes to silently no-op.
 - **Attack Surface:** Blocklists exist historically because bad drivers really did crash browsers. By overriding, we accept a wider crash surface on genuinely broken drivers. Mitigation: the sanity-test failure path is dead-coded specifically so a *transient* crash does not permanently disable HW accel; a real repeated-crash driver would still surface user-visible errors. Codec-specific blocks are preserved (see vendor-vs-codec split).
 - **Dependencies:** `Wayland compositor supporting DMABuf overlays (Mutter/GNOME 48 on this system)`, `i965 VA-API driver present and initialised`, `PipeWire or working audio stack (unrelated but often co-located failures)`
 
@@ -1511,7 +1511,7 @@ GPU poison was found in the 2026-08-03 tree audit.
 ## RECONCILIATION BANNER (2026-08-04)
 
 The LAYMAN + DEVELOPER + AUDIT documents for 02.GPU were regenerated with the
-`dual-track` toolkit against the live patched tree (`$HOME/firefox-src`)
+`dual-track` toolkit against the live patched tree (`the source tree`)
 and the 5 `.patch` files, every claim re-verified at `file:line`. They REPLACE, as
 the current dual-track record, the 2026-07-16 copies in the CONSOLIDATION 2026-08-02
 block earlier in this file (retained there as history).
@@ -1782,7 +1782,7 @@ The failure mode is asymmetric: any single un-patched consultation point silentl
 Before trusting a build, confirm each layer is applied and the vendor-vs-codec split is intact.
 
 **Prerequisites:**
-- FF_SRC pointed at the patched tree ($HOME/firefox-src)
+- FF_SRC pointed at the patched tree (the source tree)
 - ripgrep or grep available
 
 **Step 1:** grep -n 'Gorilla: native Wayland' "$FF_SRC/gfx/config/gfxConfigManager.cpp"
@@ -1847,7 +1847,7 @@ Reverting any one layer re-blocklists the GPU because the failure mode is asymme
 
 ## Verification Commands
 
-Run against the patched tree (`export FF_SRC=$HOME/firefox-src`). Each command PROVES one of the claims above.
+Run against the patched tree (`export FF_SRC=the source tree`). Each command PROVES one of the claims above.
 
 ```bash
 # Layer 5 — Wayland compositor force-enable (expect line 162, UserForceEnable not UserEnable)

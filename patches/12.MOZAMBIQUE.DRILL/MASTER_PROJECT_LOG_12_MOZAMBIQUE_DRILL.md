@@ -19,7 +19,7 @@ history and reproducible by re-running `dual-track code render` on the
 | Pre-check | `PRECHECK.md` | `e5cef98179828ad0` | P0–P3: 0 / 0 / 0 / 0 |
 
 **Topic patch files** (both verified applied in the live tree
-`$HOME/firefox-src` on 2026-08-04 by grep):
+`the source tree` on 2026-08-04 by grep):
 
 - `toolkit/components/normandy/lib/RecipeRunner.sys.mjs:289` — fallback default
   `21600` → `1893456000  // 60y (Mozambique Drill)`
@@ -349,7 +349,7 @@ Confirm the patches applied and the values match before shipping. Each site chan
 
 
 **Prerequisites:**
-- FF_SRC pointed at the patched tree ($HOME/firefox-src)
+- FF_SRC pointed at the patched tree (the source tree)
 
 **Step 1:** grep -n 1893456000 $FF_SRC/toolkit/components/normandy/lib/RecipeRunner.sys.mjs $FF_SRC/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
   - Expected: One match per file: RecipeRunner.sys.mjs:289 and RemoteSettingsExperimentLoader.sys.mjs:256, each with '// 60y (Mozambique Drill)'.

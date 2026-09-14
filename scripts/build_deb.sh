@@ -14,7 +14,7 @@
 #
 # USAGE:  build_deb.sh [VERSION] [DIST_BIN] [OUT_DIR]
 #   VERSION   default: read from application.ini (e.g. 154.0a1) + "-1"
-#   DIST_BIN  default: /home/gorilla/firefox-main/obj-x86_64-pc-linux-gnu/dist/bin
+#   DIST_BIN  default: $HOME/firefox-src/obj-x86_64-pc-linux-gnu/dist/bin
 #   OUT_DIR   default: FIrefox.154.Work/release
 # =============================================================================
 set -euo pipefail
@@ -142,7 +142,7 @@ done
 # APP-GRID ICON FIX — the template's 1024x1024 slot is the RAW vault master
 # (2598x2626, NON-SQUARE) so GNOME renders it wrong/small in the app grid. Regenerate
 # proper SQUARE large icons with the CANONICAL command from wayland_dual_icon_bug_fixer.sh
-# (documented in CLAUDE.md + lesson Lanczos_Downsample_Icon_Pipeline): fuzz-trim the
+# (see the icon pipeline notes): fuzz-trim the
 # transparent padding, Lanczos-fit, then center-pad to an exact NxN square. Never copy a
 # raw non-square master into a size dir.
 if command -v magick >/dev/null; then

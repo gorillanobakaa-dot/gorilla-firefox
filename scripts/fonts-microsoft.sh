@@ -8,7 +8,7 @@
 #  repo — YOU pull the fonts from Microsoft, on your machine, with this script.
 #
 #  Method credit: Arch Linux `ttf-ms-win11-auto` (the upstream approach).
-#  Full background: Second.Brain/microsoft_fonts.xml
+#  Full background is kept with the project's own notes.
 #
 #  LICENSING (read this):
 #    * Microsoft's EULA permits USE of these fonts. It does NOT grant you the
@@ -120,5 +120,5 @@ if [ "$missing" = 0 ]; then
 else
   echo "[WARN] Some fonts were missing. Yu Gothic lives in the Japanese language"
   echo "       pack; if absent, grab it from the -japanese font set (see"
-  echo "       Second.Brain/microsoft_fonts.xml font lists) or a JP eval ISO."
+  echo "       the project's own font lists) or a JP eval ISO."
 fi

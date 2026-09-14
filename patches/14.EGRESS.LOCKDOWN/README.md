@@ -95,7 +95,7 @@ leak even if a later stage regressed.
 - `14-egress-remote-lockdown.DEVELOPER.md` — the cross-cutting architecture,
   the four mechanisms side by side, the shared invariants and debt.
 - `14-egress-remote-lockdown.AUDIT.md` — IBM A–F over the unified topic.
-- Distilled atoms in `SECOND.BRAIN/…/Firefox.154.Lessons/09.REMOTE.Telemetry.Experiments/`
+- Distilled findings are kept with the project's own notes
   (the DB's telemetry+remote category), ingested into the `firefox_154` collection.
 
 Authoritative per-topic detail remains in each source dir's own

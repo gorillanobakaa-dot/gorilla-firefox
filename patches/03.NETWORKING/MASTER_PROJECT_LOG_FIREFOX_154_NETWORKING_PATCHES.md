@@ -260,7 +260,7 @@ All outbound connections remain locked down, and the browser cannot connect to u
 
 > The three merged documents that follow were regenerated on 2026-08-04 by the doc-audit toolkit
 > (`dual-track code prep`/`render`, quality gate PASS: audit 98, developer 90, layman 91) against the
-> patched live tree at `$HOME/firefox-src`, and re-verified byte-for-byte. They REPLACE the
+> patched live tree at `the source tree`, and re-verified byte-for-byte. They REPLACE the
 > 2026-08-02 verbatim merges of the same three files. The correction is substantive: the prior merges
 > asserted Necko-layer Glean/telemetry fencing (`GLEAN_DISABLED` / `MOZ_TELEMETRY_REPORTING 0`) in
 > HttpChannelParent / nsHttpConnectionMgr / Http3Session / nsUDPSocket. That fencing was REVERTED in the
@@ -530,7 +530,7 @@ The values are co-designed with the 7.1.2 kernel and must not be read in isolati
 Confirm the documented values are the values in netwerk before trusting this doc.
 
 **Prerequisites:**
-- FF_SRC points at the patched tree ($HOME/firefox-src)
+- FF_SRC points at the patched tree (the source tree)
 
 **Step 1:** grep -n 'NEGATIVE_RECORD_LIFETIME\|SetThreadLimit\|SetIdleThreadLimit' $FF_SRC/netwerk/dns/nsHostResolver.cpp
   - Expected: NEGATIVE_RECORD_LIFETIME = 3 (:69), SetThreadLimit(16) (:190), SetIdleThreadLimit(12) (:191).
@@ -945,7 +945,7 @@ Folder now holds 4 patches (was 8), all CLEAN + byte-IDENTICAL, all Species-A ke
 tuning. Telemetry containment UNCHANGED and intact: datareporting.glean.uploadEnabled=false
 LOCKED + toolkit.telemetry.* LOCKED in baked firefox.js (the real "fly in the jar").
 Takes effect at next ./mach build (6 netwerk TUs recompile). Provenance note: removing inert
-Gemini theater is NOT the abandoned excision ([[telemetry-strategy]]) — no telemetry CODE was
+inert leftover scaffolding is NOT the abandoned excision ([[telemetry-strategy]]) — no telemetry CODE was
 touched; the glean:: calls remain, contained by prefs exactly as doctrine requires.
 
 ---

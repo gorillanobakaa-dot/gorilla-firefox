@@ -12,7 +12,7 @@ audit were regenerated with the `dual-track` toolkit and validated (quality gate
 (`.dual-track-rules.py`) reported **0 findings (P0 0 · P1 0 · P2 0 · P3 0)**.
 
 Every claim in the regenerated docs is grounded against the LIVE tree
-(`$HOME/firefox-src`) or the patch/script text, with `file:line` or an
+(`the source tree`) or the patch/script text, with `file:line` or an
 authority, or is explicitly labelled **not verified / not measured**. This
 corrects three overstatements carried in the 2026-07-16 generation-1 docs that the
 2026-08-03 POR had flagged (POR preserved verbatim at the end of this log):
@@ -656,7 +656,7 @@ stay consistent between runs.
 # POR — 11.FONT.SYSTEM room clearing (2026-08-03)
 
 Per `patches/SOP.room-clearing-and-poison-audit.md`. Method: every claim verified against the
-LIVE tree (`$HOME/firefox-src`) and the VANILLA vault
+LIVE tree (`the source tree`) and the VANILLA vault
 (`<vault>`),
 never against the docs. Read-only pass — the only file written is this POR.
 
@@ -671,7 +671,7 @@ never against the docs. Read-only pass — the only file written is this POR.
 | moz.build wires 8 bundled fonts via `FINAL_TARGET_FILES.fonts` | present, byte-exact; all 8 files physically installed | browser/fonts/moz.build:6–15; `ls browser/fonts/` → consola/segoeui/segoeuib/seguisb/SegUIVar/YuGothB/YuGothR/TwemojiMozilla present |
 | `.gitignore` excludes `*.ttf`/`*.ttc` with TwemojiMozilla CC-BY exception (AUDIT §E) | **confirmed** — the rule is in the *patches* repo, not firefox-main | `FIrefox.154.Work/.gitignore:62–64` (`*.ttf` / `*.ttc` / `!TwemojiMozilla.ttf`) |
 | `get-microsoft-fonts.sh` acquisition set matches the bundle | `NEEDED_FONTS` = the 7 MS fonts in moz.build (Twemoji excluded — CC-BY, upstream in-tree) | get-microsoft-fonts.sh:35–43 vs browser/fonts/moz.build |
-| `Second.Brain/microsoft_fonts.xml` reference (script + README.fonts.md) | resolves to a real fortress artifact (2 copies) | `$HOME/Documents/SECOND.BRAIN/Chroma.DB.and.Brain.xml/Brain/microsoft_fonts.xml` and `.../Firefox.154.Lessons/11.FONT.SYSTEM/microsoft_fonts.xml` |
+| the project's own notes reference (script + README.fonts.md) | resolves to a real fortress artifact (2 copies) | `the project's private notes` and `.../Firefox.154.Lessons/11.FONT.SYSTEM/microsoft_fonts.xml` |
 
 ## Tangoes (2 — both documentation, 0 code/binary)
 
@@ -684,7 +684,7 @@ anywhere in the live tree. It is read purely via `Preferences::GetBool("...", fa
 hardcoded default. An **unregistered** pref does not appear in about:config until explicitly set,
 so that verification step would fail as written.
 *Falsifiable check:* `grep -rln bundled_fonts.skip_system_scan --include=*.yaml --include=*.js
---include=*.mjs $HOME/firefox-src` → **no matches**.
+--include=*.mjs the source tree` → **no matches**.
 *Safety:* unaffected. This is the SOP's safety asymmetry — an unregistered pref read with a
 `false` default is inert, and the top-line **default-OFF behavioural claim (AUDIT/LAYMAN/
 DEVELOPER/README) is TRUE and verified**. Only the narrow "registered / visible in about:config"
@@ -710,7 +710,7 @@ treat the `40s→4s` / `10×` figures as unverified marketing until a benchmark 
   no such file exists in the live tree. The content survives as a brain XML
   (`GATHERED_BRAIN_LESSONS/…font_bundle_rationale.xml`).
 - **Provenance-marker style differs from canonical.** Markers are `[GORILLA]`/`[Gorilla]`, not the
-  `// GORILLA OVERRIDE:` form named in CLAUDE.md. The markers ARE present (the "keep markers" rule
+  `// GORILLA OVERRIDE:` form named in the project rules file. The markers ARE present (the "keep markers" rule
   is satisfied); only the token differs.
 - **Privacy benefit is conditional on the default-OFF pref.** The DEVELOPER "Trust Boundary" and
   LAYMAN "Your Privacy" notes describe reduced font fingerprinting, but that is realized **only when

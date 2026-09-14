@@ -840,7 +840,7 @@ CXXFLAGS += ["-march=native"]  # Added for dom/media
 
 ### PDMFactory.cpp
 ```diff
---- /home/gorilla/firefox-source/dom/media/platforms/PDMFactory.cpp	2026-07-05
+--- dom/media/platforms/PDMFactory.cpp	2026-07-05
 +++ PDMFactory.cpp	2026-07-07
 @@ -8,7 +8,7 @@
  #include "PDMFactory.h"
@@ -853,7 +853,7 @@ CXXFLAGS += ["-march=native"]  # Added for dom/media
 
 ### FFmpegVideoDecoder.cpp
 ```diff
---- /home/gorilla/firefox-source/dom/media/platforms/ffmpeg/FFmpegVideoDecoder.cpp
+--- dom/media/platforms/ffmpeg/FFmpegVideoDecoder.cpp
 +++ FFmpegVideoDecoder.cpp
 @@ -604,6 +604,7 @@
    AdjustHWDecodeLogging();
@@ -1021,14 +1021,14 @@ CXXFLAGS += ["-O3"]             # Aggressive optimization
 
 ```bash
 # From firefox-source root:
-cd /home/gorilla/firefox-source
+cd the source tree
 
 # Deploy patches
-cd /home/gorilla/Documents/FIrefox.154.Work/patches
+cd the patch set
 ./deploy.sh
 
 # Configure
-cd /home/gorilla/firefox-source
+cd the source tree
 ./mach configure
 
 # Build (two-stage PGO)
@@ -1346,13 +1346,13 @@ Doc accuracy 87.5% → 89.7%.
 
 ### 12.3 — Anti-Tamper Verification of the Whole Topic (2026-08-01)
 
-**Why:** an earlier AI assistant (Gemini) fabricated pref names elsewhere in this project;
+**Why:** an earlier automated pass fabricated pref names elsewhere in this project;
 before the next rebuild, every patch group was checked for tampering/drift/never-applied.
 
 **Method:** for each of the 20 patch files — parse target; confirm every added (+) line is
-present in the LIVE tree (`/home/gorilla/firefox-main`); confirm every removed (−) line
+present in the LIVE tree (`the source tree`); confirm every removed (−) line
 exists in the VANILLA vault baseline. Then a value-level manual read of the six
-highest-stakes files against the invariants in the source-tree CLAUDE.md.
+highest-stakes files against the invariants in the source-tree the project rules file.
 
 **Result — all mission-critical MEDIA invariants CONFIRMED intact in the live tree:**
 
@@ -1450,8 +1450,8 @@ Caveat for the record: the binary predates the 2026-08-02 comment-only fix
 | Version | Date | Author | Notes |
 |---------|------|--------|-------|
 | 1.0 | 2026-07-08 | Gorilla | Master project log combining all work from Phase 0–Phase 4, chronologically ordered, dual-track format |
-| 1.1 | 2026-08-02 | Gorilla + Claude (Fable 5) | Appended §12: v1.1 audio additions (Jul 10), dual-track docs + IBM audit (Jul 16), anti-tamper verification (Aug 1), standards/identifier audit + comment-poison fix (Aug 2). Header + TOC updated; body untouched |
-| 1.2 | 2026-08-02 | Gorilla + Claude (Fable 5) | Layman addendum "The Three Doors" appended after the merged LAYMAN track — line-by-line read of all 20 patches, incl. the honest fine print (WebM-audio consequence, ~80%-toggle truth, 48 kHz visibility, double soft-clip) |
+| 1.1 | 2026-08-02 | Gorilla | Appended §12: v1.1 audio additions (Jul 10), dual-track docs + IBM audit (Jul 16), anti-tamper verification (Aug 1), standards/identifier audit + comment-poison fix (Aug 2). Header + TOC updated; body untouched |
+| 1.2 | 2026-08-02 | Gorilla | Layman addendum "The Three Doors" appended after the merged LAYMAN track — line-by-line read of all 20 patches, incl. the honest fine print (WebM-audio consequence, ~80%-toggle truth, 48 kHz visibility, double soft-clip) |
 
 **Reconstruction Note:** This document combines findings from:
 - `00_MEDIA_HISTORY_AND_ROADMAP.md` (project overview)
@@ -1590,7 +1590,7 @@ This patch group replaces Firefox's permissive 'try hardware, fall back to softw
 ## Architecture
 
 - **Pattern:** Layered soft-enforcement gated by a single runtime pref, `media.gorilla.hardware_only_mode` (`StaticPrefs::media_gorilla_hardware_only_mode()`). Every layer that can construct a decoder or answer a codec-capability query is wrapped in a check against this pref AND the predicate `IsBlockedSoftwareOnlyVideoCodec` for the C++ paths. Blocking is intentionally redundant across six layers: any single layer left un-patched would silently re-open software fallback. The pref defaults ON in this build; turning it OFF reverts every gate to upstream behaviour without a rebuild.
-- **Trust Boundary:** The RDD (Remote Data Decoder) process is where VAAPI actually runs. Everything upstream of it — content process, PDMFactory, DecoderTraits — is a gate; RDD is the executor. GPU process is not involved and must remain ForceDisabled on Wayland (see gfx_thebes_gfxPlatformGtk.cpp patch and CLAUDE.md).
+- **Trust Boundary:** The RDD (Remote Data Decoder) process is where VAAPI actually runs. Everything upstream of it — content process, PDMFactory, DecoderTraits — is a gate; RDD is the executor. GPU process is not involved and must remain ForceDisabled on Wayland (see gfx_thebes_gfxPlatformGtk.cpp patch and the project rules file).
 - **Discrete-GPU assumption:** Reference hardware also has an AMD Radeon HD 7670M (Turks, muxless Enduro) — disabled in BIOS. All GPU-decode paths therefore target Intel HD 4000 exclusively; there is no runtime GPU selection logic in these patches. If deploying to a machine where the discrete GPU is BIOS-enabled, expect undefined behaviour in the compositor path.
 - **Attack Surface:** MIME-type spoofing by malicious pages was already handled upstream; this policy narrows the attack surface further by refusing to instantiate SW decoders whose CVE history is longer than H.264's HW path. Frame-pool cap prevents memory-pressure DoS via crafted streams.
 - **Dependencies:** `libavcodec (FFmpeg) linked at runtime for VAAPI H.264`, `libva1 + i965-va-driver from Debian`, `LIBVA_DRIVER_NAME=i965 in /etc/environment (the iHD driver does NOT support Ivy Bridge)`
@@ -2157,7 +2157,7 @@ dated all.js sign-off. Do not "correct" them on DSP math.)
 
 This section supersedes the earlier v1.0/Aug-02 merged excerpts above wherever they
 conflict. It was regenerated from the 20 live `.patch` files and re-verified against the
-patched tree `/home/gorilla/firefox-main` (FF_SRC). Key re-verifications: `UserForceEnable`
+patched tree `the source tree` (FF_SRC). Key re-verifications: `UserForceEnable`
 at gfxPlatformGtk.cpp:283 (NOT UserEnable); GPU_PROCESS ForceDisable on Wayland at line 333
 (VA-API in RDD); VA-API frame pool = 16 at four sites (2046/2144/2277/2408); pref
 media.gorilla.hardware_only_mode at StaticPrefList.yaml:12746; PDMFactory reject at 475-479.
@@ -2504,7 +2504,7 @@ The HD 4000 has a fixed-function H.264 VLD ASIC but no VP9/AV1 hardware decode. 
 Before trusting a build, verify the pref exists and the enforcement points are present in the tree.
 
 **Prerequisites:**
-- The patched tree at $FF_SRC (default /home/gorilla/firefox-main)
+- The patched tree at $FF_SRC (default the source tree)
 
 **Step 1:** grep -n 'media.gorilla.hardware_only_mode' $FF_SRC/modules/libpref/init/StaticPrefList.yaml
   - Expected: Hit at line 12746.

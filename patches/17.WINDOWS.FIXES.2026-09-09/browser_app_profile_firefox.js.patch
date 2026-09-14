@@ -791,7 +791,7 @@ index 4b5f0562be..9ecb2c1ef7 100644
 +
 +// ====================================================================
 +// GORILLA UNLEASHED — validated additions from config/firefox.js blueprint (2026-08-01)
-+// 122 prefs the battle-tested base lacked. Poison-audited; Gemini fabrications/wrong-
++// 122 prefs the battle-tested base lacked. Poison-audited; fabricated and wrong-
 +// names removed. PURE ADDITIONS — no existing value changed; Mozambique Drill, 0.0.0.0 egress
 +// locks, sandbox, and BBR-matched network tuning all untouched. Veto-skipped: DoH, clearOnShutdown.
 +// ====================================================================

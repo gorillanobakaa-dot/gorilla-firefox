@@ -198,7 +198,7 @@ Reverting restores full telemetry recording and the ~12.8% parent-process CPU co
 
 ## Changelog Notes
 
-Three-stage development: (1) MemoryTelemetry + FOG short-circuits -> ~11.5% saved; (2) dispatcher::launch no-op -> buffer-growth fix; (3) const GORILLA_TELEMETRY_OFF DCE guards on timing+memory distributions -> residual 0.84%->0.39%. Prior structural-excision attempt (documented in Second.Brain fog_glean_excision_sop.xml) abandoned: it caused NS_ERROR_FACTORY_NOT_REGISTERED and required 157 shim headers. GORILLA_TELEMETRY_OFF is a pre-existing in-tree identifier (no-brand-spam rule governs NEW identifiers).
+Three-stage development: (1) MemoryTelemetry + FOG short-circuits -> ~11.5% saved; (2) dispatcher::launch no-op -> buffer-growth fix; (3) const GORILLA_TELEMETRY_OFF DCE guards on timing+memory distributions -> residual 0.84%->0.39%. Prior structural-excision attempt (documented with the project's own notes) abandoned: it caused NS_ERROR_FACTORY_NOT_REGISTERED and required 157 shim headers. GORILLA_TELEMETRY_OFF is a pre-existing in-tree identifier (no-brand-spam rule governs NEW identifiers).
 
 ---
 *Developer Track. Human Track twin: `13-telemetry-kill.LAYMAN.md`.*
@@ -364,7 +364,7 @@ Remember Edward Snowden? He showed the world that data collection is rarely 'jus
 
 **Why this section exists.** The 2026-08-02 merge above was generated 2026-07-16/17,
 before a second wave of `GORILLA_TELEMETRY_OFF` guards was added to the live tree. This
-2026-08-04 regeneration re-verifies every claim against `$HOME/firefox-src`
+2026-08-04 regeneration re-verifies every claim against `the source tree`
 (`dual-track` toolkit, `--validate` gate passed: layman 91/100, developer 86/100,
 audit 99/100) and corrects two record-integrity items. **Where the two sections disagree,
 THIS one is authoritative.**
@@ -645,7 +645,7 @@ Excision was tried and abandoned: physically removing the subsystem orphaned moz
 
 ### Verify the guards exist in the live tree
 
-Confirm the shipped state before trusting the kill. Run against the patched tree (FF_SRC=$HOME/firefox-src).
+Confirm the shipped state before trusting the kill. Run against the patched tree (FF_SRC=the source tree).
 
 **Prerequisites:**
 - A checked-out patched Firefox 154 tree

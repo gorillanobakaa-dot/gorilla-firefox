@@ -53,7 +53,7 @@ Microsoft's free trial file). That's it.
 `ttf-ms-win11-auto` method — fetch the Windows 11 Enterprise 90-day evaluation
 ISO from Microsoft's eval center, extract `sources/install.wim`, pull
 `Windows/Fonts/<needed>` with 7-Zip, verify, install. No Windows required.
-Full font tables and background: `Second.Brain/microsoft_fonts.xml`.
+Full font tables and background are kept with the project's own notes.
 
 **Why a script, not the binaries — the honest accounting:**
 - Microsoft's EULA licenses **use**, not **redistribution**. Committing the

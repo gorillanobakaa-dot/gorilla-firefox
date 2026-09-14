@@ -20,7 +20,7 @@ the live tree on 2026-08-03. This log's gen-1 documentation set (dated
 
 - Both patches reproduce the live tree byte-exact: staged vanilla
   (`SafetyVault.Firefox/firefox-main`) + `patch -p1` + `cmp` against
-  `$HOME/firefox-src` → `REMOTEAGENT: BYTE-EXACT MATCH`,
+  `the source tree` → `REMOTEAGENT: BYTE-EXACT MATCH`,
   `MARIONETTE: BYTE-EXACT MATCH`.
 - Live loopback list is vanilla `["127.0.0.1", "[::1]"]` at
   `remote/components/RemoteAgent.sys.mjs:81` (vanilla comment at `:79`);
@@ -97,7 +97,7 @@ Three-site dead-coding per channel (constructor default, setter body, command-li
 ### 🟠 P1-001 — P1 *(found by rule)*
 
 - **Plain English:** A repair instruction points at a room that does not exist in the current building (remote/components/RemoteAgent.sys.mjs	2026-08-03 12:43:46.381629057 +0100). Upstream moved or renamed it, so the repair cannot be carried out.
-- **Technical:** remote_components_RemoteAgent.sys.mjs.patch: target path remote/components/RemoteAgent.sys.mjs	2026-08-03 12:43:46.381629057 +0100 is missing under $HOME/firefox-src. The patch will not apply.
+- **Technical:** remote_components_RemoteAgent.sys.mjs.patch: target path remote/components/RemoteAgent.sys.mjs	2026-08-03 12:43:46.381629057 +0100 is missing under the source tree. The patch will not apply.
 - **Fix:** Re-locate the code in the new tree and regenerate the patch against it.
 - **Effort:** 1h
 
@@ -178,7 +178,7 @@ Run these to check the claims above rather than trusting them.
 
 ```bash
 patch -p1 --dry-run < remote_components_RemoteAgent.sys.mjs.patch   # applies (P1-001 is a parser false positive)
-grep -n loopbackAddresses $HOME/firefox-src/remote/components/RemoteAgent.sys.mjs   # ["127.0.0.1", "[::1]"] at :81
+grep -n loopbackAddresses remote/components/RemoteAgent.sys.mjs   # ["127.0.0.1", "[::1]"] at :81
 grep -rn '0.0.0.0' remote/components/RemoteAgent.sys.mjs remote/components/Marionette.sys.mjs   # no matches
 grep -n 'PHYSICAL LOCK' remote_components_Marionette.sys.mjs.patch remote_components_RemoteAgent.sys.mjs.patch   # three per file
 ss -tlnp | grep -E ':2828|:9222'   # expect no output (run on a build; not executed this pass)
@@ -308,7 +308,7 @@ A single off-switch is defeatable: a pref can be flipped, a constructor default 
 - **Remote execution:** Removes both browser-automation channels. WebDriver BiDi / Marionette can drive navigation, evaluate script, and (with system access) perform privileged operations; all are denied because the channels never enable.
 - **Data handling:** No data is collected, logged, or transmitted by these changes. Removing Services.env.set(ENV_ALLOW_SYSTEM_ACCESS, "1") means the build no longer writes that env marker.
 - **Attack surface:** Two fewer reachable listening sockets at runtime; env/flag/setter activation inputs inert. The reverted loopback poison would, IF the lockdown were removed, have inverted the loopback check: whitelisting a 0.0.0.0 (all-interfaces, world-reachable) bind as 'localhost' while failing to recognise a genuine 127.0.0.1 bind. Reverted 2026-08-03; no 0.0.0.0 remains in either file (verified 2026-08-04).
-- **Notes:** allowHosts governs INBOUND host whitelisting for the Remote Agent server. The project's outbound host-blackhole ('kill-categories') is OUTBOUND-only and is therefore not a compensating control here — it would not have mitigated the poison. (Basis: architectural read; blackhole code not re-inspected this session.) Loopback definition authority: in-source Bug 1220810 comment at RemoteAgent.sys.mjs:78-80 ('localhost is guaranteed to resolve to a loopback address (127.0.0.1 or ::1)'), consistent with RFC 5735, which classifies 127.0.0.0/8 as Loopback and 0.0.0.0/8 as 'this host on this network' (not loopback).
+- **Notes:** allowHosts governs INBOUND host whitelisting for the Remote Agent server. The project's outbound host-blackhole ('kill-categories') is OUTBOUND-only and is therefore not a compensating control here — it would not have mitigated the poison. (Basis: architectural read; blackhole code not re-inspected this pass.) Loopback definition authority: in-source Bug 1220810 comment at RemoteAgent.sys.mjs:78-80 ('localhost is guaranteed to resolve to a loopback address (127.0.0.1 or ::1)'), consistent with RFC 5735, which classifies 127.0.0.0/8 as Loopback and 0.0.0.0/8 as 'this host on this network' (not loopback).
 
 ## Error Conditions
 
@@ -325,7 +325,7 @@ Confirm the .patch files are true records of the tree and nothing has drifted. S
 
 ```bash
 VAULT=<vault>
-LIVE=$HOME/firefox-src
+LIVE=the source tree
 ROOM=patches/new.patches/09.REMOTE
 mkdir -p /tmp/rt/remote/components
 cp "$VAULT"/remote/components/{Marionette,RemoteAgent}.sys.mjs /tmp/rt/remote/components/
@@ -337,12 +337,12 @@ cmp /tmp/rt/remote/components/Marionette.sys.mjs "$LIVE"/remote/components/Mario
 
 **Prerequisites:**
 - vanilla vault tree (SafetyVault.Firefox/firefox-main)
-- live tree $HOME/firefox-src
+- live tree the source tree
 - patch(1), cmp
 
 **Step 1:** Stage the vanilla remote/components/{Marionette,RemoteAgent}.sys.mjs into a work dir, then: patch -p1 < remote_components_RemoteAgent.sys.mjs.patch (and the Marionette patch)
   - Expected: both apply with no .rej
-**Step 2:** cmp work/remote/components/RemoteAgent.sys.mjs $HOME/firefox-src/remote/components/RemoteAgent.sys.mjs (and Marionette)
+**Step 2:** cmp work/remote/components/RemoteAgent.sys.mjs remote/components/RemoteAgent.sys.mjs (and Marionette)
   - Expected: BYTE-EXACT MATCH for both (verified 2026-08-04)
 
 **After this task:** (vanilla + patch) == live for both files.
@@ -354,7 +354,7 @@ The RemoteAgent loopback list was poisoned 127.0.0.1 -> 0.0.0.0 and reverted 202
 **Prerequisites:**
 - live tree
 
-**Step 1:** grep -n loopbackAddresses $HOME/firefox-src/remote/components/RemoteAgent.sys.mjs
+**Step 1:** grep -n loopbackAddresses remote/components/RemoteAgent.sys.mjs
   - Expected: ["127.0.0.1", "[::1]"] at line 81; vanilla comment at :79
 **Step 2:** grep -rn '0.0.0.0' remote/components/RemoteAgent.sys.mjs remote/components/Marionette.sys.mjs
   - Expected: no matches
@@ -652,7 +652,7 @@ stay consistent between runs.
 ### 🟠 P1-001 — P1
 
 - **Plain English:** A repair instruction points at a room that does not exist in the current building (remote/components/RemoteAgent.sys.mjs	2026-08-03 12:43:46.381629057 +0100). Upstream moved or renamed it, so the repair cannot be carried out.
-- **Technical:** remote_components_RemoteAgent.sys.mjs.patch: target path remote/components/RemoteAgent.sys.mjs	2026-08-03 12:43:46.381629057 +0100 is missing under $HOME/firefox-src. The patch will not apply.
+- **Technical:** remote_components_RemoteAgent.sys.mjs.patch: target path remote/components/RemoteAgent.sys.mjs	2026-08-03 12:43:46.381629057 +0100 is missing under the source tree. The patch will not apply.
 - **Fix:** Re-locate the code in the new tree and regenerate the patch against it.
 - **Effort:** 1h
 

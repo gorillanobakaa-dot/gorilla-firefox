@@ -18,7 +18,7 @@ regeneration fixes:
    including the **four hallucinated (inert) pref keys** in the privacy list and the stale
    `00_OVERRIDES_HISTORY_AND_ROADMAP.md` narrative (which still says "8GB RAM" and "sole user.js").
 
-Verification anchors used this pass (against `FF_SRC=$HOME/firefox-src`):
+Verification anchors used this pass (against `FF_SRC=the source tree`):
 - All 4 suspect keys ABSENT from the whole tree: `toolkit.telemetry.coverage.opt-out`,
   `browser.ping-centre.telemetry`, `browser.attribution.enabled`,
   `messaging-system.rsexperimentloader.enabled`.
@@ -309,7 +309,7 @@ Verify what is actually in the room before trusting the docs.
 The four keys must be shown to exist nowhere, not merely assumed.
 
 **Prerequisites:**
-- FF_SRC=$HOME/firefox-src
+- FF_SRC=the source tree
 
 **Step 1:** for k in toolkit.telemetry.coverage.opt-out browser.ping-centre.telemetry browser.attribution.enabled messaging-system.rsexperimentloader.enabled; do grep -rIl -F "$k" $FF_SRC && echo FOUND $k || echo ABSENT $k; done
   - Expected: ABSENT for all four.
@@ -321,7 +321,7 @@ The four keys must be shown to exist nowhere, not merely assumed.
 The zero-copy and codec prefs are belts for compiled-in code; confirm that code exists.
 
 **Prerequisites:**
-- FF_SRC=$HOME/firefox-src
+- FF_SRC=the source tree
 
 **Step 1:** sed -n '276,283p' $FF_SRC/gfx/thebes/gfxPlatformGtk.cpp
   - Expected: GORILLA UserForceEnable block gated by StaticPrefs::media_gorilla_hardware_only_mode().

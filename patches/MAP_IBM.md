@@ -2,7 +2,7 @@
 
 > **Document Version:** 1.1 | **Last Updated:** 2026-07-08 | **Author:** Gorilla  
 > **Supersedes:** MAP.md (informal version)  
-> **Document Classification:** Internal Technical Reference  
+> **Document Classification:** Technical Reference  
 > **Confidentiality:** Public (Open Source)
 
 ---
@@ -531,7 +531,7 @@ cat firefox-source/browser/app/distribution/policies.json | grep "app.normandy.e
 
 **Usage:**
 ```bash
-cd $HOME/Documents/FIrefox.154.Work/patches
+cd patches
 
 # Dry run (no changes)
 ./deploy.sh --dry-run $HOME/firefox-source
@@ -590,7 +590,7 @@ find $HOME/firefox-source -name "*.gorilla-patched" | wc -l
 
 **Search Command:**
 ```bash
-cd $HOME/Documents/FIrefox.154.Work/patches
+cd patches
 find . -name "AudioStream.cpp"
 # Output: ./01.MEDIA/AudioStream.cpp
 ```
@@ -618,7 +618,7 @@ find . -name "AudioStream.cpp"
 # Example: Adding new media patch
 
 # Step 2: Create patch file
-cp /path/to/NewFile.cpp $HOME/Documents/FIrefox.154.Work/patches/01.MEDIA/
+cp /path/to/NewFile.cpp patches/01.MEDIA/
 
 # Step 3: Update this document (MAP_IBM.md)
 # Add entry to 01.MEDIA file list
@@ -639,7 +639,7 @@ cd $HOME/firefox-source
 **Procedure:**
 ```bash
 # Step 1: Remove from category directory
-rm $HOME/Documents/FIrefox.154.Work/patches/01.MEDIA/OldFile.cpp
+rm patches/01.MEDIA/OldFile.cpp
 
 # Step 2: Update this document (MAP_IBM.md)
 # Remove entry from file list
@@ -657,7 +657,7 @@ cd $HOME/firefox-source
 **Procedure:**
 ```bash
 # Step 1: Create new category directory
-mkdir $HOME/Documents/FIrefox.154.Work/patches/15_NEW_CATEGORY
+mkdir patches/15_NEW_CATEGORY
 
 # Step 2: Move files
 mv patches/01.MEDIA/SomeFile.cpp patches/15_NEW_CATEGORY/
@@ -778,7 +778,7 @@ mv patches/01.MEDIA/SomeFile.cpp patches/15_NEW_CATEGORY/
 
 ---
 
-**Document Classification:** Internal Technical Reference  
+**Document Classification:** Technical Reference  
 **Confidentiality:** Public (Open Source)  
 **Review Cycle:** On patch structure changes  
 **Next Review:** 2026-10-06

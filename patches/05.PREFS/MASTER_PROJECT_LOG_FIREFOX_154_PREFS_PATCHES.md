@@ -104,7 +104,7 @@ The category passes all code guidelines.
 # ═══ CORRECTION 2026-08-04 — Part 1/Part 2 above are the 2026-07-10 generation-1 record and contain errors ═══
 
 The 2026-07-10 "Rule-Based Code Audit" (Part 2) cited fabricated locations. Corrected against
-the live tree (`$HOME/firefox-src`) and the .patch files on 2026-08-04:
+the live tree (`the source tree`) and the .patch files on 2026-08-04:
 
 - `media.gorilla.hardware_only_mode` is declared at **StaticPrefList.yaml line 12746**, not 12681
   (verified: `grep -n media.gorilla.hardware_only_mode modules/libpref/init/StaticPrefList.yaml`).
@@ -497,7 +497,7 @@ You can read every default. Every `pref("whatever", false)` line has a reason be
 # ═══ CONSOLIDATION 2026-08-04 — dual-track docs + IBM audit REGENERATED; merged VERBATIM below ═══
 
 Regenerated via `dual-track` (precheck -> code prep -> fill -> render --validate) against
-the byte-exact 2026-08-04 .patch files and the live tree `$HOME/firefox-src`.
+the byte-exact 2026-08-04 .patch files and the live tree `the source tree`.
 Quality gate (>=85): LAYMAN 91/100, DEVELOPER 85/100, AUDIT 98/100 — all PASS.
 Standalone side-doc `.md` and the `.filled.json`/`.prep.json` scaffolding were deleted after
 this verbatim merge (one-canonical-doc doctrine); the `.patch` files remain the shipped artifact.
@@ -524,7 +524,7 @@ The browser's factory-settings room is in good shape and safe to ship for its in
 
 ## SECTION C: TECHNICAL SUMMARY (Developer)
 
-Layered default stack (StaticPrefList/all.js greprefs, then app-default firefox.js) plus a compile recipe that excises outbound subsystems. Effective values were verified against $HOME/firefox-src, not the patch alone: layers.gpu-process.enabled=false (both files), media.gorilla.hardware_only_mode=true at StaticPrefList.yaml:12746, telemetry family false+locked, Normandy Mozambique Drill (enabled=false/api_url=''/run_interval=1893456000, locked), Nimbus off+locked, AI/ML+SmartWindow+SmartTabGroups+translations off+locked, TopSites/Pocket/Fakespot engine killed with merino/spoc endpoints -> 0.0.0.0. Last-write-wins correctly resolves captive-portal (all.js:4209 false -> firefox.js:1373 true) and safebrowsing malware/phishing (all.js:4210-11 false -> firefox.js:3730-31 true) to ON, with remote safebrowsing fetch (downloads.remote, gethashURL) off. media.volume_scale=2.0 is signed and owner-ear-validated. language.properties is trimmed to en/en-us (fingerprint defence). The vanilla-base+append pattern is the documented method; override-duplicates are NOT poison.
+Layered default stack (StaticPrefList/all.js greprefs, then app-default firefox.js) plus a compile recipe that excises outbound subsystems. Effective values were verified against the source tree, not the patch alone: layers.gpu-process.enabled=false (both files), media.gorilla.hardware_only_mode=true at StaticPrefList.yaml:12746, telemetry family false+locked, Normandy Mozambique Drill (enabled=false/api_url=''/run_interval=1893456000, locked), Nimbus off+locked, AI/ML+SmartWindow+SmartTabGroups+translations off+locked, TopSites/Pocket/Fakespot engine killed with merino/spoc endpoints -> 0.0.0.0. Last-write-wins correctly resolves captive-portal (all.js:4209 false -> firefox.js:1373 true) and safebrowsing malware/phishing (all.js:4210-11 false -> firefox.js:3730-31 true) to ON, with remote safebrowsing fetch (downloads.remote, gethashURL) off. media.volume_scale=2.0 is signed and owner-ear-validated. language.properties is trimmed to en/en-us (fingerprint defence). The vanilla-base+append pattern is the documented method; override-duplicates are NOT poison.
 
 ## SECTION D: DETECTED DEFECTS
 
@@ -775,7 +775,7 @@ Two deliberate patterns. (1) Vanilla-base + appended-GORILLA-override, resolved 
 Confirm the effective (last-write-wins) values, not just the patch hunks.
 
 **Prerequisites:**
-- FF_SRC=$HOME/firefox-src
+- FF_SRC=the source tree
 - ripgrep/grep
 
 **Step 1:** grep -n 'network.captive-portal-service.enabled' modules/libpref/init/all.js browser/app/profile/firefox.js

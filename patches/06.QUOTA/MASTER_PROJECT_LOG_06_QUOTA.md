@@ -4,7 +4,7 @@
 
 ## Regeneration note (supersedes the 2026-07-16 generation-1 content)
 
-This log replaces the earlier merged docs, which contained a **phantom function name**. Corrections applied and tree-verified this pass (2026-08-04, live tree `$HOME/firefox-src`):
+This log replaces the earlier merged docs, which contained a **phantom function name**. Corrections applied and tree-verified this pass (2026-08-04, live tree `the source tree`):
 
 - The whitelist predicate is **`QuotaManager::IsOriginInternal`** (ActorsParent.cpp:7774; declared QuotaManager.h:744), **not** the phantom `IsFirstOriginQuotaPromptRequired`, which exists nowhere in the tree.
 - The `NIGHTLY_BUILD -> EARLY_BETA_OR_EARLIER` gate swap (:4297) is a **no-op on this build**: milestone `154.0a1` (config/milestone.txt) defines both macros, and `--disable-debug` leaves the gate on the channel macro alone. The swap only widens the diagnostic's reach to early-Beta milestones. (The old docs implied it newly enabled the diagnostic here.)
@@ -67,7 +67,7 @@ Three independent point fixes to dom/quota/ActorsParent.cpp, the parent-process 
 ### 🟢 P3-001 — P3 *(found by review)*
 
 - **Plain English:** Housekeeping, not a code fault: these three edits to Firefox's source carry no project 'who changed this and why' tag, which the project's own rules ask for. It is unclear whether they are the project's own work or ordinary Firefox updates. Like a repair with no signature on the work order - the repair is fine, the paperwork is missing.
-- **Technical:** grep 'GORILLA' dom/quota/ActorsParent.cpp -> none. CLAUDE.md mandates // GORILLA OVERRIDE: markers on project edits to Mozilla source. None of the three hunks (:268/:7779, :4297, deleted shutdown block) carry one. None is a resource optimization; all read as upstream correctness fixes; vanilla vs live trees are ~3 days apart.
+- **Technical:** grep 'GORILLA' dom/quota/ActorsParent.cpp -> none. the project rules file mandates // GORILLA OVERRIDE: markers on project edits to Mozilla source. None of the three hunks (:268/:7779, :4297, deleted shutdown block) carry one. None is a resource optimization; all read as upstream correctness fixes; vanilla vs live trees are ~3 days apart.
 - **Fix:** Diff the three hunks against mozilla-central at the pull revision. If project-authored, add provenance markers; if upstream, annotate 06.QUOTA as documenting upstream drift.
 - **Effort:** 30min (needs network access to mozilla-central)
 
@@ -272,7 +272,7 @@ sha256sum dom_quota_ActorsParent.cpp.patch     # 2814f13dbeb54536...  (42 lines)
 Validate function name and line placement, not the doc's word.
 
 **Prerequisites:**
-- export FF_SRC=$HOME/firefox-src
+- export FF_SRC=the source tree
 
 **Step 1:** grep -n 'kAboutHomeOriginPrefix' $FF_SRC/dom/quota/ActorsParent.cpp
   - Expected: Definition at :268 and use at :7779, inside QuotaManager::IsOriginInternal (:7774).
@@ -299,7 +299,7 @@ Validate function name and line placement, not the doc's word.
 
 ## Technical Debt
 
-🟡 **LOW** — No // GORILLA OVERRIDE: provenance marker on any of the three edits, though CLAUDE.md mandates them for project edits to Mozilla source. Either the markers are owed, or these are upstream mozilla-central changes captured as ~3-day drift (none is a resource optimization; all read as ordinary upstream correctness fixes). → Resolve authorship: diff the three hunks against mozilla-central at the pull revision. If project-authored, add provenance markers; if upstream, annotate 06.QUOTA as documenting upstream drift, not customization.
+🟡 **LOW** — No // GORILLA OVERRIDE: provenance marker on any of the three edits, though the project rules file mandates them for project edits to Mozilla source. Either the markers are owed, or these are upstream mozilla-central changes captured as ~3-day drift (none is a resource optimization; all read as ordinary upstream correctness fixes). → Resolve authorship: diff the three hunks against mozilla-central at the pull revision. If project-authored, add provenance markers; if upstream, annotate 06.QUOTA as documenting upstream drift, not customization.
 🟡 **LOW** — 06.QUOTA is a single-file catch-all with three unrelated changes. → Acceptable as-is; fold into a broader dom/quota topic only if more quota work lands.
 🟡 **LOW** — 'redundant' framing for the deleted clear is only defensible as 'not required at this point', since no other .Clear() exists. → Keep the 'stale-mutex-hold / not required here' framing; do not claim another site clears the maps.
 
