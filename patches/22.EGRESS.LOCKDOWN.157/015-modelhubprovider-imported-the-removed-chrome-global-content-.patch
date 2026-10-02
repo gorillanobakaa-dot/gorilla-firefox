@@ -1,0 +1,45 @@
+# Gorilla 157 privacy cut
+# ModelHubProvider imported the removed chrome://global/content/ml/ModelHub.sys.mjs at startup (provider category + module removed); WEBGL_debug_renderer_info extension disabled in code so no page gets the GPU model string (leaks row).
+# Files: dom/canvas/ClientWebGLContext.cpp, toolkit/mozapps/extensions/extensions.manifest, toolkit/mozapps/extensions/internal/moz.build
+
+diff --git a/dom/canvas/ClientWebGLContext.cpp b/dom/canvas/ClientWebGLContext.cpp
+index 67b11d6f2f..96090e6392 100644
+--- a/dom/canvas/ClientWebGLContext.cpp
++++ b/dom/canvas/ClientWebGLContext.cpp
+@@ -6368,7 +6368,9 @@ bool ClientWebGLContext::IsExtensionForbiddenForCaller(
+       return true;
+ 
+     case WebGLExtensionID::WEBGL_debug_renderer_info:
+-      return !StaticPrefs::webgl_enable_debug_renderer_info();
++      // GORILLA UNLEASHED - PHYSICAL LOCK: the unmasked GPU vendor/renderer strings are never exposed to a page,
++      // whatever webgl.enable-debug-renderer-info says (the leak page read "ANGLE (Intel, Intel(R) HD Graphics ...)").
++      return true;
+ 
+     case WebGLExtensionID::WEBGL_debug_shaders:
+       return ShouldResistFingerprinting(RFPTarget::WebGLRenderInfo);
+diff --git a/toolkit/mozapps/extensions/extensions.manifest b/toolkit/mozapps/extensions/extensions.manifest
+index abb82cae6e..98210a9a25 100644
+--- a/toolkit/mozapps/extensions/extensions.manifest
++++ b/toolkit/mozapps/extensions/extensions.manifest
+@@ -6,7 +6,7 @@ category update-timer addonManager @mozilla.org/addons/integration;1,getService,
+ #ifndef MOZ_THUNDERBIRD
+ #ifndef MOZ_WIDGET_ANDROID
+ category addon-provider-module GMPProvider resource://gre/modules/addons/GMPProvider.sys.mjs
+-category addon-provider-module ModelHubProvider resource://gre/modules/addons/ModelHubProvider.sys.mjs
++# GORILLA excised: ModelHubProvider (ML model hub removed; its module imported chrome://global/content/ml/ModelHub.sys.mjs at startup)
+ category addon-provider-module SitePermsAddonProvider resource://gre/modules/addons/SitePermsAddonProvider.sys.mjs
+ #endif
+ #endif
+diff --git a/toolkit/mozapps/extensions/internal/moz.build b/toolkit/mozapps/extensions/internal/moz.build
+index 2d89b848c5..993d2709ea 100644
+--- a/toolkit/mozapps/extensions/internal/moz.build
++++ b/toolkit/mozapps/extensions/internal/moz.build
+@@ -19,7 +19,7 @@ EXTRA_JS_MODULES.addons += [
+ if CONFIG["MOZ_WIDGET_TOOLKIT"] != "android":
+     EXTRA_JS_MODULES.addons += [
+         "GMPProvider.sys.mjs",
+-        "ModelHubProvider.sys.mjs",
++        # GORILLA excised: "ModelHubProvider.sys.mjs" (ML model hub removed)
+         ## TODO consider extending it to mobile builds too (See Bug 1790084).
+         "SitePermsAddonProvider.sys.mjs",
+     ]

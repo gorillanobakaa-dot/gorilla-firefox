@@ -1,0 +1,28 @@
+# Gorilla 157 privacy cut
+# Excision creep: 157's utility process preloads the llama runtime for HW_INFERENCE under XP_WIN+MOZ_SANDBOX; backends/llama is excised, so the include and the Init() call go, GORILLA-commented like Gorilla's other excisions
+# Files: ipc/glue/UtilityProcessImpl.cpp
+
+diff --git a/ipc/glue/UtilityProcessImpl.cpp b/ipc/glue/UtilityProcessImpl.cpp
+index 254ce4e17b..4996abc44b 100644
+--- a/ipc/glue/UtilityProcessImpl.cpp
++++ b/ipc/glue/UtilityProcessImpl.cpp
+@@ -11,7 +11,7 @@
+ 
+ #if defined(XP_WIN) && defined(MOZ_SANDBOX)
+ #  include "mozilla/CpuInfo.h"
+-#  include "mozilla/llama/LlamaRuntimeLinker.h"
++// GORILLA excised: mozilla/llama/LlamaRuntimeLinker.h (backends/llama removed)
+ #  include "mozilla/sandboxTarget.h"
+ #  include "WMF.h"
+ #  include "WMFDecoderModule.h"
+@@ -106,9 +106,7 @@ bool UtilityProcessImpl::Init(int aArgc, char* aArgv[]) {
+     UtilityMediaServiceParent::WMFPreloadForSandbox();
+   }
+ 
+-  if (*sandboxingKind == SandboxingKind::HW_INFERENCE) {
+-    mozilla::llama::LlamaRuntimeLinker::Init();
+-  }
++  // GORILLA excised: LlamaRuntimeLinker::Init() for HW_INFERENCE (backends/llama removed)
+ 
+   // Go for it
+   mozilla::SandboxTarget::Instance()->StartSandbox();

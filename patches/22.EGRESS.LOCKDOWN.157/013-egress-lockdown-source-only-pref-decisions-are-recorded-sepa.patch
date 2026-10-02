@@ -1,0 +1,73 @@
+# Gorilla 157 privacy cut
+# Egress lockdown, source only: pref decisions are recorded separately, so the locked pref block is out (proposed separately); push connection never enabled in PushService; connectivity probe reads off in NetworkConnectivityService.cpp. No leak depends on a pref now.
+# Files: browser/app/profile/firefox.js, dom/push/PushService.sys.mjs, netwerk/base/NetworkConnectivityService.cpp
+
+diff --git a/browser/app/profile/firefox.js b/browser/app/profile/firefox.js
+index 34c50b2571..2685e67126 100644
+--- a/browser/app/profile/firefox.js
++++ b/browser/app/profile/firefox.js
+@@ -4091,28 +4091,3 @@ pref("identity.fxaccounts.enabled", false, locked);
+ // 2048 is what every Linux build ships. See NOT_HARDENING in
+ // working scripts/fix_prefs_last_wins.py.
+ pref("network.captive-portal-service.enabled", false, locked);
+-
+-// GORILLA UNLEASHED - EGRESS LOCKDOWN (2026-10-02). Measured with the browser's own nsHttp log: 155.0.1 and the
+-// first 157 builds asked eight Mozilla hosts for things on their own. Every one is closed here (locked) and in the
+-// code that would have asked (PHYSICAL LOCK comments in the modules named). Last file wins: keep this block last.
+-pref("services.settings.server", "data:,#remote-settings-dummy/v1", locked);      // Remote Settings, attachments, content-signature chains
+-pref("browser.region.update.enabled", false, locked);                            // location.services.mozilla.com
+-pref("browser.region.network.url", "", locked);
+-pref("browser.region.network.scope", "", locked);
+-pref("dom.push.connection.enabled", false, locked);                              // push.services.mozilla.com
+-pref("dom.push.serverURL", "", locked);
+-pref("extensions.getAddons.cache.enabled", false, locked);                       // services.addons.mozilla.org
+-pref("extensions.getAddons.get.url", "", locked);
+-pref("extensions.getAddons.search.browseURL", "", locked);
+-pref("extensions.update.enabled", false, locked);                                // versioncheck.addons.mozilla.org
+-pref("extensions.update.url", "", locked);
+-pref("extensions.update.background.url", "", locked);
+-pref("extensions.update.autoUpdateDefault", false, locked);
+-pref("extensions.systemAddon.update.enabled", false, locked);                    // aus5.mozilla.org SystemAddons
+-pref("extensions.systemAddon.update.url", "", locked);
+-pref("network.connectivity-service.enabled", false, locked);                     // firefox-portal-detection.com
+-pref("network.connectivity-service.IPv4.url", "", locked);
+-pref("network.connectivity-service.IPv6.url", "", locked);
+-pref("network.connectivity-service.DNSv4.domain", "", locked);
+-pref("network.connectivity-service.DNSv6.domain", "", locked);
+-pref("captivedetect.canonicalURL", "", locked);
+diff --git a/dom/push/PushService.sys.mjs b/dom/push/PushService.sys.mjs
+index 182ec29d8f..a80ca442c7 100644
+--- a/dom/push/PushService.sys.mjs
++++ b/dom/push/PushService.sys.mjs
+@@ -240,6 +240,9 @@ export var PushService = {
+   },
+ 
+   _changeStateConnectionEnabledEvent(enabled) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK (egress): the push connection to push.services.mozilla.com is never
++    // enabled, whatever dom.push.connection.enabled says. Everything below treats the service as disabled.
++    enabled = false;
+     lazy.console.debug("changeStateConnectionEnabledEvent()", enabled);
+ 
+     if (
+diff --git a/netwerk/base/NetworkConnectivityService.cpp b/netwerk/base/NetworkConnectivityService.cpp
+index 1a69dcbce7..b56035d99e 100644
+--- a/netwerk/base/NetworkConnectivityService.cpp
++++ b/netwerk/base/NetworkConnectivityService.cpp
+@@ -354,7 +354,7 @@ NetworkConnectivityService::OnLookupComplete(nsICancelable* aRequest,
+ NS_IMETHODIMP
+ NetworkConnectivityService::RecheckDNS() {
+   bool enabled =
+-      Preferences::GetBool("network.connectivity-service.enabled", false);
++      false;  // GORILLA UNLEASHED - PHYSICAL LOCK (egress): no probe of firefox-portal-detection.com, whatever the pref says
+   if (!enabled) {
+     return NS_OK;
+   }
+@@ -538,7 +538,7 @@ already_AddRefed<nsIChannel> NetworkConnectivityService::SetupIPCheckChannel(
+ NS_IMETHODIMP
+ NetworkConnectivityService::RecheckIPConnectivity() {
+   bool enabled =
+-      Preferences::GetBool("network.connectivity-service.enabled", false);
++      false;  // GORILLA UNLEASHED - PHYSICAL LOCK (egress): no probe of firefox-portal-detection.com, whatever the pref says
+   if (!enabled) {
+     return NS_OK;
+   }

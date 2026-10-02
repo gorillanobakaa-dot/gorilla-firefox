@@ -1,0 +1,239 @@
+# Gorilla 157 privacy cut
+# Privacy at source: legacy telemetry never sends (TelemetrySend, pingsender task), pingsender.exe and nmhproxy.exe not built or shipped, no GMP checks/downloads, no add-on update checks, no Safe Browsing/tracking list downloads, captive portal service never starts, network geolocation never sends, UITour dead, new-tab Discovery Stream fetches nothing.
+# Files: browser/app/moz.build, browser/components/uitour/UITour.sys.mjs, browser/extensions/newtab/lib/DiscoveryStreamFeed.sys.mjs, browser/installer/package-manifest.in, dom/system/NetworkGeolocationProvider.sys.mjs, netwerk/base/CaptivePortalService.cpp, toolkit/components/telemetry/app/TelemetrySend.sys.mjs, toolkit/components/telemetry/moz.build, toolkit/components/telemetry/pings/BackgroundTask_pingsender.sys.mjs, toolkit/components/url-classifier/nsUrlClassifierStreamUpdater.cpp, toolkit/modules/GMPInstallManager.sys.mjs, toolkit/mozapps/extensions/AddonManager.sys.mjs, toolkit/mozapps/extensions/internal/AddonUpdateChecker.sys.mjs
+
+diff --git a/browser/app/moz.build b/browser/app/moz.build
+index db09aba7e9..44e4acb25c 100644
+--- a/browser/app/moz.build
++++ b/browser/app/moz.build
+@@ -229,8 +229,7 @@ if CONFIG["MOZ_SANDBOX"] and CONFIG["OS_ARCH"] == "WINNT":
+         "usp10.dll",
+     ]
+ 
+-if CONFIG["TARGET_OS"] in ("WINNT", "OSX"):
+-    DIRS += ["nmhproxy"]
++# GORILLA excised: nmhproxy (native messaging bridge; was: if TARGET_OS in WINNT, OSX: DIRS += ["nmhproxy"])
+ 
+ # Control the default heap size.
+ # This is the heap returned by GetProcessHeap().
+diff --git a/browser/components/uitour/UITour.sys.mjs b/browser/components/uitour/UITour.sys.mjs
+index fb6f8d359b..cc830e93b6 100644
+--- a/browser/components/uitour/UITour.sys.mjs
++++ b/browser/components/uitour/UITour.sys.mjs
+@@ -240,6 +240,10 @@ export var UITour = {
+   },
+ 
+   onPageEvent(aEvent, aBrowser) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: UITour lets allow-listed Mozilla pages query and drive the browser. Never in this build.
++    if (true) {
++      return false;
++    }
+     let browser = aBrowser;
+     let window = browser.documentGlobal;
+ 
+diff --git a/browser/extensions/newtab/lib/DiscoveryStreamFeed.sys.mjs b/browser/extensions/newtab/lib/DiscoveryStreamFeed.sys.mjs
+index 626bfeada5..bbd3da072b 100644
+--- a/browser/extensions/newtab/lib/DiscoveryStreamFeed.sys.mjs
++++ b/browser/extensions/newtab/lib/DiscoveryStreamFeed.sys.mjs
+@@ -546,6 +546,10 @@ export class DiscoveryStreamFeed {
+   }
+ 
+   async fetchFromEndpoint(endpoint, options = {}, useOhttp = false) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK (egress): the new tab page fetches no stories, sponsored content or layouts from anywhere.
++    if (true) {
++      return null;
++    }
+     let fetchPromise;
+     if (!endpoint) {
+       console.error("Tried to fetch endpoint but none was configured.");
+diff --git a/browser/installer/package-manifest.in b/browser/installer/package-manifest.in
+index 4b38e190ab..d97e6f9ec3 100644
+--- a/browser/installer/package-manifest.in
++++ b/browser/installer/package-manifest.in
+@@ -413,12 +413,12 @@ bin/libfreebl_64int_3.so
+ 
+ ; [ Ping Sender ]
+ ;
+-@BINPATH@/pingsender@BIN_SUFFIX@
++; GORILLA excised: pingsender (telemetry sender)
+ 
+ ; [ Native Messaging Host Proxy ]
+ ;
+ #if defined(XP_WIN) || defined(XP_MACOSX)
+-@BINPATH@/nmhproxy@BIN_SUFFIX@
++; GORILLA excised: nmhproxy (native messaging bridge: no outside program drives this browser)
+ #endif
+ 
+ ; [ Notification COM Server ]
+diff --git a/dom/system/NetworkGeolocationProvider.sys.mjs b/dom/system/NetworkGeolocationProvider.sys.mjs
+index 42f574fa83..07dd95de5e 100644
+--- a/dom/system/NetworkGeolocationProvider.sys.mjs
++++ b/dom/system/NetworkGeolocationProvider.sys.mjs
+@@ -413,6 +413,11 @@ NetworkGeolocationProvider.prototype = {
+    *                          </code>
+    */
+   async sendLocationRequest(wifiData) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK (egress): no Wi-Fi scan or IP lookup is ever sent to a geolocation service.
++    if (true) {
++      this.onStatus(true, "geolocation disabled in this build");
++      return;
++    }
+     let data = { wifiAccessPoints: undefined };
+     // Zero or one entry means lookup is only by our own IP address.
+     if (wifiData && wifiData.length >= 2) {
+diff --git a/netwerk/base/CaptivePortalService.cpp b/netwerk/base/CaptivePortalService.cpp
+index 65b1769cfc..a48afa4e42 100644
+--- a/netwerk/base/CaptivePortalService.cpp
++++ b/netwerk/base/CaptivePortalService.cpp
+@@ -149,6 +149,9 @@ nsresult CaptivePortalService::Initialize() {
+ }
+ 
+ nsresult CaptivePortalService::Start() {
++  // GORILLA UNLEASHED - PHYSICAL LOCK (egress): no captive-portal probe of firefox-portal-detection.com, whatever the pref says.
++  return NS_OK;
++
+   if (!mInitialized) {
+     return NS_ERROR_NOT_INITIALIZED;
+   }
+diff --git a/toolkit/components/telemetry/app/TelemetrySend.sys.mjs b/toolkit/components/telemetry/app/TelemetrySend.sys.mjs
+index 2ebae13763..d19871e4cc 100644
+--- a/toolkit/components/telemetry/app/TelemetrySend.sys.mjs
++++ b/toolkit/components/telemetry/app/TelemetrySend.sys.mjs
+@@ -1024,6 +1024,10 @@ export var TelemetrySendImpl = {
+    * @param {string} submissionURL The complete Telemetry-compliant URL for the ping.
+    */
+   _sendWithPingSender(pingId, submissionURL) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK (telemetry): pingsender is not built; nothing is handed to it.
++    if (true) {
++      return;
++    }
+     this._log.trace(
+       "_sendWithPingSender - sending " + pingId + " to " + submissionURL
+     );
+@@ -1386,6 +1390,10 @@ export var TelemetrySendImpl = {
+   },
+ 
+   _doPing(ping, id, isPersisted) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK (telemetry): no ping leaves this browser, whatever the server pref or upload pref says.
++    if (true) {
++      return Promise.resolve();
++    }
+     let startTime = ChromeUtils.now();
+ 
+     if (!this.sendingEnabled(ping)) {
+@@ -1677,6 +1685,10 @@ export var TelemetrySendImpl = {
+   },
+ 
+   runPingSender(pings, observer) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK (telemetry): no pingsender process and no --backgroundtask pingsender, ever.
++    if (true) {
++      return;
++    }
+     if (AppConstants.platform === "android") {
+       throw Components.Exception("", Cr.NS_ERROR_NOT_IMPLEMENTED);
+     }
+diff --git a/toolkit/components/telemetry/moz.build b/toolkit/components/telemetry/moz.build
+index c92948cad2..8dc92c0a34 100644
+--- a/toolkit/components/telemetry/moz.build
++++ b/toolkit/components/telemetry/moz.build
+@@ -7,7 +7,7 @@ include("/ipc/chromium/chromium-config.mozbuild")
+ FINAL_LIBRARY = "xul"
+ 
+ DIRS = [
+-    "pingsender",
++    # GORILLA excised: "pingsender" (standalone telemetry sender; this browser sends no pings)
+ ]
+ 
+ DEFINES["MOZ_APP_VERSION"] = '"%s"' % CONFIG["MOZ_APP_VERSION"]
+diff --git a/toolkit/components/telemetry/pings/BackgroundTask_pingsender.sys.mjs b/toolkit/components/telemetry/pings/BackgroundTask_pingsender.sys.mjs
+index 89915ba3c3..636dbe5afe 100644
+--- a/toolkit/components/telemetry/pings/BackgroundTask_pingsender.sys.mjs
++++ b/toolkit/components/telemetry/pings/BackgroundTask_pingsender.sys.mjs
+@@ -5,6 +5,10 @@
+ import { sendStandalonePing } from "resource://gre/modules/TelemetrySend.sys.mjs";
+ 
+ export async function runBackgroundTask(commandLine) {
++  // GORILLA UNLEASHED - PHYSICAL LOCK (telemetry): the pingsender background task sends nothing.
++  if (true) {
++    return 0;
++  }
+   let sends = [];
+   for (let i = 0; i < commandLine.length; i += 2) {
+     sends.push(
+diff --git a/toolkit/components/url-classifier/nsUrlClassifierStreamUpdater.cpp b/toolkit/components/url-classifier/nsUrlClassifierStreamUpdater.cpp
+index 1962fdb08d..f353c36888 100644
+--- a/toolkit/components/url-classifier/nsUrlClassifierStreamUpdater.cpp
++++ b/toolkit/components/url-classifier/nsUrlClassifierStreamUpdater.cpp
+@@ -274,6 +274,11 @@ nsUrlClassifierStreamUpdater::DownloadUpdates(
+   NS_ENSURE_ARG(aUpdateErrorCallback);
+   NS_ENSURE_ARG(aDownloadErrorCallback);
+ 
++  // GORILLA UNLEASHED - PHYSICAL LOCK (egress): no list update is ever downloaded (shavar.services.mozilla.com,
++  // safebrowsing.googleapis.com). Tracker blocking is uBlock Origin's job in this browser.
++  *_retval = false;
++  return NS_OK;
++
+   if (mIsUpdating) {
+     LOG(("Already updating, queueing update %s from %s",
+          PromiseFlatCString(aRequestPayload).get(),
+diff --git a/toolkit/modules/GMPInstallManager.sys.mjs b/toolkit/modules/GMPInstallManager.sys.mjs
+index 347c35ec57..6b45e0fb9e 100644
+--- a/toolkit/modules/GMPInstallManager.sys.mjs
++++ b/toolkit/modules/GMPInstallManager.sys.mjs
+@@ -282,6 +282,10 @@ GMPInstallManager.prototype = {
+    */
+   async checkForAddons() {
+     let log = getScopedLogger("GMPInstallManager.checkForAddons");
++    // GORILLA UNLEASHED - PHYSICAL LOCK (egress): see simpleCheckAndInstall.
++    if (true) {
++      return { usedFallback: true, addons: [] };
++    }
+     if (this._deferred) {
+       log.error("checkForAddons already called");
+       return Promise.reject({ type: "alreadycalled" });
+@@ -563,6 +567,12 @@ GMPInstallManager.prototype = {
+    */
+   async simpleCheckAndInstall() {
+     let log = getScopedLogger("GMPInstallManager.simpleCheckAndInstall");
++    // GORILLA UNLEASHED - PHYSICAL LOCK (egress): no GMP update check (aus5.mozilla.org) and no plugin download (Widevine from Google,
++    // OpenH264 from Cisco). DRM video will not play; WebRTC uses VP8/VP9 instead of H.264.
++    if (true) {
++      log.info("GMP checks disabled in this build");
++      return { status: "nothing-new-to-install" };
++    }
+ 
+     if (this._versionchangeOccurred()) {
+       log.info(
+diff --git a/toolkit/mozapps/extensions/AddonManager.sys.mjs b/toolkit/mozapps/extensions/AddonManager.sys.mjs
+index 34a1083593..e70bb1f595 100644
+--- a/toolkit/mozapps/extensions/AddonManager.sys.mjs
++++ b/toolkit/mozapps/extensions/AddonManager.sys.mjs
+@@ -1367,6 +1367,10 @@ var AddonManagerInternal = {
+    *                       (the resulting addon installations may still be in progress).
+    */
+   backgroundUpdateCheck() {
++    // GORILLA UNLEASHED - PHYSICAL LOCK (egress): no background add-on update check against AMO. Bundled add-ons are updated at build time.
++    if (true) {
++      return Promise.resolve();
++    }
+     if (!gStarted) {
+       throw Components.Exception(
+         "AddonManager is not initialized",
+diff --git a/toolkit/mozapps/extensions/internal/AddonUpdateChecker.sys.mjs b/toolkit/mozapps/extensions/internal/AddonUpdateChecker.sys.mjs
+index 5b7b10a764..037c197c3c 100644
+--- a/toolkit/mozapps/extensions/internal/AddonUpdateChecker.sys.mjs
++++ b/toolkit/mozapps/extensions/internal/AddonUpdateChecker.sys.mjs
+@@ -638,6 +638,12 @@ export var AddonUpdateChecker = {
+    *         down in-progress update requests
+    */
+   checkForUpdates(aId, aUrl, aObserver) {
+-    return new UpdateParser(aId, aUrl, aObserver);
++    // GORILLA UNLEASHED - PHYSICAL LOCK (egress): no update manifest is ever fetched; the observer hears "no updates".
++    Services.tm.dispatchToMainThread(() => {
++      try {
++        aObserver.onUpdateCheckComplete([]);
++      } catch (e) {}
++    });
++    return { cancel() {} };
+   },
+ };

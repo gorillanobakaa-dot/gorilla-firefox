@@ -1,0 +1,75 @@
+# Gorilla 157 privacy cut
+# Gorilla's list, at source: weather feed never fetches; translations never offered, never assemble an engine (no Bergamot wasm, no language models), no supported languages; search-as-you-type suggestions off at the provider. 155.0.1 had none of these three.
+# Files: browser/components/urlbar/UrlbarProviderSearchSuggestions.sys.mjs, browser/extensions/newtab/lib/WeatherFeed.sys.mjs, toolkit/components/translations/actors/TranslationsParent.sys.mjs
+
+diff --git a/browser/components/urlbar/UrlbarProviderSearchSuggestions.sys.mjs b/browser/components/urlbar/UrlbarProviderSearchSuggestions.sys.mjs
+index 7f3df874ff..45814b7e77 100644
+--- a/browser/components/urlbar/UrlbarProviderSearchSuggestions.sys.mjs
++++ b/browser/components/urlbar/UrlbarProviderSearchSuggestions.sys.mjs
+@@ -93,6 +93,11 @@ export class UrlbarProviderSearchSuggestions extends UrlbarProvider {
+    * @param {UrlbarQueryContext} queryContext The query context object.
+    */
+   async isActive(queryContext) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no search-as-you-type suggestions (every keystroke would reach the search
++    // engine before Enter). Form history and the typed query itself still work.
++    if (true) {
++      return false;
++    }
+     // If the sources don't include search or the user used a restriction
+     // character other than search, don't allow any suggestions.
+     if (
+diff --git a/browser/extensions/newtab/lib/WeatherFeed.sys.mjs b/browser/extensions/newtab/lib/WeatherFeed.sys.mjs
+index 4efedfc39c..5f84327c4e 100644
+--- a/browser/extensions/newtab/lib/WeatherFeed.sys.mjs
++++ b/browser/extensions/newtab/lib/WeatherFeed.sys.mjs
+@@ -96,6 +96,12 @@ export class WeatherFeed {
+   }
+ 
+   async fetch() {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: the weather widget never fetches (Merino). Nothing to show, nothing sent.
++    if (true) {
++      this.suggestions = [];
++      this.hourlyForecasts = [];
++      return;
++    }
+     // Keep a handle on the `MerinoClient` instance that exists at the start of
+     // this fetch. If fetching stops or this `Weather` instance is uninitialized
+     // during the fetch, `#merino` will be nulled, and the fetch should stop. We
+diff --git a/toolkit/components/translations/actors/TranslationsParent.sys.mjs b/toolkit/components/translations/actors/TranslationsParent.sys.mjs
+index fc39c651d3..7e016026af 100644
+--- a/toolkit/components/translations/actors/TranslationsParent.sys.mjs
++++ b/toolkit/components/translations/actors/TranslationsParent.sys.mjs
+@@ -1708,6 +1708,10 @@ export class TranslationsParent extends JSWindowActorParent {
+    * browser/components/translations/tests/browser/browser_translations_full_page_language_id_behavior.js
+    */
+   async maybeOfferTranslations() {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: translations are never offered (no popup, no language detection round).
++    if (true) {
++      return;
++    }
+     if (!this.browsingContext?.currentWindowGlobal) {
+       return;
+     }
+@@ -2898,6 +2902,11 @@ export class TranslationsParent extends JSWindowActorParent {
+    * @returns {Promise<TranslationsEnginePayload>}
+    */
+   static async getTranslationsEnginePayload(languagePair) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no translation engine is ever assembled, so the Bergamot wasm and the
++    // language models (Remote Settings attachments) are never requested.
++    if (true) {
++      throw new Error("GORILLA: translations engine disabled in this build");
++    }
+     const wasmStartTime = ChromeUtils.now();
+     const bergamotWasmBlobPromise = TranslationsParent.#getBergamotWasmBlob();
+     bergamotWasmBlobPromise
+@@ -3081,6 +3090,10 @@ export class TranslationsParent extends JSWindowActorParent {
+    * @returns {Promise<SupportedLanguages>}
+    */
+   static async getSupportedLanguages() {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no supported languages, so every translations UI shows nothing to pick.
++    if (true) {
++      return { sourceLanguages: [], targetLanguages: [], languagePairs: [] };
++    }
+     await chaosMode(1 / 4);
+     const languagePairs = await TranslationsParent.getNonPivotLanguagePairs();
+ 

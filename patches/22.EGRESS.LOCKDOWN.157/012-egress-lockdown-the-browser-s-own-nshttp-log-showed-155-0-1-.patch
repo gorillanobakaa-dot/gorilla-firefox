@@ -1,0 +1,128 @@
+# Gorilla 157 privacy cut
+# EGRESS LOCKDOWN: the browser's own nsHttp log showed 155.0.1 and 157 asking 8 Mozilla hosts on their own (Remote Settings + attachments + content-signature, location service, push, add-ons API, system add-on updater, connectivity probe). Source guards (PHYSICAL LOCK) in Utils/Region/AddonManager/AddonRepository plus a locked pref block at the end of firefox.js.
+# Files: browser/app/profile/firefox.js, services/settings/Utils.sys.mjs, toolkit/modules/Region.sys.mjs, toolkit/mozapps/extensions/AddonManager.sys.mjs, toolkit/mozapps/extensions/internal/AddonRepository.sys.mjs
+
+diff --git a/browser/app/profile/firefox.js b/browser/app/profile/firefox.js
+index 2685e67126..34c50b2571 100644
+--- a/browser/app/profile/firefox.js
++++ b/browser/app/profile/firefox.js
+@@ -4091,3 +4091,28 @@ pref("identity.fxaccounts.enabled", false, locked);
+ // 2048 is what every Linux build ships. See NOT_HARDENING in
+ // working scripts/fix_prefs_last_wins.py.
+ pref("network.captive-portal-service.enabled", false, locked);
++
++// GORILLA UNLEASHED - EGRESS LOCKDOWN (2026-10-02). Measured with the browser's own nsHttp log: 155.0.1 and the
++// first 157 builds asked eight Mozilla hosts for things on their own. Every one is closed here (locked) and in the
++// code that would have asked (PHYSICAL LOCK comments in the modules named). Last file wins: keep this block last.
++pref("services.settings.server", "data:,#remote-settings-dummy/v1", locked);      // Remote Settings, attachments, content-signature chains
++pref("browser.region.update.enabled", false, locked);                            // location.services.mozilla.com
++pref("browser.region.network.url", "", locked);
++pref("browser.region.network.scope", "", locked);
++pref("dom.push.connection.enabled", false, locked);                              // push.services.mozilla.com
++pref("dom.push.serverURL", "", locked);
++pref("extensions.getAddons.cache.enabled", false, locked);                       // services.addons.mozilla.org
++pref("extensions.getAddons.get.url", "", locked);
++pref("extensions.getAddons.search.browseURL", "", locked);
++pref("extensions.update.enabled", false, locked);                                // versioncheck.addons.mozilla.org
++pref("extensions.update.url", "", locked);
++pref("extensions.update.background.url", "", locked);
++pref("extensions.update.autoUpdateDefault", false, locked);
++pref("extensions.systemAddon.update.enabled", false, locked);                    // aus5.mozilla.org SystemAddons
++pref("extensions.systemAddon.update.url", "", locked);
++pref("network.connectivity-service.enabled", false, locked);                     // firefox-portal-detection.com
++pref("network.connectivity-service.IPv4.url", "", locked);
++pref("network.connectivity-service.IPv6.url", "", locked);
++pref("network.connectivity-service.DNSv4.domain", "", locked);
++pref("network.connectivity-service.DNSv6.domain", "", locked);
++pref("captivedetect.canonicalURL", "", locked);
+diff --git a/services/settings/Utils.sys.mjs b/services/settings/Utils.sys.mjs
+index 70f77c9fcb..8a58a885d7 100644
+--- a/services/settings/Utils.sys.mjs
++++ b/services/settings/Utils.sys.mjs
+@@ -105,10 +105,9 @@ function _isUndefined(value) {
+ 
+ export var Utils = {
+   get SERVER_URL() {
+-    return lazy.allowServerURL
+-      ? // eslint-disable-next-line mozilla/valid-lazy
+-        lazy.gServerURL
+-      : AppConstants.REMOTE_SETTINGS_SERVER_URLS[0];
++    // GORILLA UNLEASHED - PHYSICAL LOCK (egress): Remote Settings never talks to a server. The dummy URL is
++    // Mozilla's own "no server" value; local dumps still load, nothing is fetched, no signature chain is pulled.
++    return "data:,#remote-settings-dummy/v1";
+   },
+ 
+   CHANGES_PATH: "/buckets/monitor/collections/changes/changeset",
+@@ -119,13 +118,9 @@ export var Utils = {
+   log,
+ 
+   get shouldSkipRemoteActivity() {
+-    if (
+-      (lazy.isRunningTests || Cu.isInAutomation) &&
+-      this.SERVER_URL == "data:,#remote-settings-dummy/v1"
+-    ) {
+-      return true;
+-    }
+-    return Services.policies?.isAllowed("remoteSettings") === false;
++    // GORILLA UNLEASHED - PHYSICAL LOCK (egress): every remote activity of Remote Settings is skipped, not only
++    // under tests. Sync, the startup bundle and attachment downloads all consult this getter.
++    return true;
+   },
+ 
+   get CERT_CHAIN_ROOT_IDENTIFIER() {
+diff --git a/toolkit/modules/Region.sys.mjs b/toolkit/modules/Region.sys.mjs
+index 77308ba9f4..88577d0ef5 100644
+--- a/toolkit/modules/Region.sys.mjs
++++ b/toolkit/modules/Region.sys.mjs
+@@ -223,6 +223,11 @@ class RegionDetector {
+    * Triggers fetching of the users current region. Exposed for tests.
+    */
+   async _fetchRegion() {
++    // GORILLA UNLEASHED - PHYSICAL LOCK (egress): no region lookup at location.services.mozilla.com, ever.
++    // The region stays whatever the profile already holds (or empty); nothing here needs a network answer.
++    if (true) {
++      return;
++    }
+     if (this._retryCount >= MAX_RETRIES) {
+       return;
+     }
+diff --git a/toolkit/mozapps/extensions/AddonManager.sys.mjs b/toolkit/mozapps/extensions/AddonManager.sys.mjs
+index 30989722ef..34a1083593 100644
+--- a/toolkit/mozapps/extensions/AddonManager.sys.mjs
++++ b/toolkit/mozapps/extensions/AddonManager.sys.mjs
+@@ -1349,7 +1349,8 @@ var AddonManagerInternal = {
+ 
+   // Returns true if System Addons should be updated
+   systemUpdateEnabled() {
+-    if (!Services.prefs.getBoolPref(PREF_SYS_ADDON_UPDATE_ENABLED)) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK (egress): system add-on updates never run (aus5.mozilla.org).
++    if (true || !Services.prefs.getBoolPref(PREF_SYS_ADDON_UPDATE_ENABLED)) {
+       return false;
+     }
+     if (Services.policies && !Services.policies.isAllowed("SysAddonUpdate")) {
+diff --git a/toolkit/mozapps/extensions/internal/AddonRepository.sys.mjs b/toolkit/mozapps/extensions/internal/AddonRepository.sys.mjs
+index a14c21530a..beb3115406 100644
+--- a/toolkit/mozapps/extensions/internal/AddonRepository.sys.mjs
++++ b/toolkit/mozapps/extensions/internal/AddonRepository.sys.mjs
+@@ -509,6 +509,10 @@ export var AddonRepository = {
+    * @returns {Array<AddonSearchResult>}
+    */
+   async getAddonsByIDs(aIDs) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK (egress): no metadata lookup at services.addons.mozilla.org.
++    if (true) {
++      return [];
++    }
+     const idCheck = aIDs.map(id => {
+       if (id.startsWith("rta:")) {
+         return atob(id.split(":")[1]);
+@@ -648,6 +652,10 @@ export var AddonRepository = {
+    * @return Promise{null} Resolves when the metadata update is complete.
+    */
+   async backgroundUpdateCheck() {
++    // GORILLA UNLEASHED - PHYSICAL LOCK (egress): the add-on metadata cache is never refreshed from AMO.
++    if (true) {
++      return;
++    }
+     let shutter = (async () => {
+       if (this.appIsShuttingDown) {
+         logger.debug(

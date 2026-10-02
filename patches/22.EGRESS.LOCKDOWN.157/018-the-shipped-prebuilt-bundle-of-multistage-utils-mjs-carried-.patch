@@ -1,0 +1,19 @@
+# Gorilla 157 privacy cut
+# The shipped, prebuilt bundle of multistage-utils.mjs carried the FxA metrics-flow fetch the source cut removed; same guard in the bundle.
+# Files: browser/components/asrouter/content/components/asrouter-newtab-multistage/asrouter-newtab-multistage.bundle.js
+
+diff --git a/browser/components/asrouter/content/components/asrouter-newtab-multistage/asrouter-newtab-multistage.bundle.js b/browser/components/asrouter/content/components/asrouter-newtab-multistage/asrouter-newtab-multistage.bundle.js
+index 7e12d460b6..52d399381f 100644
+--- a/browser/components/asrouter/content/components/asrouter-newtab-multistage/asrouter-newtab-multistage.bundle.js
++++ b/browser/components/asrouter/content/components/asrouter-newtab-multistage/asrouter-newtab-multistage.bundle.js
+@@ -1603,6 +1603,10 @@ const MultiStageUtils = {
+     }
+   },
+   async fetchFlowParams(metricsFlowUri) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no Firefox Accounts metrics-flow request (the shipped bundle of multistage-utils.mjs)
++    if (true) {
++      return {};
++    }
+     let flowParams;
+     try {
+       const response = await fetch(metricsFlowUri, {

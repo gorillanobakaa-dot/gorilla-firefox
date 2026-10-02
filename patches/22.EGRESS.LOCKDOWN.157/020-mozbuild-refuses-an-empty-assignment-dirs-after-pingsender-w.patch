@@ -1,0 +1,20 @@
+# Gorilla 157 privacy cut
+# Mozbuild refuses an empty assignment (DIRS = [] after pingsender was excised): the whole DIRS statement goes.
+# Files: toolkit/components/telemetry/moz.build
+
+diff --git a/toolkit/components/telemetry/moz.build b/toolkit/components/telemetry/moz.build
+index 8dc92c0a34..184b428890 100644
+--- a/toolkit/components/telemetry/moz.build
++++ b/toolkit/components/telemetry/moz.build
+@@ -6,9 +6,8 @@ include("/ipc/chromium/chromium-config.mozbuild")
+ 
+ FINAL_LIBRARY = "xul"
+ 
+-DIRS = [
+-    # GORILLA excised: "pingsender" (standalone telemetry sender; this browser sends no pings)
+-]
++# GORILLA excised: DIRS = ["pingsender"] (standalone telemetry sender; this browser sends no pings).
++# mozbuild refuses an empty assignment, so the whole statement goes.
+ 
+ DEFINES["MOZ_APP_VERSION"] = '"%s"' % CONFIG["MOZ_APP_VERSION"]
+ 

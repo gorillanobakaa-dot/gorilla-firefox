@@ -1,0 +1,403 @@
+# Gorilla 157 privacy cut
+# Privacy at source: canary telemetry IDs and no datareporting/state.json; Normandy never initialises; no coverage ping; no Merino (urlbar, weather, sports, stocks, new tab); new-tab ads/top sites/wallpapers/stories/picture of the day fetch nothing; no ad callbacks or reports; no remote ASRouter providers, CFR add-on lookups or notification images; no FxA metrics flow; no abuse reports, no AMO discovery (it carried a client-ID hash), no release-notes fetch; no remote search suggestions; Sync and device pairing never talk to a server.
+# Files: browser/components/asrouter/content-src/lib/multistage-utils.mjs, browser/components/asrouter/modules/ASRouter.sys.mjs, browser/components/asrouter/modules/CFRPageActions.sys.mjs, browser/components/asrouter/modules/ToastNotification.sys.mjs, browser/components/urlbar/MerinoClient.sys.mjs, browser/extensions/newtab/lib/AdsFeed.sys.mjs, browser/extensions/newtab/lib/TelemetryFeed.sys.mjs, browser/extensions/newtab/lib/TemporaryMerinoClientShim.sys.mjs, browser/extensions/newtab/lib/TopSitesFeed.sys.mjs, browser/extensions/newtab/lib/TopStoriesFeed.sys.mjs, browser/extensions/newtab/lib/Wallpapers/WallpaperFeed.sys.mjs, browser/extensions/newtab/lib/Widgets/PictureOfTheDayFeed.sys.mjs, browser/extensions/newtab/lib/Widgets/StocksFeed.sys.mjs, services/fxaccounts/FxAccountsPairingChannel.sys.mjs, services/sync/modules/resource.sys.mjs, toolkit/components/normandy/Normandy.sys.mjs, toolkit/components/search/SearchSuggestionController.sys.mjs, toolkit/components/telemetry/app/ClientID.sys.mjs, toolkit/components/telemetry/pings/CoveragePing.sys.mjs, toolkit/mozapps/extensions/AbuseReporter.sys.mjs, toolkit/mozapps/extensions/content/aboutaddons-utils.mjs
+
+diff --git a/browser/components/asrouter/content-src/lib/multistage-utils.mjs b/browser/components/asrouter/content-src/lib/multistage-utils.mjs
+index 42b9a7b9ec..3c345f22fc 100644
+--- a/browser/components/asrouter/content-src/lib/multistage-utils.mjs
++++ b/browser/components/asrouter/content-src/lib/multistage-utils.mjs
+@@ -64,6 +64,10 @@ export const MultiStageUtils = {
+     }
+   },
+   async fetchFlowParams(metricsFlowUri) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no Firefox Accounts metrics-flow request
++    if (true) {
++      return {};
++    }
+     let flowParams;
+     try {
+       const response = await fetch(metricsFlowUri, {
+diff --git a/browser/components/asrouter/modules/ASRouter.sys.mjs b/browser/components/asrouter/modules/ASRouter.sys.mjs
+index e820907b46..f693e58ee7 100644
+--- a/browser/components/asrouter/modules/ASRouter.sys.mjs
++++ b/browser/components/asrouter/modules/ASRouter.sys.mjs
+@@ -225,6 +225,10 @@ export const MessageLoaderUtils = {
+    * @returns {Promise} resolves with an array of messages, or an empty array if none could be fetched
+    */
+   async _remoteLoader(provider, options) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no remote message provider is ever fetched
++    if (true) {
++      return [];
++    }
+     let remoteMessages = [];
+     if (provider.url) {
+       const allCached = await MessageLoaderUtils._remoteLoaderCache(
+diff --git a/browser/components/asrouter/modules/CFRPageActions.sys.mjs b/browser/components/asrouter/modules/CFRPageActions.sys.mjs
+index 9fd3d15f34..c79fd25281 100644
+--- a/browser/components/asrouter/modules/CFRPageActions.sys.mjs
++++ b/browser/components/asrouter/modules/CFRPageActions.sys.mjs
+@@ -952,6 +952,10 @@ export const CFRPageActions = {
+    * @return            A string for the URL that was fetched
+    */
+   async _fetchLatestAddonVersion(id) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no add-on lookup at AMO for recommendations
++    if (true) {
++      return null;
++    }
+     let url = null;
+     try {
+       const response = await fetch(`${ADDONS_API_URL}/${id}/`, {
+diff --git a/browser/components/asrouter/modules/ToastNotification.sys.mjs b/browser/components/asrouter/modules/ToastNotification.sys.mjs
+index f15adf09ab..6bd9e866bd 100644
+--- a/browser/components/asrouter/modules/ToastNotification.sys.mjs
++++ b/browser/components/asrouter/modules/ToastNotification.sys.mjs
+@@ -130,7 +130,8 @@ export const ToastNotification = {
+         Ci.nsIWindowsAlertNotification
+       );
+       try {
+-        const resp = await fetch(imageData.url);
++        // GORILLA UNLEASHED - PHYSICAL LOCK (egress): notification images are never fetched.
++        const resp = { ok: false };
+         if (!resp.ok) {
+           throw new Error(`Could not fetch ${imageUrl}`);
+         }
+diff --git a/browser/components/urlbar/MerinoClient.sys.mjs b/browser/components/urlbar/MerinoClient.sys.mjs
+index a2a49093be..675da931e0 100644
+--- a/browser/components/urlbar/MerinoClient.sys.mjs
++++ b/browser/components/urlbar/MerinoClient.sys.mjs
+@@ -180,6 +180,10 @@ export class MerinoClient {
+     otherParams = {},
+     endpointUrl = lazy.UrlbarPrefs.get("merinoEndpointURL"),
+   }) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no Merino request (suggestions, weather, sports, stocks), whatever the endpoint pref says
++    if (true) {
++      return [];
++    }
+     this.#lazy.logger.debug("Fetch start", { query });
+ 
+     // If endpointUrl is explicitly provided, use it as-is
+@@ -434,6 +438,10 @@ export class MerinoClient {
+    *   response.
+    */
+   async autoCompleteWeatherLocation({ source, query, timeoutMs = undefined }) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no Merino weather lookup
++    if (true) {
++      return null;
++    }
+     let response = await this.fetch({
+       providers: ["accuweather"],
+       query: query || "",
+diff --git a/browser/extensions/newtab/lib/AdsFeed.sys.mjs b/browser/extensions/newtab/lib/AdsFeed.sys.mjs
+index 42e62e6fed..7782294e56 100644
+--- a/browser/extensions/newtab/lib/AdsFeed.sys.mjs
++++ b/browser/extensions/newtab/lib/AdsFeed.sys.mjs
+@@ -168,7 +168,8 @@ export class AdsFeed {
+    * automated tests that simulate responses from this fetch.
+    */
+   fetch(...args) {
+-    return fetch(...args);
++    // GORILLA UNLEASHED - PHYSICAL LOCK (egress): this feed fetches nothing from the network.
++    return Promise.reject(new Error("GORILLA: network fetch disabled"));
+   }
+ 
+   /**
+diff --git a/browser/extensions/newtab/lib/TelemetryFeed.sys.mjs b/browser/extensions/newtab/lib/TelemetryFeed.sys.mjs
+index 6852b04d49..68d7bd4439 100644
+--- a/browser/extensions/newtab/lib/TelemetryFeed.sys.mjs
++++ b/browser/extensions/newtab/lib/TelemetryFeed.sys.mjs
+@@ -1517,6 +1517,10 @@ export class TelemetryFeed {
+    */
+ 
+   async sendUnifiedAdsCallbackEvent(data = { url: null, position: null }) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no ad callback
++    if (true) {
++      return;
++    }
+     if (!data.url) {
+       throw new Error(
+         `[Unified ads callback] Missing argument (No url). Cannot send telemetry event.`
+@@ -2137,6 +2141,10 @@ export class TelemetryFeed {
+   }
+ 
+   async handleReportAdUserEvent(action) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no ad report
++    if (true) {
++      return;
++    }
+     const { placement_id, position, report_reason, reporting_url } =
+       action.data || {};
+ 
+diff --git a/browser/extensions/newtab/lib/TemporaryMerinoClientShim.sys.mjs b/browser/extensions/newtab/lib/TemporaryMerinoClientShim.sys.mjs
+index 618917c078..0bc42539b2 100644
+--- a/browser/extensions/newtab/lib/TemporaryMerinoClientShim.sys.mjs
++++ b/browser/extensions/newtab/lib/TemporaryMerinoClientShim.sys.mjs
+@@ -192,6 +192,10 @@ export class TemporaryMerinoClientShim {
+     endpointUrl = null,
+     acceptLanguage = null,
+   }) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no Merino request (suggestions, weather, sports, stocks), whatever the endpoint pref says
++    if (true) {
++      return [];
++    }
+     this.#lazy.logger.debug("Fetch start", { query });
+ 
+     // If endpointUrl is explicitly provided, use it as-is
+@@ -449,6 +453,10 @@ export class TemporaryMerinoClientShim {
+    *   response.
+    */
+   async autoCompleteWeatherLocation({ source, query, timeoutMs = undefined }) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no Merino weather lookup
++    if (true) {
++      return null;
++    }
+     let response = await this.fetch({
+       providers: ["accuweather"],
+       query: query || "",
+@@ -669,6 +677,10 @@ export class TemporaryMerinoClientShim {
+    *   (deliberate skip).
+    */
+   async fetchSportsTeams({ source, endpointUrl }) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no Merino sports lookup
++    if (true) {
++      return null;
++    }
+     if (!endpointUrl) {
+       return { data: null, error: null };
+     }
+diff --git a/browser/extensions/newtab/lib/TopSitesFeed.sys.mjs b/browser/extensions/newtab/lib/TopSitesFeed.sys.mjs
+index d6f211222a..6dc2bd05ce 100644
+--- a/browser/extensions/newtab/lib/TopSitesFeed.sys.mjs
++++ b/browser/extensions/newtab/lib/TopSitesFeed.sys.mjs
+@@ -1513,7 +1513,8 @@ export class TopSitesFeed {
+    * automated tests that simulate responses from this fetch.
+    */
+   fetch(...args) {
+-    return fetch(...args);
++    // GORILLA UNLEASHED - PHYSICAL LOCK (egress): this feed fetches nothing from the network.
++    return Promise.reject(new Error("GORILLA: network fetch disabled"));
+   }
+ 
+   /**
+diff --git a/browser/extensions/newtab/lib/TopStoriesFeed.sys.mjs b/browser/extensions/newtab/lib/TopStoriesFeed.sys.mjs
+index 939f87ed14..81270e0052 100644
+--- a/browser/extensions/newtab/lib/TopStoriesFeed.sys.mjs
++++ b/browser/extensions/newtab/lib/TopStoriesFeed.sys.mjs
+@@ -168,6 +168,10 @@ export class TopStoriesFeed {
+   }
+ 
+   async fetchStories() {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no stories endpoint
++    if (true) {
++      return;
++    }
+     if (!this.stories_endpoint) {
+       return null;
+     }
+@@ -270,6 +274,10 @@ export class TopStoriesFeed {
+   }
+ 
+   async fetchTopics() {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no topics endpoint
++    if (true) {
++      return;
++    }
+     if (!this.topics_endpoint) {
+       return null;
+     }
+diff --git a/browser/extensions/newtab/lib/Wallpapers/WallpaperFeed.sys.mjs b/browser/extensions/newtab/lib/Wallpapers/WallpaperFeed.sys.mjs
+index fc43deba29..fb95abb4a8 100644
+--- a/browser/extensions/newtab/lib/Wallpapers/WallpaperFeed.sys.mjs
++++ b/browser/extensions/newtab/lib/Wallpapers/WallpaperFeed.sys.mjs
+@@ -106,7 +106,8 @@ export class WallpaperFeed {
+    * automated tests that simulate responses from this fetch.
+    */
+   fetch(...args) {
+-    return fetch(...args);
++    // GORILLA UNLEASHED - PHYSICAL LOCK (egress): this feed fetches nothing from the network.
++    return Promise.reject(new Error("GORILLA: network fetch disabled"));
+   }
+ 
+   /**
+diff --git a/browser/extensions/newtab/lib/Widgets/PictureOfTheDayFeed.sys.mjs b/browser/extensions/newtab/lib/Widgets/PictureOfTheDayFeed.sys.mjs
+index 494628d513..e48a649af8 100644
+--- a/browser/extensions/newtab/lib/Widgets/PictureOfTheDayFeed.sys.mjs
++++ b/browser/extensions/newtab/lib/Widgets/PictureOfTheDayFeed.sys.mjs
+@@ -174,6 +174,10 @@ export class PictureOfTheDayFeed {
+   }
+ 
+   async fetch() {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no picture-of-the-day fetch
++    if (true) {
++      return;
++    }
+     if (!this.merino) {
+       this.merino = this.MerinoClient(MERINO_CLIENT_KEY);
+     }
+@@ -410,5 +414,6 @@ PictureOfTheDayFeed.prototype.Date = () => {
+   return Date;
+ };
+ PictureOfTheDayFeed.prototype.fetchImage = url => {
+-  return fetch(url);
++  // GORILLA UNLEASHED - PHYSICAL LOCK (egress)
++  return Promise.reject(new Error("GORILLA: network fetch disabled"));
+ };
+diff --git a/browser/extensions/newtab/lib/Widgets/StocksFeed.sys.mjs b/browser/extensions/newtab/lib/Widgets/StocksFeed.sys.mjs
+index 8e78e3da61..ef9a66f228 100644
+--- a/browser/extensions/newtab/lib/Widgets/StocksFeed.sys.mjs
++++ b/browser/extensions/newtab/lib/Widgets/StocksFeed.sys.mjs
+@@ -236,6 +236,10 @@ export class StocksFeed {
+   // `query` defaults to "" (the default ETF set). A non-empty query (e.g.
+   // "$AAPL") performs an individual lookup through the same path; unused for now.
+   async fetch(query = "", retryCount = 0) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no stocks lookup
++    if (true) {
++      return;
++    }
+     const generation = this.fetchGeneration;
+     try {
+       if (!this.ensureMerinoClient()) {
+diff --git a/services/fxaccounts/FxAccountsPairingChannel.sys.mjs b/services/fxaccounts/FxAccountsPairingChannel.sys.mjs
+index 3ce6d6f0f1..4265b1b938 100644
+--- a/services/fxaccounts/FxAccountsPairingChannel.sys.mjs
++++ b/services/fxaccounts/FxAccountsPairingChannel.sys.mjs
+@@ -3504,6 +3504,10 @@ class src_PairingChannel extends EventTarget {
+   }
+ 
+   static _makePairingChannel(wsUri, ConnectionClass, psk) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no pairing WebSocket
++    if (true) {
++      throw new Error("GORILLA: device pairing is disabled in this build");
++    }
+     const socket = new WebSocket(wsUri);
+     return new Promise((resolve, reject) => {
+       // eslint-disable-next-line prefer-const
+diff --git a/services/sync/modules/resource.sys.mjs b/services/sync/modules/resource.sys.mjs
+index 1afec7fb24..2355f6276f 100644
+--- a/services/sync/modules/resource.sys.mjs
++++ b/services/sync/modules/resource.sys.mjs
+@@ -167,6 +167,10 @@ Resource.prototype = {
+    * @returns {Response}
+    */
+   async _doRequest(method, data = null) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: Sync never talks to a server
++    if (true) {
++      throw new Error("GORILLA: Sync is disabled in this build");
++    }
+     const controller = new AbortController();
+     const request = await this._createRequest(method, data, controller.signal);
+     const responsePromise = fetch(request); // Rejects on network failure.
+diff --git a/toolkit/components/normandy/Normandy.sys.mjs b/toolkit/components/normandy/Normandy.sys.mjs
+index 9048287f87..36ddc2aa4d 100644
+--- a/toolkit/components/normandy/Normandy.sys.mjs
++++ b/toolkit/components/normandy/Normandy.sys.mjs
+@@ -41,6 +41,10 @@ export var Normandy = {
+ 
+   /** Initialization that needs to happen before the first paint on startup. */
+   async init({ runAsync = true } = {}) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: Normandy never initialises: no recipe runner, no preference experiments, no shield-preference-experiments.json
++    if (true) {
++      return;
++    }
+     // NOTE: It looks like we can see us being called twice between init(true)
+     // coming from "browser-before-ui-startup" (see BrowserComponents.manifest)
+     // and init(false) coming from FirstStartup.sys.mjs.
+diff --git a/toolkit/components/search/SearchSuggestionController.sys.mjs b/toolkit/components/search/SearchSuggestionController.sys.mjs
+index 6b32d77bb7..ecc0b23263 100644
+--- a/toolkit/components/search/SearchSuggestionController.sys.mjs
++++ b/toolkit/components/search/SearchSuggestionController.sys.mjs
+@@ -341,7 +341,8 @@ export class SearchSuggestionController {
+       maxRemoteResults &&
+       SearchSuggestionController.engineOffersSuggestions(engine, fetchTrending)
+     ) {
+-      promises.push(this.#fetchRemote(this.#context));
++      // GORILLA UNLEASHED - PHYSICAL LOCK (egress): no keystroke is sent to the search engine before Enter (search bar, about:home, context menu).
++      // promises.push(this.#fetchRemote(this.#context));
+     }
+ 
+     /**
+diff --git a/toolkit/components/telemetry/app/ClientID.sys.mjs b/toolkit/components/telemetry/app/ClientID.sys.mjs
+index 99b65edba7..4e602d851a 100644
+--- a/toolkit/components/telemetry/app/ClientID.sys.mjs
++++ b/toolkit/components/telemetry/app/ClientID.sys.mjs
+@@ -268,6 +268,14 @@ var ClientIDImpl = {
+    * we generate a new one.
+    */
+   async _doLoadDataReportingState() {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no unique identifier is generated; every profile carries Mozilla's own canary IDs, and nothing is read from or written to datareporting/state.json
++    if (true) {
++      this._clientID = CANARY_CLIENT_ID;
++      this._profileGroupID = CANARY_PROFILE_GROUP_ID;
++      this._usageProfileID = CANARY_USAGE_PROFILE_ID;
++      this._usageProfileGroupID = CANARY_USAGE_PROFILE_GROUP_ID;
++      return { clientID: this._clientID, profileGroupID: this._profileGroupID, usageProfileID: this._usageProfileID, usageProfileGroupID: this._usageProfileGroupID };
++    }
+     this._log.trace(`_doLoadDataReportingState`);
+     // If there's a removal in progress, let's wait for it
+     await this._resetIdentifiersTask;
+@@ -405,6 +413,10 @@ var ClientIDImpl = {
+    * @return {Promise} A promise resolved when the DRS state file is saved to disk.
+    */
+   async _saveDataReportingState() {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: the data-reporting state file is never written
++    if (true) {
++      return;
++    }
+     try {
+       this._log.trace(`_saveDataReportingState`);
+       let obj = {
+diff --git a/toolkit/components/telemetry/pings/CoveragePing.sys.mjs b/toolkit/components/telemetry/pings/CoveragePing.sys.mjs
+index a41d7dcc7b..5bc60ce271 100644
+--- a/toolkit/components/telemetry/pings/CoveragePing.sys.mjs
++++ b/toolkit/components/telemetry/pings/CoveragePing.sys.mjs
+@@ -61,6 +61,10 @@ export var CoveragePing = Object.freeze({
+   // by design. It also sends no identifying data like the client ID. See the "coverage ping"
+   // documentation for details.
+   reportTelemetrySetting() {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: the telemetry coverage ping (coverage.telemetry.mozilla.org) is never sent
++    if (true) {
++      return;
++    }
+     const enabled = Services.prefs.getBoolPref(TELEMETRY_ENABLED_PREF, false);
+ 
+     const payload = {
+diff --git a/toolkit/mozapps/extensions/AbuseReporter.sys.mjs b/toolkit/mozapps/extensions/AbuseReporter.sys.mjs
+index bb7df75e3d..7137b53723 100644
+--- a/toolkit/mozapps/extensions/AbuseReporter.sys.mjs
++++ b/toolkit/mozapps/extensions/AbuseReporter.sys.mjs
+@@ -99,6 +99,10 @@ export const AbuseReporter = {
+    *          API response (or an error when something went wrong).
+    */
+   async sendAbuseReport(addonId, data, options = {}) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no abuse report to AMO
++    if (true) {
++      throw new Error("GORILLA: add-on abuse reports are not sent from this build");
++    }
+     const rejectReportError = async (errorType, { response } = {}) => {
+       // Leave errorInfo empty if there is no response or fails to be converted
+       // into an error info object.
+diff --git a/toolkit/mozapps/extensions/content/aboutaddons-utils.mjs b/toolkit/mozapps/extensions/content/aboutaddons-utils.mjs
+index 9a11865eaf..7f4865a3a1 100644
+--- a/toolkit/mozapps/extensions/content/aboutaddons-utils.mjs
++++ b/toolkit/mozapps/extensions/content/aboutaddons-utils.mjs
+@@ -192,6 +192,10 @@ export function detachUpdateHandler(install) {
+ }
+ 
+ export async function loadReleaseNotes(uri) {
++  // GORILLA UNLEASHED - PHYSICAL LOCK: no release-notes fetch
++  if (true) {
++    throw new Error("GORILLA: release notes are not fetched");
++  }
+   const res = await fetch(uri.spec, { credentials: "omit" });
+ 
+   if (!res.ok) {
+@@ -929,6 +933,10 @@ export var DiscoveryAPI = {
+   },
+ 
+   async _fetchRecommendedAddons(useClientId) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no discovery request to AMO (it carried a hash of the telemetry client ID)
++    if (true) {
++      return [];
++    }
+     let discoveryApiUrl = new URL(
+       Services.urlFormatter.formatURLPref(PREF_DISCOVERY_API_URL)
+     );

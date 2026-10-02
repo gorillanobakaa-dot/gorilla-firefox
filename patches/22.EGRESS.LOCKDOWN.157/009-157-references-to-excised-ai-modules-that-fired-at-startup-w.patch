@@ -1,0 +1,82 @@
+# Gorilla 157 privacy cut
+# 157 references to excised AI modules that fired at startup/window open/close (Missing chrome or resource URL, Error in processing browser-idle-startup for GenAI.init / LinkPreview.init): AIWindow imports pointed at Gorilla's AIWindowStub (155 pattern) which gains getChatTabConversationId(); the two dead category hooks and the LinkPreview teardown import removed.
+# Files: browser/base/content/browser-init.js, browser/components/BrowserComponents.manifest, browser/components/tabbrowser/Tabbrowser.sys.mjs, browser/components/urlbar/content/UrlbarInputBase.mjs, browser/modules/AIWindowStub.sys.mjs
+
+diff --git a/browser/base/content/browser-init.js b/browser/base/content/browser-init.js
+index 28ac9595a8..f3a1c3d636 100644
+--- a/browser/base/content/browser-init.js
++++ b/browser/base/content/browser-init.js
+@@ -1138,10 +1138,7 @@ var gBrowserInit = {
+       gBrowser.removeTabsProgressListener(window.TabsProgressListener);
+     } catch (ex) {}
+ 
+-    // Bug 1952900 to allow switching to unload category without leaking
+-    ChromeUtils.importESModule(
+-      "moz-src:///browser/components/genai/LinkPreview.sys.mjs"
+-    ).LinkPreview.teardown(window);
++    // GORILLA excised: LinkPreview.teardown (genai removed; the module is not packaged)
+ 
+     BrowserUtils.callModulesFromCategory(
+       { categoryName: "browser-window-unload", jsGlobal: globalThis },
+diff --git a/browser/components/BrowserComponents.manifest b/browser/components/BrowserComponents.manifest
+index 8cdf3777e5..8c0db220b4 100644
+--- a/browser/components/BrowserComponents.manifest
++++ b/browser/components/BrowserComponents.manifest
+@@ -70,7 +70,7 @@ category browser-window-load moz-src:///browser/components/customkeys/CustomKeys
+ 
+ category browser-window-delayed-startup moz-src:///browser/components/contentanalysis/content/ContentAnalysis.sys.mjs ContentAnalysis.initialize
+ category browser-window-delayed-startup resource:///modules/HomePage.sys.mjs HomePage.delayedStartup
+-category browser-window-delayed-startup moz-src:///browser/components/genai/LinkPreview.sys.mjs LinkPreview.init
++# GORILLA excised: LinkPreview.init (genai removed)
+ category browser-window-delayed-startup moz-src:///browser/components/reportbrokensite/ReportBrokenSite.sys.mjs ReportBrokenSite.init
+ category browser-window-delayed-startup moz-src:///browser/components/search/SearchUIUtils.sys.mjs SearchUIUtils.init
+ category browser-window-delayed-startup moz-src:///browser/components/sharing/SharePageAction.sys.mjs SharePageAction.init
+@@ -182,7 +182,7 @@ category browser-idle-startup resource://gre/modules/RFPHelper.sys.mjs RFPHelper
+ category browser-idle-startup resource://gre/modules/Blocklist.sys.mjs Blocklist.loadBlocklistAsync
+ category browser-idle-startup resource://gre/modules/psm/RemoteSecuritySettings.sys.mjs RemoteSecuritySettings.init
+ category browser-idle-startup moz-src:///browser/components/tabbrowser/TabUnloader.sys.mjs TabUnloader.init
+-category browser-idle-startup resource:///modules/GenAI.sys.mjs GenAI.init
++# GORILLA excised: GenAI.init (genai removed)
+ category browser-idle-startup moz-src:///browser/components/urlbar/QuickSuggest.sys.mjs QuickSuggest.init
+ category browser-idle-startup moz-src:///browser/components/urlbar/UrlbarSearchTermsPersistence.sys.mjs UrlbarSearchTermsPersistence.init
+ category browser-idle-startup moz-src:///browser/components/search/SERPCategorization.sys.mjs SERPCategorization.init
+diff --git a/browser/components/tabbrowser/Tabbrowser.sys.mjs b/browser/components/tabbrowser/Tabbrowser.sys.mjs
+index 779273cbdd..09a840d7c3 100644
+--- a/browser/components/tabbrowser/Tabbrowser.sys.mjs
++++ b/browser/components/tabbrowser/Tabbrowser.sys.mjs
+@@ -7,7 +7,7 @@ import { XPCOMUtils } from "resource://gre/modules/XPCOMUtils.sys.mjs";
+ 
+ const lazy = XPCOMUtils.declareLazy({
+   AIWindow:
+-    "moz-src:///browser/components/aiwindow/ui/modules/AIWindow.sys.mjs",
++    "resource:///modules/AIWindowStub.sys.mjs", // GORILLA: aiwindow excised, stub answers
+   allowTransparentBrowser: {
+     pref: "browser.tabs.allow_transparent_browser",
+     default: false,
+diff --git a/browser/components/urlbar/content/UrlbarInputBase.mjs b/browser/components/urlbar/content/UrlbarInputBase.mjs
+index 3c1964335b..bd9cb6d1e1 100644
+--- a/browser/components/urlbar/content/UrlbarInputBase.mjs
++++ b/browser/components/urlbar/content/UrlbarInputBase.mjs
+@@ -51,7 +51,7 @@ if (lazy) {
+   );
+   ChromeUtils.defineESModuleGetters(lazy, {
+     AIWindow:
+-      "moz-src:///browser/components/aiwindow/ui/modules/AIWindow.sys.mjs",
++      "resource:///modules/AIWindowStub.sys.mjs", // GORILLA: aiwindow excised, stub answers
+     BrowserUIUtils: "resource:///modules/BrowserUIUtils.sys.mjs",
+     CustomizableUI:
+       "moz-src:///browser/components/customizableui/CustomizableUI.sys.mjs",
+diff --git a/browser/modules/AIWindowStub.sys.mjs b/browser/modules/AIWindowStub.sys.mjs
+index 2d3bd2171b..d06bb32bf4 100644
+--- a/browser/modules/AIWindowStub.sys.mjs
++++ b/browser/modules/AIWindowStub.sys.mjs
+@@ -64,4 +64,9 @@ export const AIWindow = {
+   get initialStartupURL() {
+     return null;
+   },
++
++  /** 157: Tabbrowser asks every tab for its chat conversation id. No tab is a chat tab here. */
++  getChatTabConversationId() {
++    return null;
++  },
+ };

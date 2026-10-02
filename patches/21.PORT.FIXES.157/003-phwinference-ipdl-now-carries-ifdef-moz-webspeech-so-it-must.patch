@@ -1,0 +1,18 @@
+# Gorilla 157 port fix
+# PHWInference.ipdl now carries #ifdef MOZ_WEBSPEECH, so it must be a PREPROCESSED_IPDL_SOURCES entry like PContent.ipdl (the IPDL lexer refused the directive)
+# Files: toolkit/components/ml/ipc/moz.build
+
+diff --git a/toolkit/components/ml/ipc/moz.build b/toolkit/components/ml/ipc/moz.build
+index d621c9b065..61e8e9ead0 100644
+--- a/toolkit/components/ml/ipc/moz.build
++++ b/toolkit/components/ml/ipc/moz.build
+@@ -18,7 +18,8 @@ UNIFIED_SOURCES += [
+     "HWInferenceParent.cpp",
+ ]
+ 
+-IPDL_SOURCES = [
++# GORILLA 157: preprocessed so the PSpeechRecognition include can follow MOZ_WEBSPEECH
++PREPROCESSED_IPDL_SOURCES = [
+     "PHWInference.ipdl",
+ ]
+ 

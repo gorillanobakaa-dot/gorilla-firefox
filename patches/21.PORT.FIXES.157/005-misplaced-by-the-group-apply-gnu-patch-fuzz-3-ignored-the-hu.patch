@@ -1,0 +1,31 @@
+# Gorilla 157 port fix
+# Misplaced by the group apply (GNU patch --fuzz=3 ignored the hunk's context): the early return NS_OK block moved to its place after gInitializeCalled = true, inside InitializeFOG
+# Files: toolkit/components/glean/xpcom/FOG.cpp
+
+diff --git a/toolkit/components/glean/xpcom/FOG.cpp b/toolkit/components/glean/xpcom/FOG.cpp
+index 889a02e6c0..bd720e47b2 100644
+--- a/toolkit/components/glean/xpcom/FOG.cpp
++++ b/toolkit/components/glean/xpcom/FOG.cpp
+@@ -146,17 +146,17 @@ extern "C" uint32_t FOG_MaxPingLimit(void) {
+ }
+ 
+ NS_IMETHODIMP
++FOG::InitializeFOG(const nsACString& aDataPathOverride,
++                   const nsACString& aAppIdOverride,
++                   const bool aDisableInternalPings) {
++  MOZ_ASSERT(XRE_IsParentProcess());
++  gInitializeCalled = true;
+ 
+   // Gorilla: skip Glean initialization entirely — the glean.dispatche thread
+   // wastes ~3.5% parent CPU on metric bookkeeping we don't need. Upload is
+   // already disabled; this prevents the dispatcher thread from being spawned.
+   return NS_OK;
+ 
+-FOG::InitializeFOG(const nsACString& aDataPathOverride,
+-                   const nsACString& aAppIdOverride,
+-                   const bool aDisableInternalPings) {
+-  MOZ_ASSERT(XRE_IsParentProcess());
+-  gInitializeCalled = true;
+   if (!AppShutdown::IsInOrBeyond(ShutdownPhase::AppShutdownConfirmed)) {
+     RunOnShutdown(
+         [&] {

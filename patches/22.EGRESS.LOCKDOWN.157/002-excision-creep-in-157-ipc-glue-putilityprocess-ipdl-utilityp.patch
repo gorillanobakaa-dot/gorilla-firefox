@@ -1,0 +1,17 @@
+# Gorilla 157 privacy cut
+# Excision creep: in 157 ipc/glue/PUtilityProcess.ipdl, UtilityProcessManager and dom/ipc/ContentParent include PHWInference/HWInference from toolkit/components/ml/ipc (~150 new sites in ~20 files); the 155 excision of the ml DIRS entry cannot be carried without rewriting the utility-process framework. The ml directory is built again; backends/llama, the MLEngine actor registration and aboutinference stay excised
+# Files: toolkit/components/moz.build
+
+diff --git a/toolkit/components/moz.build b/toolkit/components/moz.build
+index e29787417f..11e7082d39 100644
+--- a/toolkit/components/moz.build
++++ b/toolkit/components/moz.build
+@@ -56,7 +56,7 @@ DIRS += [
+     "kvstore",
+     "media",
+     "mediasniffer",
+-    # GORILLA excised: "ml",
++    "ml",  # GORILLA 157: kept - ipc/glue (UtilityProcess) and dom/ipc now depend on ml/ipc (HWInference); llama and MLEngine excisions stand
+     "mozintl",
+     "mozprotocol",
+     "pageextractor",

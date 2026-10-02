@@ -1,0 +1,65 @@
+# Gorilla 157 privacy cut
+# 157 keeps toolkit/components/ml for ipc/ (UtilityProcess HWInference), which dragged the whole ML JavaScript stack into omni.ja (26 modules 155 did not ship). Keep ipc/ and MLUtils; drop jar.mn, actors, MLModelHub service and the EngineProcess idle-startup hook.
+# Files: browser/components/BrowserComponents.manifest, toolkit/components/ml/components.conf, toolkit/components/ml/moz.build
+
+diff --git a/browser/components/BrowserComponents.manifest b/browser/components/BrowserComponents.manifest
+index 8c0db220b4..ec9ce62eeb 100644
+--- a/browser/components/BrowserComponents.manifest
++++ b/browser/components/BrowserComponents.manifest
+@@ -187,7 +187,7 @@ category browser-idle-startup moz-src:///browser/components/urlbar/QuickSuggest.
+ category browser-idle-startup moz-src:///browser/components/urlbar/UrlbarSearchTermsPersistence.sys.mjs UrlbarSearchTermsPersistence.init
+ category browser-idle-startup moz-src:///browser/components/search/SERPCategorization.sys.mjs SERPCategorization.init
+ category browser-idle-startup resource://gre/modules/ContentRelevancyManager.sys.mjs ContentRelevancyManager.init
+-category browser-idle-startup chrome://global/content/ml/EngineProcess.sys.mjs EngineProcess.maybeReportNativeOnnxRuntimeAvailability
++# GORILLA excised: EngineProcess.maybeReportNativeOnnxRuntimeAvailability (ml JavaScript removed)
+ category browser-idle-startup resource://gre/modules/ColorwayThemeMigration.sys.mjs ColorwayThemeMigration.maybeWarn
+ category browser-idle-startup resource://gre/modules/AppServicesTracing.sys.mjs RustLogForwarder.init
+ category browser-idle-startup moz-src:///toolkit/components/contextualidentity/ContextualIdentityService.sys.mjs ContextualIdentityService.load
+diff --git a/toolkit/components/ml/components.conf b/toolkit/components/ml/components.conf
+index c71e099e62..349d67f6ae 100644
+--- a/toolkit/components/ml/components.conf
++++ b/toolkit/components/ml/components.conf
+@@ -6,11 +6,5 @@ Classes = [
+         'type': 'mozilla::ml::MLUtils',
+         'headers': ['mozilla/ml/MLUtils.h'],
+     },
+-    {
+-        'name': 'MLModelHub',
+-        'cid': '{e381b167-cb68-429c-9d57-35acf9054505}',
+-        'contract_ids': ['@mozilla.org/ml-modelhub;1'],
+-        'esModule': 'moz-src:///toolkit/components/ml/MLModelHubService.sys.mjs',
+-        'constructor': 'MLModelHubService',
+-    },
++    # GORILLA excised: MLModelHub (ML JavaScript stack removed)
+ ]
+diff --git a/toolkit/components/ml/moz.build b/toolkit/components/ml/moz.build
+index 630587bffd..b75191d926 100644
+--- a/toolkit/components/ml/moz.build
++++ b/toolkit/components/ml/moz.build
+@@ -7,13 +7,13 @@ SPHINX_TREES["/toolkit/components/ml"] = "docs"
+ if CONFIG["ONNX_RUNTIME"]:
+     FINAL_TARGET_FILES += ["%" + CONFIG["ONNX_RUNTIME"]]
+ 
+-JAR_MANIFESTS += ["jar.mn"]
++# GORILLA excised: jar.mn (the ML JavaScript stack: chrome://global/content/ml/* is not packaged; ipc/ and MLUtils stay for UtilityProcess)
+ 
+ with Files("**"):
+     BUG_COMPONENT = ("Core", "Machine Learning: On Device")
+ 
+ DIRS += [
+-    "actors",
++    # GORILLA excised: "actors" (MLEngineParent/Child; the MLEngine actor is excised in ActorManagerParent)
+     "tests",
+ ]
+ 
+@@ -43,9 +43,7 @@ XPIDL_SOURCES += [
+     "nsIMLUtils.idl",
+ ]
+ 
+-MOZ_SRC_FILES += [
+-    "MLModelHubService.sys.mjs",
+-]
++# GORILLA excised: MOZ_SRC_FILES MLModelHubService.sys.mjs (its components.conf entry is removed too)
+ 
+ UNIFIED_SOURCES += [
+     "MLUtils.cpp",

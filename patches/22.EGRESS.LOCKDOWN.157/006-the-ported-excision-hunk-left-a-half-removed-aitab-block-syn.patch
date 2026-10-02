@@ -1,0 +1,87 @@
+# Gorilla 157 privacy cut
+# The ported excision hunk left a half-removed AITab block (SyntaxError line 242) that built fine and killed every JSWindowActor in the installed 157.0 (no address bar, no extensions). Excised AITab, SmartWindowTasks and SmartFormFillReview whole, as 155.0.1 did for aiwindow.
+# Files: browser/components/DesktopActorRegistry.sys.mjs
+
+diff --git a/browser/components/DesktopActorRegistry.sys.mjs b/browser/components/DesktopActorRegistry.sys.mjs
+index 1b21e51506..ec436f81bb 100644
+--- a/browser/components/DesktopActorRegistry.sys.mjs
++++ b/browser/components/DesktopActorRegistry.sys.mjs
+@@ -234,48 +234,10 @@ let JSWINDOWACTORS = {
+   // GORILLA excised: AIChatContent actor (aiwindow removed).
+ 
+   // GORILLA excised: AISmartBar actor (aiwindow removed).
+-  // GORILLA excised: SmartWindowTasks actor (aiwindow removed).
+ 
+-    parent: {
+-    },
+-    child: {
+-        "moz-src:///browser/components/aiwindow/ui/actors/AITabChild.sys.mjs",
+-      events: {
+-        "AITab:RequestPage": { wantUntrusted: true },
+-      },
+-    },
+-    matches: ["about:aitab", "about:aitab?*"],
+-    remoteTypes: ["privilegedabout"],
+-    enablePreference: "browser.smartwindow.aitab.enabled",
+-  },
++  // GORILLA excised: AITab actor (aiwindow removed; new upstream in 157).
+ 
+-  SmartWindowTasks: {
+-    parent: {
+-      esModuleURI:
+-        "moz-src:///browser/components/aiwindow/ui/actors/SmartWindowTasksParent.sys.mjs",
+-    },
+-    child: {
+-      esModuleURI:
+-        "moz-src:///browser/components/aiwindow/ui/actors/SmartWindowTasksChild.sys.mjs",
+-      events: {
+-        "SmartWindowTasks:RequestListMonitors": { wantUntrusted: true },
+-        "SmartWindowTasks:RequestCreateMonitor": { wantUntrusted: true },
+-        "SmartWindowTasks:RequestDeleteMonitor": { wantUntrusted: true },
+-        "SmartWindowTasks:RequestUpdateMonitor": { wantUntrusted: true },
+-        "SmartWindowTasks:RequestRunMonitor": { wantUntrusted: true },
+-        "SmartWindowTasks:RequestPauseMonitor": { wantUntrusted: true },
+-        "SmartWindowTasks:RequestConstants": { wantUntrusted: true },
+-        "SmartWindowTasks:RequestOpenUrl": { wantUntrusted: true },
+-      },
+-    },
+-    allFrames: true,
+-    // TODO: Remove chrome:// URL and "parent" remoteType before landing
+-    // These are only for development while about:smartwindowtasks registration lands
+-    matches: ["about:smartwindowtasks"],
+-    includeChrome: true,
+-    remoteTypes: ["privilegedabout"],
+-    enablePreference: "browser.smartwindow.enabled",
+-  },
++  // GORILLA excised: SmartWindowTasks actor (aiwindow removed).
+ 
+   BackupUI: {
+     parent: {
+@@ -852,26 +814,7 @@ let JSWINDOWACTORS = {
+ 
+   // GORILLA excised: SmartFormFill actor (aiwindow removed).
+ 
+-  SmartFormFillReview: {
+-    parent: {
+-      esModuleURI:
+-        "moz-src:///browser/components/aiwindow/ui/actors/SmartFormFillReviewParent.sys.mjs",
+-    },
+-    child: {
+-      esModuleURI:
+-        "moz-src:///browser/components/aiwindow/ui/actors/SmartFormFillReviewChild.sys.mjs",
+-      events: {
+-        "SmartFormFillReview:Ready": { wantUntrusted: true },
+-        "fill-form": { wantUntrusted: true },
+-        cancel: { wantUntrusted: true },
+-        stop: { wantUntrusted: true },
+-        close: { wantUntrusted: true },
+-      },
+-    },
+-    matches: ["about:smartformfillreview"],
+-    remoteTypes: ["privilegedabout"],
+-    enablePreference: "browser.smartwindow.smartformfill.enabled",
+-  },
++  // GORILLA excised: SmartFormFillReview actor (aiwindow removed; new upstream in 157).
+ 
+   SpeechDispatcher: {
+     parent: {

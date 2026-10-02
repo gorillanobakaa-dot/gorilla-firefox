@@ -1,0 +1,36 @@
+# Gorilla 157 port fix
+# The GORILLA OVERRIDE block sat in the middle of a two-line assignment (since 155.0.1), so the module never parsed; moved it above the embedder line. Found by the new node --check on changed JS.
+# Files: toolkit/components/places/PlacesSemanticHistoryManager.sys.mjs
+
+diff --git a/toolkit/components/places/PlacesSemanticHistoryManager.sys.mjs b/toolkit/components/places/PlacesSemanticHistoryManager.sys.mjs
+index 502cb3c423..f5ee31a4c7 100644
+--- a/toolkit/components/places/PlacesSemanticHistoryManager.sys.mjs
++++ b/toolkit/components/places/PlacesSemanticHistoryManager.sys.mjs
+@@ -225,13 +225,6 @@ class PlacesSemanticHistoryManager {
+       return;
+     }
+ 
+-    this.embedder = lazy.embeddingsGeneratorFactory.forPlaces();
+-    this.semanticDB = new lazy.PlacesSemanticHistoryDatabase({
+-      embeddingSize: this.embedder.embeddingSize,
+-      fileName: "places_semantic.sqlite",
+-    });
+-    this.qualifiedForSemanticSearch =
+-      this.embedder.isEnoughPhysicalMemoryAvailable() &&
+     // GORILLA OVERRIDE: ml stack excised — the embeddings generator no
+     // longer exists. Finalize immediately: every capability getter reports
+     // false and the urlbar semantic provider stays inactive (it used to
+@@ -242,6 +235,13 @@ class PlacesSemanticHistoryManager {
+     if (true) {
+       return;
+     }
++    this.embedder = lazy.embeddingsGeneratorFactory.forPlaces();
++    this.semanticDB = new lazy.PlacesSemanticHistoryDatabase({
++      embeddingSize: this.embedder.embeddingSize,
++      fileName: "places_semantic.sqlite",
++    });
++    this.qualifiedForSemanticSearch =
++      this.embedder.isEnoughPhysicalMemoryAvailable() &&
+       this.embedder.isEnoughCpuCoresAvailable();
+ 
+     lazy.AsyncShutdown.appShutdownConfirmed.addBlocker(
