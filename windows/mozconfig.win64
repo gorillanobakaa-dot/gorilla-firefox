@@ -79,15 +79,13 @@ ac_add_options --disable-debug-symbols
 # first written (same omission as sccache: rewritten from memory rather than
 # diffed - see "working scripts/diff_mozconfig.py").
 #
-# They are staged COMMENTED because each changes configure flags and would
-# invalidate the objdir. Enable them TOGETHER WITH sccache above, in one
-# rebuild, rather than paying for two.
-#
-# ac_add_options --disable-default-browser-agent   # Windows scheduled task that phones home
-# ac_add_options --disable-webspeech               # speech-to-text / text-to-speech APIs
-# ac_add_options --disable-necko-wifi              # WLAN scanning for geolocation
-# ac_add_options --enable-rust-simd                # cross-platform performance
-# ac_add_options --enable-jemalloc                 # already the Windows default; explicit
+# Enabled 2026-10-02 to match the live config/mozconfig.win64 the 157 builds used
+# (decision D-157-22: every build configuration carries every disable).
+ac_add_options --disable-default-browser-agent   # Windows scheduled task that phones home
+ac_add_options --disable-webspeech               # speech-to-text / text-to-speech APIs
+ac_add_options --disable-necko-wifi              # WLAN scanning for geolocation
+ac_add_options --enable-rust-simd                # cross-platform performance
+ac_add_options --enable-jemalloc                 # already the Windows default; explicit
 # ac_add_options --without-wasm-sandboxed-libraries
 # mk_add_options AUTOCLOBBER=0                     # never clobber silently
 #
