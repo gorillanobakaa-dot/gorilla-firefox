@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/chrome/browser/customizableui/customizableWidgets.properties b/browser/locales/en-US/chrome/browser/customizableui/customizableWidgets.properties
+index fab5fb066c..a435a6a901 100644
 --- a/browser/locales/en-US/chrome/browser/customizableui/customizableWidgets.properties
 +++ b/browser/locales/en-US/chrome/browser/customizableui/customizableWidgets.properties
 @@ -1,54 +1,53 @@

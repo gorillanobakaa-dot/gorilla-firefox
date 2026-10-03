@@ -1,6 +1,8 @@
+diff --git a/browser/components/preferences/jar.mn b/browser/components/preferences/jar.mn
+index a84468121d..08151ec67a 100644
 --- a/browser/components/preferences/jar.mn
 +++ b/browser/components/preferences/jar.mn
-@@ -25,7 +25,6 @@
+@@ -25,7 +25,6 @@ browser.jar:
     content/browser/preferences/etp-toggle-promo.svg
     content/browser/preferences/etp-advanced-banner.svg
     content/browser/preferences/spell-check-promo.svg
@@ -8,7 +10,7 @@
     content/browser/preferences/FocusHistory.mjs
     content/browser/preferences/DefaultBrowserHelper.mjs
     content/browser/preferences/config/about-firefox.mjs                 (config/about-firefox.mjs)
-@@ -34,7 +33,6 @@
+@@ -34,7 +33,6 @@ browser.jar:
     content/browser/preferences/config/accessibility.mjs                 (config/accessibility.mjs)
     content/browser/preferences/config/appearance.mjs                    (config/appearance.mjs)
     content/browser/preferences/config/browser-icon.mjs                  (config/browser-icon.mjs)

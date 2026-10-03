@@ -1,6 +1,8 @@
+diff --git a/browser/base/content/browser-menubar.js b/browser/base/content/browser-menubar.js
+index a31ffe4eeb..5d3874824f 100644
 --- a/browser/base/content/browser-menubar.js
 +++ b/browser/base/content/browser-menubar.js
-@@ -192,8 +192,6 @@
+@@ -206,8 +206,6 @@ document.addEventListener(
            if (!event.target.parentNode._placesView) {
              new HistoryMenu(event);
            }

@@ -1,6 +1,8 @@
+diff --git a/toolkit/locales/en-US/toolkit/about/aboutAddons.ftl b/toolkit/locales/en-US/toolkit/about/aboutAddons.ftl
+index ab20738e2c..2ac3a257d3 100644
 --- a/toolkit/locales/en-US/toolkit/about/aboutAddons.ftl
 +++ b/toolkit/locales/en-US/toolkit/about/aboutAddons.ftl
-@@ -1,27 +1,23 @@
+@@ -1,27 +1,21 @@
  # This Source Code Form is subject to the terms of the Mozilla Public
  # License, v. 2.0. If a copy of the MPL was not distributed with this
  # file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -9,11 +11,8 @@
  
  search-header =
 -    .placeholder = Search addons.mozilla.org
--    .searchbuttonlabel = Search
-+    .placeholder =
-+        
-+        Search addons.gorilla.org
-+        .searchbuttonlabel = Search
++    .placeholder = Search addons.gorilla.org
+     .searchbuttonlabel = Search
  
  ## Variables
  ##   $domain - Domain name where add-ons are available (e.g. addons.mozilla.org)
@@ -35,7 +34,7 @@
  list-empty-installed =
      .value = You don’t have any add-ons of this type installed
  
-@@ -41,15 +37,15 @@
+@@ -41,15 +35,15 @@ help-button = Add-ons Support
  sidebar-help-button-title =
      .title = Add-ons Support
  
@@ -55,43 +54,8 @@
  
  detail-version =
      .label = Version
-@@ -63,43 +59,55 @@
- detail-contributions-description = The developer of this add-on asks that you help support its continued development by making a small contribution.
- 
- detail-contributions-button = Contribute
--    .title = Contribute to the development of this add-on
--    .accesskey = C
-+    .title =
-+        
-+        Contribute to the development of this add-on
-+        .accesskey = C
- 
- detail-update-type =
-     .value = Automatic Updates
- 
- detail-update-default =
--    .label = Default
--    .tooltiptext = Automatically install updates only if that’s the default
-+    .label =
-+        
-+        Default
-+        .tooltiptext = Automatically install updates only if that’s the default
- 
- detail-update-automatic =
--    .label = On
--    .tooltiptext = Automatically install updates
-+    .label =
-+        
-+        On
-+        .tooltiptext = Automatically install updates
- 
- detail-update-manual =
--    .label = Off
--    .tooltiptext = Don’t automatically install updates
-+    .label =
-+        
-+        Off
-+        .tooltiptext = Don’t automatically install updates
+@@ -82,16 +76,16 @@ detail-update-manual =
+     .tooltiptext = Don’t automatically install updates
  
  # Used as a description for the option to allow or block an add-on in private windows.
 -detail-private-browsing-label = Run in Private Windows
@@ -111,24 +75,8 @@
 +detail-private-required-description2 = This Gorilla extension has access to your online activities while private browsing. <a data-l10n-name="learn-more">Learn more</a>
  
  detail-private-browsing-on =
--    .label = Allow
--    .tooltiptext = Enable in Private Browsing
-+    .label =
-+        
-+        Allow
-+        .tooltiptext = Enable in Private Browsing
- 
- detail-private-browsing-off =
--    .label = Don’t Allow
--    .tooltiptext = Disable in Private Browsing
-+    .label =
-+        
-+        Don’t Allow
-+        .tooltiptext = Disable in Private Browsing
- 
- detail-home =
-     .label = Homepage
-@@ -108,31 +116,34 @@
+     .label = Allow
+@@ -108,7 +102,7 @@ detail-home-value =
      .value = { detail-home.label }
  
  detail-repository =
@@ -137,16 +85,8 @@
  
  detail-repository-value =
      .value = { detail-repository.label }
- 
- detail-check-for-updates =
--    .label = Check for Updates
--    .accesskey = U
--    .tooltiptext = Check for updates for this add-on
-+    .label =
-+        
-+        Check for Updates
-+        .accesskey = U
-+        .tooltiptext = Check for updates for this add-on
+@@ -119,20 +113,21 @@ detail-check-for-updates =
+     .tooltiptext = Check for updates for this add-on
  
  detail-show-preferences =
 -    .label =
@@ -176,7 +116,7 @@
          }
  
  detail-rating =
-@@ -154,23 +165,21 @@
+@@ -154,23 +149,21 @@ disabled-unsigned-devinfo =
      Developers interested in getting their add-ons verified can continue by reading our
      <label data-l10n-name="learn-more">manual</label>.
  
@@ -208,7 +148,7 @@
  
  aboutaddons-sidebar =
      .heading = Add-ons
-@@ -178,12 +187,12 @@
+@@ -178,12 +171,12 @@ aboutaddons-sidebar =
  addon-category-discover = Recommendations
  addon-category-discover-title =
      .title = Recommendations
@@ -225,7 +165,7 @@
  addon-category-plugin = Plugins
  addon-category-plugin-title =
      .title = Plugins
-@@ -209,7 +218,6 @@
+@@ -209,7 +202,6 @@ addon-category-sitepermission-title =
  addon-sitepermission-host = Site Permissions for { $host }
  
  ## These are global warnings
@@ -233,7 +173,7 @@
  extensions-warning-safe-mode3 =
      .message = All add-ons have been disabled by Troubleshoot Mode.
  extensions-warning-check-compatibility2 =
-@@ -221,11 +229,10 @@
+@@ -221,11 +213,10 @@ extensions-warning-update-security2 =
  extensions-warning-update-security-button = Enable
      .title = Enable add-on update security checking
  extensions-warning-imported-addons2 =
@@ -247,7 +187,7 @@
  addon-updates-check-for-updates = Check for Updates
      .accesskey = C
  addon-updates-view-updates = View Recent Updates
-@@ -233,7 +240,6 @@
+@@ -233,7 +224,6 @@ addon-updates-view-updates = View Recent Updates
  
  # This menu item is a checkbox that toggles the default global behavior for
  # add-on update checking.
@@ -255,7 +195,7 @@
  addon-updates-update-addons-automatically = Update Add-ons Automatically
      .accesskey = A
  
-@@ -242,26 +248,23 @@
+@@ -242,26 +232,23 @@ addon-updates-update-addons-automatically = Update Add-ons Automatically
  ## update checking behavior for all add-ons to the default global behavior
  ## (which itself is either "Automatically" or "Manually", controlled by the
  ## extensions-updates-update-addons-automatically.label menu item).
@@ -284,7 +224,7 @@
      .accesskey = I
  addon-install-from-file-dialog-title = Select add-on to install
  addon-install-from-file-filter-name = Add-ons
-@@ -269,22 +272,21 @@
+@@ -269,22 +256,21 @@ addon-open-about-debugging = Debug Add-ons
      .accesskey = b
  
  ## Extension shortcut management
@@ -315,7 +255,7 @@
  
  shortcuts-modifier-mac = Include Ctrl, Alt, or ⌘
  shortcuts-modifier-other = Include Ctrl or Alt
-@@ -310,7 +312,7 @@
+@@ -310,7 +296,7 @@ shortcuts-exists = Already in use by { $addon }
  #   $numberToShow (number) - Number of other elements available to show
  shortcuts-card-expand-button =
      { $numberToShow ->
@@ -324,7 +264,7 @@
      }
  
  shortcuts-card-collapse-button = Show Less
-@@ -319,39 +321,41 @@
+@@ -319,39 +305,41 @@ header-back-button =
      .title = Go back
  
  ## Recommended add-ons page
@@ -376,7 +316,7 @@
  
  privacy-policy = Privacy Policy
  
-@@ -364,12 +368,12 @@
+@@ -364,12 +352,12 @@ created-by-author = by <a data-l10n-name="author">{ $author }</a>
  #   $dailyUsers (number) - The number of daily users.
  user-count = Users: { $dailyUsers }
  install-extension-button = Add to { -brand-product-name }
@@ -391,7 +331,7 @@
  
  # This is a label for the button to open the "more options" menu, it is only
  # used for screen readers.
-@@ -377,7 +381,6 @@
+@@ -377,7 +365,6 @@ addon-options-button =
      .aria-label = More Options
  
  ## Add-on actions
@@ -399,7 +339,7 @@
  report-addon-button = Report
  remove-addon-button = Remove
  # The link will always be shown after the other text.
-@@ -390,8 +393,8 @@
+@@ -390,8 +377,8 @@ extension-enable-addon-button-label =
      .aria-label = Enable
  preferences-addon-button =
      { PLATFORM() ->
@@ -410,7 +350,7 @@
      }
  details-addon-button = Details
  release-notes-addon-button = Release Notes
-@@ -401,7 +404,7 @@
+@@ -401,7 +388,7 @@ extension-enabled-heading = Enabled
  extension-disabled-heading = Disabled
  
  theme-enabled-heading = Enabled
@@ -419,7 +359,7 @@
  
  plugin-enabled-heading = Enabled
  plugin-disabled-heading = Disabled
-@@ -426,7 +429,7 @@
+@@ -426,7 +413,7 @@ addon-detail-rating-label = Rating
  
  # Message for add-ons with a staged pending update.
  install-postponed-message2 =
@@ -428,7 +368,7 @@
  install-postponed-button = Update Now
  
  # This string is used to show that an add-on is disabled.
-@@ -439,12 +442,11 @@
+@@ -439,12 +426,11 @@ addon-name-disabled = { $name } (disabled)
  #   $numberOfReviews (number) - The number of reviews received
  addon-detail-reviews-link =
      { $numberOfReviews ->
@@ -443,7 +383,7 @@
  # Variables:
  #   $addon (string) - Name of the add-on
  pending-uninstall-description2 =
-@@ -465,8 +467,8 @@
+@@ -465,8 +451,8 @@ addon-detail-group-label-updates =
  # This is the tooltip text for the private browsing badge in about:addons. The
  # badge is the private browsing icon included next to the extension's name.
  addon-badge-private-browsing-allowed3 =
@@ -454,7 +394,7 @@
  addon-detail-private-browsing-allow = Allow
  addon-detail-private-browsing-disallow = Don’t Allow
  # aria-label associated to the private browsing row to help screen readers to announce the group
-@@ -476,11 +478,10 @@
+@@ -476,11 +462,10 @@ addon-detail-group-label-private-browsing =
  
  ## "sites with restrictions" (internally called "quarantined") are special domains
  ## where add-ons are normally blocked for security reasons.
@@ -467,7 +407,7 @@
  # Used as label and tooltip text on the radio inputs associated to the quarantined domains UI controls.
  addon-detail-quarantined-domains-allow = Allow
  addon-detail-quarantined-domains-disallow = Don’t Allow
-@@ -490,28 +491,26 @@
+@@ -490,28 +475,26 @@ addon-detail-group-label-quarantined-domains =
  
  ## This is the tooltip text for the recommended badges for an extension in about:addons. The
  ## badge is a small icon displayed next to an extension when it is recommended on AMO.
@@ -499,7 +439,7 @@
  available-updates-heading = Available Updates
  recent-updates-heading = Recent Updates
  
-@@ -519,7 +518,7 @@
+@@ -519,7 +502,7 @@ release-notes-loading = Loading…
  release-notes-error = Sorry, but there was an error loading the release notes.
  
  addon-permissions-heading = Permissions
@@ -508,7 +448,7 @@
  addon-permissions-required-label = Required:
  addon-permissions-optional-label = Optional:
  addon-permissions-learnmore = Learn more about permissions
-@@ -528,8 +527,8 @@
+@@ -528,8 +511,8 @@ addon-permissions-learnmore = Learn more about permissions
  # the user.
  addon-permissions-managed-by-policy = Some permissions are managed by your organization.
  
@@ -519,7 +459,7 @@
  
  # Variables:
  #   $hostname (string) - Host where the permissions are granted
-@@ -537,26 +536,27 @@
+@@ -537,26 +520,25 @@ addon-sitepermissions-required = Grants the following capabilities to <span data
  
  # A recommendation for the Firefox Color theme shown at the bottom of the theme
  # list view. The "Firefox Color" name itself should not be translated.
@@ -548,14 +488,12 @@
  addons-heading-search-button =
 -    .title = Search addons.mozilla.org
 -    .aria-label = Search addons.mozilla.org
-+    .title =
-+        
-+        Search addons.gorilla.org
-+        .aria-label = Search addons.gorilla.org
++    .title = Search addons.gorilla.org
++    .aria-label = Search addons.gorilla.org
  
  addon-page-options-button =
      .title = Tools for all add-ons
-@@ -564,7 +564,6 @@
+@@ -564,7 +546,6 @@ addon-page-options-button =
  ## Detail notifications
  ## Variables:
  ##   $name (string) - Name of the add-on.
@@ -563,7 +501,7 @@
  # Variables:
  #   $version (string) - Application version.
  details-notification-incompatible2 =
-@@ -577,15 +576,15 @@
+@@ -577,15 +558,15 @@ details-notification-unsigned2 =
      .message = { $name } could not be verified for use in { -brand-short-name }. Proceed with caution.
  
  details-notification-hard-blocked-extension =
@@ -583,7 +521,7 @@
  details-notification-soft-blocked-other-disabled2 =
      .message = This add-on is restricted and has been disabled. You can enable it, but this may be risky.
  details-notification-soft-blocked-other-enabled2 =
-@@ -596,22 +595,20 @@
+@@ -596,22 +577,20 @@ details-notification-gmp-pending2 =
      .message = { $name } will be installed shortly.
  
  ## Gecko Media Plugins (GMPs)
@@ -610,7 +548,7 @@
  addon-data-collection-learnmore = Learn more about data collection
  
  # Name of the Permissions tab in `about:addons` when the data collection feature is enabled.
-@@ -620,32 +617,30 @@
+@@ -620,15 +599,15 @@ permissions-data-addon-button = Permissions and data
  # This is a description for extension that use this AI model
  # Variables:
  #   $extensionName (String) - Name of the extension
@@ -618,7 +556,7 @@
 +mlmodel-extension-label = Used by the Gorilla extension { $extensionName }
  
  ## Mapping Engine IDs from AI models to how that feature represented by the engine Id is described in the used by section in local model management
--
+ 
  mlmodel-about-inference = { -brand-short-name } uses this on about:inference
  mlmodel-link-preview = { -brand-short-name } uses this to generate key points when you preview links
  mlmodel-pdfjs = { -brand-short-name } uses this to create alt text for images you add to PDFs
@@ -628,12 +566,9 @@
 +mlmodel-smart-tab-embedding-engine = { -brand-short-name } uses this to suggest Gorilla tabs for your Gorilla tab groups
  
  mlmodel-formfill-engine = { -brand-short-name } uses this to help fill in address forms
- 
- # AI Model will be downloaded on the users device and used locally
- addon-category-mlmodel = On-device AI
- addon-category-mlmodel-title =
--  .title = On-device AI
-+    .title = On-device AI
+ mlmodel-speech-recognition = { -brand-short-name } uses this for on-device speech recognition
+@@ -639,14 +618,13 @@ addon-category-mlmodel-title =
+   .title = On-device AI
  
  mlmodel-heading = Manage On-Device AI Models
 -mlmodel-description =
@@ -642,8 +577,7 @@
  
  # Label for button that when clicked removed local model
  mlmodel-remove-addon-button =
--  .aria-label = Remove
-+    .aria-label = Remove
+   .aria-label = Remove
  # Label for the aggregated value of all files for a model
 -mlmodel-addon-detail-totalsize-label = File size
 +mlmodel-addon-detail-totalsize-label = Gorilla File size

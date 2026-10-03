@@ -1,6 +1,8 @@
+diff --git a/toolkit/content/aboutwebrtc/aboutWebrtc.css b/toolkit/content/aboutwebrtc/aboutWebrtc.css
+index 5abd0220ef..2721be00b5 100644
 --- a/toolkit/content/aboutwebrtc/aboutWebrtc.css
 +++ b/toolkit/content/aboutwebrtc/aboutWebrtc.css
-@@ -267,3 +267,7 @@
+@@ -267,3 +267,7 @@ div.fold-trigger {
    opacity: 1;
    transition: opacity 0.5s;
  }

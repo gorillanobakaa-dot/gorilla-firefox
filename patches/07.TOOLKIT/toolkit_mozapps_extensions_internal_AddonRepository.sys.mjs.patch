@@ -1,6 +1,8 @@
+diff --git a/toolkit/mozapps/extensions/internal/AddonRepository.sys.mjs b/toolkit/mozapps/extensions/internal/AddonRepository.sys.mjs
+index 4000f79484..a14c21530a 100644
 --- a/toolkit/mozapps/extensions/internal/AddonRepository.sys.mjs
 +++ b/toolkit/mozapps/extensions/internal/AddonRepository.sys.mjs
-@@ -818,41 +818,10 @@
+@@ -818,41 +818,10 @@ export var AddonRepository = {
    },
  
    async getAvailableLangpacks() {

@@ -1,3 +1,5 @@
+diff --git a/toolkit/locales/en-US/toolkit/about/aboutWebauthn.ftl b/toolkit/locales/en-US/toolkit/about/aboutWebauthn.ftl
+index 87bf8f848f..48d239b758 100644
 --- a/toolkit/locales/en-US/toolkit/about/aboutWebauthn.ftl
 +++ b/toolkit/locales/en-US/toolkit/about/aboutWebauthn.ftl
 @@ -1,15 +1,12 @@
@@ -16,7 +18,7 @@
  about-webauthn-info-section-title = Device info
  about-webauthn-info-subsection-title = Authenticator info
  about-webauthn-options-subsection-title = Authenticator options
-@@ -21,7 +18,6 @@
+@@ -21,7 +18,6 @@ about-webauthn-confirm-deletion-section-title = Confirm deletion
  about-webauthn-bio-enrollment-section-title = Biometric enrollments
  
  ## Info field texts
@@ -24,7 +26,7 @@
  about-webauthn-text-connect-device = Please connect a security token.
  # If multiple devices are plugged in, they will blink and we are asking the user to select one by touching the device they want.
  about-webauthn-text-select-device = Please select your desired security token by touching the device.
-@@ -32,16 +28,15 @@
+@@ -32,16 +28,15 @@ about-webauthn-bio-enrollment-list-subsection-title = Enrollments:
  about-webauthn-add-bio-enrollment-section-title = Add new enrollment
  
  ## Results label
@@ -44,7 +46,7 @@
      }
  about-webauthn-results-pin-blocked-error = Error: There are no attempts left and your device has been locked, because the wrong PIN was provided too many times. The device needs a reset.
  about-webauthn-results-pin-not-set-error = Error: PIN not set. This operation needs PIN protection.
-@@ -51,7 +46,6 @@
+@@ -51,7 +46,6 @@ about-webauthn-results-pin-auth-blocked-error = Error: There were too many faile
  about-webauthn-results-cancelled-by-user-error = Error: Operation has been canceled by the user.
  
  ## Labels
@@ -52,7 +54,7 @@
  about-webauthn-new-pin-label = New PIN:
  about-webauthn-repeat-pin-label = Repeat new PIN:
  about-webauthn-current-pin-label = Current PIN:
-@@ -63,7 +57,6 @@
+@@ -63,7 +57,6 @@ about-webauthn-credential-list-empty = No credentials found on device.
  about-webauthn-confirm-deletion-label = You are about to delete:
  
  ## Buttons
@@ -60,7 +62,7 @@
  about-webauthn-current-set-pin-button = Set PIN
  about-webauthn-current-change-pin-button = Change PIN
  # List is a verb, as in "Show list of credentials"
-@@ -79,7 +72,6 @@
+@@ -79,7 +72,6 @@ about-webauthn-update-button = Update
  
  ## Authenticator options fields
  ## Option fields correspond to the CTAP2 option IDs and definitions found in https://fidoalliance.org/specs/fido-v2.1-ps-20210615/fido-client-to-authenticator-protocol-v2.1-ps-20210615.html#option-id
@@ -68,7 +70,7 @@
  about-webauthn-auth-option-uv = User verification
  about-webauthn-auth-option-up = User presence
  about-webauthn-auth-option-clientpin = Client PIN
-@@ -112,7 +104,6 @@
+@@ -112,7 +104,6 @@ about-webauthn-auth-option-null = Not supported
  
  ## Authenticator info fields
  ## Info fields correspond to the CTAP2 authenticatorGetInfo field member name and definitions found in https://fidoalliance.org/specs/fido-v2.1-ps-20210615/fido-client-to-authenticator-protocol-v2.1-ps-20210615.html#authenticatorGetInfo
@@ -76,7 +78,7 @@
  about-webauthn-auth-info-vendor-prototype-config-commands = Vendor prototype config commands
  about-webauthn-auth-info-remaining-discoverable-credentials = Remaining discoverable credentials
  about-webauthn-auth-info-certifications = Certifications
-@@ -132,7 +123,7 @@
+@@ -132,7 +123,7 @@ about-webauthn-auth-info-pin-protocols = PIN protocols
  about-webauthn-auth-info-max-msg-size = Max message size
  # AAGUID should not be translated.
  about-webauthn-auth-info-aaguid = AAGUID
@@ -85,7 +87,7 @@
  about-webauthn-auth-info-versions = Versions
  # Shows when boolean value for an info field is True. True should not be translated.
  about-webauthn-auth-info-true = True
-@@ -141,7 +132,6 @@
+@@ -141,7 +132,6 @@ about-webauthn-auth-info-false = False
  about-webauthn-auth-info-null = Not supported
  
  ## Bio enrollment sample feedbacks
@@ -93,7 +95,7 @@
  # To register a new enrollment (e.g. fingerprint) usually
  # multiple scans of the same finger have to be sampled.
  # This shows how many the user still has to do.
-@@ -149,22 +139,20 @@
+@@ -149,22 +139,20 @@ about-webauthn-auth-info-null = Not supported
  #  $repeatCount (Number): number of tries left
  about-webauthn-samples-still-needed =
      { $repeatCount ->

@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/installer/custom.properties b/browser/locales/en-US/installer/custom.properties
+index 8c33192e58..eb500cb71c 100644
 --- a/browser/locales/en-US/installer/custom.properties
 +++ b/browser/locales/en-US/installer/custom.properties
 @@ -1,23 +1,17 @@
@@ -24,7 +26,7 @@
  REG_APP_DESC=$BrandShortName delivers safe, easy web browsing. A familiar user interface, enhanced security features including protection from online identity theft, and integrated search let you get the most out of the web.
  BRIEF_APP_DESC=Fast and private web browsing
  # LOCALIZATION NOTE:
-@@ -63,7 +57,7 @@
+@@ -63,7 +57,7 @@ UN_CONFIRM_PAGE_TITLE=Uninstall $BrandFullName
  UN_CONFIRM_UNINSTALLED_FROM=$BrandShortName will be uninstalled from the following location:
  
  UN_REFRESH_PAGE_TITLE=Refresh $BrandShortName Instead?
@@ -33,7 +35,7 @@
  UN_REFRESH_LEARN_MORE=&Learn more
  UN_REFRESH_BUTTON=&Refresh $BrandShortName
  
-@@ -73,7 +67,7 @@
+@@ -73,7 +67,7 @@ STATUS_INSTALL_APP=Installing $BrandShortName…
  STATUS_UNINSTALL_MAIN=Uninstalling $BrandShortName…
  STATUS_CLEANUP=A Little Housekeeping…
  

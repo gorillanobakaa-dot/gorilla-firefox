@@ -1,6 +1,8 @@
+diff --git a/browser/components/places/content/places-commands.js b/browser/components/places/content/places-commands.js
+index 53043c1bf7..d8b2ec8ede 100644
 --- a/browser/components/places/content/places-commands.js
 +++ b/browser/components/places/content/places-commands.js
-@@ -15,11 +15,7 @@
+@@ -15,11 +15,7 @@ document.getElementById("placesCommands").addEventListener("command", event => {
        PlacesCommandHook.showPlacesOrganizer("UnfiledBookmarks");
        break;
      case "Browser:ShowAllHistory":

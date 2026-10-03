@@ -1,6 +1,8 @@
+diff --git a/toolkit/locales/en-US/toolkit/global/commonDialog.ftl b/toolkit/locales/en-US/toolkit/global/commonDialog.ftl
+index df0cb01926..468a823259 100644
 --- a/toolkit/locales/en-US/toolkit/global/commonDialog.ftl
 +++ b/toolkit/locales/en-US/toolkit/global/commonDialog.ftl
-@@ -1,24 +1,25 @@
+@@ -1,20 +1,19 @@
  # This Source Code Form is subject to the terms of the Mozilla Public
  # License, v. 2.0. If a copy of the MPL was not distributed with this
  # file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -24,14 +26,4 @@
 +    .value = Password
  
  common-dialog-copy-cmd =
--    .label = Copy
--    .accesskey = C
-+    .label =
-+        Copy
-+        .accesskey = C
- common-dialog-select-all-cmd =
--    .label = Select All
--    .accesskey = A
-+    .label =
-+        Select All
-+        .accesskey = A
+     .label = Copy

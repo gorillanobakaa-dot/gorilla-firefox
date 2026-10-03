@@ -1,23 +1,24 @@
+diff --git a/browser/components/urlbar/UrlbarUtils.sys.mjs b/browser/components/urlbar/UrlbarUtils.sys.mjs
+index e00dd45b3e..29c5e0ba63 100644
 --- a/browser/components/urlbar/UrlbarUtils.sys.mjs
 +++ b/browser/components/urlbar/UrlbarUtils.sys.mjs
-@@ -10,7 +10,6 @@
- /**
+@@ -11,15 +11,12 @@
+  * @import {UrlbarLoadRequest, URIFixupPrimitives} from "chrome://browser/content/urlbar/UrlbarShared.mjs"
   * @import {Query} from "./UrlbarProvidersManager.sys.mjs"
   * @import {SearchEngine} from "moz-src:///toolkit/components/search/SearchEngine.sys.mjs"
 - * @import {SmartbarInput} from "chrome://browser/content/urlbar/SmartbarInput.mjs"
-  * @import {UrlbarSearchStringTokenData} from "./UrlbarTokenizer.sys.mjs"
   */
  
-@@ -18,8 +17,6 @@
+ import { UrlbarShared } from "chrome://browser/content/urlbar/UrlbarShared.mjs";
  import { XPCOMUtils } from "resource://gre/modules/XPCOMUtils.sys.mjs";
  
  const lazy = XPCOMUtils.declareLazy({
 -  AIWindow:
 -    "moz-src:///browser/components/aiwindow/ui/modules/AIWindow.sys.mjs",
-   BrowserUIUtils: "resource:///modules/BrowserUIUtils.sys.mjs",
    ContextualIdentityService:
      "moz-src:///toolkit/components/contextualidentity/ContextualIdentityService.sys.mjs",
-@@ -2215,23 +2212,11 @@
+   CustomizableUI:
+@@ -1277,23 +1274,11 @@ export var UrlbarUtils = {
     *
     * @param {Window} window
     *   The window to get the URL bar for.

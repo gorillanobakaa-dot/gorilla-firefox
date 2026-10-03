@@ -1,3 +1,5 @@
+diff --git a/toolkit/locales/en-US/chrome/global/filepicker.properties b/toolkit/locales/en-US/chrome/global/filepicker.properties
+index 0b2391b3c2..1822e6c127 100644
 --- a/toolkit/locales/en-US/chrome/global/filepicker.properties
 +++ b/toolkit/locales/en-US/chrome/global/filepicker.properties
 @@ -1,19 +1,18 @@

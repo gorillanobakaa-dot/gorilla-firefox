@@ -1,6 +1,8 @@
+diff --git a/browser/components/sidebar/browser-sidebar.js b/browser/components/sidebar/browser-sidebar.js
+index 6a91102899..11bd386eb9 100644
 --- a/browser/components/sidebar/browser-sidebar.js
 +++ b/browser/components/sidebar/browser-sidebar.js
-@@ -13,8 +13,6 @@
+@@ -13,8 +13,6 @@ const { DeferredTask } = ChromeUtils.importESModule(
  );
  
  const toolsNameMap = {
@@ -9,7 +11,7 @@
    viewTabsSidebar: "syncedtabs",
    viewHistorySidebar: "history",
    viewBookmarksSidebar: "bookmarks",
-@@ -98,17 +96,12 @@
+@@ -99,17 +97,12 @@ var SidebarController = {
        () => sidebar._updateMenus?.()
      );
      Object.defineProperty(sidebar, "visible", {
@@ -28,10 +30,11 @@
    get sidebars() {
      if (this._sidebars) {
        return this._sidebars;
-@@ -186,40 +179,6 @@
+@@ -186,40 +179,6 @@ var SidebarController = {
+       ],
      ]);
  
-     this.registerPrefSidebar(
+-    this.registerPrefSidebar(
 -      "browser.ml.chat.enabled",
 -      "viewGenaiChatSidebar",
 -      {
@@ -65,11 +68,10 @@
 -      }
 -    );
 -
--    this.registerPrefSidebar(
+     this.registerPrefSidebar(
        "browser.contextual-password-manager.enabled",
        "viewCPMSidebar",
-       {
-@@ -2667,8 +2626,6 @@
+@@ -2834,8 +2793,6 @@ var SidebarController = {
  };
  
  ChromeUtils.defineESModuleGetters(SidebarController, {

@@ -1,6 +1,8 @@
+diff --git a/netwerk/protocol/http/HttpConnectionUDP.cpp b/netwerk/protocol/http/HttpConnectionUDP.cpp
+index d5998258e9..c016d0ea84 100644
 --- a/netwerk/protocol/http/HttpConnectionUDP.cpp
 +++ b/netwerk/protocol/http/HttpConnectionUDP.cpp
-@@ -293,14 +293,27 @@
+@@ -317,14 +317,27 @@ nsresult HttpConnectionUDP::InitCommon(nsIUDPSocket* aSocket,
      return rv;
    }
  

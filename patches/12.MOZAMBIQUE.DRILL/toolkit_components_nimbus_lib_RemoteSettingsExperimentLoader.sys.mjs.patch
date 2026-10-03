@@ -1,6 +1,8 @@
+diff --git a/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs b/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
+index 58c642df8c..bafdbc761e 100644
 --- a/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
 +++ b/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
-@@ -253,7 +253,7 @@
+@@ -256,7 +256,7 @@ export class RemoteSettingsExperimentLoader {
        this,
        "intervalInSeconds",
        RUN_INTERVAL_PREF,

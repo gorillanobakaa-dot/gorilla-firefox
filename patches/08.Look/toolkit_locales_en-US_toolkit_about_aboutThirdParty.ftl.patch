@@ -1,3 +1,5 @@
+diff --git a/toolkit/locales/en-US/toolkit/about/aboutThirdParty.ftl b/toolkit/locales/en-US/toolkit/about/aboutThirdParty.ftl
+index 7ec6275ed4..133e173608 100644
 --- a/toolkit/locales/en-US/toolkit/about/aboutThirdParty.ftl
 +++ b/toolkit/locales/en-US/toolkit/about/aboutThirdParty.ftl
 @@ -1,19 +1,18 @@
@@ -22,7 +24,7 @@
  third-party-detail-vendor = Vendor info
  third-party-detail-occurrences = Occurrences
      .title = How many times this module was loaded.
-@@ -28,20 +27,25 @@
+@@ -28,12 +27,15 @@ third-party-th-status = Status
  
  third-party-tag-ime = IME
      .title =
@@ -40,46 +42,17 @@
          This module did not block the application because it was loaded
          in the background.
  third-party-icon-unsigned =
--    .title = This module is not signed
--    .alt = This module is not signed
-+    .title =
-+        This module is not signed
-+        .alt = This module is not signed
- third-party-icon-warning =
--    .title = { -brand-short-name } crashed in code from this module
--    .alt = { -brand-short-name } crashed in code from this module
-+    .title =
-+        { -brand-short-name } crashed in code from this module
-+        .alt = { -brand-short-name } crashed in code from this module
- 
- third-party-status-loaded = Loaded
- third-party-status-blocked = Blocked
-@@ -49,35 +53,39 @@
- 
- third-party-button-copy-to-clipboard = Copy raw data to clipboard
- third-party-loading-data =
--    .alt = Loading system information…
--    .title = Loading system information…
-+    .alt =
-+        Loading system information…
-+        .title = Loading system information…
+@@ -54,7 +56,7 @@ third-party-loading-data =
  third-party-button-reload = Reload with system info
      .title = Reload with system information
  third-party-button-open =
 -    .title = Open file location…
 +    .title = Open Gorilla file location…
  third-party-button-to-block-module = Block this module
--    .title = Block this module
--    .aria-label = Block this module
-+    .title =
-+        Block this module
-+        .aria-label = Block this module
- third-party-button-to-unblock-module = Unblock this module
--    .title = Currently blocked. Click to unblock it.
--    .aria-label = Currently blocked. Click to unblock it.
-+    .title =
-+        Currently blocked. Click to unblock it.
-+        .aria-label = Currently blocked. Click to unblock it.
+     .title = Block this module
+     .aria-label = Block this module
+@@ -63,17 +65,17 @@ third-party-button-to-unblock-module = Unblock this module
+     .aria-label = Currently blocked. Click to unblock it.
  third-party-button-to-unblock-module-disabled = Unblock this module (blocklist currently disabled)
      .title =
 +        
@@ -99,10 +72,3 @@
  third-party-should-restart-title = Restart { -brand-short-name }
  third-party-restart-now = Restart now
  third-party-restart-later = Restart later
- 
- third-party-blocked-by-builtin =
--    .title = Blocked by { -brand-short-name }
--    .alt = Blocked by { -brand-short-name }
-+    .title =
-+        Blocked by { -brand-short-name }
-+        .alt = Blocked by { -brand-short-name }

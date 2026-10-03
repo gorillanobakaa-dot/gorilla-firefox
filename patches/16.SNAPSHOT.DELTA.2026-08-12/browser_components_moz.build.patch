@@ -1,6 +1,8 @@
+diff --git a/browser/components/moz.build b/browser/components/moz.build
+index 63cfb33a3b..b3e1bf8754 100644
 --- a/browser/components/moz.build
 +++ b/browser/components/moz.build
-@@ -28,7 +28,9 @@
+@@ -28,7 +28,9 @@ DIRS += [
      "about",
      "aboutlogins",
      "aboutwelcome",
@@ -11,7 +13,7 @@
      "asrouter",
      "attribution",
      "backup",
-@@ -42,7 +44,7 @@
+@@ -41,7 +43,7 @@ DIRS += [
      "enterprisepolicies",
      "extensions",
      "firefoxview",

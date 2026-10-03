@@ -1,6 +1,8 @@
+diff --git a/toolkit/components/nimbus/ExperimentAPI.sys.mjs b/toolkit/components/nimbus/ExperimentAPI.sys.mjs
+index 681c72b7ff..80e3356229 100644
 --- a/toolkit/components/nimbus/ExperimentAPI.sys.mjs
 +++ b/toolkit/components/nimbus/ExperimentAPI.sys.mjs
-@@ -16,7 +16,6 @@
+@@ -14,7 +14,6 @@ const lazy = XPCOMUtils.declareLazy({
    CleanupManager: "resource://normandy/lib/CleanupManager.sys.mjs",
    ExperimentManager: "resource://nimbus/lib/ExperimentManager.sys.mjs",
    FeatureManifest: "resource://nimbus/FeatureManifest.sys.mjs",
@@ -8,7 +10,7 @@
    NimbusMigrations: "resource://nimbus/lib/Migrations.sys.mjs",
    NimbusTelemetry: "resource://nimbus/lib/Telemetry.sys.mjs",
    RemoteSettings: "resource://services-settings/remote-settings.sys.mjs",
-@@ -122,12 +121,8 @@
+@@ -117,12 +116,8 @@ export const EnrollmentType = Object.freeze({
  export const ExperimentAPI = new (class {
    /**
     * Whether or not the ExperimentAPI has been initialized.
@@ -22,7 +24,7 @@
  
    /**
     * The current ExperimentManager.
-@@ -190,11 +185,6 @@
+@@ -185,11 +180,6 @@ export const ExperimentAPI = new (class {
     */
    #studiesEnabled = false;
  
@@ -34,7 +36,7 @@
    constructor() {
      if (IS_MAIN_PROCESS) {
        // Ensure that the profile ID is cached in a pref.
-@@ -256,24 +246,15 @@
+@@ -251,24 +241,15 @@ export const ExperimentAPI = new (class {
     *        Force the RemoteSettingsExperimentLoader to trigger a RemoteSettings
     *        sync before updating recipes for the first time.
     *
@@ -63,7 +65,7 @@
  
      // Compute the enabled state and cache it. It is possible for the enabled
      // state to change during ExperimentAPI initialization, but we do not
-@@ -312,20 +293,12 @@
+@@ -307,20 +288,12 @@ export const ExperimentAPI = new (class {
        );
      }
  
@@ -84,9 +86,9 @@
      try {
        await this._rsLoader.enable({ forceSync });
      } catch (e) {
-@@ -345,10 +318,6 @@
-       );
-     }
+@@ -354,10 +327,6 @@ export const ExperimentAPI = new (class {
+     // ... but we should still try to report telemetry and connect the crash
+     // reporter.
  
 -    if (this.#firstStartupTimestamps) {
 -      this.#firstStartupTimestamps.loaderInitEnd = ChromeUtils.now();
@@ -95,9 +97,9 @@
      if (CRASHREPORTER_ENABLED) {
        this.manager.store.on("update", this._annotateCrashReport);
        this._annotateCrashReport();
-@@ -382,9 +351,7 @@
-     // no-op.
-     await this._onEnabledPrefChange();
+@@ -400,9 +369,7 @@ export const ExperimentAPI = new (class {
+       await this._onEnabledPrefChange();
+     }
  
 -    if (this.#firstStartupTimestamps) {
 -      this.#firstStartupTimestamps.nimbusInitEnd = ChromeUtils.now();
@@ -106,7 +108,7 @@
    }
  
    /**
-@@ -450,7 +417,7 @@
+@@ -468,7 +435,7 @@ export const ExperimentAPI = new (class {
        this._onEnabledPrefChange
      );
  
@@ -115,7 +117,7 @@
    }
  
    #computeEnabled() {
-@@ -482,22 +449,23 @@
+@@ -500,22 +467,23 @@ export const ExperimentAPI = new (class {
    }
  
    get labsEnabled() {
@@ -146,7 +148,7 @@
    }
  
    /**
-@@ -560,7 +528,7 @@
+@@ -578,7 +546,7 @@ export const ExperimentAPI = new (class {
    }
  
    _removeCrashReportAnnotator() {
@@ -155,7 +157,7 @@
        this.#experimentManager?.store.off("update", this._annotateCrashReport);
      }
    }
-@@ -569,7 +537,7 @@
+@@ -587,7 +555,7 @@ export const ExperimentAPI = new (class {
     * Handle a pref change that may result in Nimbus being enabled or disabled.
     */
    async _onEnabledPrefChange() {
@@ -164,7 +166,7 @@
        return;
      }
  
-@@ -694,39 +662,6 @@
+@@ -712,39 +680,6 @@ export const ExperimentAPI = new (class {
    async optInToExperiment(options) {
      return this._rsLoader._optInToExperiment(options);
    }

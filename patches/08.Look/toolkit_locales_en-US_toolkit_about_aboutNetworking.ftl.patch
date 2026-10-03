@@ -1,3 +1,5 @@
+diff --git a/toolkit/locales/en-US/toolkit/about/aboutNetworking.ftl b/toolkit/locales/en-US/toolkit/about/aboutNetworking.ftl
+index 06e1a42ebd..7a0585e2a1 100644
 --- a/toolkit/locales/en-US/toolkit/about/aboutNetworking.ftl
 +++ b/toolkit/locales/en-US/toolkit/about/aboutNetworking.ftl
 @@ -1,7 +1,6 @@
@@ -8,7 +10,7 @@
  about-networking-title = About Networking
  about-networking-http = HTTP
  about-networking-http-clear-cache-button = Clear HTTP Cache
-@@ -50,10 +49,9 @@
+@@ -100,10 +99,9 @@ about-networking-dns-https-rrs-lookup-table-column = HTTPS RRs
  about-networking-networkid = Network ID
  about-networking-networkid-id = Network ID
  # Note: do not translate about:logging, as it is a URL.

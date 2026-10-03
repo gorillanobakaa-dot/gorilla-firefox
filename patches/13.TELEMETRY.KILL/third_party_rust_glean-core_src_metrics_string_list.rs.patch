@@ -1,6 +1,8 @@
+diff --git a/third_party/rust/glean-core/src/metrics/string_list.rs b/third_party/rust/glean-core/src/metrics/string_list.rs
+index ad2a1b6244..849adca358 100644
 --- a/third_party/rust/glean-core/src/metrics/string_list.rs
 +++ b/third_party/rust/glean-core/src/metrics/string_list.rs
-@@ -54,6 +54,7 @@
+@@ -54,6 +54,7 @@ impl StringListMetric {
      ///
      /// Truncates the value if it is longer than `MAX_STRING_LENGTH` bytes and logs an error.
      pub fn add(&self, value: String) {
@@ -8,7 +10,7 @@
          let metric = self.clone();
          crate::launch_with_glean(move |glean| metric.add_sync(glean, value))
      }
-@@ -106,6 +107,7 @@
+@@ -106,6 +107,7 @@ impl StringListMetric {
      ///
      /// Truncates any value in the list if it is longer than `MAX_STRING_LENGTH` and logs an error.
      pub fn set(&self, values: Vec<String>) {

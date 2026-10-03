@@ -1,6 +1,8 @@
+diff --git a/netwerk/dns/nsHostResolver.cpp b/netwerk/dns/nsHostResolver.cpp
+index c04d1d0d81..f82a829560 100644
 --- a/netwerk/dns/nsHostResolver.cpp
 +++ b/netwerk/dns/nsHostResolver.cpp
-@@ -63,7 +63,10 @@
+@@ -65,7 +65,10 @@ using namespace mozilla::net;
  
  // None of our implementations expose a TTL for negative responses, so we use a
  // constant always.
@@ -12,7 +14,7 @@
  
  //----------------------------------------------------------------------------
  
-@@ -181,8 +184,11 @@
+@@ -183,8 +186,11 @@ nsresult nsHostResolver::Init() MOZ_NO_THREAD_SAFETY_ANALYSIS {
    LOG(("Native HTTPS records supported=%d", bool(sNativeHTTPSSupported)));
  
    nsCOMPtr<nsIThreadPool> threadPool = new nsThreadPool();

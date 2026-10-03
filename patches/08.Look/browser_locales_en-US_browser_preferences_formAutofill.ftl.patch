@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/browser/preferences/formAutofill.ftl b/browser/locales/en-US/browser/preferences/formAutofill.ftl
+index 4b91c16a1a..511dc16865 100644
 --- a/browser/locales/en-US/browser/preferences/formAutofill.ftl
 +++ b/browser/locales/en-US/browser/preferences/formAutofill.ftl
 @@ -1,9 +1,7 @@
@@ -10,47 +12,16 @@
  autofill-manage-addresses-title = Saved addresses
  autofill-manage-addresses-list-header = Addresses
  
-@@ -17,26 +15,29 @@
- autofill-manage-edit-button = Edit…
- 
- ## The address capture doorhanger
--
- address-capture-save-doorhanger-header = Save address?
- address-capture-save-doorhanger-description = Save info to { -brand-short-name } so you can fill out forms quickly.
- address-capture-update-doorhanger-header = Update address?
- address-capture-edit-doorhanger-header = Edit address
- 
- address-capture-save-button =
--    .label = Save
--    .accessKey = S
-+    .label =
-+        Save
-+        .accessKey = S
- address-capture-not-now-button =
--    .label = Not now
--    .accessKey = N
-+    .label =
-+        Not now
-+        .accessKey = N
- address-capture-cancel-button =
--    .label = Cancel
--    .accessKey = C
-+    .label =
-+        Cancel
-+        .accessKey = C
- address-capture-update-button =
--    .label = Update
--    .accessKey = U
-+    .label =
-+        Update
-+        .accessKey = U
+@@ -39,7 +37,7 @@ address-capture-update-button =
+     .label = Update
+     .accessKey = U
  address-capture-manage-address-button =
 -    .label = Address settings
 +    .label = Address Gorilla settings
  address-capture-learn-more-button =
      .label = Learn more
  address-capture-open-menu-button =
-@@ -53,7 +54,6 @@
+@@ -56,7 +54,6 @@ autofill-edit-address-title = Edit address
  ## Labels for address fields (e.g. for a mailing address) used as part of the form
  ## autofill feature. For more information on the address structure (e.g. levels),
  ## see also https://developers.google.com/maps/documentation/javascript/geocoding
@@ -58,22 +29,7 @@
  autofill-address-name = Name
  autofill-address-organization = Organization
  autofill-address-street-address = Street address
-@@ -108,13 +108,12 @@
- autofill-address-country-only = Country
- 
- ##
--
- autofill-address-tel = Phone
- autofill-address-email = Email
- 
- autofill-cancel-button = Cancel
- autofill-save-button = Save
--autofill-country-warning-message = Form autofill is currently available only for certain countries.
-+autofill-country-warning-message = Form Autofill is currently available only for certain countries.
- autofill-message-tooltip = View message about autofill
- 
- # The dialog title for creating credit cards in browser preferences.
-@@ -122,9 +121,25 @@
+@@ -125,9 +122,25 @@ autofill-add-card-title = Add card
  # The dialog title for editing credit cards in browser preferences.
  autofill-edit-card-title2 = Edit card
  
@@ -100,10 +56,10 @@
  autofill-card-name-on-card-2 =
      .label = Name on card
  autofill-card-expires-month-2 =
-@@ -133,11 +148,3 @@
-     .label = Expires year
- autofill-card-billing-address-2 =
-     .label = Billing address
+@@ -140,14 +153,6 @@ autofill-card-billing-address-2 =
+ # card. Use whichever abbreviation is most familiar in your locale.
+ autofill-card-security-code =
+     .label = CVV
 -autofill-card-network = Card Type
 -
 -# This string is never actually displayed, but is used to make it easier to
@@ -112,3 +68,6 @@
 -# methods section. Localizers should choose terms that make sense for payment
 -# methods in their region.
 -autofill-card-search-term-credit-cards = credit cards, credit, cards, debit cards, debit, wallet, checkout
+ 
+ ## The passport autofill management dialog in browser preferences
+ 

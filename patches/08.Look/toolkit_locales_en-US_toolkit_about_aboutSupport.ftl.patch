@@ -1,3 +1,5 @@
+diff --git a/toolkit/locales/en-US/toolkit/about/aboutSupport.ftl b/toolkit/locales/en-US/toolkit/about/aboutSupport.ftl
+index 179b2b6c01..bcee7e5ec6 100644
 --- a/toolkit/locales/en-US/toolkit/about/aboutSupport.ftl
 +++ b/toolkit/locales/en-US/toolkit/about/aboutSupport.ftl
 @@ -1,10 +1,9 @@
@@ -12,7 +14,7 @@
      trying to solve a problem. If you are looking for answers to common questions
      about { -brand-short-name }, check out our <a data-l10n-name="support-link">support website</a>.
  
-@@ -46,22 +45,22 @@
+@@ -46,22 +45,22 @@ app-basics-update-channel = Update Channel
  # as in "Folder for updates". "Update" is a noun, not a verb.
  app-basics-update-dir =
      { PLATFORM() ->
@@ -42,7 +44,7 @@
  # Rosetta is Apple's translation process to run apps containing x86_64
  # instructions on Apple Silicon. This should remain in English.
  app-basics-rosetta = Rosetta Translated
-@@ -69,15 +68,15 @@
+@@ -69,15 +68,15 @@ app-basics-memory-use = Memory Use
  app-basics-performance = Performance
  app-basics-service-workers = Registered Service Workers
  app-basics-third-party = Third-party Modules
@@ -62,7 +64,7 @@
  app-basics-safe-mode = Safe Mode
  app-basics-memory-size = Memory Size (RAM)
  app-basics-disk-available = Disk Space Available
-@@ -90,9 +89,9 @@
+@@ -90,9 +89,9 @@ app-basics-data-size = { $value } { $unit }
  
  show-dir-label =
      { PLATFORM() ->
@@ -75,7 +77,7 @@
      }
  environment-variables-title = Environment Variables
  environment-variables-name = Name
-@@ -101,7 +100,7 @@
+@@ -101,7 +100,7 @@ modified-key-prefs-title = Important Modified Preferences
  modified-prefs-name = Name
  modified-prefs-value = Value
  user-js-title = user.js Preferences
@@ -84,7 +86,7 @@
  locked-key-prefs-title = Important Locked Preferences
  locked-prefs-name = Name
  locked-prefs-value = Value
-@@ -114,9 +113,9 @@
+@@ -114,9 +113,9 @@ graphics-gpu2-title = GPU #2
  graphics-decision-log-title = Decision Log
  graphics-crash-guards-title = Crash Guard Disabled Features
  graphics-workarounds-title = Workarounds
@@ -96,7 +98,7 @@
  # Desktop environment in use on Linux (e.g. GNOME, KDE, XFCE, etc).
  graphics-desktop-environment = Desktop Environment
  place-database-title = Places Database
-@@ -157,11 +156,10 @@
+@@ -167,11 +166,10 @@ restart-in-troubleshoot-mode-label = Troubleshoot Mode…
  clear-startup-cache-title = Try clearing the startup cache
  clear-startup-cache-label = Clear startup cache…
  startup-cache-dialog-title2 = Restart { -brand-short-name } to clear startup cache?
@@ -109,7 +111,7 @@
  audio-backend = Audio Backend
  max-audio-channels = Max Channels
  sample-rate = Preferred Sample Rate
-@@ -184,7 +182,6 @@
+@@ -194,7 +192,6 @@ media-codec-support-info = Codec Support Information
  media-capabilities-enumerate = Enumerate database
  
  ## Codec support table
@@ -117,7 +119,7 @@
  media-codec-support-sw-decoding = Software Decoding
  media-codec-support-hw-decoding = Hardware Decoding
  media-codec-support-sw-encoding = Software Encoding
-@@ -192,13 +189,12 @@
+@@ -202,13 +199,12 @@ media-codec-support-hw-encoding = Hardware Encoding
  media-codec-support-codec-name = Codec Name
  media-codec-support-supported = Supported
  media-codec-support-unsupported = Unsupported
@@ -133,7 +135,7 @@
  media-content-decryption-modules-title = Content Decryption Modules Information
  media-key-system-name = Key System Name
  media-video-robustness = Video Robustness
-@@ -210,9 +206,8 @@
+@@ -220,9 +216,8 @@ media-cdm-capabilities = Capabilities
  media-cdm-clear-lead = Clear Lead
  
  ##
@@ -144,7 +146,7 @@
  intl-locales-requested = Requested Locales
  intl-locales-available = Available Locales
  intl-locales-supported = App Locales
-@@ -229,58 +224,55 @@
+@@ -239,58 +234,55 @@ intl-regional-prefs = Regional Preferences
  ## and for subscribing to browser-internal events.
  ##
  ## See also https://firefox-source-docs.mozilla.org/remote/
@@ -214,7 +216,7 @@
  blocked-driver = Blocked for your graphics driver version.
  blocked-gfx-card = Blocked for your graphics card because of unresolved driver issues.
  blocked-os-version = Blocked for your operating system version.
-@@ -305,7 +297,6 @@
+@@ -315,7 +307,6 @@ virtual-monitor-disp = Virtual Monitor Display
  ## The following strings indicate if an API key has been found.
  ## In some development versions, it's expected for some API keys that they are
  ## not found.
@@ -222,7 +224,7 @@
  found = Found
  missing = Missing
  
-@@ -324,13 +315,13 @@
+@@ -334,13 +325,13 @@ gpu-active = Active
  webgl1-wsiinfo = WebGL 1 Driver WSI Info
  webgl1-renderer = WebGL 1 Driver Renderer
  webgl1-version = WebGL 1 Driver Version
@@ -240,7 +242,7 @@
  webgpu-default-adapter = WebGPU Default Adapter
  webgpu-fallback-adapter = WebGPU Fallback Adapter
  
-@@ -365,8 +356,7 @@
+@@ -375,8 +366,7 @@ has-user-namespaces = User Namespaces
  has-privileged-user-namespaces = User Namespaces for privileged processes
  # Variables
  # $status (string) - Boolean value of hasUserNamespaces (should only be false when support-user-namespaces-unavailable is used)
@@ -250,7 +252,7 @@
  can-sandbox-content = Content Process Sandboxing
  can-sandbox-media = Media Plugin Sandboxing
  content-sandbox-level = Content Process Sandbox Level
-@@ -374,7 +364,7 @@
+@@ -384,7 +374,7 @@ effective-content-sandbox-level = Effective Content Process Sandbox Level
  content-win32k-lockdown-state = Win32k Lockdown State for Content Process
  support-sandbox-gpu-level = GPU Process Sandbox Level
  sandbox-proc-type-content = content
@@ -259,7 +261,7 @@
  sandbox-proc-type-media-plugin = media plugin
  sandbox-proc-type-data-decoder = data decoder
  
-@@ -417,41 +407,36 @@
+@@ -427,41 +417,36 @@ zooming-enabled = smooth pinch-zoom enabled
  
  ## Variables
  ## $preferenceKey (string) - String ID of preference
@@ -305,7 +307,7 @@
  support-remote-experiments-title = Remote Experiments
  support-remote-experiments-name = Name
  support-remote-experiments-branch = Experiment Branch
-@@ -462,14 +447,12 @@
+@@ -472,14 +457,12 @@ support-remote-features-name = Name
  support-remote-features-status = Status
  
  ## Pointing devices

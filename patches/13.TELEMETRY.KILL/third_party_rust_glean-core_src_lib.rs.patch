@@ -1,6 +1,8 @@
+diff --git a/third_party/rust/glean-core/src/lib.rs b/third_party/rust/glean-core/src/lib.rs
+index c401c3dafe..d2f2494704 100644
 --- a/third_party/rust/glean-core/src/lib.rs
 +++ b/third_party/rust/glean-core/src/lib.rs
-@@ -104,6 +104,16 @@
+@@ -104,6 +104,16 @@ pub(crate) const DELETION_REQUEST_PINGS_DIRECTORY: &str = "deletion_request";
  /// Note: The initialization might still be in progress, as it runs in a separate thread.
  static INITIALIZE_CALLED: AtomicBool = AtomicBool::new(false);
  

@@ -1,0 +1,183 @@
+# Gorilla 157 privacy cut
+# D-157-12: video plugins on demand. Background/startup/timer GMP checks stay dead (checkForAddons, simpleCheckAndInstall: no aus5.mozilla.org, no Chromium update service). New GMPInstallManager.installOnDemand builds the manifest from the built-in gmp-sources/*.json and downloads straight from Google (edgedl.me.gvt1.com, mirror www.google.com) or Cisco (ciscobinary.openh264.org) with sha512+size verification. Triggers: EMEVideo:CDMMissing (page asked for Widevine) in GMPProvider; rtcpeer:Request from a page holding camera/microphone in WebRTCParent (OpenH264). ProductAddonChecker downloads are mozAnon (no cookies).
+# Files: browser/actors/WebRTCParent.sys.mjs, toolkit/modules/GMPInstallManager.sys.mjs, toolkit/mozapps/extensions/internal/GMPProvider.sys.mjs, toolkit/mozapps/extensions/internal/ProductAddonChecker.sys.mjs
+
+diff --git a/browser/actors/WebRTCParent.sys.mjs b/browser/actors/WebRTCParent.sys.mjs
+index d97d92add2..41ffa24088 100644
+--- a/browser/actors/WebRTCParent.sys.mjs
++++ b/browser/actors/WebRTCParent.sys.mjs
+@@ -7,6 +7,7 @@ import { XPCOMUtils } from "resource://gre/modules/XPCOMUtils.sys.mjs";
+ const lazy = {};
+ 
+ ChromeUtils.defineESModuleGetters(lazy, {
++  GMPInstallManager: "resource://gre/modules/GMPInstallManager.sys.mjs",
+   PrivateBrowsingUtils: "resource://gre/modules/PrivateBrowsingUtils.sys.mjs",
+   SitePermissions: "resource:///modules/SitePermissions.sys.mjs",
+   webrtcUI: "resource:///modules/webrtcUI.sys.mjs",
+@@ -47,6 +48,21 @@ export class WebRTCParent extends JSWindowActorParent {
+           )
+         );
+ 
++        // GORILLA UNLEASHED - PHYSICAL LOCK: video plugins on demand (D-157-12): a page that holds the
++        // camera or microphone is starting a call, so fetch OpenH264 (H.264 for calls) if it is
++        // missing, straight from Cisco with the built-in checksum. Never at startup or in the
++        // background, and never for a page without camera or microphone access.
++        try {
++          let browser = this.getBrowser();
++          if (browser && allowedOrActiveCameraOrMicrophone(browser)) {
++            new lazy.GMPInstallManager()
++              .installOnDemand(["gmp-gmpopenh264"])
++              .catch(e => console.error("OpenH264 on-demand install failed", e));
++          }
++        } catch (e) {
++          console.error("OpenH264 on-demand check failed", e);
++        }
++
+         let blockers = Array.from(lazy.webrtcUI.peerConnectionBlockers);
+ 
+         (async function () {
+diff --git a/toolkit/modules/GMPInstallManager.sys.mjs b/toolkit/modules/GMPInstallManager.sys.mjs
+index 6b45e0fb9e..9d385f99f3 100644
+--- a/toolkit/modules/GMPInstallManager.sys.mjs
++++ b/toolkit/modules/GMPInstallManager.sys.mjs
+@@ -48,6 +48,10 @@ const LOCAL_GMP_SOURCES = [
+   },
+ ];
+ 
++// GORILLA UNLEASHED - PHYSICAL LOCK: video plugins on demand (D-157-12): GMP ids with an install
++// in progress from installOnDemand, so repeated page requests do not start a second download.
++const gOnDemandInFlight = new Set();
++
+ function getLocalSources() {
+   if (GMPPrefs.getBool(GMPPrefs.KEY_ALLOW_LOCAL_SOURCES, true)) {
+     return LOCAL_GMP_SOURCES;
+@@ -282,7 +286,9 @@ GMPInstallManager.prototype = {
+    */
+   async checkForAddons() {
+     let log = getScopedLogger("GMPInstallManager.checkForAddons");
+-    // GORILLA UNLEASHED - PHYSICAL LOCK (egress): see simpleCheckAndInstall.
++    // GORILLA UNLEASHED - PHYSICAL LOCK: video plugins on demand (D-157-12): the background check never
++    // runs. No update.xml from Mozilla's update server (media.gmp-manager.url, aus5.mozilla.org) and
++    // no Chromium update service. Plugins come only from installOnDemand below.
+     if (true) {
+       return { usedFallback: true, addons: [] };
+     }
+@@ -567,10 +573,12 @@ GMPInstallManager.prototype = {
+    */
+   async simpleCheckAndInstall() {
+     let log = getScopedLogger("GMPInstallManager.simpleCheckAndInstall");
+-    // GORILLA UNLEASHED - PHYSICAL LOCK (egress): no GMP update check (aus5.mozilla.org) and no plugin download (Widevine from Google,
+-    // OpenH264 from Cisco). DRM video will not play; WebRTC uses VP8/VP9 instead of H.264.
++    // GORILLA UNLEASHED - PHYSICAL LOCK: video plugins on demand (D-157-12): nothing is checked or
++    // downloaded at startup, on a timer or on a pref change (BrowserGlue idle task,
++    // GMPProvider.checkForUpdates). Widevine and OpenH264 are installed only by installOnDemand,
++    // when a page asks for protected video or starts a call.
+     if (true) {
+-      log.info("GMP checks disabled in this build");
++      log.info("GMP background checks disabled in this build");
+       return { status: "nothing-new-to-install" };
+     }
+ 
+@@ -692,6 +700,67 @@ GMPInstallManager.prototype = {
+     }
+   },
+ 
++  /**
++   * GORILLA UNLEASHED - PHYSICAL LOCK: video plugins on demand (D-157-12).
++   *
++   * Installs the given GMPs if they are missing, and only them: Widevine when a page asks for
++   * com.widevine.alpha and the CDM is not installed (GMPProvider, EMEVideo:CDMMissing), OpenH264
++   * when a page that holds the camera or microphone starts a peer connection (WebRTCParent).
++   * The manifest is the one built into the browser (LOCAL_GMP_SOURCES,
++   * chrome://global/content/gmp-sources/*.json): the file is fetched straight from the vendor
++   * URL written there (Google edgedl.me.gvt1.com with www.google.com as mirror, Cisco
++   * ciscobinary.openh264.org) and checked against the built-in sha512 and size before it is
++   * unpacked. Mozilla's update server and the Chromium update service are never asked.
++   *
++   * @param {string[]} ids GMP ids, e.g. ["gmp-widevinecdm"] or ["gmp-gmpopenh264"].
++   * @return a promise resolved with { status, results }.
++   */
++  async installOnDemand(ids) {
++    let log = getScopedLogger("GMPInstallManager.installOnDemand");
++    let wanted = getLocalSources().filter(
++      source =>
++        ids.includes(source.id) &&
++        !gOnDemandInFlight.has(source.id) &&
++        (source.installByDefault ||
++          GMPPrefs.getBool(GMPPrefs.KEY_PLUGIN_FORCE_INSTALL, false, source.id))
++    );
++    if (!wanted.length) {
++      return { status: "nothing-new-to-install" };
++    }
++    for (let source of wanted) {
++      gOnDemandInFlight.add(source.id);
++    }
++    try {
++      let { addons } = await downloadLocalConfig(wanted);
++      let results = [];
++      for (let config of addons) {
++        let gmpAddon = new GMPAddon(config);
++        if (
++          !gmpAddon.isValid ||
++          GMPUtils.isPluginHidden(gmpAddon) ||
++          gmpAddon.isInstalled ||
++          !this._isAddonEnabled(gmpAddon.id)
++        ) {
++          log.info("Not installing " + gmpAddon.toString());
++          continue;
++        }
++        log.info("Installing on demand: " + gmpAddon.toString());
++        try {
++          await this.installAddon(gmpAddon);
++          results.push({ id: gmpAddon.id, result: "succeeded" });
++        } catch (e) {
++          log.error("On-demand install of " + gmpAddon.id + " failed", e);
++          results.push({ id: gmpAddon.id, result: "failed" });
++        }
++      }
++      return { status: "done", results };
++    } finally {
++      for (let source of wanted) {
++        gOnDemandInFlight.delete(source.id);
++      }
++    }
++  },
++
+   /**
+    * Makes sure everything is cleaned up
+    */
+diff --git a/toolkit/mozapps/extensions/internal/GMPProvider.sys.mjs b/toolkit/mozapps/extensions/internal/GMPProvider.sys.mjs
+index e0844cef4d..a92834f35b 100644
+--- a/toolkit/mozapps/extensions/internal/GMPProvider.sys.mjs
++++ b/toolkit/mozapps/extensions/internal/GMPProvider.sys.mjs
+@@ -634,7 +634,14 @@ GMPWrapper.prototype = {
+         this.onPrefEMEGlobalEnabledChanged();
+       }
+     } else if (topic == "EMEVideo:CDMMissing") {
+-      this.checkForUpdates(0);
++      // GORILLA UNLEASHED - PHYSICAL LOCK: video plugins on demand (D-157-12): a page asked for this
++      // CDM and it is not installed. Install it now from the built-in manifest, straight from the
++      // vendor (checkForUpdates/simpleCheckAndInstall stay dead: no Mozilla update server).
++      if (!this.appDisabled && !Services.startup.shuttingDown) {
++        new lazy.GMPInstallManager()
++          .installOnDemand([this._plugin.id])
++          .catch(e => this._log.error("installOnDemand failed", e));
++      }
+     }
+   },
+ 
+diff --git a/toolkit/mozapps/extensions/internal/ProductAddonChecker.sys.mjs b/toolkit/mozapps/extensions/internal/ProductAddonChecker.sys.mjs
+index b774662595..43a5161031 100644
+--- a/toolkit/mozapps/extensions/internal/ProductAddonChecker.sys.mjs
++++ b/toolkit/mozapps/extensions/internal/ProductAddonChecker.sys.mjs
+@@ -416,7 +416,9 @@ function parseXML(document) {
+  */
+ function downloadFile(url, options = { httpsOnlyNoUpgrade: false }) {
+   return new Promise((resolve, reject) => {
+-    let sr = new lazy.ServiceRequest();
++    // GORILLA UNLEASHED - PHYSICAL LOCK: video plugins on demand (D-157-12): plugin downloads are
++    // anonymous, so no cookies (google.com) go with the Widevine or OpenH264 download.
++    let sr = new lazy.ServiceRequest({ mozAnon: true });
+ 
+     sr.onload = function () {
+       logger.info("downloadFile File download. status=" + sr.status);

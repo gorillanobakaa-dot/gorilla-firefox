@@ -1,6 +1,8 @@
+diff --git a/third_party/rust/glean-core/src/metrics/memory_distribution.rs b/third_party/rust/glean-core/src/metrics/memory_distribution.rs
+index 3513dabf3d..609962c750 100644
 --- a/third_party/rust/glean-core/src/metrics/memory_distribution.rs
 +++ b/third_party/rust/glean-core/src/metrics/memory_distribution.rs
-@@ -99,6 +99,10 @@
+@@ -99,6 +99,10 @@ impl MemoryDistributionMetric {
      /// Values bigger than 1 Terabyte (2<sup>40</sup> bytes) are truncated
      /// and an [`ErrorType::InvalidValue`] error is recorded.
      pub fn accumulate(&self, sample: i64) {
@@ -11,7 +13,7 @@
          let metric = self.clone();
          crate::launch_with_glean(move |glean| metric.accumulate_sync(glean, sample))
      }
-@@ -181,6 +185,10 @@
+@@ -181,6 +185,10 @@ impl MemoryDistributionMetric {
      /// Values bigger than 1 Terabyte (2<sup>40</sup> bytes) are truncated
      /// and an [`ErrorType::InvalidValue`] error is recorded.
      pub fn accumulate_samples(&self, samples: Vec<i64>) {
@@ -22,7 +24,7 @@
          let metric = self.clone();
          crate::launch_with_glean(move |glean| metric.accumulate_samples_sync(glean, samples))
      }
-@@ -377,6 +385,12 @@
+@@ -377,6 +385,12 @@ impl<'a> LocalMemoryDistribution<'a> {
      ///
      /// Accumulation happens in-memory only.
      pub fn accumulate(&mut self, sample: u64) {

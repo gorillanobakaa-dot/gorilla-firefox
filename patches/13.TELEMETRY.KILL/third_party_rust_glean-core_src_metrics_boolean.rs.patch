@@ -1,6 +1,8 @@
+diff --git a/third_party/rust/glean-core/src/metrics/boolean.rs b/third_party/rust/glean-core/src/metrics/boolean.rs
+index 504f3347a5..d687cdfb63 100644
 --- a/third_party/rust/glean-core/src/metrics/boolean.rs
 +++ b/third_party/rust/glean-core/src/metrics/boolean.rs
-@@ -76,6 +76,7 @@
+@@ -76,6 +76,7 @@ impl BooleanMetric {
      ///
      /// * `value` - the value to set.
      pub fn set(&self, value: bool) {

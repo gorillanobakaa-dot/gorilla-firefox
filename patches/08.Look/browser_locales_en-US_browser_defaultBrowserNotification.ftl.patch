@@ -1,6 +1,8 @@
+diff --git a/browser/locales/en-US/browser/defaultBrowserNotification.ftl b/browser/locales/en-US/browser/defaultBrowserNotification.ftl
+index 11b483fa3a..e88d719fb1 100644
 --- a/browser/locales/en-US/browser/defaultBrowserNotification.ftl
 +++ b/browser/locales/en-US/browser/defaultBrowserNotification.ftl
-@@ -1,46 +1,44 @@
+@@ -1,9 +1,8 @@
  # This Source Code Form is subject to the terms of the Mozilla Public
  # License, v. 2.0. If a copy of the MPL was not distributed with this
  # file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -9,12 +11,9 @@
 -default-browser-notification-message = <strong>Set { -brand-short-name } as your default browser?</strong> Get fast, safe, and private browsing whenever you use the web.
 +default-browser-notification-message = <strong>Set { -brand-short-name } as your default Gorilla browser?</strong> Get fast, safe, and private browsing whenever you use the web.
  default-browser-notification-button =
--    .label = Set as default
--    .accesskey = S
-+    .label =
-+        Set as default
-+        .accesskey = S
- 
+     .label = Set as default
+     .accesskey = S
+@@ -11,36 +10,34 @@ default-browser-notification-button =
  ## These strings are used for the default browser prompt. There are 2 variations
  ## depending on the operating system (Windows vs other). The checkbox label and
  ## secondary button are shared between the variants.

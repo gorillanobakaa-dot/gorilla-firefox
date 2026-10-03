@@ -2,25 +2,43 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-# NSIS branding defines for unofficial builds.
-# The official release build branding.nsi is located in other-license/branding/firefox/
-# The nightly build branding.nsi is located in browser/installer/windows/nsis/
+# NSIS branding defines for the Gorilla Unleashed build.
+#
+# GORILLA: this file arrived from the Linux branding directory as the stock
+# UNOFFICIAL template, which declares the product as "Mozilla Developer
+# Preview" from mozilla.org. Nothing in the build overrides it, so the first
+# packaged installer introduced itself as Mozilla's - wrong on the facts and
+# a trademark problem besides. The names below are the ones the installer
+# UI, the Add/Remove Programs entry and the registry keys actually use.
+#
+# BrandFullNameInternal is used for registry and filesystem values. Changing
+# it after a release orphans the previous install's registry keys, so it is
+# set once, here, and left alone.
 
 # BrandFullNameInternal is used for some registry and file system values
 # instead of BrandFullName and typically should not be modified.
-!define BrandFullNameInternal "Mozilla Developer Preview"
-!define BrandFullName         "Mozilla Developer Preview"
-!define CompanyName           "mozilla.org"
-!define URLInfoAbout          "https://www.mozilla.org"
-!define HelpLink              "https://support.mozilla.org"
+!define BrandFullNameInternal "Gorilla Unleashed"
+!define BrandFullName         "Gorilla Unleashed"
+!define CompanyName           "Gorilla"
+!define URLInfoAbout          "https://github.com/gorillanobakaa-dot"
+!define HelpLink              "https://github.com/gorillanobakaa-dot"
 
-!define URLStubDownloadX86 "https://download.mozilla.org/?os=win&lang=${AB_CD}&product=firefox-latest"
-!define URLStubDownloadAMD64 "https://download.mozilla.org/?os=win64&lang=${AB_CD}&product=firefox-latest"
-!define URLStubDownloadAArch64 "https://download.mozilla.org/?os=win64-aarch64&lang=${AB_CD}&product=firefox-latest"
-!define URLManualDownload "https://www.mozilla.org/${AB_CD}/firefox/installer-help/?channel=release&installer_lang=${AB_CD}"
-!define URLSystemRequirements "https://www.mozilla.org/firefox/system-requirements/"
-!define Channel "unofficial"
+# GORILLA: the stub installer is NOT built or shipped by this project, but
+# installer.nsi references these unconditionally so they must stay defined.
+# They shipped pointing at download.mozilla.org - meaning any stub built
+# from this branding would have downloaded and installed upstream Firefox
+# under this name. Pointed at the project instead: still inert, no longer
+# wrong.
+!define URLStubDownloadX86 "https://github.com/gorillanobakaa-dot"
+!define URLStubDownloadAMD64 "https://github.com/gorillanobakaa-dot"
+!define URLStubDownloadAArch64 "https://github.com/gorillanobakaa-dot"
+!define URLManualDownload "https://github.com/gorillanobakaa-dot"
+!define URLSystemRequirements "https://github.com/gorillanobakaa-dot"
+!define Channel "release"
 
+# GORILLA: the stub installer is not built or shipped here. These remain
+# only because installer.nsi references them unconditionally; the full
+# installer never downloads anything, so they are inert.
 # The installer's certificate name and issuer expected by the stub installer
 !define CertNameDownload   "Mozilla Corporation"
 !define CertIssuerDownload "DigiCert Trusted G4 Code Signing RSA4096 SHA384 2021 CA1"

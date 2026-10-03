@@ -1,6 +1,8 @@
+diff --git a/toolkit/content/widgets/autocomplete-popup.js b/toolkit/content/widgets/autocomplete-popup.js
+index 11a77b10cd..8d24754004 100644
 --- a/toolkit/content/widgets/autocomplete-popup.js
 +++ b/toolkit/content/widgets/autocomplete-popup.js
-@@ -374,10 +374,31 @@
+@@ -415,10 +415,31 @@
      }
  
      adjustHeight() {

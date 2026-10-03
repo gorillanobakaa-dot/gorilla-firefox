@@ -1,6 +1,8 @@
+diff --git a/browser/themes/shared/addons/unified-extensions.css b/browser/themes/shared/addons/unified-extensions.css
+index 756325bbad..1dbfbc8eea 100644
 --- a/browser/themes/shared/addons/unified-extensions.css
 +++ b/browser/themes/shared/addons/unified-extensions.css
-@@ -312,3 +312,49 @@
+@@ -329,3 +329,49 @@ unified-extensions-item.unified-extensions-item {
      }
    }
  }

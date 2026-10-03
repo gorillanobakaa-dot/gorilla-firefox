@@ -1,8 +1,10 @@
+diff --git a/browser/components/urlbar/content/UrlbarChildController.mjs b/browser/components/urlbar/content/UrlbarChildController.mjs
+index dd073b0540..da50002bb3 100644
 --- a/browser/components/urlbar/content/UrlbarChildController.mjs
 +++ b/browser/components/urlbar/content/UrlbarChildController.mjs
-@@ -20,7 +20,6 @@
-  * @import {UrlbarInput} from "chrome://browser/content/urlbar/UrlbarInput.mjs"
-  * @import {UrlbarParentController} from "moz-src:///browser/components/urlbar/UrlbarParentController.sys.mjs"
+@@ -22,7 +22,6 @@ if (lazy) {
+ /**
+  * @import {TelemetryEvent} from "moz-src:///browser/components/urlbar/UrlbarParentController.sys.mjs"
   * @import {UrlbarView} from "chrome://browser/content/urlbar/UrlbarView.mjs"
 - * @import {SmartbarInput} from "moz-src:///browser/components/urlbar/content/SmartbarInput.mjs"
   */

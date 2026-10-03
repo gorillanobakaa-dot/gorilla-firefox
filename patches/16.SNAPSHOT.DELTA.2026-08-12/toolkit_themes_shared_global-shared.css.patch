@@ -1,3 +1,5 @@
+diff --git a/toolkit/themes/shared/global-shared.css b/toolkit/themes/shared/global-shared.css
+index 2bf2abc7cf..5080da0a70 100644
 --- a/toolkit/themes/shared/global-shared.css
 +++ b/toolkit/themes/shared/global-shared.css
 @@ -14,9 +14,27 @@
@@ -48,7 +50,7 @@
    background-color: -moz-Dialog;
    color: -moz-DialogText;
    font: message-box;
-@@ -62,19 +86,13 @@
+@@ -62,13 +86,6 @@
    }
  }
  
@@ -61,15 +63,16 @@
 -
  :is(menupopup, panel):where([type="arrow"]) {
    --menuitem-border-radius: var(--panel-menuitem-border-radius);
-   --menuitem-padding: var(--panel-menuitem-padding);
-   --menuitem-margin: var(--panel-menuitem-margin);
- }
+   --menuitem-padding-block: var(--panel-menuitem-padding-block);
+@@ -78,6 +95,7 @@ h3 {
  
-+/* stylelint-disable-next-line media-query-no-invalid */
  @media -moz-pref("widget.macos.native-popovers") and (-moz-platform: macos) {
    panel:not([nonnative]) {
++/* stylelint-disable-next-line media-query-no-invalid */
      background-color: transparent;
-@@ -109,16 +127,6 @@
+     --panel-box-shadow: none;
+     --panel-border-color: transparent;
+@@ -109,16 +127,6 @@ h3 {
    text-shadow: 1px 1px 1.5px black;
  }
  
@@ -83,10 +86,10 @@
 -  display: none !important;
 -}
 -
- /* Rules for 'hiding' portions of the chrome for special
-    kinds of windows with toolbars (not just browser windows) */
- :root[chromehidden~="menubar"] .chromeclass-menubar,
-@@ -156,8 +164,8 @@
+ /* General styles */
+ 
+ moz-input-box,
+@@ -144,8 +152,8 @@ html|textarea {
    border: 1px solid var(--input-border-color);
    border-radius: var(--border-radius-medium);
    margin: 0;

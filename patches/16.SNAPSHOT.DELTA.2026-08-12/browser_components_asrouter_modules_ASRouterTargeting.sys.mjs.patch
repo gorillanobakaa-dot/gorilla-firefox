@@ -1,6 +1,41 @@
+diff --git a/browser/components/asrouter/modules/ASRouterTargeting.sys.mjs b/browser/components/asrouter/modules/ASRouterTargeting.sys.mjs
+index 03954a8acc..2552d0c9f3 100644
 --- a/browser/components/asrouter/modules/ASRouterTargeting.sys.mjs
 +++ b/browser/components/asrouter/modules/ASRouterTargeting.sys.mjs
-@@ -1652,19 +1652,6 @@
+@@ -53,8 +53,6 @@ ChromeUtils.defineESModuleGetters(lazy, {
+   AboutNewTabResourceMapping:
+     "resource:///modules/AboutNewTabResourceMapping.sys.mjs",
+   AddonManager: "resource://gre/modules/AddonManager.sys.mjs",
+-  AIWindow:
+-    "moz-src:///browser/components/aiwindow/ui/modules/AIWindow.sys.mjs",
+   AboutNewTab: "resource:///modules/AboutNewTab.sys.mjs",
+   AppProvidedConfigEngine:
+     "moz-src:///toolkit/components/search/ConfigSearchEngine.sys.mjs",
+@@ -85,8 +83,6 @@ ChromeUtils.defineESModuleGetters(lazy, {
+     "moz-src:///browser/components/sessionstore/SessionStartup.sys.mjs",
+   SessionStore:
+     "moz-src:///browser/components/sessionstore/SessionStore.sys.mjs",
+-  SmartTabGroupingManager:
+-    "moz-src:///browser/components/tabbrowser/SmartTabGrouping.sys.mjs",
+   TargetingContext: "resource://messaging-system/targeting/Targeting.sys.mjs",
+   TabNotes: "moz-src:///browser/components/tabnotes/TabNotes.sys.mjs",
+   TaskbarTabs: "resource:///modules/taskbartabs/TaskbarTabs.sys.mjs",
+@@ -1031,10 +1027,12 @@ const TargetingGetters = {
+     return false;
+   },
+   get hasActiveAIWindow() {
+-    return !!lazy.AIWindow?.hasActiveAIWindows?.();
++    // GORILLA excised: aiwindow removed; no AI window can be active.
++    return false;
+   },
+   get isSmartTabGroupingAllowed() {
+-    return !!lazy.SmartTabGroupingManager?.isAllowed;
++    // GORILLA excised: SmartTabGrouping.sys.mjs removed.
++    return false;
+   },
+   get hasAccessedFxAPanel() {
+     return lazy.hasAccessedFxAPanel;
+@@ -1747,19 +1745,6 @@ const TargetingGetters = {
    },
  };
  
@@ -20,7 +55,7 @@
  /**
   * Sentinel rejection thrown by per-property promises in
   * `ASRouterTargeting.getEnvironmentSnapshot` when `quit-application`
-@@ -1866,7 +1853,6 @@
+@@ -1961,7 +1946,6 @@ export const ASRouterTargeting = {
      );
  
      let { targeting } = message;

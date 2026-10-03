@@ -1,3 +1,5 @@
+diff --git a/toolkit/locales/en-US/toolkit/about/url-classifier.ftl b/toolkit/locales/en-US/toolkit/about/url-classifier.ftl
+index c7cb0e044a..041d3fc9c6 100644
 --- a/toolkit/locales/en-US/toolkit/about/url-classifier.ftl
 +++ b/toolkit/locales/en-US/toolkit/about/url-classifier.ftl
 @@ -1,7 +1,6 @@
@@ -8,8 +10,8 @@
  url-classifier-title = URL Classifier Information
  url-classifier-search-title = Search
  url-classifier-search-result-title = Results
-@@ -39,12 +38,12 @@
- url-classifier-cache-pcache-expiry = Positive cache expiry
+@@ -119,12 +118,12 @@ url-classifier-content-classifier-verdict-error-with-code = Error ({ $code })
+ 
  url-classifier-debug-title = Debug
  url-classifier-debug-module-btn = Set Log Modules
 -url-classifier-debug-file-btn = Set Log File
@@ -23,7 +25,7 @@
  
  url-classifier-trigger-update = Trigger Update
  url-classifier-not-available = N/A
-@@ -58,6 +57,5 @@
+@@ -138,6 +137,5 @@ url-classifier-success = success
  
  ## Variables
  ##   $error (string) - Error message

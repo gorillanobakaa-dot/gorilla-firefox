@@ -1,0 +1,17 @@
+# Gorilla 157 privacy cut
+# D-157-00..21: THIS BROWSER NEVER CALLS HOME pref block
+# Files: browser/app/profile/firefox.js
+
+diff --git a/browser/app/profile/firefox.js b/browser/app/profile/firefox.js
+index dd359322e7..4cb3aa1bb4 100644
+--- a/browser/app/profile/firefox.js
++++ b/browser/app/profile/firefox.js
+@@ -4115,7 +4115,7 @@ pref("privacy.fingerprintingProtection", true, locked);
+ pref("privacy.resistFingerprinting", false);
+ pref("privacy.resistFingerprinting.letterboxing", false);
+ pref("webgl.enable-debug-renderer-info", false, locked);
+-pref("media.peerconnection.ice.no_host", true, locked);
++// media.peerconnection.ice.no_host: NOT locked (owner 2026-10-03: it broke same-LAN calls; local IPs stay hidden by mDNS)
+ pref("device.sensors.enabled", false, locked);
+ 
+ // D-157-07 revocation offline only: never ask a certificate authority

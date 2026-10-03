@@ -1,6 +1,8 @@
+diff --git a/modules/libpref/init/StaticPrefList.yaml b/modules/libpref/init/StaticPrefList.yaml
+index b4ea2261c2..0099fe7fee 100644
 --- a/modules/libpref/init/StaticPrefList.yaml
 +++ b/modules/libpref/init/StaticPrefList.yaml
-@@ -308,7 +308,7 @@
+@@ -303,7 +303,7 @@
  #ifdef MOZ_ENABLE_SKIA_PDF
  - name: accessibility.tagged_pdf_output.enabled
    type: bool
@@ -9,7 +11,7 @@
    mirror: always
  #endif
  
-@@ -2355,6 +2355,22 @@
+@@ -2376,6 +2376,22 @@
      mirror: always
  #endif
  
@@ -32,7 +34,7 @@
  # When false, web custom format flavors written by other applications are
  # hidden from the Async Clipboard read paths (Firefox-authored content read
  # back from the in-process clipboard cache is unaffected).
-@@ -2383,6 +2399,7 @@
+@@ -2400,6 +2416,7 @@
  # Prefs starting with "content."
  #---------------------------------------------------------------------------
  
@@ -40,7 +42,7 @@
  - name: content.cors.disable
    type: bool
    value: false
-@@ -3039,7 +3056,7 @@
+@@ -3012,7 +3029,7 @@
  # `.key` of the second `keypress` is set to the empty string.
  - name: dom.event.keypress.key.allow_lone_surrogate
    type: bool
@@ -49,7 +51,7 @@
    mirror: always
  
  # Make EventStateManager restore the last "mouseover" target when it's
-@@ -4508,11 +4525,7 @@
+@@ -4494,11 +4511,7 @@
  # long-lived profiles with a large number of unused origins.
  - name: dom.quotaManager.temporaryStorage.clearNonPersistedZeroUsageOrigins
    type: RelaxedAtomicBool
@@ -61,7 +63,7 @@
    mirror: always
  
  # Controls the maximum number of origins cleared in a single batch during
-@@ -6292,6 +6305,7 @@
+@@ -6355,6 +6368,7 @@
    value: @IS_NIGHTLY_BUILD@
    mirror: always
  
@@ -69,7 +71,7 @@
  - name: dom.workers.testing.enabled
    type: RelaxedAtomicBool
    value: false
-@@ -6452,6 +6466,12 @@
+@@ -6509,6 +6523,12 @@
    value: ""
    mirror: never
  
@@ -82,7 +84,7 @@
  # Whether to enable XSLT.
  - name: dom.xslt.enabled
    type: bool
-@@ -6977,6 +6997,9 @@
+@@ -7034,6 +7054,9 @@
    value: true
    mirror: always
  
@@ -92,7 +94,7 @@
  # Scales the autoscroll speed, as a percentage
  # (100 = default, 200 = double speed, 50 = half speed).
  - name: general.autoscroll.speed_multiplier
-@@ -6987,6 +7010,7 @@
+@@ -7044,6 +7067,7 @@
  # Limits the depth of recursive conversion of data when opening
  # a content to view.  This is mostly intended to prevent infinite
  # loops with faulty converters involved.
@@ -100,10 +102,11 @@
  - name: general.document_open_conversion_depth_limit
    type: uint32_t
    value: 20
-@@ -12715,6 +12739,32 @@
+@@ -12844,6 +12868,32 @@
+ 
  # Disable falling back to software decoders in case of frame drop
  - name: media.ffmpeg.disable-software-fallback
-   type: RelaxedAtomicBool
++  type: RelaxedAtomicBool
 +  value: true
 +  mirror: always
 +
@@ -129,11 +132,10 @@
 +# through WebCodecs over a DataChannel; Intel HD 4000 has no VP8 ASIC, so
 +# such calls are software-decoded in any browser on this hardware.
 +- name: media.gorilla.webcodecs_software_vp8
-+  type: RelaxedAtomicBool
+   type: RelaxedAtomicBool
    value: false
    mirror: always
- 
-@@ -13272,10 +13322,10 @@
+@@ -13442,10 +13492,10 @@
    value: true
    mirror: always
  
@@ -146,7 +148,7 @@
    mirror: always
  
  # Matroska
-@@ -13616,11 +13666,11 @@
+@@ -13776,11 +13826,11 @@
    mirror: always
  
  #ifdef MOZ_WEBRTC
@@ -161,7 +163,7 @@
      mirror: always
  
    # Use MediaDataDecoder API for H264 in WebRTC. This includes hardware
-@@ -15559,9 +15609,11 @@
+@@ -15763,9 +15813,11 @@
    mirror: always
  
  # This preference controls if we need to fail transactions for Local Network Access (LNA) failures.
@@ -174,7 +176,7 @@
    mirror: always
  
  # When this pref is true, loads triggered by scripts classified as trackers
-@@ -16448,16 +16500,6 @@
+@@ -16654,16 +16706,6 @@
    value: false
    mirror: always
  
@@ -191,7 +193,7 @@
  # Maximum time (ms) a session can remain in ZERORTT state before being
  # considered stuck. If a Http3Session doesn't transition to CONNECTED within
  # this timeout, it will be closed.
-@@ -16854,6 +16896,8 @@
+@@ -17060,6 +17102,8 @@
    value: 5000
    mirror: always
  
@@ -200,7 +202,7 @@
  # Backstop timeout (milliseconds) for a channel parked waiting for a cache
  # entry callback that never arrives (e.g. a wedged entry left perpetually
  # "being written" by a writer that was suspended or cancelled without ever
-@@ -16868,6 +16912,7 @@
+@@ -17074,6 +17118,7 @@
  
  # This is used for a temporary workaround for a web-compat issue. If pref is
  # true CORS preflight requests are allowed to send client certificates.
@@ -208,7 +210,7 @@
  - name: network.cors_preflight.allow_client_cert
    type: RelaxedAtomicBool
    value: false
-@@ -16961,7 +17006,7 @@
+@@ -17167,7 +17212,7 @@
  # to the connection phase (ms).
  - name: network.http.happy_eyeballs_resolution_delay
    type: RelaxedAtomicUint32
@@ -217,7 +219,7 @@
    mirror: always
    rust: true
  
-@@ -16982,6 +17027,9 @@
+@@ -17188,6 +17233,9 @@
    mirror: always
    rust: true
  
@@ -227,7 +229,7 @@
  # When Happy Eyeballs is enabled and all TRR-resolved addresses fail to
  # connect, retry the connection with TRR disabled (native DNS). This is the
  # connection-time equivalent of the legacy nsSocketTransport native-DNS
-@@ -16994,6 +17042,7 @@
+@@ -17200,6 +17248,7 @@
  # If true, it will include extra tags to be sniffed by nsUnknownDecoder
  # These tags were previously sniffed by Firefox for legacy/webcompat but
  # are not part of the MIME sniffing spec.
@@ -235,7 +237,7 @@
  - name: network.mimesniff.extra_moz_html_tags
    type: RelaxedAtomicBool
    value: false
-@@ -18547,6 +18596,15 @@
+@@ -18772,6 +18821,15 @@
      value: @IS_NIGHTLY_BUILD@
      mirror: always
  
@@ -251,7 +253,7 @@
    # Whether \Device\KsecDD is closed in content process. We are closing this
    # using a pref to give users a work-around if they have issues.
  -   name: security.sandbox.content.close-ksecdd-handle
-@@ -19544,6 +19602,10 @@
+@@ -19775,6 +19833,10 @@
    value: false
    mirror: always
  
@@ -262,7 +264,7 @@
  # Site categories for notification permission telemetry
  # Maps domains to categories for analyzing permission behavior by site type
  # XXX(krosylight): We need to document how this list is chosen for openness.
-@@ -19557,6 +19619,7 @@
+@@ -19788,6 +19850,7 @@
  # Prefs starting with "ui."
  #---------------------------------------------------------------------------
  
@@ -270,7 +272,7 @@
  - name: ui.key.generalAccessKey
    type: int32_t
    value: -1
-@@ -20017,11 +20080,7 @@
+@@ -20243,11 +20306,7 @@
  
  - name: webgl.disable-angle
    type: RelaxedAtomicBool
@@ -282,7 +284,7 @@
    mirror: always
  
  - name: webgl.disable-wgl
-@@ -20673,7 +20732,7 @@
+@@ -20907,7 +20966,7 @@
  # Use xdg-session-management-v1 for session restore on Wayland.
  - name: widget.wayland.session-management.enabled
    type: bool

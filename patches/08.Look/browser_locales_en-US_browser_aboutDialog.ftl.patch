@@ -1,32 +1,8 @@
+diff --git a/browser/locales/en-US/browser/aboutDialog.ftl b/browser/locales/en-US/browser/aboutDialog.ftl
+index 1b30273aa0..8204d652fc 100644
 --- a/browser/locales/en-US/browser/aboutDialog.ftl
 +++ b/browser/locales/en-US/browser/aboutDialog.ftl
-@@ -1,19 +1,20 @@
- # This Source Code Form is subject to the terms of the Mozilla Public
- # License, v. 2.0. If a copy of the MPL was not distributed with this
- # file, You can obtain one at http://mozilla.org/MPL/2.0/.
--
- aboutDialog-title =
-     .title = About { -brand-full-name }
- 
- releaseNotes-link = What’s new
- 
- update-checkForUpdatesButton =
--    .label = Check for updates
--    .accesskey = C
-+    .label =
-+        Check for updates
-+        .accesskey = C
- 
- update-updateButton =
--    .label = Restart to Update { -brand-shorter-name }
--    .accesskey = R
-+    .label =
-+        Restart to Update { -brand-shorter-name }
-+        .accesskey = R
- 
- update-checkingForUpdates = Checking for updates…
- settings-update-checking-for-updates =
-@@ -21,20 +22,17 @@
+@@ -21,20 +21,17 @@ settings-update-checking-for-updates =
  
  ## Variables:
  ##   $transfer (string) - Transfer progress.
@@ -49,7 +25,7 @@
  
  update-policy-disabled = Updates disabled by your organization
  settings-update-policy-disabled =
-@@ -51,7 +49,6 @@
+@@ -51,7 +48,6 @@ settings-update-other-instance-handling-updates =
  
  ## Variables:
  ##   $displayUrl (String): URL to page with download instructions. Example: www.mozilla.org/firefox/nightly/
@@ -57,7 +33,7 @@
  aboutdialog-update-manual-with-link = Updates available at <label data-l10n-name="manual-link">{ $displayUrl }</label>
  settings-update-manual-with-link = Updates available at <a data-l10n-name="manual-link">{ $displayUrl }</a>
  
-@@ -66,7 +63,6 @@
+@@ -66,7 +62,6 @@ update-internal-error2 = Unable to check for updates due to internal error. Upda
  settings-update-internal-error = Unable to check for updates due to internal error. Updates available at <a data-l10n-name="manual-link">{ $displayUrl }</a>
  
  ##

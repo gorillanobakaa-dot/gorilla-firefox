@@ -1,6 +1,8 @@
+diff --git a/gfx/thebes/gfxFT2FontList.cpp b/gfx/thebes/gfxFT2FontList.cpp
+index d0397ef465..a508dfc5c4 100644
 --- a/gfx/thebes/gfxFT2FontList.cpp
 +++ b/gfx/thebes/gfxFT2FontList.cpp
-@@ -1546,6 +1546,10 @@
+@@ -1547,6 +1547,10 @@ void gfxFT2FontList::FindFonts() {
    }
    mFontNameCache->Init();
  
@@ -11,7 +13,7 @@
  #if defined(MOZ_WIDGET_ANDROID)
    // Android API 29+ provides system font and font matcher API for native code.
  
-@@ -1565,7 +1569,7 @@
+@@ -1566,7 +1570,7 @@ void gfxFT2FontList::FindFonts() {
  
    bool useSystemFontAPI = !gfxAndroidPlatform::IsFontAPIDisabled();
  
@@ -20,7 +22,7 @@
      bool noFontByFontAPI = true;
      if (__builtin_available(android 29, *)) {
        gfxAndroidPlatform::WaitForInitializeFontAPI();
-@@ -1593,9 +1597,9 @@
+@@ -1585,9 +1589,9 @@ void gfxFT2FontList::FindFonts() {
      }
    }
  
@@ -32,7 +34,7 @@
      FindFontsInDir(androidFontsRoot, mFontNameCache.get());
    }
  
-@@ -1609,32 +1613,36 @@
+@@ -1601,32 +1605,36 @@ void gfxFT2FontList::FindFonts() {
      FindFontsInOmnijar(mFontNameCache.get());
    }
  

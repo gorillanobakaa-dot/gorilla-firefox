@@ -1,3 +1,5 @@
+diff --git a/toolkit/locales/en-US/toolkit/firefoxlabs/features.ftl b/toolkit/locales/en-US/toolkit/firefoxlabs/features.ftl
+index 0d7a96d28c..4278f0e9f7 100644
 --- a/toolkit/locales/en-US/toolkit/firefoxlabs/features.ftl
 +++ b/toolkit/locales/en-US/toolkit/firefoxlabs/features.ftl
 @@ -1,12 +1,11 @@
@@ -14,7 +16,7 @@
  
  # JS JIT Warp project
  experimental-features-js-warp =
-@@ -19,57 +18,56 @@
+@@ -19,57 +18,56 @@ experimental-features-ime-search =
  experimental-features-ime-search-description = An IME (Input Method Editor) is a tool that allows you to enter complex symbols, such as those used in East Asian or Indic written languages, using a standard keyboard. Enabling this experiment will keep the address bar panel open, showing search results and suggestions, while using IME to input text. Note that the IME might display a panel that covers the address bar results, therefore this preference is only suggested for IME not using this type of panel.
  
  experimental-features-group-developer-tools =
@@ -87,7 +89,7 @@
  
  # Timer Widget
  experimental-features-newtab-widget-timer =
-@@ -81,7 +79,7 @@
+@@ -81,7 +79,7 @@ experimental-features-newtab-widget-timer-description = Set a timer to keep you
  # Lists and Timer Widget (Combined)
  experimental-features-newtab-widget-lists-and-timer =
      .label = Lists and timer on { -firefox-home-brand-name }
@@ -96,7 +98,7 @@
  
  # Weather Widget
  experimental-features-newtab-widget-weather =
-@@ -100,15 +98,16 @@
+@@ -100,15 +98,16 @@ experimental-features-newtab-widget-clocks-description = Add up to four clocks w
  
  # Semantic History Search
  experimental-features-semantic-history-search =

@@ -1,6 +1,8 @@
+diff --git a/third_party/rust/glean-core/src/dispatcher/global.rs b/third_party/rust/glean-core/src/dispatcher/global.rs
+index af686be595..abec595865 100644
 --- a/third_party/rust/glean-core/src/dispatcher/global.rs
 +++ b/third_party/rust/glean-core/src/dispatcher/global.rs
-@@ -45,6 +45,17 @@
+@@ -45,6 +45,17 @@ fn guard() -> DispatchGuard {
  ///
  /// [`flush_init`]: fn.flush_init.html
  pub fn launch(task: impl FnOnce() + Send + 'static) {

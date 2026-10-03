@@ -1,6 +1,8 @@
+diff --git a/browser/themes/addons/jar.mn b/browser/themes/addons/jar.mn
+index e4b6f34d85..f8f5e91a58 100644
 --- a/browser/themes/addons/jar.mn
 +++ b/browser/themes/addons/jar.mn
-@@ -16,10 +16,6 @@
+@@ -16,11 +16,7 @@ browser.jar:
    content/builtin-themes/light/icon.svg            (light/icon.svg)
    content/builtin-themes/light/manifest.json       (light/manifest.json)
  
@@ -11,3 +13,4 @@
 -  content/builtin-themes/aiwindow-nova/aiwindow-theme-nova.css  (aiwindow-nova/aiwindow-theme-nova.css)
  
    content/builtin-themes/privatewindow/manifest.json            (privatewindow/manifest.json)
+ 

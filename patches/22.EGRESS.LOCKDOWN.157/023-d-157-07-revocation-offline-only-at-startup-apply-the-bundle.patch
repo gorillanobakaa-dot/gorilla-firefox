@@ -1,0 +1,104 @@
+# Gorilla 157 privacy cut
+# D-157-07 revocation offline only: at startup apply the bundled OneCRL dump (defaults/settings/security-state/onecrl.json, read with SharedUtils.loadJSONDump, no network) through updateCertBlocklist as a sync event would, only when the stored collection is older than the dump or cert storage has no revocation data. Marker GORILLA UNLEASHED - PHYSICAL LOCK: offline OneCRL. Intermediates not applied: their certificates are CDN attachments, not in the dump.
+# Files: security/manager/ssl/RemoteSecuritySettings.sys.mjs
+
+diff --git a/security/manager/ssl/RemoteSecuritySettings.sys.mjs b/security/manager/ssl/RemoteSecuritySettings.sys.mjs
+index 0c896c80d5..b41cf0c6df 100644
+--- a/security/manager/ssl/RemoteSecuritySettings.sys.mjs
++++ b/security/manager/ssl/RemoteSecuritySettings.sys.mjs
+@@ -45,6 +45,7 @@ ChromeUtils.defineLazyGetter(lazy, "log", () => {
+ ChromeUtils.defineESModuleGetters(lazy, {
+   RemoteSettingsClient:
+     "resource://services-settings/RemoteSettingsClient.sys.mjs",
++  SharedUtils: "resource://services-settings/SharedUtils.sys.mjs",
+ });
+ 
+ // Converts a JS string to an array of bytes consisting of the char code at each
+@@ -235,6 +236,74 @@ const updateCertBlocklist = async function ({
+   }
+ };
+ 
++/**
++ * GORILLA UNLEASHED - PHYSICAL LOCK: offline OneCRL
++ * Decision D-157-07 (revocation offline only). Remote Settings never syncs in this build, so OneCRL records reached
++ * certificate storage only on a "sync" event that never came: the bundled dump was shipped but never applied.
++ * At startup, read the OneCRL dump packaged in the build (resource://app/defaults/settings/security-state/onecrl.json,
++ * no network) and hand it to updateCertBlocklist exactly as a sync event would: created / updated / deleted computed
++ * against the records stored last time. Then store the dump in the local collection, so the next start does nothing.
++ * Runs only when the stored collection is older than the dump, or when certificate storage has no revocation data
++ * at all (a new profile, or cert_storage re-created).
++ *
++ * @param {RemoteSettingsClient} client the "onecrl" client created in init()
++ */
++async function gorillaApplyBundledOneCRL(client) {
++  const dump = await lazy.SharedUtils.loadJSONDump(
++    SECURITY_STATE_BUCKET,
++    "onecrl"
++  );
++  if (!dump || !Array.isArray(dump.data) || !dump.timestamp) {
++    lazy.log.error("Gorilla offline OneCRL: no bundled dump in this build");
++    return;
++  }
++  let storedTimestamp = null;
++  try {
++    storedTimestamp = await client.db.getLastModified();
++  } catch (e) {
++    storedTimestamp = null;
++  }
++  const hasPriorRevocationData = await hasPriorData(
++    Ci.nsICertStorage.DATA_TYPE_REVOCATION
++  );
++  if (
++    hasPriorRevocationData &&
++    storedTimestamp &&
++    storedTimestamp >= dump.timestamp
++  ) {
++    return;
++  }
++  let previous = [];
++  try {
++    previous = await client.db.list();
++  } catch (e) {
++    previous = [];
++  }
++  const previousById = new Map(previous.map(r => [r.id, r]));
++  const currentIds = new Set(dump.data.map(r => r.id));
++  const created = [];
++  const updated = [];
++  for (const record of dump.data) {
++    const old = previousById.get(record.id);
++    if (!old) {
++      created.push(record);
++    } else if (old.last_modified != record.last_modified) {
++      updated.push({ old, new: record });
++    }
++  }
++  const deleted = previous.filter(r => !currentIds.has(r.id));
++  // updateCertBlocklist reloads everything itself when storage has no prior revocation data.
++  await updateCertBlocklist({
++    data: { current: dump.data, created, updated, deleted },
++  });
++  await client.db.importChanges(undefined, dump.timestamp, dump.data, {
++    clear: true,
++  });
++  lazy.log.info(
++    `Gorilla offline OneCRL: applied ${dump.data.length} bundled records (dump ${dump.timestamp})`
++  );
++}
++
+ export var RemoteSecuritySettings = {
+   _initialized: false,
+   OneCRLBlocklistClient: null,
+@@ -259,6 +328,12 @@ export var RemoteSecuritySettings = {
+       signerName: SECURITY_STATE_SIGNER,
+     });
+     this.OneCRLBlocklistClient.on("sync", updateCertBlocklist);
++    // GORILLA UNLEASHED - PHYSICAL LOCK: offline OneCRL
++    // Apply the OneCRL list bundled in the build, without any network (see gorillaApplyBundledOneCRL). Not awaited:
++    // startup is not held up; failures are logged, and the next start tries again.
++    gorillaApplyBundledOneCRL(this.OneCRLBlocklistClient).catch(e =>
++      lazy.log.error(`Gorilla offline OneCRL failed: ${e}`)
++    );
+ 
+     this.IntermediatePreloadsClient = new IntermediatePreloads();
+ 

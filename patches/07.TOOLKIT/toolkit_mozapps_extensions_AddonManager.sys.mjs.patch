@@ -1,6 +1,8 @@
+diff --git a/toolkit/mozapps/extensions/AddonManager.sys.mjs b/toolkit/mozapps/extensions/AddonManager.sys.mjs
+index ec8db11391..30989722ef 100644
 --- a/toolkit/mozapps/extensions/AddonManager.sys.mjs
 +++ b/toolkit/mozapps/extensions/AddonManager.sys.mjs
-@@ -2429,7 +2429,7 @@
+@@ -2426,7 +2426,7 @@ var AddonManagerInternal = {
     * @param  aMimetype
     *         The mimetype of the add-on being installed
     * @param  aBrowser
@@ -9,7 +11,7 @@
     * @param  aInstallingPrincipal
     *         The nsIPrincipal that initiated the install
     * @param  aInstall
-@@ -2447,172 +2447,10 @@
+@@ -2444,172 +2444,10 @@ var AddonManagerInternal = {
      aInstall,
      aDetails
    ) {
@@ -186,7 +188,7 @@
    },
  
    /**
-@@ -2632,38 +2470,11 @@
+@@ -2629,38 +2467,11 @@ var AddonManagerInternal = {
     *         when there is an existing add-on for the `install` object.
     */
    installAddonFromAOM(browser, uri, install, options = {}) {
@@ -230,10 +232,10 @@
    },
  
    /**
-@@ -5888,8 +5699,6 @@
-         updated_from: extra.updated_from,
-         install_origins: extra.install_origins,
-         step: extra.step,
+@@ -5814,8 +5625,6 @@ AMTelemetry = {
+         updated_from,
+         install_origins,
+         step: extraVars?.step,
 -        // will be undefined for non-site permission addons
 -        site_permission: install.newSitePerm,
        })

@@ -1,3 +1,5 @@
+diff --git a/toolkit/locales/en-US/toolkit/global/datetimebox.ftl b/toolkit/locales/en-US/toolkit/global/datetimebox.ftl
+index 326865687a..05823b9a75 100644
 --- a/toolkit/locales/en-US/toolkit/global/datetimebox.ftl
 +++ b/toolkit/locales/en-US/toolkit/global/datetimebox.ftl
 @@ -1,16 +1,13 @@
@@ -17,7 +19,7 @@
  datetime-year =
      .aria-label = Year
  datetime-month =
-@@ -19,7 +16,6 @@
+@@ -19,7 +16,6 @@ datetime-day =
      .aria-label = Day
  
  ## Field labels for input type=time
@@ -25,7 +27,7 @@
  datetime-hour =
      .aria-label = Hours
  datetime-minute =
-@@ -32,11 +28,9 @@
+@@ -32,11 +28,9 @@ datetime-dayperiod =
      .aria-label = AM/PM
  
  ## Date/time picker buttons

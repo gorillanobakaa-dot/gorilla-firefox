@@ -1,6 +1,8 @@
+diff --git a/browser/locales/en-US/browser/profiles.ftl b/browser/locales/en-US/browser/profiles.ftl
+index 418c364ced..e02e08eab6 100644
 --- a/browser/locales/en-US/browser/profiles.ftl
 +++ b/browser/locales/en-US/browser/profiles.ftl
-@@ -1,47 +1,49 @@
+@@ -1,25 +1,24 @@
  # This Source Code Form is subject to the terms of the Mozilla Public
  # License, v. 2.0. If a copy of the MPL was not distributed with this
  # file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -26,24 +28,17 @@
  profile-card-edit-button =
 -    .title = Edit profile
 -    .aria-label = Edit profile
-+    .title =
-+        Edit Gorilla profile
-+        .aria-label = Edit Gorilla profile
++    .title = Edit Gorilla profile
++    .aria-label = Edit Gorilla profile
  profile-card-delete-button =
 -    .title = Delete profile
 -    .aria-label = Delete profile
-+    .title =
-+        Delete Gorilla profile
-+        .aria-label = Delete Gorilla profile
++    .title = Delete Gorilla profile
++    .aria-label = Delete Gorilla profile
  
  # Variables
  #   $profileName (string) - The name of the profile
- profile-card =
--    .title = Open { $profileName }
--    .aria-label = Open { $profileName }
-+    .title =
-+        Open { $profileName }
-+        .aria-label = Open { $profileName }
+@@ -29,19 +28,19 @@ profile-card =
  
  # Variables
  #   $number (number) - The number of the profile
@@ -67,24 +62,21 @@
 -edit-profile-page-explore-themes = Explore more themes
 +    .label = Gorilla Theme
 +edit-profile-page-explore-themes = Explore more Gorilla themes
- edit-profile-page-desktop-shortcut-header = Create desktop shortcut
- edit-profile-page-desktop-shortcut-toggle =
-     .aria-label = Create desktop shortcut
-@@ -54,22 +56,22 @@
- avatar-selector-icon-tab = Icon
- avatar-selector-custom-tab = Custom
- avatar-selector-cancel-button =
--  .label = Cancel
-+    .label = Cancel
+ edit-profile-page-desktop-shortcut-toggle-2 =
+     .label = Create desktop shortcut
+ edit-profile-page-avatar-header-2 =
+@@ -57,21 +56,21 @@ avatar-selector-cancel-button =
+   .label = Cancel
  avatar-selector-save-button =
--  .label = Save
+   .label = Save
 -avatar-selector-upload-file = Upload a file
 -avatar-selector-drag-file = Or drag a file here
-+    .label = Save
 +avatar-selector-upload-file = Upload a Gorilla file
 +avatar-selector-drag-file = Or drag a Gorilla file here
  avatar-selector-add-image = Add an image
  avatar-selector-crop = Crop
+ avatar-selector-dialog =
+     .aria-label = Edit Avatar
  
 -edit-profile-page-no-name = Name this profile to help you find it later. Rename it any time.
 -edit-profile-page-duplicate-name = Profile name already in use. Try a new name.
@@ -102,7 +94,7 @@
  new-profile-page-learn-more = Learn more
  new-profile-page-input-placeholder =
      .placeholder = Pick a name like “Work” or “Personal”
-@@ -79,91 +81,86 @@
+@@ -81,28 +80,28 @@ new-profile-page-done-button =
  # Variables
  #   $profilename (String) - The name of the copied profile.
  copied-profile-page-header-2 = Your copy of “{ $profilename }” is ready to customize
@@ -116,7 +108,7 @@
  restored-profile-page-learn-more = Learn more
  
  ## Delete profile dialogue that allows users to review what they will lose if they choose to delete their profile. Each item (open windows, etc.) is displayed in a table, followed by a column with the number of items.
--
+ 
  # Variables
  #   $profilename (String) - The name of the profile.
 -delete-profile-page-title-2 = Delete “{ $profilename }” profile
@@ -124,8 +116,7 @@
  
  # Variables
  #   $profilename (String) - The name of the profile.
--delete-profile-header = Delete { $profilename } profile?
-+delete-profile-header = Delete { $profilename } Gorilla profile?
+ delete-profile-header-2 = Delete “{ $profilename }” profile?
  delete-profile-description = { -brand-short-name } will permanently delete the following data from this device:
  # Open is an adjective, as in "browser windows currently open".
 -delete-profile-windows = Open windows
@@ -140,15 +131,8 @@
  delete-profile-autofill = Autofill data (addresses, payment methods)
  delete-profile-logins = Passwords
  
- ##
--
- # Button label
- delete-profile-cancel = Cancel
- # Button label
- delete-profile-confirm = Delete
+@@ -117,49 +116,49 @@ delete-profile-confirm = Delete
  
- ## These strings are color themes available to select from the profile selection screen. Theme names should be localized.
--
  profiles-gray-theme = Gray
  profiles-gray-theme-title =
 -    .title = Apply gray theme
@@ -200,7 +184,7 @@
 +    .title = Apply system Gorilla theme
  
  ## Data collection settings changed (multi-profile)
--
+ 
  # Full infobar message with inline bold title followed by body text
 -multiprofile-data-collection-message = <strong>Data collection settings changed.</strong> The changes made in another profile apply to all profiles on this device.
 +multiprofile-data-collection-message = <strong>Data collection Gorilla settings changed.</strong> The changes made in another Gorilla profile apply to all Gorilla profiles on this device.
@@ -211,13 +195,7 @@
  
  # Secondary button label to dismiss the infobar without action
  multiprofile-data-collection-dismiss = Dismiss
- 
- ## Alternative text for default profile icons
--
- barbell-avatar-alt =
-     .alt = Barbell
- bike-avatar-alt =
-@@ -229,7 +226,6 @@
+@@ -231,7 +230,6 @@ video-game-controller-avatar-alt =
      .alt = Video game controller
  
  ## Labels for default avatar icons
@@ -225,7 +203,7 @@
  barbell-avatar = Barbell
  bike-avatar = Bike
  book-avatar = Book
-@@ -266,7 +262,6 @@
+@@ -268,7 +266,6 @@ star-avatar = Star
  video-game-controller-avatar = Video game controller
  
  ## Tooltips for default avatar icons
@@ -233,7 +211,7 @@
  barbell-avatar-tooltip =
      .tooltiptext = Apply barbell avatar
  bike-avatar-tooltip =
-@@ -330,15 +325,15 @@
+@@ -332,15 +329,15 @@ video-game-controller-avatar-tooltip =
  
  
  custom-avatar-crop-back-button =

@@ -1,6 +1,8 @@
+diff --git a/toolkit/locales/jar.mn b/toolkit/locales/jar.mn
+index 7f8010ef90..c7563ee064 100644
 --- a/toolkit/locales/jar.mn
 +++ b/toolkit/locales/jar.mn
-@@ -15,7 +15,6 @@
+@@ -13,7 +13,6 @@
    layoutdebug/layoutdebug.ftl                      (../../layout/tools/layout-debug/ui/content/layoutdebug.ftl)
  #endif
  #if defined(NIGHTLY_BUILD)

@@ -1,0 +1,21 @@
+# Gorilla 157 privacy cut
+# D-157-15: primeMitm returns at once, so the canary HEAD request to the MITM priming endpoint (mitmdetection.services.mozilla.com) is never sent from the certificate error page (never calls home)
+# Files: toolkit/actors/NetErrorParent.sys.mjs
+
+diff --git a/toolkit/actors/NetErrorParent.sys.mjs b/toolkit/actors/NetErrorParent.sys.mjs
+index 751e16de21..020eedc63c 100644
+--- a/toolkit/actors/NetErrorParent.sys.mjs
++++ b/toolkit/actors/NetErrorParent.sys.mjs
+@@ -149,6 +149,12 @@ export class NetErrorParent extends EscapablePageParent {
+    * order to help network code detect a system-wide man-in-the-middle.
+    */
+   primeMitm(browser) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no MITM priming. The canary HEAD request to
++    // security.certerrors.mitm.priming.endpoint (mitmdetection.services.mozilla.com) is never sent.
++    // Cost: the certificate error page no longer guesses that a proxy or antivirus is intercepting.
++    if (true) {
++      return;
++    }
+     // If we already have a mitm canary issuer stored, then don't bother with the
+     // extra request. This will be cleared on every update ping.
+     if (Services.prefs.getStringPref("security.pki.mitm_canary_issuer", null)) {

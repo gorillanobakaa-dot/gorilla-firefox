@@ -1,6 +1,8 @@
+diff --git a/toolkit/locales/en-US/toolkit/global/notification.ftl b/toolkit/locales/en-US/toolkit/global/notification.ftl
+index 6191253a17..e3863c159c 100644
 --- a/toolkit/locales/en-US/toolkit/global/notification.ftl
 +++ b/toolkit/locales/en-US/toolkit/global/notification.ftl
-@@ -1,16 +1,16 @@
+@@ -1,16 +1,15 @@
  # This Source Code Form is subject to the terms of the Mozilla Public
  # License, v. 2.0. If a copy of the MPL was not distributed with this
  # file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -15,9 +17,8 @@
  notification-close-button =
 -  .aria-label = Close
 -  .title = Close
-+    .aria-label =
-+        Close
-+        .title = Close
++    .aria-label = Close
++    .title = Close
  
  close-notification-message =
      .tooltiptext = Close this message

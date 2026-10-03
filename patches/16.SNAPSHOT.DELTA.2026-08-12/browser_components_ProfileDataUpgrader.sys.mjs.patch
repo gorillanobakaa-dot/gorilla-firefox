@@ -1,6 +1,8 @@
+diff --git a/browser/components/ProfileDataUpgrader.sys.mjs b/browser/components/ProfileDataUpgrader.sys.mjs
+index 6cee3dcd7d..c980d799e8 100644
 --- a/browser/components/ProfileDataUpgrader.sys.mjs
 +++ b/browser/components/ProfileDataUpgrader.sys.mjs
-@@ -923,30 +923,6 @@
+@@ -923,30 +923,6 @@ export let ProfileDataUpgrader = {
        Services.prefs.setBoolPref("signon.reencryptionNeeded", true);
      }
  

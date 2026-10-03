@@ -1,0 +1,17 @@
+diff --git a/toolkit/components/ml/moz.build b/toolkit/components/ml/moz.build
+index b919250aaa..630587bffd 100644
+--- a/toolkit/components/ml/moz.build
++++ b/toolkit/components/ml/moz.build
+@@ -20,9 +20,11 @@ DIRS += [
+ # ggml has no armv7-android CPU backend variant upstream, so there is no
+ # inference engine to run on Android, and consequently no HWInference utility
+ # process to talk to: SandboxingKind::HW_INFERENCE does not exist there.
++# GORILLA excised: backends/llama (llama.cpp C++ backend).
++# Its WebIDL (dom/webidl/LlamaRunner.webidl) and the third_party/llama.cpp
++# sources are already removed, so this would not compile.
+ if CONFIG["MOZ_WIDGET_TOOLKIT"] != "android":
+     DIRS += [
+-        "backends/llama",
+         "ipc",
+     ]
+ 

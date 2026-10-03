@@ -1,6 +1,8 @@
+diff --git a/browser/locales/en-US/browser/editBookmarkOverlay.ftl b/browser/locales/en-US/browser/editBookmarkOverlay.ftl
+index da74660e48..fe5b08fa7f 100644
 --- a/browser/locales/en-US/browser/editBookmarkOverlay.ftl
 +++ b/browser/locales/en-US/browser/editBookmarkOverlay.ftl
-@@ -1,55 +1,60 @@
+@@ -1,55 +1,54 @@
  # This Source Code Form is subject to the terms of the Mozilla Public
  # License, v. 2.0. If a copy of the MPL was not distributed with this
  # file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -8,25 +10,22 @@
  bookmark-overlay-name-2 =
 -  .value = Name
 -  .accesskey = N
-+    .value =
-+        Name
-+        .accesskey = N
++    .value = Name
++    .accesskey = N
  
  bookmark-overlay-url =
 -  .value = URL
 -  .accesskey = U
-+    .value =
-+        URL
-+        .accesskey = U
++    .value = URL
++    .accesskey = U
  
  # Location refers to the position of the bookmark within the browser's
  # bookmarks, not to its URL or address.
  bookmark-overlay-location-2 =
 -  .value = Location
 -  .accesskey = L
-+    .value =
-+        Location
-+        .accesskey = L
++    .value = Location
++    .accesskey = L
  
  bookmark-overlay-choose =
 -  .label = Choose…
@@ -48,16 +47,14 @@
  bookmark-overlay-new-folder-button =
 -  .label = New Folder
 -  .accesskey = o
-+    .label =
-+        New Folder
-+        .accesskey = o
++    .label = New Folder
++    .accesskey = o
  
  bookmark-overlay-tags-2 =
 -  .value = Tags
 -  .accesskey = T
-+    .value =
-+        Tags
-+        .accesskey = T
++    .value = Tags
++    .accesskey = T
  
  bookmark-overlay-tags-empty-description =
 -  .placeholder = Separate tags with commas
@@ -74,9 +71,8 @@
  bookmark-overlay-keyword-2 =
 -  .value = Keyword
 -  .accesskey = K
-+    .value =
-+        Keyword
-+        .accesskey = K
++    .value = Keyword
++    .accesskey = K
  
 -bookmark-overlay-tags-caption-label = Use tags to organize and search for bookmarks from the address bar
 +bookmark-overlay-tags-caption-label = Use tags to organize and search for Gorilla bookmarks from the address bar

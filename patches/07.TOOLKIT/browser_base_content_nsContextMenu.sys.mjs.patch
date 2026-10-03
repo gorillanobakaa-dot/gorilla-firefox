@@ -1,3 +1,5 @@
+diff --git a/browser/base/content/nsContextMenu.sys.mjs b/browser/base/content/nsContextMenu.sys.mjs
+index 4f48face7c..f2009c1e7c 100644
 --- a/browser/base/content/nsContextMenu.sys.mjs
 +++ b/browser/base/content/nsContextMenu.sys.mjs
 @@ -5,8 +5,6 @@
@@ -9,7 +11,7 @@
    BrowserSearchTelemetry:
      "moz-src:///browser/components/search/BrowserSearchTelemetry.sys.mjs",
    BrowserUtils: "resource://gre/modules/BrowserUtils.sys.mjs",
-@@ -15,8 +13,6 @@
+@@ -15,8 +13,6 @@ ChromeUtils.defineESModuleGetters(lazy, {
      "moz-src:///toolkit/components/contextualidentity/ContextualIdentityService.sys.mjs",
    DevToolsShim: "chrome://devtools-startup/content/DevToolsShim.sys.mjs",
    E10SUtils: "resource://gre/modules/E10SUtils.sys.mjs",
@@ -18,7 +20,7 @@
    LoginHelper: "resource://gre/modules/LoginHelper.sys.mjs",
    LoginManagerContextMenu:
      "resource://gre/modules/LoginManagerContextMenu.sys.mjs",
-@@ -511,7 +507,8 @@
+@@ -529,7 +525,8 @@ export class nsContextMenu {
        "browser.tabs.splitView.enabled"
      );
      let currentTabInSplitView = !!window.gBrowser?.selectedTab?.splitview;
@@ -28,7 +30,7 @@
      this.showItem("context-openlink", shouldShow && !isWindowPrivate);
      this.showItem(
        "context-openlinkprivate",
-@@ -528,10 +525,7 @@
+@@ -546,10 +543,7 @@ export class nsContextMenu {
        shouldShow && !isWindowPrivate && showContainers
      );
      this.showItem("context-openlinkincurrent", this.onPlainTextLink);
@@ -40,7 +42,7 @@
      let isHiddenTab = !!window.gBrowser?.getTabForBrowser(this.browser)?.hidden;
      let isPinnedTab = !!window.gBrowser?.getTabForBrowser(this.browser)?.pinned;
      this.showItem(
-@@ -906,12 +900,7 @@
+@@ -924,12 +918,7 @@ export class nsContextMenu {
  
      this.showAndFormatSearchContextItem();
      this.showTranslateSelectionItem();
@@ -54,7 +56,7 @@
  
      // srcdoc cannot be opened separately due to concerns about web
      // content with about:srcdoc in location bar masquerading as trusted
-@@ -2264,10 +2253,8 @@
+@@ -2318,10 +2307,8 @@ export class nsContextMenu {
      );
    }
  

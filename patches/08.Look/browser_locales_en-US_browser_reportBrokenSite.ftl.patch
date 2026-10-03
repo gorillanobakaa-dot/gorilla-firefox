@@ -1,6 +1,8 @@
+diff --git a/browser/locales/en-US/browser/reportBrokenSite.ftl b/browser/locales/en-US/browser/reportBrokenSite.ftl
+index b37c479480..976ea5c04f 100644
 --- a/browser/locales/en-US/browser/reportBrokenSite.ftl
 +++ b/browser/locales/en-US/browser/reportBrokenSite.ftl
-@@ -1,11 +1,11 @@
+@@ -1,11 +1,10 @@
  # This Source Code Form is subject to the terms of the Mozilla Public
  # License, v. 2.0. If a copy of the MPL was not distributed with this
  # file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -9,13 +11,12 @@
  report-broken-site-panel-header =
 -  .label = Report broken site
 -  .title = Report broken site
-+    .label =
-+        Report broken site
-+        .title = Report broken site
++    .label = Report broken site
++    .title = Report broken site
  report-broken-site-panel-intro-text = Your report helps us understand and fix issues in { -brand-product-name } to make it better for everyone.
  report-broken-site-panel-learn-more-link = Learn more
  
-@@ -14,49 +14,50 @@
+@@ -14,49 +13,49 @@ report-broken-site-panel-url-label = URL of broken site
  report-broken-site-panel-reason-intro-text = What’s not working?
  
  report-broken-site-panel-reason-load-moz-box-button =
@@ -77,13 +78,12 @@
  report-broken-site-panel-report-sent-header =
 -  .label = Your report has been sent
 -  .title = Your report has been sent
-+    .label =
-+        Your report has been sent
-+        .title = Your report has been sent
++    .label = Your report has been sent
++    .title = Your report has been sent
  report-broken-site-panel-report-sent-text = Thank you for helping { -brand-product-name } make the web more open, accessible, and better for everyone.
  
  report-broken-site-panel-invalid-url-label = Please enter a valid URL
-@@ -64,19 +65,19 @@
+@@ -64,19 +63,19 @@ report-broken-site-panel-invalid-url-label = Please enter a valid URL
  # $minLength (number) - The minimum number of characters required in the description textarea.
  report-broken-site-panel-invalid-description-label =
      {$minLength ->

@@ -1,6 +1,8 @@
+diff --git a/gfx/thebes/gfxDWriteFontList.cpp b/gfx/thebes/gfxDWriteFontList.cpp
+index 38fd69a3eb..0ce96d02d3 100644
 --- a/gfx/thebes/gfxDWriteFontList.cpp
 +++ b/gfx/thebes/gfxDWriteFontList.cpp
-@@ -1652,7 +1652,10 @@
+@@ -1680,7 +1680,10 @@ void gfxDWriteFontList::InitSharedFontListForPlatform() {
        forceClassicFams.Sort();
      }
      nsTArray<fontlist::Family::InitData> families;
@@ -12,7 +14,7 @@
  #ifdef MOZ_BUNDLED_FONTS
      if (mBundledFonts) {
        TimeStamp start2 = TimeStamp::Now();
-@@ -1733,11 +1736,17 @@
+@@ -1761,11 +1764,17 @@ nsresult gfxDWriteFontList::InitFontListForPlatform() {
          std::move(timerId));
    }
  #endif

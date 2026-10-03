@@ -1,15 +1,17 @@
+diff --git a/browser/base/content/browser-sets.js b/browser/base/content/browser-sets.js
+index 1da8c65679..75b67bbd65 100644
 --- a/browser/base/content/browser-sets.js
 +++ b/browser/base/content/browser-sets.js
-@@ -8,8 +8,6 @@
+@@ -8,8 +8,6 @@ document.addEventListener(
      const lazy = {};
      ChromeUtils.defineESModuleGetters(lazy, {
        TranslationsParent: "resource://gre/actors/TranslationsParent.sys.mjs",
 -      AIWindowUI:
 -        "moz-src:///browser/components/aiwindow/ui/modules/AIWindowUI.sys.mjs",
-     });
- 
-     // <commandset id="mainCommandSet"> defined in browser-sets.inc.xhtml
-@@ -19,15 +17,9 @@
+       ContainerCreationPanel:
+         "chrome://browser/content/usercontext/ContainerCreationPanel.mjs",
+       Referrals: "resource:///modules/referrals/Referrals.sys.mjs",
+@@ -22,15 +20,9 @@ document.addEventListener(
        .addEventListener("command", event => {
          switch (event.target.id) {
            case "cmd_newNavigator":
@@ -28,7 +30,7 @@
              break;
            case "cmd_handleBackspace":
              BrowserCommands.handleBackspace();
-@@ -270,15 +262,9 @@
+@@ -284,15 +276,9 @@ document.addEventListener(
            case "cmd_openUnifiedExtensionsPanel":
              gUnifiedExtensions.openPanel(event);
              break;
@@ -47,7 +49,7 @@
            case "Tools:Sanitize":
              Sanitizer.showUI(window);
              break;
-@@ -337,26 +323,8 @@
+@@ -351,26 +337,8 @@ document.addEventListener(
          case "viewBookmarksToolbarKb":
            BookmarkingUI.toggleBookmarksToolbar("shortcut");
            break;

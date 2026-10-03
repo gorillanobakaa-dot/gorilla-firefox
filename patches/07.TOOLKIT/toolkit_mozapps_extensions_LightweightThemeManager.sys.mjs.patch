@@ -1,3 +1,5 @@
+diff --git a/toolkit/mozapps/extensions/LightweightThemeManager.sys.mjs b/toolkit/mozapps/extensions/LightweightThemeManager.sys.mjs
+index 70c6fa28ad..d2ab92c703 100644
 --- a/toolkit/mozapps/extensions/LightweightThemeManager.sys.mjs
 +++ b/toolkit/mozapps/extensions/LightweightThemeManager.sys.mjs
 @@ -6,13 +6,6 @@
@@ -14,7 +16,7 @@
  // Parses the `images` property of a theme manifest and stores them in `styles`.
  function loadImages(images, styles, experiment, baseURI, logger) {
    for (let image of Object.keys(images)) {
-@@ -24,16 +17,18 @@
+@@ -24,16 +17,18 @@ function loadImages(images, styles, experiment, baseURI, logger) {
  
      switch (image) {
        case "additional_backgrounds": {
@@ -36,7 +38,7 @@
          } else {
            logger?.warn(`Unrecognized theme property found: images.${image}`);
          }
-@@ -165,14 +160,12 @@
+@@ -169,14 +164,12 @@ function loadProperties(properties, styles, experiment, logger) {
          if (!assertValidAdditionalBackgrounds(property, val.length)) {
            break;
          }
@@ -56,7 +58,7 @@
          break;
        }
        case "color_scheme":
-@@ -222,75 +215,6 @@
+@@ -226,75 +219,6 @@ function loadDetails(details, experiment, baseURI, id, version, logger) {
  }
  
  export var LightweightThemeManager = {
@@ -132,7 +134,7 @@
    async _fetchThemeDataFromBuiltinManifest(baseURI) {
      let baseURIObj = Services.io.newURI(baseURI);
      let res = await fetch(baseURIObj.resolve("./manifest.json"));
-@@ -333,7 +257,6 @@
+@@ -337,7 +261,6 @@ export var LightweightThemeManager = {
        experiment.stylesheet = baseURI.resolve(experiment.stylesheet);
      }
      let lwtData = {
@@ -140,7 +142,7 @@
        experiment,
      };
      lwtData.theme = loadDetails(
-@@ -358,7 +281,7 @@
+@@ -362,7 +285,7 @@ export var LightweightThemeManager = {
    },
  
    set fallbackThemeData(data) {
@@ -149,7 +151,7 @@
        _fallbackThemeData = Object.assign({}, data);
      } else {
        _fallbackThemeData = null;
-@@ -366,6 +289,22 @@
+@@ -370,6 +293,22 @@ export var LightweightThemeManager = {
    },
  
    get themeData() {

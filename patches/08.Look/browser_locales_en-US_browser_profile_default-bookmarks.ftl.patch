@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/browser/profile/default-bookmarks.ftl b/browser/locales/en-US/browser/profile/default-bookmarks.ftl
+index 5523466f30..c98314742c 100644
 --- a/browser/locales/en-US/browser/profile/default-bookmarks.ftl
 +++ b/browser/locales/en-US/browser/profile/default-bookmarks.ftl
 @@ -1,22 +1,20 @@
@@ -27,7 +29,7 @@
  
  # link title for https://www.mozilla.org/contribute/
  default-bookmarks-firefox-community = Get Involved
-@@ -25,16 +23,16 @@
+@@ -25,16 +23,16 @@ default-bookmarks-firefox-community = Get Involved
  default-bookmarks-firefox-about = About Us
  
  # Firefox Nightly links folder name
@@ -48,7 +50,7 @@
  
  # Nightly builds only, link title for https://addons.mozilla.org/firefox/addon/nightly-tester-tools/
  default-bookmarks-nightly-tester-tools = Nightly Tester Tools
-@@ -43,4 +41,4 @@
+@@ -43,4 +41,4 @@ default-bookmarks-nightly-tester-tools = Nightly Tester Tools
  default-bookmarks-crashes = All your crashes
  
  # Nightly builds only, link title for https://planet.mozilla.org/

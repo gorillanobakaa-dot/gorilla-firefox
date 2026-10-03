@@ -1,15 +1,19 @@
+diff --git a/browser/base/content/browser.js b/browser/base/content/browser.js
+index 6ea9b0dbcd..145a0aa81f 100644
 --- a/browser/base/content/browser.js
 +++ b/browser/base/content/browser.js
-@@ -12,8 +12,6 @@
+@@ -12,8 +12,8 @@ var { AppConstants } = ChromeUtils.importESModule(
  // lazy module getters
  
  ChromeUtils.defineESModuleGetters(this, {
 -  AIWindow:
 -    "moz-src:///browser/components/aiwindow/ui/modules/AIWindow.sys.mjs",
++  // GORILLA: points at the inert stub, not the excised component.
++  AIWindow: "resource:///modules/AIWindowStub.sys.mjs",
    AMTelemetry: "resource://gre/modules/AddonManager.sys.mjs",
    AboutNewTab: "resource:///modules/AboutNewTab.sys.mjs",
    AboutReaderParent: "resource:///actors/AboutReaderParent.sys.mjs",
-@@ -1961,15 +1959,6 @@
+@@ -1901,15 +1901,6 @@ let gFileMenu = {
      }
      PrintUtils.updatePrintSetupMenuHiddenState();
  
@@ -25,7 +29,7 @@
    },
  };
  
-@@ -2340,7 +2329,6 @@
+@@ -2313,7 +2304,6 @@ var XULBrowserWindow = {
      // If we've actually changed document, update the toolbar visibility.
      if (!isSameDocument) {
        updateBookmarkToolbarVisibility();

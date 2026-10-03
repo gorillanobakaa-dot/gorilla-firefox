@@ -1,17 +1,16 @@
+diff --git a/browser/locales/en-US/browser/safeMode.ftl b/browser/locales/en-US/browser/safeMode.ftl
+index dbe9f9fe78..e286e7a7b4 100644
 --- a/browser/locales/en-US/browser/safeMode.ftl
 +++ b/browser/locales/en-US/browser/safeMode.ftl
-@@ -1,15 +1,15 @@
+@@ -1,7 +1,6 @@
  # This Source Code Form is subject to the terms of the Mozilla Public
  # License, v. 2.0. If a copy of the MPL was not distributed with this
  # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 -
  troubleshoot-mode-window =
--    .title = Open { -brand-short-name } in Troubleshoot Mode?
--    .style = max-width: 400px
-+    .title =
-+        Open { -brand-short-name } in Troubleshoot Mode?
-+        .style = max-width: 400px
- start-troubleshoot-mode =
+     .title = Open { -brand-short-name } in Troubleshoot Mode?
+     .style = max-width: 400px
+@@ -9,7 +8,7 @@ start-troubleshoot-mode =
      .label = Open
  refresh-profile =
      .label = Refresh { -brand-short-name }

@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/chrome/browser/downloads/downloads.properties b/browser/locales/en-US/chrome/browser/downloads/downloads.properties
+index 71addebf07..d957c8ca87 100644
 --- a/browser/locales/en-US/chrome/browser/downloads/downloads.properties
 +++ b/browser/locales/en-US/chrome/browser/downloads/downloads.properties
 @@ -1,7 +1,6 @@
@@ -8,7 +10,7 @@
  # LOCALIZATION NOTE (stateStarting):
  # Indicates that the download is starting.
  stateStarting=Starting…
-@@ -30,33 +29,33 @@
+@@ -30,33 +29,33 @@ stateBlockedParentalControls=Blocked by Parental Controls
  # These strings are shown in the panel for some types of blocked downloads. You
  # may need to adjust "downloads.width" in "downloads.dtd" if this turns out to
  # be longer than the other existing status strings.
@@ -55,7 +57,7 @@
  
  # LOCALIZATION NOTE (unblockHeaderUnblock, unblockHeaderOpen,
  #                    unblockTypeMalware, unblockTypePotentiallyUnwanted2,
-@@ -68,21 +67,21 @@
+@@ -68,21 +67,21 @@ fileBlockedAndDeleted=File discarded (Blocked)
  # download to be unblocked.  The severity of the threat is expressed in
  # descending order by the unblockType strings, it is higher for files detected
  # as malware and lower for uncommon downloads.

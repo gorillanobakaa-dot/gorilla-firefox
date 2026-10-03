@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/browser/aboutPolicies.ftl b/browser/locales/en-US/browser/aboutPolicies.ftl
+index 7f97e3c499..225d3b621c 100644
 --- a/browser/locales/en-US/browser/aboutPolicies.ftl
 +++ b/browser/locales/en-US/browser/aboutPolicies.ftl
 @@ -1,11 +1,10 @@
@@ -13,7 +15,7 @@
  
  # 'Active' is used to describe the policies that are currently active
  active-policies-tab = Active
-@@ -15,11 +14,11 @@
+@@ -15,11 +14,11 @@ documentation-tab = Documentation
  # These title attributes label the navigation buttons when the moz-page-nav
  # sidebar is collapsed and the visible button text is hidden.
  active-policies-tab-title =

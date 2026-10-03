@@ -1,3 +1,5 @@
+diff --git a/devtools/client/themes/aboutprofiling.css b/devtools/client/themes/aboutprofiling.css
+index 3facd64930..e31f71be7f 100644
 --- a/devtools/client/themes/aboutprofiling.css
 +++ b/devtools/client/themes/aboutprofiling.css
 @@ -179,3 +179,21 @@

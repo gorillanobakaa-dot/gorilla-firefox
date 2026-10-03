@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/browser/browserSets.ftl b/browser/locales/en-US/browser/browserSets.ftl
+index bb7357d0f9..ad89cf9600 100644
 --- a/browser/locales/en-US/browser/browserSets.ftl
 +++ b/browser/locales/en-US/browser/browserSets.ftl
 @@ -1,7 +1,6 @@
@@ -8,7 +10,7 @@
  window-minimize-command =
      .label = Minimize
  
-@@ -48,19 +47,21 @@
+@@ -48,19 +47,21 @@ search-find-selection-shortcut =
  # are recommended by the Human Interface Guidelines
  # of each platform for your locale.
  search-focus-shortcut-alt =
@@ -36,7 +38,7 @@
  
  addons-shortcut =
      .key = A
-@@ -173,7 +174,6 @@
+@@ -173,7 +174,6 @@ bookmark-show-toolbar-shortcut =
  ## All `-alt*` messages are alternative acceleration keys for zoom.
  ## If shift key is needed with your locale popular keyboard for them,
  ## you can use these alternative items. Otherwise, their values should be empty.
@@ -44,7 +46,7 @@
  full-zoom-reduce-shortcut =
      .key = -
  
-@@ -199,7 +199,6 @@
+@@ -199,7 +199,6 @@ full-zoom-reset-shortcut-alt =
      .key = {""}
  
  ##
@@ -52,7 +54,7 @@
  bidi-switch-direction-shortcut =
      .key = X
  
-@@ -208,7 +207,6 @@
+@@ -208,7 +207,6 @@ private-browsing-shortcut =
  
  ## The shortcuts below are for Mac specific
  ## global menu.

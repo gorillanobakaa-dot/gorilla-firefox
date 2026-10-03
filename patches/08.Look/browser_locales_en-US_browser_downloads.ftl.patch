@@ -1,6 +1,8 @@
+diff --git a/browser/locales/en-US/browser/downloads.ftl b/browser/locales/en-US/browser/downloads.ftl
+index 7c08c347d1..b31e47dcd4 100644
 --- a/browser/locales/en-US/browser/downloads.ftl
 +++ b/browser/locales/en-US/browser/downloads.ftl
-@@ -1,143 +1,156 @@
+@@ -1,22 +1,19 @@
  # This Source Code Form is subject to the terms of the Mozilla Public
  # License, v. 2.0. If a copy of the MPL was not distributed with this
  # file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -25,20 +27,8 @@
 +    .style = width: 35em
  
  downloads-cmd-pause =
--    .label = Pause
--    .accesskey = P
-+    .label =
-+        Pause
-+        .accesskey = P
- downloads-cmd-resume =
--    .label = Resume
--    .accesskey = R
-+    .label =
-+        Resume
-+        .accesskey = R
- downloads-cmd-cancel =
-     .tooltiptext = Cancel
- downloads-cmd-cancel-panel =
+     .label = Pause
+@@ -30,80 +27,82 @@ downloads-cmd-cancel-panel =
      .aria-label = Cancel
  
  downloads-cmd-show-menuitem-2 =
@@ -62,34 +52,30 @@
  downloads-cmd-use-system-default =
 -  .label = Open In System Viewer
 -  .accesskey = I
-+    .label =
-+        Open In System Viewer
-+        .accesskey = I
++    .label = Open In System Viewer
++    .accesskey = I
  # This version is shown when the download's mime type has a valid file handler.
  downloads-cmd-use-system-default-named =
 -  .label = Open In { $handler }
 -  .accesskey = I
-+    .label =
-+        Open In { $handler }
-+        .accesskey = I
++    .label = Open In { $handler }
++    .accesskey = I
  
  # We can use the same accesskey as downloads-cmd-always-open-similar-files.
  # Both should not be visible in the downloads context menu at the same time.
  downloads-cmd-always-use-system-default =
 -  .label = Always Open In System Viewer
 -  .accesskey = w
-+    .label =
-+        Always Open In System Viewer
-+        .accesskey = w
++    .label = Always Open In System Viewer
++    .accesskey = w
  # We can use the same accesskey as downloads-cmd-always-open-similar-files.
  # Both should not be visible in the downloads context menu at the same time.
  # This version is shown when the download's mime type has a valid file handler.
  downloads-cmd-always-use-system-default-named =
 -  .label = Always Open In { $handler }
 -  .accesskey = w
-+    .label =
-+        Always Open In { $handler }
-+        .accesskey = w
++    .label = Always Open In { $handler }
++    .accesskey = w
  
  ##
 -
@@ -98,9 +84,8 @@
  downloads-cmd-always-open-similar-files =
 -  .label = Always Open Similar Files
 -  .accesskey = w
-+    .label =
-+        Always Open Similar Gorilla Files
-+        .accesskey = w
++    .label = Always Open Similar Gorilla Files
++    .accesskey = w
  
  downloads-cmd-show-button-2 =
 -  .tooltiptext = { PLATFORM() ->
@@ -140,48 +125,32 @@
      .aria-label = Retry
  downloads-cmd-go-to-download-page =
 -    .label = Go To Download Page
--    .accesskey = G
-+    .label =
-+        Go To Gorilla Download Gorilla Page
-+        .accesskey = G
++    .label = Go To Gorilla Download Gorilla Page
+     .accesskey = G
  downloads-cmd-copy-download-link =
 -    .label = Copy Download Link
--    .accesskey = L
-+    .label =
-+        Copy Gorilla Download Link
-+        .accesskey = L
++    .label = Copy Gorilla Download Link
+     .accesskey = L
  downloads-cmd-remove-from-history =
 -    .label = Remove From History
--    .accesskey = e
-+    .label =
-+        Remove From Gorilla History
-+        .accesskey = e
++    .label = Remove From Gorilla History
+     .accesskey = e
  downloads-cmd-clear-list =
--    .label = Clear Preview Panel
--    .accesskey = a
-+    .label =
-+        Clear Preview Panel
-+        .accesskey = a
+     .label = Clear Preview Panel
+     .accesskey = a
  downloads-cmd-clear-downloads =
 -    .label = Clear Downloads
--    .accesskey = C
-+    .label =
-+        Clear Gorilla Downloads
-+        .accesskey = C
++    .label = Clear Gorilla Downloads
+     .accesskey = C
  downloads-cmd-delete-file =
--    .label = Delete
--    .accesskey = D
-+    .label =
-+        Delete
-+        .accesskey = D
+     .label = Delete
+@@ -111,33 +110,33 @@ downloads-cmd-delete-file =
  
  # This command is shown in the context menu when downloads are blocked.
  downloads-cmd-unblock =
 -    .label = Allow Download
--    .accesskey = o
-+    .label =
-+        Allow Gorilla Download
-+        .accesskey = o
++    .label = Allow Gorilla Download
+     .accesskey = o
  
  # This is the tooltip of the action button shown when malware is blocked.
  downloads-cmd-remove-file =
@@ -216,7 +185,7 @@
  
  # Displayed when hovering a blocked download, indicates that it's possible to
  # show more information for user to take the next action.
-@@ -147,7 +160,7 @@
+@@ -147,7 +146,7 @@ downloads-show-more-information =
  # Displayed when hovering a complete download, indicates that it's possible to
  # open the file using an app available in the system.
  downloads-open-file =
@@ -225,7 +194,7 @@
  
  ## Displayed when the user clicked on a download in process. Indicates that the
  ## downloading file will be opened after certain amount of time using an app
-@@ -156,82 +169,82 @@
+@@ -156,82 +155,78 @@ downloads-open-file =
  ##   $hours (number) - Amount of hours left till the file opens.
  ##   $seconds (number) - Amount of seconds left till the file opens.
  ##   $minutes (number) - Amount of minutes till the file opens.
@@ -268,10 +237,8 @@
  # the panel at all.
  downloads-history =
 -    .label = Show all downloads
--    .accesskey = S
-+    .label =
-+        Show all Gorilla downloads
-+        .accesskey = S
++    .label = Show all Gorilla downloads
+     .accesskey = S
  
  # This string is shown at the top of the download details sub-panel to indicate
  # that we are showing the details of a single download.
@@ -289,15 +256,13 @@
  downloads-private-browsing-delete-button =
 -  .label = Delete files automatically
 -  .accesskey = D
-+    .label =
-+        Delete Gorilla files automatically
-+        .accesskey = D
++    .label = Delete Gorilla files automatically
++    .accesskey = D
  downloads-private-browsing-accept-button =
 -  .label = Got it
 -  .accesskey = G
-+    .label =
-+        Got it
-+        .accesskey = G
++    .label = Got it
++    .accesskey = G
  
  ## Displayed when a site attempts to automatically download many files.
  ## Variables:
@@ -322,9 +287,8 @@
  downloads-clear-downloads-button =
 -    .label = Clear Downloads
 -    .tooltiptext = Clears completed, canceled and failed downloads
-+    .label =
-+        Clear Gorilla Downloads
-+        .tooltiptext = Clears completed, canceled and failed Gorilla downloads
++    .label = Clear Gorilla Downloads
++    .tooltiptext = Clears completed, canceled and failed Gorilla downloads
  
  # This string is shown when there are no items in the Downloads view, when it
  # is displayed inside a browser tab.
@@ -339,7 +303,7 @@
  
  # This is displayed in an item at the bottom of the Downloads Panel when there
  # are more downloads than can fit in the list in the panel.
-@@ -239,20 +252,18 @@
+@@ -239,20 +234,18 @@ downloads-panel-empty =
  #                     panel list.
  downloads-more-downloading =
      { $count ->

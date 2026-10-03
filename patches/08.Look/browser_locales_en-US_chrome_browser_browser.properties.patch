@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/chrome/browser/browser.properties b/browser/locales/en-US/chrome/browser/browser.properties
+index 6ed6353fdb..359f5a5ef6 100644
 --- a/browser/locales/en-US/chrome/browser/browser.properties
 +++ b/browser/locales/en-US/chrome/browser/browser.properties
 @@ -1,26 +1,23 @@
@@ -30,7 +32,7 @@
  bookmarkAllTabsDefault=[Folder Name]
  
  unsignedAddonsDisabled.message=One or more installed add-ons cannot be verified and have been disabled.
-@@ -34,7 +31,7 @@
+@@ -34,7 +31,7 @@ geolocationLastAccessIndicatorText=Last access %S
  openProtocolHandlerPermissionEntryLabel=%S:// links
  
  crashedpluginsMessage.title=The %S plugin has crashed.
@@ -39,7 +41,7 @@
  crashedpluginsMessage.reloadButton.accesskey=R
  crashedpluginsMessage.submitButton.label=Submit a crash report
  crashedpluginsMessage.submitButton.accesskey=S
-@@ -55,21 +52,21 @@
+@@ -55,21 +52,21 @@ keywordURIFixup.goTo.accesskey=Y
  update.downloadAndInstallButton.label=Update to %S
  update.downloadAndInstallButton.accesskey=U
  
@@ -67,7 +69,7 @@
  # LOCALIZATION NOTE (urlbar-zoom-button.tooltip):
  # %S is the keyboard shortcut for resetting the zoom level to 100%
  urlbar-zoom-button.tooltip=Reset zoom level (%S)
-@@ -80,7 +77,7 @@
+@@ -80,7 +77,7 @@ reader-mode-button.tooltip=Toggle reader view (%S)
  # LOCALIZATION NOTE(zoom-button.label): %S is the current page zoom level,
  # %% will be displayed as a single % character (% is commonly used to define
  # format specifiers, so it needs to be escaped).
@@ -76,7 +78,7 @@
  
  # LOCALIZATION NOTE(zoom-button.aria-label): %S is the current page zoom level,
  # %% will be displayed as a single % character (% is commonly used to define
-@@ -90,24 +87,24 @@
+@@ -90,24 +87,24 @@ zoom-button.aria-label =%S%%, Reset zoom level
  # General bookmarks button
  # LOCALIZATION NOTE (bookmarksMenuButton.tooltip):
  # %S is the keyboard shortcut for "Show All Bookmarks"
@@ -107,7 +109,7 @@
  
  # Canvas permission prompt
  # LOCALIZATION NOTE (canvas.siteprompt2): %S is hostname
-@@ -132,40 +129,38 @@
+@@ -132,40 +129,38 @@ identity.ev.contentOwner2=Certificate issued to: %S
  identity.notSecure.label=Not Secure
  identity.notSecure.tooltip=Connection is not secure
  
@@ -159,7 +161,7 @@
  geolocation.systemSettingsTitle=Awaiting Location Permission
  # %S is replaced by the product name (e.g. Firefox)
  geolocation.systemWillRequestPermission=The system will ask you to grant this permission to %S.
-@@ -177,7 +172,7 @@
+@@ -177,7 +172,7 @@ xr.allow2.accesskey=A
  xr.block=Block
  xr.block.accesskey=B
  xr.shareWithSite4=Allow %S to access virtual reality devices? This may expose sensitive information.
@@ -168,7 +170,7 @@
  xr.remember=Remember this decision
  
  # Persistent storage UI
-@@ -193,6 +188,8 @@
+@@ -193,6 +188,8 @@ persistentStorage.allowWithSite2=Allow %S to store data in persistent storage?
  # it's okay for them to have the same access key
  webNotifications.allow2=Allow
  webNotifications.allow2.accesskey=A
@@ -177,7 +179,7 @@
  webNotifications.never=Never Allow
  webNotifications.never.accesskey=v
  webNotifications.alwaysBlock=Always Block
-@@ -241,117 +238,117 @@
+@@ -241,117 +238,117 @@ addKeywordTitleAutoFill=Search %S
  # troubleshootModeRestart
  # LOCALIZATION NOTE (troubleshootModeRestartPromptTitle): %S is the name of the product (e.g., Firefox)
  troubleshootModeRestartPromptTitle=Restart %S in Troubleshoot Mode?
@@ -246,18 +248,17 @@
 -decoder.noHWAcceleration.message = To improve video quality, you may need to install Microsoft’s Media Feature Pack.
 -decoder.noPulseAudio.message = To play audio, you may need to install the required PulseAudio software.
 -decoder.unsupportedLibavcodec.message = libavcodec may be vulnerable or is not supported, and should be updated to play video.
--
--decoder.decodeError.message = An error occurred while decoding a media resource.
--decoder.decodeError.button = Report site issue
--decoder.decodeError.accesskey = R
--decoder.decodeWarning.message = A recoverable error occurred while decoding a media resource.
 +decoder.noCodecs.button =  Learn how
 +decoder.noCodecs.accesskey =  L
 +decoder.noCodecsLinux.message =  To play video, you may need to install the required video codecs.
 +decoder.noHWAcceleration.message =  To improve video quality, you may need to install Microsoft’s Media Feature Pack.
 +decoder.noPulseAudio.message =  To play audio, you may need to install the required PulseAudio software.
 +decoder.unsupportedLibavcodec.message =  libavcodec may be vulnerable or is not supported, and should be updated to play video.
-+
+ 
+-decoder.decodeError.message = An error occurred while decoding a media resource.
+-decoder.decodeError.button = Report site issue
+-decoder.decodeError.accesskey = R
+-decoder.decodeWarning.message = A recoverable error occurred while decoding a media resource.
 +decoder.decodeError.message =  An error occurred while decoding a media resource.
 +decoder.decodeError.button =  Report site issue
 +decoder.decodeError.accesskey =  R

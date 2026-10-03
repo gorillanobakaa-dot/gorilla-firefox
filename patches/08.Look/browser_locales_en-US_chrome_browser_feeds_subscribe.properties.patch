@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/chrome/browser/feeds/subscribe.properties b/browser/locales/en-US/chrome/browser/feeds/subscribe.properties
+index ef01723b9e..7ebb8a4c5f 100644
 --- a/browser/locales/en-US/chrome/browser/feeds/subscribe.properties
 +++ b/browser/locales/en-US/chrome/browser/feeds/subscribe.properties
 @@ -1,7 +1,6 @@

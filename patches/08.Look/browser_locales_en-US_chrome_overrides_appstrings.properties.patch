@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/chrome/overrides/appstrings.properties b/browser/locales/en-US/chrome/overrides/appstrings.properties
+index 13464a72e8..03a00925cb 100644
 --- a/browser/locales/en-US/chrome/overrides/appstrings.properties
 +++ b/browser/locales/en-US/chrome/overrides/appstrings.properties
 @@ -1,33 +1,32 @@
@@ -49,7 +51,7 @@
  externalProtocolTitle=External Protocol Request
  externalProtocolPrompt=An external application must be launched to handle %1$S: links.\n\n\nRequested link:\n\n%2$S\n\nApplication: %3$S\n\n\nIf you were not expecting this request it may be an attempt to exploit a weakness in that other program. Cancel this request unless you are sure it is not malicious.\n
  #LOCALIZATION NOTE (externalProtocolUnknown): The following string is shown if the application name can't be determined
-@@ -37,15 +36,15 @@
+@@ -37,15 +36,15 @@ externalProtocolLaunchBtn=Launch application
  malwareBlocked=The site at %S has been reported as an attack site and has been blocked based on your security preferences.
  harmfulBlocked=The site at %S has been reported as a potentially harmful site and has been blocked based on your security preferences.
  unwantedBlocked=The site at %S has been reported as serving unwanted software and has been blocked based on your security preferences.

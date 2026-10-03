@@ -1,6 +1,8 @@
+diff --git a/browser/locales/en-US/browser/appExtensionFields.ftl b/browser/locales/en-US/browser/appExtensionFields.ftl
+index 4962ed6d29..c69bf427a1 100644
 --- a/browser/locales/en-US/browser/appExtensionFields.ftl
 +++ b/browser/locales/en-US/browser/appExtensionFields.ftl
-@@ -1,18 +1,16 @@
+@@ -1,21 +1,19 @@
  # This Source Code Form is subject to the terms of the Mozilla Public
  # License, v. 2.0. If a copy of the MPL was not distributed with this
  # file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -27,3 +29,6 @@
 -extension-firefox-alpenglow-description=Use a colorful appearance for buttons, menus, and windows.
 +extension-firefox-alpenglow-name = Gorilla Unleashed Alpenglow
 +extension-firefox-alpenglow-description = Use a colorful appearance for buttons, menus, and Gorilla windows.
+ 
+ ## Theme names shown in the Firefox Themes picker in about:addons and theme add-on card,
+ ## and new default-theme description for the theme add-on card.

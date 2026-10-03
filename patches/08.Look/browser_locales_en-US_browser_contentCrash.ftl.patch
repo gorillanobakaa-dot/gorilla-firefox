@@ -1,6 +1,8 @@
+diff --git a/browser/locales/en-US/browser/contentCrash.ftl b/browser/locales/en-US/browser/contentCrash.ftl
+index dfe6a19844..cdf678d425 100644
 --- a/browser/locales/en-US/browser/contentCrash.ftl
 +++ b/browser/locales/en-US/browser/contentCrash.ftl
-@@ -1,29 +1,27 @@
+@@ -1,29 +1,26 @@
  # This Source Code Form is subject to the terms of the Mozilla Public
  # License, v. 2.0. If a copy of the MPL was not distributed with this
  # file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -21,9 +23,8 @@
  crashed-subframe-submit =
 -  .label = Submit report
 -  .accesskey = S
-+    .label =
-+        Submit report
-+        .accesskey = S
++    .label = Submit report
++    .accesskey = S
  
  ## Pending crash reports
 -
@@ -38,7 +39,7 @@
      }
  
  pending-crash-reports-view-all =
-@@ -37,10 +35,11 @@
+@@ -37,8 +34,8 @@ pending-crash-reports-always-send =
  #   $reportCount (Number): the number of pending crash reports
  requested-crash-reports-message-new =
      { $reportCount ->
@@ -49,8 +50,3 @@
      }
  
  requested-crash-reports-dont-show-again =
--    .label = Don’t show again
--    .accesskey = D
-+    .label =
-+        Don’t show again
-+        .accesskey = D

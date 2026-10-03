@@ -1,3 +1,5 @@
+diff --git a/toolkit/locales/en-US/toolkit/about/aboutProfiles.ftl b/toolkit/locales/en-US/toolkit/about/aboutProfiles.ftl
+index aed8aa3312..90a74aff7b 100644
 --- a/toolkit/locales/en-US/toolkit/about/aboutProfiles.ftl
 +++ b/toolkit/locales/en-US/toolkit/about/aboutProfiles.ftl
 @@ -2,14 +2,13 @@
@@ -19,7 +21,7 @@
  profiles-flush-fail-title = Changes not saved
  profiles-flush-conflict = { profiles-conflict }
  profiles-flush-failed = An unexpected error has prevented your changes from being saved.
-@@ -17,8 +16,8 @@
+@@ -17,8 +16,8 @@ profiles-flush-restart-button = Restart { -brand-short-name }
  
  # Variables:
  #   $name (String) - Name of the profile
@@ -30,7 +32,7 @@
  profiles-rootdir = Root Directory
  
  # localDir is used to show the directory corresponding to
-@@ -28,48 +27,48 @@
+@@ -28,48 +27,48 @@ profiles-rootdir = Root Directory
  # part of a backup scheme.)
  # In case localDir and rootDir are equal, localDir is not shown.
  profiles-localdir = Local Directory

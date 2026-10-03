@@ -1,6 +1,8 @@
+diff --git a/intl/locales/moz.build b/intl/locales/moz.build
+index 5688314462..3d1786384f 100644
 --- a/intl/locales/moz.build
 +++ b/intl/locales/moz.build
-@@ -40,7 +40,6 @@
+@@ -40,7 +40,6 @@ locales = [
      "ku",
      "la",
      "lt",

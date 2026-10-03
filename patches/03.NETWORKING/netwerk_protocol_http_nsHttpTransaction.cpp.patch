@@ -1,3 +1,5 @@
+diff --git a/netwerk/protocol/http/nsHttpTransaction.cpp b/netwerk/protocol/http/nsHttpTransaction.cpp
+index 01b53c799f..99b00be13e 100644
 --- a/netwerk/protocol/http/nsHttpTransaction.cpp
 +++ b/netwerk/protocol/http/nsHttpTransaction.cpp
 @@ -73,6 +73,11 @@
@@ -12,7 +14,7 @@
  namespace mozilla::net {
  
  //-----------------------------------------------------------------------------
-@@ -834,8 +839,16 @@
+@@ -835,8 +840,16 @@ nsresult nsHttpTransaction::ReadSegments(nsAHttpSegmentReader* reader,
  
    mDeferredSendProgress = false;
    mReader = reader;

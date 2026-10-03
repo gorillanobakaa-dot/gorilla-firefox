@@ -1,6 +1,8 @@
+diff --git a/toolkit/themes/shared/in-content/common-shared.css b/toolkit/themes/shared/in-content/common-shared.css
+index 84cba8cfb7..062983b1d6 100644
 --- a/toolkit/themes/shared/in-content/common-shared.css
 +++ b/toolkit/themes/shared/in-content/common-shared.css
-@@ -666,8 +666,8 @@
+@@ -666,8 +666,8 @@ html|*#categories[last-input-type="mouse"] > html|button.category:focus-visible
  }
  
  .category-icon {
@@ -11,7 +13,7 @@
    margin-inline: auto;
    -moz-context-properties: fill, fill-opacity;
    fill: currentColor;
-@@ -936,8 +936,8 @@
+@@ -936,8 +936,8 @@ xul|treechildren::-moz-tree-image(selected) {
  
  .message-bar-icon {
    content: url("chrome://global/skin/icons/info.svg");
@@ -22,7 +24,7 @@
    padding: var(--space-xsmall);
    margin-inline-end: var(--space-xsmall);
    -moz-context-properties: fill;
-@@ -1114,3 +1114,105 @@
+@@ -1114,3 +1114,105 @@ xul|*.addons-icon {
  .back-button:dir(rtl) {
    transform: scaleX(-1);
  }

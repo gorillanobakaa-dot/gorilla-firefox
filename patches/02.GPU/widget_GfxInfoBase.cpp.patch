@@ -1,7 +1,9 @@
+diff --git a/widget/GfxInfoBase.cpp b/widget/GfxInfoBase.cpp
+index 9ebeb94673..aa39b624e5 100644
 --- a/widget/GfxInfoBase.cpp
 +++ b/widget/GfxInfoBase.cpp
-@@ -1,4 +1,15 @@
- /*
+@@ -1,3 +1,14 @@
++/*
 + * @gorilla-unleashed-154 ─ MODIFIED
 + * ────────────────────────────────────────────────────────────
 + * Timestamp : 2026-07-05
@@ -12,11 +14,10 @@
 + *             (HD 4000). See 02.GPU/00_GPU_HISTORY_AND_ROADMAP.md.
 + * ────────────────────────────────────────────────────────────
 + */
-+/*
+ /*
   * This Source Code Form is subject to the terms of the Mozilla Public
   * License, v. 2.0. If a copy of the MPL was not distributed with this
-  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-@@ -1109,6 +1120,17 @@
+@@ -1184,6 +1195,17 @@ nsresult GfxInfoBase::GetFeatureStatusImpl(
      return NS_OK;
    }
  

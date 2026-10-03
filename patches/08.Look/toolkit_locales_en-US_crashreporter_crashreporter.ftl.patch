@@ -1,3 +1,5 @@
+diff --git a/toolkit/locales/en-US/crashreporter/crashreporter.ftl b/toolkit/locales/en-US/crashreporter/crashreporter.ftl
+index bebe09ccbe..451b27ad3e 100644
 --- a/toolkit/locales/en-US/crashreporter/crashreporter.ftl
 +++ b/toolkit/locales/en-US/crashreporter/crashreporter.ftl
 @@ -1,11 +1,10 @@
@@ -13,7 +15,7 @@
  crashreporter-plea = To help us diagnose and fix the problem, you can send us a crash report.
  
  crashreporter-information = This application is run after a crash to report the problem to { -vendor-short-name }. It should not be run directly.
-@@ -28,7 +27,7 @@
+@@ -28,7 +27,7 @@ crashreporter-checkbox-test-hardware = Check for hardware and configuration prob
  
  crashreporter-checkbox-send-report = Tell { -vendor-short-name } about this crash so they can fix it.
  
@@ -22,7 +24,7 @@
  
  crashreporter-submit-status = Your crash report will be submitted before you quit or restart.
  crashreporter-submit-waiting-hardware-tests = Checking for hardware and configuration problems…
-@@ -52,11 +51,10 @@
+@@ -52,11 +51,10 @@ crashreporter-crash-identifier = Crash ID: { $id }
  crashreporter-crash-details = You can view details of this crash at { $url }.
  
  # Error strings

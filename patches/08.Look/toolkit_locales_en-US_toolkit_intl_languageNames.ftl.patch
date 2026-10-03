@@ -1,3 +1,5 @@
+diff --git a/toolkit/locales/en-US/toolkit/intl/languageNames.ftl b/toolkit/locales/en-US/toolkit/intl/languageNames.ftl
+index 526d5b62c1..21accb2d86 100644
 --- a/toolkit/locales/en-US/toolkit/intl/languageNames.ftl
 +++ b/toolkit/locales/en-US/toolkit/intl/languageNames.ftl
 @@ -1,7 +1,6 @@

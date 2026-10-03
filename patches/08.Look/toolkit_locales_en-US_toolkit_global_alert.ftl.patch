@@ -1,3 +1,5 @@
+diff --git a/toolkit/locales/en-US/toolkit/global/alert.ftl b/toolkit/locales/en-US/toolkit/global/alert.ftl
+index f0061d4446..f0ab07601d 100644
 --- a/toolkit/locales/en-US/toolkit/global/alert.ftl
 +++ b/toolkit/locales/en-US/toolkit/global/alert.ftl
 @@ -1,12 +1,10 @@

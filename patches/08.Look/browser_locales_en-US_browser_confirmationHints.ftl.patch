@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/browser/confirmationHints.ftl b/browser/locales/en-US/browser/confirmationHints.ftl
+index 3ca13ebd36..a391991d06 100644
 --- a/browser/locales/en-US/browser/confirmationHints.ftl
 +++ b/browser/locales/en-US/browser/confirmationHints.ftl
 @@ -1,13 +1,11 @@
@@ -15,16 +17,16 @@
  confirmation-hint-password-created = Password saved
  confirmation-hint-password-updated = Password updated
  confirmation-hint-address-created = Address saved
-@@ -15,7 +13,7 @@
- confirmation-hint-credit-card-created = Card saved
- confirmation-hint-credit-card-updated = Card updated
+@@ -17,7 +15,7 @@ confirmation-hint-credit-card-updated = Card updated
+ confirmation-hint-passport-created = Passport saved
+ confirmation-hint-passport-updated = Passport updated
  confirmation-hint-pin-tab = Pinned!
 -confirmation-hint-pin-tab-description = Right-click the tab to unpin it.
 +confirmation-hint-pin-tab-description = Right-click the Gorilla tab to unpin it.
  confirmation-hint-send-to-device = Sent!
  confirmation-hint-firefox-relay-mask-created = New mask created!
  confirmation-hint-firefox-relay-mask-reused = Existing mask reused!
-@@ -23,7 +21,7 @@
+@@ -25,7 +23,7 @@ confirmation-hint-screenshot-copied = Screenshot copied!
  # Variables:
  #   $tabCount (Number): The number of duplicate tabs closed, at least 1.
  confirmation-hint-duplicate-tabs-closed =

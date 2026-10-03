@@ -1,6 +1,8 @@
+diff --git a/browser/components/preferences/dialogs/browserLanguages.js b/browser/components/preferences/dialogs/browserLanguages.js
+index bc5f95d6cf..39a2d46beb 100644
 --- a/browser/components/preferences/dialogs/browserLanguages.js
 +++ b/browser/components/preferences/dialogs/browserLanguages.js
-@@ -512,57 +512,9 @@
+@@ -512,57 +512,9 @@ var gBrowserLanguagesDialog = {
    },
  
    async loadLocalesFromAMO() {

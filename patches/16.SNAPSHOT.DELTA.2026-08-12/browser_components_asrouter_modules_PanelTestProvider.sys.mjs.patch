@@ -1,9 +1,12 @@
+diff --git a/browser/components/asrouter/modules/PanelTestProvider.sys.mjs b/browser/components/asrouter/modules/PanelTestProvider.sys.mjs
+index 1b926f0acc..a333ed240a 100644
 --- a/browser/components/asrouter/modules/PanelTestProvider.sys.mjs
 +++ b/browser/components/asrouter/modules/PanelTestProvider.sys.mjs
-@@ -4054,62 +4054,6 @@
+@@ -3169,62 +3169,6 @@ const MESSAGES = () => [
+     targeting:
        "source == 'newtab' && !isMajorUpgrade && !activeNotifications && userPrefs.cfrFeatures && previousSessionEnd && !hasActiveEnterprisePolicies",
    },
-   {
+-  {
 -    id: "TEST_CONTENT_ANCHOR",
 -    template: "feature_callout",
 -    content: {
@@ -59,20 +62,19 @@
 -    },
 -    targeting: "isAIWindow",
 -  },
--  {
+   {
      id: "WORLD_CUP_TASKBAR_TABS_SPOTLIGHT",
      groups: ["panel-test-provider"],
-     template: "spotlight",
-@@ -4220,11 +4164,7 @@
-     return Promise.resolve(
-       MESSAGES().map(message => ({
-         ...message,
--        targeting:
--          typeof message.targeting === "string" &&
--          message.targeting?.includes("isAIWindow")
--            ? `isAIWindow && providerCohorts.panel_local_testing == "SHOW_TEST"`
--            : `providerCohorts.panel_local_testing == "SHOW_TEST"`,
-+        targeting: `providerCohorts.panel_local_testing == "SHOW_TEST"`,
-       }))
-     );
+@@ -3476,11 +3420,7 @@ export const PanelTestProvider = {
+    */
+   tagMessageForTesting(message) {
+     message.provider = "panel_local_testing";
+-    message.targeting =
+-      typeof message.targeting === "string" &&
+-      message.targeting?.includes("isAIWindow")
+-        ? `isAIWindow && providerCohorts.panel_local_testing == "SHOW_TEST"`
+-        : `providerCohorts.panel_local_testing == "SHOW_TEST"`;
++    message.targeting = `providerCohorts.panel_local_testing == "SHOW_TEST"`;
+     return message;
    },
+ 

@@ -1,6 +1,8 @@
+diff --git a/toolkit/locales/en-US/toolkit/updates/elevation.ftl b/toolkit/locales/en-US/toolkit/updates/elevation.ftl
+index 120848f63b..52817d2abd 100644
 --- a/toolkit/locales/en-US/toolkit/updates/elevation.ftl
 +++ b/toolkit/locales/en-US/toolkit/updates/elevation.ftl
-@@ -2,30 +2,29 @@
+@@ -2,30 +2,28 @@
  # License, v. 2.0. If a copy of the MPL was not distributed with this
  # file, You can obtain one at http://mozilla.org/MPL/2.0/.
  # This is temporary until bug 1521632 is fixed
@@ -37,9 +39,8 @@
  sandbox-unprivileged-namespaces-dismiss-button =
 -  .label = Don’t show again
 -  .accesskey = D
-+    .label =
-+        Don’t show again
-+        .accesskey = D
++    .label = Don’t show again
++    .accesskey = D
  sandbox-unprivileged-namespaces-howtofix = How to fix this issue
  
 -sandbox-content-disabled-warning =

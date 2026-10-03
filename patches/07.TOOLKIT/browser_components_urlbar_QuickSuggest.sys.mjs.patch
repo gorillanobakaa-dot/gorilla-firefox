@@ -1,6 +1,8 @@
+diff --git a/browser/components/urlbar/QuickSuggest.sys.mjs b/browser/components/urlbar/QuickSuggest.sys.mjs
+index 5f78da138d..b672ed8357 100644
 --- a/browser/components/urlbar/QuickSuggest.sys.mjs
 +++ b/browser/components/urlbar/QuickSuggest.sys.mjs
-@@ -214,8 +214,6 @@
+@@ -277,8 +277,6 @@ const FEATURES = {
      "moz-src:///browser/components/urlbar/private/SportsSuggestions.sys.mjs",
    SuggestBackendMerino:
      "moz-src:///browser/components/urlbar/private/SuggestBackendMerino.sys.mjs",
@@ -9,7 +11,7 @@
    SuggestBackendRust:
      "moz-src:///browser/components/urlbar/private/SuggestBackendRust.sys.mjs",
    WeatherSuggestions:
-@@ -301,7 +299,6 @@
+@@ -364,7 +362,6 @@ class _QuickSuggest {
      return [
        this.rustBackend,
        this.#featuresByName.get("SuggestBackendMerino"),
@@ -17,7 +19,7 @@
      ].filter(b => b?.isEnabled);
    }
  
-@@ -366,70 +363,8 @@
+@@ -429,70 +426,8 @@ class _QuickSuggest {
     *   This is intended for tests only. See `#initPrefs()`.
     */
    async init(testOverrides = null) {

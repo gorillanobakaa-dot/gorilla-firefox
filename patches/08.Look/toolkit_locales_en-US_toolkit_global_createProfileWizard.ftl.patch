@@ -1,6 +1,8 @@
+diff --git a/toolkit/locales/en-US/toolkit/global/createProfileWizard.ftl b/toolkit/locales/en-US/toolkit/global/createProfileWizard.ftl
+index f116bdea3b..11c2b3e714 100644
 --- a/toolkit/locales/en-US/toolkit/global/createProfileWizard.ftl
 +++ b/toolkit/locales/en-US/toolkit/global/createProfileWizard.ftl
-@@ -1,53 +1,53 @@
+@@ -1,53 +1,50 @@
  # This Source Code Form is subject to the terms of the Mozilla Public
  # License, v. 2.0. If a copy of the MPL was not distributed with this
  # file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -8,9 +10,8 @@
  create-profile-window2 =
 -  .title = Create Profile Wizard
 -  .style = min-width: 45em; min-height: 32em;
-+    .title =
-+        Create Gorilla Profile Wizard
-+        .style = min-width: 45em; min-height: 32em;
++    .title = Create Gorilla Profile Wizard
++    .style = min-width: 45em; min-height: 32em;
  
  ## First wizard page
 -
@@ -71,13 +72,11 @@
  create-profile-choose-folder =
 -  .label = Choose Folder…
 -  .accesskey = C
-+    .label =
-+        Choose Folder…
-+        .accesskey = C
++    .label = Choose Folder…
++    .accesskey = C
  
  create-profile-use-default =
 -  .label = Use Default Folder
 -  .accesskey = U
-+    .label =
-+        Use Default Folder
-+        .accesskey = U
++    .label = Use Default Folder
++    .accesskey = U

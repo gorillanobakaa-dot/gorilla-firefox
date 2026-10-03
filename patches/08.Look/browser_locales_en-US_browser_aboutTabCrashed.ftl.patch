@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/browser/aboutTabCrashed.ftl b/browser/locales/en-US/browser/aboutTabCrashed.ftl
+index 33f5098de4..50f924a720 100644
 --- a/browser/locales/en-US/browser/aboutTabCrashed.ftl
 +++ b/browser/locales/en-US/browser/aboutTabCrashed.ftl
 @@ -1,22 +1,21 @@

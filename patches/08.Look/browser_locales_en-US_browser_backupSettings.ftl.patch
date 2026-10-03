@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/browser/backupSettings.ftl b/browser/locales/en-US/browser/backupSettings.ftl
+index 14be694e2f..4e00ff170e 100644
 --- a/browser/locales/en-US/browser/backupSettings.ftl
 +++ b/browser/locales/en-US/browser/backupSettings.ftl
 @@ -1,7 +1,6 @@
@@ -8,47 +10,16 @@
  # This string is used to name the folder that users will save backups to.
  # "Restore" is an action and intended for prompting users to select this folder
  # when following backup restoration steps. Please only include characters that
-@@ -22,8 +21,9 @@
- backup-file-name = { -brand-product-name }Backup
+@@ -23,7 +22,7 @@ backup-file-name = { -brand-product-name }Backup
  
  settings-data-backup-header2 =
--    .label = Backup
+     .label = Backup
 -    .description = Automatically protect your bookmarks, history, and other data.
-+    .label =
-+        Backup
-+        .description = Automatically protect your Gorilla bookmarks, Gorilla history, and other data.
++    .description = Automatically protect your Gorilla bookmarks, Gorilla history, and other data.
  settings-data-backup-toggle = Manage backup
  settings-data-backup-toggle-on2 =
      .label = Turn on backup
-@@ -50,26 +50,28 @@
- settings-data-backup-last-backup-filename = Filename: { $fileName }
- 
- settings-data-backup-restore-scheduled-on =
--    .label = Restore your data
--    .description = Recover your { -brand-product-name } data back from the last time it was backed up.
-+    .label =
-+        Restore your data
-+        .description = Recover your { -brand-product-name } data back from the last time it was backed up.
- 
- settings-data-backup-restore-scheduled-off =
--    .label = Restore your data
--    .description = Use a { -brand-product-name } backup from another device to restore your data.
-+    .label =
-+        Restore your data
-+        .description = Use a { -brand-product-name } backup from another device to restore your data.
- 
- settings-sensitive-data =
-     .label = Sensitive data
- settings-sensitive-data-encryption-description = Back up your passwords and payment methods, plus keep all your data safe with encryption.
- settings-data-toggle-encryption-label2 =
--    .label = Back up your sensitive data
--    .description = Back up your passwords and payment methods, plus keep all your data safe with encryption.
-+    .label =
-+        Back up your sensitive data
-+        .description = Back up your passwords and payment methods, plus keep all your data safe with encryption.
- settings-data-toggle-encryption-support-link = Learn more
- 
- settings-data-change-password2 =
+@@ -69,7 +68,6 @@ settings-data-change-password2 =
      .label = Change password
  
  ## These strings are displayed in a modal when users want to turn on scheduled backups.
@@ -56,7 +27,7 @@
  turn-on-scheduled-backups-header = Turn on backup
  turn-on-scheduled-backups-description = { -brand-short-name } will create a snapshot of your data every 24 hours. You can restore it if there’s a problem or you get a new device.
  turn-on-scheduled-backups-support-link = What will be backed up?
-@@ -80,12 +82,10 @@
+@@ -80,12 +78,10 @@ turn-on-scheduled-backups-location-label = Location
  #   $recommendedFolder (String) - Name of the recommended folder for saving backups
  turn-on-scheduled-backups-location-default-folder =
      .value = { $recommendedFolder } (recommended)
@@ -71,7 +42,7 @@
      }
  
  turn-on-scheduled-backups-encryption-label = Back up your sensitive data
-@@ -99,11 +99,9 @@
+@@ -99,11 +95,9 @@ turn-on-scheduled-backups-confirm-button = Turn on backup
  # Tell the user there was an error accessing the user's selected backup
  # folder. The folder may be invalid or inaccessible.
  turn-on-scheduled-backups-error-file-system = There was a problem with your selected backup folder. Choose a different folder and try again.
@@ -83,7 +54,7 @@
  turn-off-scheduled-backups-header = Turn off backup?
  turn-off-scheduled-backups-description = This also deletes all of your backup data. It can’t be undone.
  turn-off-scheduled-backups-support-link = Learn more
-@@ -112,18 +110,17 @@
+@@ -112,18 +106,17 @@ turn-off-scheduled-backups-cancel-button = Cancel
  turn-off-scheduled-backups-confirm-button = Turn off and delete backup
  
  ## These strings are displayed in a modal when users want restore from a backup.
@@ -106,7 +77,7 @@
      }
  restore-from-backup-password-label = Password
  restore-from-backup-password-description = This unlocks your encrypted backup.
-@@ -133,16 +130,15 @@
+@@ -133,16 +126,15 @@ restore-from-backup-confirm-button = Restore and restart
  restore-from-backup-restoring-button = Restoring…
  
  restore-from-backup-type-group-label =
@@ -125,15 +96,14 @@
  # User is not authorized to restore a particular backup file, usually because
  # the backup file is encrypted and the user provided a recovery password that
  # was different than the password the user configured for their backup file
-@@ -152,38 +148,42 @@
+@@ -152,23 +144,23 @@ backup-service-error-incorrect-password = Incorrect password. <a data-l10n-name=
  # loaded and parsed correctly, most likely due to data corruption of the
  # backup file itself
  backup-service-error-corrupt-file =
 -    .heading = This file isn’t working
 -    .message = There was a problem with your backup file. Choose a different file and try again.
-+    .heading =
-+        This Gorilla file isn’t working
-+        .message = There was a problem with your backup Gorilla file. Choose a different Gorilla file and try again.
++    .heading = This Gorilla file isn’t working
++    .message = There was a problem with your backup Gorilla file. Choose a different Gorilla file and try again.
  
  # The backup file cannot be restored. The currently running application may
  # be too old and may not support features in the backed up profile.
@@ -142,9 +112,8 @@
  backup-service-error-unsupported-version =
 -    .heading = This file isn’t working
 -    .message = The file you chose isn’t compatible with this version of { -brand-short-name }. Choose a different file and try again.
-+    .heading =
-+        This Gorilla file isn’t working
-+        .message = The Gorilla file you chose isn’t compatible with this version of { -brand-short-name }. Choose a different Gorilla file and try again.
++    .heading = This Gorilla file isn’t working
++    .message = The Gorilla file you chose isn’t compatible with this version of { -brand-short-name }. Choose a different Gorilla file and try again.
  
  # The backup file cannot be restored. The currently running application is not
  # the same application that created the backup file (e.g. Firefox cannot
@@ -152,34 +121,20 @@
  backup-service-error-unsupported-application =
 -    .heading = This file isn’t working
 -    .message = The file you chose was not created by { -brand-short-name }. Choose a different file and try again.
-+    .heading =
-+        This Gorilla file isn’t working
-+        .message = The Gorilla file you chose was not created by { -brand-short-name }. Choose a different Gorilla file and try again.
++    .heading = This Gorilla file isn’t working
++    .message = The Gorilla file you chose was not created by { -brand-short-name }. Choose a different Gorilla file and try again.
  
  # Recovery from backup did not succeed. Potential causes could be file system
  # errors, internal code errors, decryption errors, etc.
- backup-service-error-recovery-failed =
--    .heading = { -brand-short-name } couldn’t restore
--    .message = Restart { -brand-short-name } and try restoring your backup again.
-+    .heading =
-+        { -brand-short-name } couldn’t restore
-+        .message = Restart { -brand-short-name } and try restoring your backup again.
- 
- # There was some error in the backup service but we don't have a more specific
- # idea of what went wrong
- backup-service-error-went-wrong2 =
--    .heading = Hmm, there was a problem backing up.
--    .message = Try again in a few minutes.
-+    .heading =
-+        Hmm, there was a problem backing up.
-+        .message = Try again in a few minutes.
+@@ -183,7 +175,6 @@ backup-service-error-went-wrong2 =
+     .message = Try again in a few minutes.
  
  ## These strings are displayed in a modal when users want to enable encryption or change the password for an existing backup.
 -
  enable-backup-encryption-header = Back up your sensitive data
  enable-backup-encryption-support-link = Learn more
  
-@@ -197,7 +197,6 @@
+@@ -197,7 +188,6 @@ enable-backup-encryption-confirm-button = Save
  change-backup-encryption-header = Change backup password
  
  ## These strings are displayed in a tooltip showing what requirements are met while creating a password.
@@ -187,7 +142,7 @@
  password-rules-header = Password requirements
  password-rules-length-description = At least 8 characters
  password-rules-email-description = Not your email address
-@@ -206,14 +205,12 @@
+@@ -206,14 +196,12 @@ password-validity-has-email = Can’t be an email address
  password-validity-do-not-match = Passwords don’t match
  
  ## These strings are only used for assistive technologies, like screen readers, in the password requirements tooltip.
@@ -202,7 +157,7 @@
  disable-backup-encryption-header = Remove password protection
  disable-backup-encryption-description2 = Your saved passwords and payment methods will also no longer be backed up.
  disable-backup-encryption-support-link = What will be backed up?
-@@ -223,7 +220,6 @@
+@@ -223,7 +211,6 @@ disable-backup-encryption-confirm-button = Remove password
  
  ## These strings are used to tell users when errors occur when using
  ## the backup system
@@ -210,7 +165,7 @@
  backup-error-password-requirements = Your password doesn’t meet the requirements. Please try another password.
  
  # This error message will be shown to the user when something went wrong with
-@@ -236,12 +232,11 @@
+@@ -236,12 +223,11 @@ backup-error-retry = Something went wrong. Please try again.
  ## The single-file backup archive is a specially-crafted, static HTML file
  ## that is placed within a user specified directory (the Documents folder by
  ## default) within a folder labelled with the "backup-folder-name" string.
@@ -225,7 +180,7 @@
  
  backup-file-encryption-state-label = Encrypted:
  backup-file-encryption-state-value-encrypted = Yes
-@@ -258,28 +253,27 @@
+@@ -258,28 +244,27 @@ backup-file-how-to-restore-header = How to restore:
  
  # The ☰ character is intended as a visual icon representing the Firefox
  # application menu.
@@ -262,7 +217,7 @@
      }
  
  # Variables:
-@@ -293,7 +287,13 @@
+@@ -293,7 +278,13 @@ backup-file-creation-metadata2 = <b>{ $profileName }</b> created on { DATETIME($
  #   $date (Number) - The epoch timestamp of the restore.
  backup-restored-profile-name = Restored from { $deviceName } on { DATETIME($date, year: "numeric", month: "numeric", day: "numeric") } at { DATETIME($date, hour: "2-digit", minute: "2-digit") }
  

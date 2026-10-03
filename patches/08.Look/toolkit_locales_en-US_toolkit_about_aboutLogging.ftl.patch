@@ -1,3 +1,5 @@
+diff --git a/toolkit/locales/en-US/toolkit/about/aboutLogging.ftl b/toolkit/locales/en-US/toolkit/about/aboutLogging.ftl
+index 16043d3d2f..ce25b01d95 100644
 --- a/toolkit/locales/en-US/toolkit/about/aboutLogging.ftl
 +++ b/toolkit/locales/en-US/toolkit/about/aboutLogging.ftl
 @@ -1,31 +1,30 @@
@@ -38,7 +40,7 @@
  about-logging-logging-to-profiler = Logging to the { -profiler-brand-name }
  about-logging-no-log-modules = None
  about-logging-no-log-file = None
-@@ -33,10 +32,9 @@
+@@ -33,10 +32,9 @@ about-logging-logging-preset-selector-text = Logging preset:
  about-logging-with-profiler-stacks-checkbox = Enable stack traces for log messages
  about-logging-with-javascript-tracing-checkbox = Enable JavaScript tracing
  about-logging-menu =
@@ -50,7 +52,7 @@
  about-logging-preset-networking-label = Networking
  about-logging-preset-networking-description = Log modules to diagnose networking issues
  about-logging-preset-networking-cookie-label = Cookies
-@@ -58,14 +56,14 @@
+@@ -58,14 +56,14 @@ about-logging-preset-ml-description = Log modules to diagnose machine learning i
  about-logging-preset-web-compat-label = Web Compat
  about-logging-preset-web-compat-description = Log modules to diagnose web compatibility issues
  about-logging-preset-navigation = Navigation
@@ -68,7 +70,7 @@
  about-logging-preset-custom-label = Custom
  about-logging-preset-custom-description = Log modules manually selected
  
-@@ -75,16 +73,14 @@
+@@ -75,16 +73,14 @@ about-logging-error = Error:
  ## Variables:
  ##   $k (String) - Variable name
  ##   $v (String) - Variable value
@@ -86,7 +88,7 @@
  
  # Variables:
  #   $errorText (string) - The received error message, inserted as is.
-@@ -94,8 +90,7 @@
+@@ -94,8 +90,7 @@ about-logging-configured-via-url = Option configured via URL
  
  ## The upload interface is shown only with the preference toolkit.aboutLogging.uploadProfileToCloud
  ## set to true. It is false by default, except on Android.
@@ -96,7 +98,7 @@
  about-logging-save-button = Save
  about-logging-upload-button = Upload
  
-@@ -105,7 +100,7 @@
+@@ -105,7 +100,7 @@ about-logging-saved = Saved to { $path }
  
  # Variables:
  #   $percent (number) - The upload completion progress, to be displayed as a percentage. This is a value between 0 and 1.
@@ -105,7 +107,7 @@
  
  # Variables:
  #   $url (string) - The URL where the profile can be found
-@@ -113,32 +108,31 @@
+@@ -113,32 +108,31 @@ about-logging-uploaded = Uploaded to <a data-l10n-name="uploaded-message-url">{
  about-logging-share-uploaded-url = <img data-l10n-name="share-image"/> Share URL
  # Variables:
  #   $errorText (string) - The received error message, inserted as is.

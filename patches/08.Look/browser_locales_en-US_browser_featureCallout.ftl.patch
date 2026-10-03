@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/browser/featureCallout.ftl b/browser/locales/en-US/browser/featureCallout.ftl
+index c5c9b35633..cd55996de2 100644
 --- a/browser/locales/en-US/browser/featureCallout.ftl
 +++ b/browser/locales/en-US/browser/featureCallout.ftl
 @@ -1,7 +1,6 @@
@@ -8,7 +10,7 @@
  # Callout dialog primary button to advance to next screen
  callout-primary-advance-button-label = Next
  
-@@ -9,30 +8,27 @@
+@@ -9,30 +8,27 @@ callout-primary-advance-button-label = Next
  callout-primary-complete-button-label = Got it!
  
  ## Firefox View feature tour strings
@@ -45,7 +47,7 @@
  callout-pdfjs-edit-title = Edit PDFs with our new text tool
  callout-pdfjs-edit-body-a = Fill out forms, add comments, or take notes directly in { -brand-short-name }.
  callout-pdfjs-edit-body-b = Skip the search for free online editors. Fill out forms, add comments, or take notes directly in { -brand-short-name }.
-@@ -46,60 +42,53 @@
+@@ -46,60 +42,53 @@ callout-pdfjs-draw-body-b = No more printing and scanning. Mark up PDFs, then sa
  callout-pdfjs-draw-button = Got it!
  
  ## Firefox View Discoverability Strings
@@ -134,13 +136,7 @@
  sidebar-callout-survey-privacy-notice-link = Privacy Notice
  sidebar-callout-survey-very-satisfied = Very satisfied
  sidebar-callout-survey-satisfied = Satisfied
-@@ -109,48 +98,45 @@
- sidebar-callout-survey-dont-use-it = I don’t use it
- sidebar-callout-survey-productive-question =
-     To what extent do you agree or disagree with this statement:<br/>
--    “The { -brand-short-name } sidebar helps me be more productive”?
-+    “The { -brand-short-name } Gorilla sidebar helps me be more productive”?
- sidebar-callout-survey-strongly-agree = Strongly agree
+@@ -114,17 +103,17 @@ sidebar-callout-survey-strongly-agree = Strongly agree
  sidebar-callout-survey-agree = Agree
  sidebar-callout-survey-disagree = Disagree
  sidebar-callout-survey-strongly-disagree = Strongly disagree
@@ -156,32 +152,26 @@
  sidebar-callout-survey-thank-you = Thank you for your feedback!
  
  # Sidebar GenAI Survey Strings
--
+ 
 -sidebar-genai-survey-satisfaction-question = How satisfied are you with having access to an AI chatbot in the sidebar?
 +sidebar-genai-survey-satisfaction-question = How satisfied are you with having access to an AI chatbot in the Gorilla sidebar?
  sidebar-genai-survey-productive-question =
      To what extent do you agree or disagree with this statement:<br/>
--    “The AI chatbot in the sidebar helps me be more productive”?
-+    “The AI chatbot in the Gorilla sidebar helps me be more productive”?
- 
+     “The AI chatbot in the sidebar helps me be more productive”?
+@@ -132,10 +121,10 @@ sidebar-genai-survey-productive-question =
  # Split View Onboarding Strings
--
+ 
  splitview-onboarding-callout-title-1 = Split view: a better way to multitask
--splitview-onboarding-callout-subtitle-1 = Right click this tab and choose “Add Split View” to see two tabs at once.
-+splitview-onboarding-callout-subtitle-1 = Right click this Gorilla tab and choose “Add Split View” to see two Gorilla tabs at once.
+-splitview-onboarding-callout-subtitle-1 = Right-click this tab and choose “Add Split View” to see two tabs at once.
++splitview-onboarding-callout-subtitle-1 = Right-click this Gorilla tab and choose “Add Split View” to see two Gorilla tabs at once.
  splitview-onboarding-callout-cta-1 = Try it now
  
 -splitview-onboarding-callout-title-2 = See two tabs at once with split view
--splitview-onboarding-callout-subtitle-2 = No extra windows. No tab flipping. Right-click this tab and choose “Add Split View.”
 +splitview-onboarding-callout-title-2 = See two Gorilla tabs at once with split view
-+splitview-onboarding-callout-subtitle-2 = No extra Gorilla windows. No Gorilla tab flipping. Right-click this Gorilla tab and choose “Add Split View.”
+ splitview-onboarding-callout-subtitle-2 = No extra windows. No tab flipping. Right-click this tab and choose “Add Split View.”
  splitview-onboarding-callout-cta-2 = Try split view
  
- # Unified Search Button callout strings
--
- unified-search-callout-title = Switch between search engines
- unified-search-callout-subtitle = Choose what works best for your specific search.
- unified-search-callout-primary-label = Next
+@@ -147,10 +136,10 @@ unified-search-callout-primary-label = Next
  unified-search-callout-secondary-label = Dismiss
  
  unified-search-engines-callout-title = Search with a shortcut
@@ -194,7 +184,7 @@
  # The user can type "print" and "clear" and a button will appear in the
  # search bar (e.g. Print page) the user can click to initiate the action.
  # These example text inputs correlate to the the following strings
-@@ -158,10 +144,9 @@
+@@ -158,10 +147,9 @@ actions-callout-title = Complete common tasks or access basic settings
  # "print" - quickactions-cmd-print
  # "clear" - quickactions-cmd-clearrecenthistory2
  # When localizing, ensure the translations match to ensure the action button appears as expected.
@@ -206,7 +196,7 @@
  # Accessibility label for dropdown menu button
  split-dismiss-button-default-label =
      .title = More options
-@@ -173,36 +158,33 @@
+@@ -173,36 +161,33 @@ split-dismiss-button-show-fewer-option =
      .label = Show fewer recommendations
  # Opens about:preferences#general-cfrfeatures
  split-dismiss-button-manage-settings-option =
@@ -252,7 +242,7 @@
  perplexity-callout-theme-1-title = Need the right answer, right away?
  perplexity-callout-theme-2-title = Try Perplexity: a new way to search
  
-@@ -218,14 +200,12 @@
+@@ -218,14 +203,12 @@ perplexity-callout-secondary-label-2 = Got it
  
  ## Startpage callout strings. Startpage (https://www.startpage.com/) is a
  ## brand name and should not be translated or transliterated.
@@ -267,11 +257,9 @@
  # Suggestion to backup passwords by signing up for Mozilla account and using sync
  fxa-adoption-passwords-title = Password saved. Let’s back it up.
  fxa-adoption-passwords-subtitle = Protect your passwords by syncing them to your devices with encryption.
-@@ -233,44 +213,42 @@
- fxa-adoption-passwords-primary-button-label = Sign up
- 
+@@ -235,19 +218,19 @@ fxa-adoption-passwords-primary-button-label = Sign up
  ## Taskbar Tabs callout strings
--
+ 
  taskbar-tabs-social-callout-title = Keep your favorite feeds in your taskbar
 -taskbar-tabs-social-callout-subtitle = Launch your social sites like an app in a streamlined window protected by { -brand-short-name }.
 +taskbar-tabs-social-callout-subtitle = Launch your social sites like an app in a streamlined Gorilla window protected by { -brand-short-name }.
@@ -292,8 +280,12 @@
 -taskbar-tabs-value-prop-callout-subtitle = Launch it in its own window and a simplified interface with a single click.
 +taskbar-tabs-value-prop-callout-subtitle = Launch it in its own Gorilla window and a simplified interface with a single click.
  
+ ## Taskbar Tabs callout strings (treatment B copy variants)
+ ##
+@@ -276,26 +259,26 @@ taskbar-tabs-callout-primary-button-v3 = Pin to taskbar
+ 
  ## Windows 10 EoS Sync messages group 1 callouts
--
+ 
 -windows-10-eos-sync-urgency-title-1 = Don’t lose everything you’ve saved when you move to Windows 11.
 -windows-10-eos-sync-urgency-subtitle-1 = Sync now to keep your { -brand-short-name } bookmarks, passwords, and settings safe and easy to restore.
 -windows-10-eos-sync-urgency-title-2 = Saying goodbye to Windows 10? Protect your data when you switch.
@@ -329,7 +321,7 @@
  
  windows-10-eos-sync-split-dismiss-button-show-fewer-option =
      .label = Show fewer recommendations
-@@ -278,7 +256,6 @@
+@@ -303,7 +286,6 @@ windows-10-eos-sync-dismiss-button-label = Dismiss
  windows-10-eos-sync-callout-primary-advance-button-label = Next
  
  ## Link Preview Onboarding message callout strings
@@ -337,7 +329,7 @@
  link-preview-onboarding-callout-title = New: Click and hold to preview links
  link-preview-onboarding-callout-description = See a short description, reading time, and more to decide if a link is worth the click. Also available on right-click.
  
-@@ -288,15 +265,14 @@
+@@ -313,15 +295,14 @@ link-preview-onboarding-callout-description = See a short description, reading t
  ## Translators should feel free to adapt these strings to phrasing that sounds
  ## natural in their language rather than translating literally — the goal is
  ## an inviting, conversational tone, not a word-for-word match.

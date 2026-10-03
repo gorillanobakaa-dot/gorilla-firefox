@@ -1,3 +1,5 @@
+diff --git a/toolkit/locales/en-US/toolkit/neterror/certError.ftl b/toolkit/locales/en-US/toolkit/neterror/certError.ftl
+index e0433267c2..45c259f49e 100644
 --- a/toolkit/locales/en-US/toolkit/neterror/certError.ftl
 +++ b/toolkit/locales/en-US/toolkit/neterror/certError.ftl
 @@ -1,16 +1,15 @@
@@ -19,7 +21,7 @@
  
  cert-error-trust-unknown-issuer-intro = Someone could be trying to impersonate the site and you should not continue.
  
-@@ -34,7 +33,6 @@
+@@ -34,7 +33,6 @@ cert-error-trust-certificate-transparency = { -brand-short-name } doesn’t trus
  
  ## Variables:
  ##   $hostname (string) - Hostname of the website with cert error.
@@ -27,7 +29,7 @@
  cert-error-revoked-certificate = { -brand-short-name } blocked your visit to this site because the certificate provided for { $hostname } has been revoked and isn’t trusted anymore.
  cert-error-bad-signature = { -brand-short-name } blocked your visit to this site because the signature on the certificate provided for { $hostname } isn’t valid.
  cert-error-key-pinning-failure = { -brand-short-name } blocked your visit to this site because the certificate provided for { $hostname } uses a different public key than expected.
-@@ -43,8 +41,8 @@
+@@ -43,8 +41,8 @@ cert-error-cert-not-in-name-space = { -brand-short-name } blocked your visit to
  cert-error-inadequate-cert-type = { -brand-short-name } blocked your visit to this site because the certificate provided for { $hostname } isn’t allowed to be used by a web server.
  cert-error-path-len-constraint-invalid = { -brand-short-name } blocked your visit to this site because the certificate provided for { $hostname } has too many intermediate certificates in the path to the root certificate.
  cert-error-invalid-key = { -brand-short-name } blocked your visit to this site because the certificate provided for { $hostname } has a key that is invalid. Most likely, it is too small to be secure.
@@ -38,7 +40,7 @@
  cert-error-untrusted-issuer = { -brand-short-name } blocked your visit to this site because the certificate provided for { $hostname } was issued by a certificate authority that isn’t trusted anymore.
  cert-error-untrusted-cert = { -brand-short-name } blocked your visit to this site because the certificate provided for { $hostname } is marked as not trusted.
  cert-error-invalid-integer-encoding = { -brand-short-name } blocked your visit to this site because the certificate provided for { $hostname } contains an invalid encoding of an integer. Common causes include negative serial numbers, negative RSA moduli, and encodings that are longer than necessary.
-@@ -110,10 +108,9 @@
+@@ -110,10 +108,9 @@ cert-error-details-cert-chain-label = Certificate chain:
  
  # Variables:
  #   $hostname (string) - Hostname of the website blocked by csp or xfo error.
@@ -50,7 +52,7 @@
  connectionFailure-title = Unable to connect
  deniedPortAccess-title = This address is restricted
  # "Hmm" is a sound made when considering or puzzling over something.
-@@ -121,8 +118,8 @@
+@@ -121,8 +118,8 @@ deniedPortAccess-title = This address is restricted
  dnsNotFound-title = Hmm. We’re having trouble finding that site.
  internet-connection-offline-title = Looks like there’s a problem with your internet connection.
  
@@ -61,7 +63,7 @@
  generic-title = Oops.
  captivePortal-title = Log in to network
  # "Hmm" is a sound made when considering or puzzling over something.
-@@ -132,7 +129,7 @@
+@@ -132,7 +129,7 @@ netInterrupt-title = The connection was interrupted
  notCached-title = Document Expired
  netOffline-title = Offline mode
  contentEncodingError-title = Content Encoding Error
@@ -70,7 +72,7 @@
  netReset-title = The connection was reset
  netTimeout-title = The connection has timed out
  httpErrorPage-title = Looks like there’s a problem with this site
-@@ -140,14 +137,14 @@
+@@ -140,14 +137,14 @@ serverError-title = Looks like there’s a problem with this site
  unknownProtocolFound-title = The address wasn’t understood
  proxyConnectFailure-title = The proxy server is refusing connections
  proxyResolveFailure-title = Unable to find the proxy server
@@ -88,7 +90,7 @@
  clockSkewError-title = Your Computer Clock is Wrong
  networkProtocolError-title = Network Protocol Error
  nssBadCert-title = Warning: Potential Security Risk Ahead
-@@ -155,7 +152,6 @@
+@@ -155,7 +152,6 @@ nssBadCert-sts-title = Did Not Connect: Potential Security Issue
  certerror-mitm-title = Software is Preventing { -brand-short-name } From Safely Connecting to This Site
  
  ## Felt Privacy V1 Strings
@@ -96,7 +98,7 @@
  fp-certerror-page-title = Warning: Security Risk
  fp-certerror-body-title = Be careful. Something doesn’t look right.
  
-@@ -169,7 +165,6 @@
+@@ -169,7 +165,6 @@ fp-certerror-hide-advanced-button = Hide advanced
  
  ## Variables:
  ##   $hostname (String) - Hostname of the website to which the user was trying to connect.
@@ -104,7 +106,7 @@
  fp-certerror-override-exception-button-2 = Proceed to { $hostname } (Risky)
      .accesskey = P
  fp-certerror-intro = { -brand-short-name } spotted a potentially serious security issue with <strong>{ $hostname }</strong>. Someone pretending to be the site could try to steal things like credit card info, passwords, or emails.
-@@ -177,7 +172,6 @@
+@@ -177,7 +172,6 @@ fp-certerror-expired-into = { -brand-short-name } spotted a security issue with
  fp-certerror-transparency-intro = Someone pretending to be <strong>{ $hostname }</strong> could try to steal things like credit card info, passwords, or emails.
  
  ##
@@ -112,7 +114,7 @@
  fp-certerror-view-certificate-link = View the site’s certificate
  fp-certerror-return-to-previous-page-recommended-button-2 = Go back (Recommended)
      .accesskey = G
-@@ -228,7 +222,7 @@
+@@ -228,7 +222,7 @@ fp-certerror-not-yet-valid-why-dangerous-body = Sites use certificates issued by
  # This string appears after the following string: "What can you do about it?" (fp-certerror-what-can-you-do)
  # Variables:
  #   $date (Date) - Clock date.
@@ -121,7 +123,7 @@
  
  # Variables:
  #   $error (string) - NSS error code string that specifies type of cert error. e.g. unknown issuer, invalid cert, etc.
-@@ -258,7 +252,7 @@
+@@ -258,7 +252,7 @@ fp-certerror-pkix-not-yet-valid-why-dangerous-body = { -brand-short-name } doesn
  # This string appears after the following string: "What can you do about it?" (fp-certerror-what-can-you-do)
  # Variables:
  #   $date (Date) - Device's clock date.
@@ -130,7 +132,7 @@
  
  # This string appears after the following string: "What makes the site look dangerous?" (fp-certerror-why-site-dangerous)
  # Variables:
-@@ -268,8 +262,8 @@
+@@ -268,8 +262,8 @@ fp-certerror-invalid-cert-why-dangerous = The owner of { $hostname } hasn’t se
  # Variables:
  #   $hostname (String) - Hostname of the website to which the user was trying to connect.
  #   $now (Date) - The current datetime, to be formatted as a date

@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/browser/customkeys.ftl b/browser/locales/en-US/browser/customkeys.ftl
+index 14bf14761d..82ed27ca50 100644
 --- a/browser/locales/en-US/browser/customkeys.ftl
 +++ b/browser/locales/en-US/browser/customkeys.ftl
 @@ -1,11 +1,73 @@
@@ -76,7 +78,7 @@
  customkeys-sidebar =
    .aria-label = Sidebar
  customkeys-title-heading =
-@@ -23,7 +85,6 @@
+@@ -25,7 +87,6 @@ customkeys-key-unchangeable = (cannot be changed)
  customkeys-key-new =
    .label = Press new key:
  # Displayed in the new key field when the key that was pressed isn't valid.
@@ -84,7 +86,7 @@
  customkeys-shortcut-unassigned =
    .placeholder = Add shortcut
  # Variables:
-@@ -55,52 +116,5 @@
+@@ -62,52 +123,5 @@ customkeys-reset-all-confirm-button-cancel = Cancel
  
  ## Added shortcuts:
  

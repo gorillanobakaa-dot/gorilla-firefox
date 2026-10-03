@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/browser/fxviewTabList.ftl b/browser/locales/en-US/browser/fxviewTabList.ftl
+index 02adbd04ba..867826624f 100644
 --- a/browser/locales/en-US/browser/fxviewTabList.ftl
 +++ b/browser/locales/en-US/browser/fxviewTabList.ftl
 @@ -1,7 +1,6 @@
@@ -8,7 +10,7 @@
  # Variables:
  #   $date (string) - Date to be formatted based on locale
  fxviewtabrow-date = { DATETIME($date, dateStyle: "short") }
-@@ -13,79 +12,76 @@
+@@ -13,79 +12,76 @@ fxviewtabrow-time = { DATETIME($time, timeStyle: "short") }
  # Variables:
  #   $targetURI (string) - URL of tab that will be opened in the new tab
  fxviewtabrow-tabs-list-tab =

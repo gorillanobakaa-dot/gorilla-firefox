@@ -1,6 +1,8 @@
+diff --git a/toolkit/components/normandy/content/about-studies/about-studies.css b/toolkit/components/normandy/content/about-studies/about-studies.css
+index 0aa64c0d8d..f170159883 100644
 --- a/toolkit/components/normandy/content/about-studies/about-studies.css
 +++ b/toolkit/components/normandy/content/about-studies/about-studies.css
-@@ -174,3 +174,19 @@
+@@ -174,3 +174,19 @@ button > .button-box {
  .opt-in-box.opt-in-error {
    color: var(--text-color-error);
  }

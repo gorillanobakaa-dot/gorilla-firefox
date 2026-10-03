@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/browser/webProtocolHandler.ftl b/browser/locales/en-US/browser/webProtocolHandler.ftl
+index e11ec0deac..9982270966 100644
 --- a/browser/locales/en-US/browser/webProtocolHandler.ftl
 +++ b/browser/locales/en-US/browser/webProtocolHandler.ftl
 @@ -1,13 +1,11 @@

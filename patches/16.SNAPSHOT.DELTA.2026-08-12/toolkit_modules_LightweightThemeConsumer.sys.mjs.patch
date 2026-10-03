@@ -1,6 +1,8 @@
+diff --git a/toolkit/modules/LightweightThemeConsumer.sys.mjs b/toolkit/modules/LightweightThemeConsumer.sys.mjs
+index 2bef680f15..fe98854b7b 100644
 --- a/toolkit/modules/LightweightThemeConsumer.sys.mjs
 +++ b/toolkit/modules/LightweightThemeConsumer.sys.mjs
-@@ -227,7 +227,6 @@
+@@ -227,7 +227,6 @@ export function LightweightThemeConsumer(aDocument) {
    this._doc = aDocument;
    this._win = aDocument.defaultView;
    this._winId = this._win.docShell.outerWindowID;
@@ -8,7 +10,7 @@
    this._isPrivateWindow = lazy.PrivateBrowsingUtils.isWindowPrivate(this._win);
  
    XPCOMUtils.defineLazyPreferenceGetter(
-@@ -251,11 +250,7 @@
+@@ -251,11 +250,7 @@ export function LightweightThemeConsumer(aDocument) {
      "_toolbarTheme",
      "browser.theme.toolbar-theme",
      2,
@@ -21,7 +23,7 @@
    );
  
    // Whether we should switch to a dark theme variant in private windows
-@@ -275,13 +270,6 @@
+@@ -275,13 +270,6 @@ export function LightweightThemeConsumer(aDocument) {
    this.forcedColorsMediaQuery = this._win.matchMedia("(forced-colors)");
    this.forcedColorsMediaQuery.addListener(this);
  
@@ -35,7 +37,7 @@
    this._update(lazy.LightweightThemeManager.themeData);
  
    this._win.addEventListener("unload", this, { once: true });
-@@ -316,8 +304,6 @@
+@@ -316,8 +304,6 @@ LightweightThemeConsumer.prototype = {
        case "unload":
          Services.obs.removeObserver(this, "lightweight-theme-styling-update");
          Services.ppmm.sharedData.delete(`theme/${this._winId}`);
@@ -44,7 +46,7 @@
          this._win = this._doc = null;
          this.darkThemeMediaQuery?.removeListener(this);
          this.darkThemeMediaQuery = null;
-@@ -330,7 +316,7 @@
+@@ -330,7 +316,7 @@ LightweightThemeConsumer.prototype = {
    _update(themeData) {
      const manager = lazy.LightweightThemeManager;
  
@@ -53,7 +55,7 @@
      this._lastData = themeData;
      let isPrivateThemeActive = false;
  
-@@ -344,26 +330,7 @@
+@@ -344,26 +330,7 @@ LightweightThemeConsumer.prototype = {
        DEFAULT_THEME_ID === themeId ||
        !!lazy.BuiltInThemeConfig.get(themeId)?.inApp;
  
@@ -81,7 +83,7 @@
        shouldMakePrivateWindowDark &&
        this.BROWSER_NOVA_ENABLED &&
        isDefaultOrInApp
-@@ -409,7 +376,7 @@
+@@ -409,7 +376,7 @@ LightweightThemeConsumer.prototype = {
        return true;
      })();
  
@@ -90,7 +92,7 @@
        updateGlobalThemeData = false;
      }
  
-@@ -608,11 +575,6 @@
+@@ -609,11 +576,6 @@ LightweightThemeConsumer.prototype = {
        this._lastExperimentData.stylesheet = stylesheet;
      }
    },

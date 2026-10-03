@@ -1,6 +1,8 @@
+diff --git a/browser/components/preferences/config/tabs-browsing.mjs b/browser/components/preferences/config/tabs-browsing.mjs
+index 50ba8c2da3..4ddb7b5a0c 100644
 --- a/browser/components/preferences/config/tabs-browsing.mjs
 +++ b/browser/components/preferences/config/tabs-browsing.mjs
-@@ -13,7 +13,6 @@
+@@ -13,7 +13,6 @@ const lazy = XPCOMUtils.declareLazy({
    AppConstants: "resource://gre/modules/AppConstants.sys.mjs",
    ContextualIdentityService:
      "moz-src:///toolkit/components/contextualidentity/ContextualIdentityService.sys.mjs",
@@ -8,7 +10,7 @@
    ShortcutUtils: "resource://gre/modules/ShortcutUtils.sys.mjs",
    TransientPrefs: "resource:///modules/TransientPrefs.sys.mjs",
  });
-@@ -439,20 +438,14 @@
+@@ -440,20 +439,14 @@ Preferences.addSetting({
    id: "linkPreviewEnabled",
    pref: "browser.ml.linkPreview.enabled",
    deps: ["aiControlDefault", "aiControlLinkPreviews"],

@@ -1,6 +1,8 @@
+diff --git a/widget/GfxDriverInfo.cpp b/widget/GfxDriverInfo.cpp
+index 0c9cb0936e..14e302ec04 100644
 --- a/widget/GfxDriverInfo.cpp
 +++ b/widget/GfxDriverInfo.cpp
-@@ -203,24 +203,27 @@
+@@ -204,24 +204,27 @@ already_AddRefed<const GfxDeviceFamily> GfxDriverInfo::GetDeviceFamily(
        APPEND_DEVICE(0x2e13); /* IntelQ45_2 */
        break;
      case DeviceFamily::IntelHDGraphicsToIvyBridge:
@@ -40,7 +42,7 @@
        break;
      case DeviceFamily::IntelHaswell:
        APPEND_DEVICE(0x0402); /* IntelHaswell_GT1_1 */
-@@ -260,13 +263,15 @@
+@@ -261,13 +264,15 @@ already_AddRefed<const GfxDeviceFamily> GfxDriverInfo::GetDeviceFamily(
        APPEND_DEVICE(0x0D2E); /* IntelHaswell_GT3e_5 */
        break;
      case DeviceFamily::IntelSandyBridge:

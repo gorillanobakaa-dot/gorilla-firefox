@@ -1,3 +1,5 @@
+diff --git a/toolkit/locales/en-US/toolkit/contentanalysis/contentanalysis.ftl b/toolkit/locales/en-US/toolkit/contentanalysis/contentanalysis.ftl
+index 718d13e467..a86fcec0dc 100644
 --- a/toolkit/locales/en-US/toolkit/contentanalysis/contentanalysis.ftl
 +++ b/toolkit/locales/en-US/toolkit/contentanalysis/contentanalysis.ftl
 @@ -1,7 +1,6 @@
@@ -8,7 +10,7 @@
  contentanalysis-alert-title = Content Analysis
  
  # Variables:
-@@ -19,8 +18,8 @@
+@@ -19,8 +18,8 @@ contentanalysis-slow-agent-dialog-body-file = { $agent } is reviewing “{ $file
  #   $count (number) - The number of additional items in the request for analysis
  contentanalysis-slow-agent-dialog-body-file-and-more =
      { $count ->
@@ -19,7 +21,7 @@
      }
  # Variables:
  #   $agent - The name of the DLP agent doing the analysis
-@@ -38,7 +37,7 @@
+@@ -38,7 +37,7 @@ contentanalysis-operationtype-print = print
  #   $filename - The filename associated with the request, such as "aFile.txt"
  contentanalysis-upload-description = upload of “{ $filename }”
  #   $filename - The filename associated with the request, such as "aFile.txt"
@@ -28,7 +30,7 @@
  
  contentanalysis-warndialogtitle = This content may be unsafe
  
-@@ -80,14 +79,14 @@
+@@ -80,14 +79,14 @@ contentanalysis-error-message-print = Print denied.
  #   $contentName - Description of the content, such as "clipboard" or "aFile.txt"
  contentanalysis-timeout-block-error-message-content = The connection to { $agent } timed out. { $contentName } has been blocked.
  

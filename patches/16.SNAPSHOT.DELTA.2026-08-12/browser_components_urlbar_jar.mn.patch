@@ -1,12 +1,14 @@
+diff --git a/browser/components/urlbar/jar.mn b/browser/components/urlbar/jar.mn
+index 4bb84a32cb..fcd2e978f4 100644
 --- a/browser/components/urlbar/jar.mn
 +++ b/browser/components/urlbar/jar.mn
-@@ -4,9 +4,6 @@
- 
- browser.jar:
+@@ -6,9 +6,6 @@ browser.jar:
+         content/browser/urlbar/UrlbarInputBase.mjs         (content/UrlbarInputBase.mjs)
          content/browser/urlbar/L10nCache.mjs               (content/L10nCache.mjs)
+         content/browser/urlbar/SearchbarInput.mjs          (content/SearchbarInput.mjs)
 -        content/browser/urlbar/SmartbarInput.mjs           (content/SmartbarInput.mjs)
 -        content/browser/urlbar/SmartbarInputController.mjs (content/SmartbarInputController.mjs)
 -        content/browser/urlbar/SmartbarInputUtils.mjs      (content/SmartbarInputUtils.mjs)
          content/browser/urlbar/UrlbarChildController.mjs   (content/UrlbarChildController.mjs)
-         content/browser/urlbar/UrlbarEventBufferer.mjs     (content/UrlbarEventBufferer.mjs)
-         content/browser/urlbar/UrlbarInput.mjs             (content/UrlbarInput.mjs)
+         content/browser/urlbar/UrlbarChildTelemetry.mjs    (content/UrlbarChildTelemetry.mjs)
+         content/browser/urlbar/UrlbarContentUtils.mjs      (content/UrlbarContentUtils.mjs)

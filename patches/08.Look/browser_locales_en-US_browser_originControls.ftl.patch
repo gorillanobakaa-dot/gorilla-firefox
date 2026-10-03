@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/browser/originControls.ftl b/browser/locales/en-US/browser/originControls.ftl
+index 14b55c3ec6..904de735fb 100644
 --- a/browser/locales/en-US/browser/originControls.ftl
 +++ b/browser/locales/en-US/browser/originControls.ftl
 @@ -1,23 +1,21 @@
@@ -27,7 +29,7 @@
  
  origin-controls-option-all-domains =
      .label = On All Sites
-@@ -34,7 +32,6 @@
+@@ -34,7 +32,6 @@ origin-controls-option-always-on =
  
  ## These strings are used to map Origin Controls states to user-friendly
  ## messages. They currently appear in the unified extensions panel.
@@ -35,7 +37,7 @@
  origin-controls-state-no-access = Can’t read and change data on this site
  
  origin-controls-state-quarantined = Not allowed by { -vendor-short-name } on this site
-@@ -45,32 +42,34 @@
+@@ -45,16 +42,15 @@ origin-controls-state-when-clicked = Permission needed to read and change data
  
  origin-controls-state-hover-run-visit-only = Run for this visit only
  
@@ -52,12 +54,9 @@
  ##   $extensionTitle (String) - Extension name or title message.
 -
  origin-controls-toolbar-button =
--    .label = { $extensionTitle }
--    .tooltiptext = { $extensionTitle }
-+    .label =
-+        { $extensionTitle }
-+        .tooltiptext = { $extensionTitle }
- 
+     .label = { $extensionTitle }
+     .tooltiptext = { $extensionTitle }
+@@ -62,15 +58,17 @@ origin-controls-toolbar-button =
  # Extension's toolbar button when permission is needed.
  # Note that the new line is intentionally part of the tooltip.
  origin-controls-toolbar-button-permission-needed =

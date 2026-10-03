@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/browser/touchbar/touchbar.ftl b/browser/locales/en-US/browser/touchbar/touchbar.ftl
+index 43a66d7a31..781a3a8e26 100644
 --- a/browser/locales/en-US/browser/touchbar/touchbar.ftl
 +++ b/browser/locales/en-US/browser/touchbar/touchbar.ftl
 @@ -1,7 +1,6 @@
@@ -8,7 +10,7 @@
  # Strings in this file are used to localize button titles displayed on the
  # MacBook Touch Bar.
  back = Back
-@@ -11,13 +10,13 @@
+@@ -11,13 +10,13 @@ home = Home
  fullscreen = Fullscreen
  touchbar-fullscreen-exit = Exit Fullscreen
  find = Find
@@ -25,7 +27,7 @@
  open-sidebar = Sidebars
  
  # This string describes shortcuts for search.
-@@ -27,10 +26,9 @@
+@@ -27,10 +26,9 @@ search-popover = Search shortcuts
  search-search-in = Search in:
  
  ## Various categories of shortcuts for search.

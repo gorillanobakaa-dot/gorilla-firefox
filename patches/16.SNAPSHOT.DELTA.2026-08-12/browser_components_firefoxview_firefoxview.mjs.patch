@@ -1,6 +1,8 @@
+diff --git a/browser/components/firefoxview/firefoxview.mjs b/browser/components/firefoxview/firefoxview.mjs
+index 2681149a97..f0da6e6aff 100644
 --- a/browser/components/firefoxview/firefoxview.mjs
 +++ b/browser/components/firefoxview/firefoxview.mjs
-@@ -21,12 +21,6 @@
+@@ -21,12 +21,6 @@ let pageNav = null;
  let activeComponent = null;
  let searchKeyboardShortcut = null;
  
@@ -13,7 +15,7 @@
  const { topChromeWindow } = window.browsingContext;
  
  function onHashChange() {
-@@ -74,7 +68,6 @@
+@@ -74,7 +68,6 @@ async function updateSearchTextboxSize() {
      { id: "firefoxview-search-text-box-recentlyclosed" },
      { id: "firefoxview-search-text-box-tabs" },
      { id: "firefoxview-search-text-box-history" },
@@ -21,7 +23,7 @@
    ];
    let maxLength = 30;
    for (const msg of await document.l10n.formatMessages(msgs)) {
-@@ -107,12 +100,6 @@
+@@ -107,12 +100,6 @@ function updateSyncVisibility() {
  window.addEventListener("DOMContentLoaded", async () => {
    recordEnteredTelemetry();
  
@@ -34,7 +36,7 @@
    pageNav = document.querySelector("moz-page-nav");
    viewsDeck = document.querySelector("named-deck");
  
-@@ -206,6 +193,3 @@
+@@ -206,6 +193,3 @@ function onLocalesChanged() {
    });
  }
  

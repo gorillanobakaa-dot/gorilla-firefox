@@ -1,3 +1,5 @@
+diff --git a/toolkit/locales/en-US/toolkit/global/resistFingerPrinting.ftl b/toolkit/locales/en-US/toolkit/global/resistFingerPrinting.ftl
+index a9936281ca..03b19afd0e 100644
 --- a/toolkit/locales/en-US/toolkit/global/resistFingerPrinting.ftl
 +++ b/toolkit/locales/en-US/toolkit/global/resistFingerPrinting.ftl
 @@ -1,6 +1,5 @@

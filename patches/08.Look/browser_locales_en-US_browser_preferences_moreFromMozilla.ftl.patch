@@ -1,6 +1,8 @@
+diff --git a/browser/locales/en-US/browser/preferences/moreFromMozilla.ftl b/browser/locales/en-US/browser/preferences/moreFromMozilla.ftl
+index ac655663e0..7993ae4c47 100644
 --- a/browser/locales/en-US/browser/preferences/moreFromMozilla.ftl
 +++ b/browser/locales/en-US/browser/preferences/moreFromMozilla.ftl
-@@ -1,111 +1,109 @@
+@@ -1,91 +1,81 @@
  # This Source Code Form is subject to the terms of the Mozilla Public
  # License, v. 2.0. If a copy of the MPL was not distributed with this
  # file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -23,11 +25,9 @@
 +more-from-moz-firefox-mobile-description = The mobile Gorilla browser that puts your privacy first.
  more-from-moz-firefox-mobile-title-1 = { -brand-product-name } for Mobile
  more-from-moz-firefox-mobile =
--    .label = { -brand-product-name } for Mobile
+     .label = { -brand-product-name } for Mobile
 -    .description = The mobile browser that puts your privacy first.
-+    .label =
-+        { -brand-product-name } for Mobile
-+        .description = The mobile Gorilla browser that puts your privacy first.
++    .description = The mobile Gorilla browser that puts your privacy first.
  
  more-from-moz-mozilla-vpn-title = { -mozilla-vpn-brand-name }
  more-from-moz-mozilla-vpn-description = Discover an added layer of anonymous browsing and protection.
@@ -92,53 +92,13 @@
  ## .label (title) and .description for a moz-fieldset inside a moz-card.
 -
  more-from-moz-mozilla-monitor-card =
--    .label = { -mozmonitor-brand-name }
--    .description = Find out where your personal info has been exposed online with a free scan.
-+    .label =
-+        { -mozmonitor-brand-name }
-+        .description = Find out where your personal info has been exposed online with a free scan.
+     .label = { -mozmonitor-brand-name }
+     .description = Find out where your personal info has been exposed online with a free scan.
  
  more-from-moz-mozilla-vpn-card =
--    .label = { -mozilla-vpn-brand-name }
+     .label = { -mozilla-vpn-brand-name }
 -    .description = Get extra protection for all apps — not just your browser. Keep your data safe on public Wi-Fi and insecure networks.
-+    .label =
-+        { -mozilla-vpn-brand-name }
-+        .description = Get extra protection for all apps — not just your Gorilla browser. Keep your data safe on public Wi-Fi and insecure networks.
++    .description = Get extra protection for all apps — not just your Gorilla browser. Keep your data safe on public Wi-Fi and insecure networks.
  
  more-from-moz-firefox-relay-card =
--    .label = { -relay-brand-name }
--    .description = Protect your inbox from spam with free email masking.
-+    .label =
-+        { -relay-brand-name }
-+        .description = Protect your inbox from spam with free email masking.
- 
- more-from-moz-mdn-card =
--    .label = { -mdn-brand-name }
--    .description = Learn web development with free guides and references.
-+    .label =
-+        { -mdn-brand-name }
-+        .description = Learn web development with free guides and references.
- 
- more-from-moz-thunderbird-card =
--    .label = { -thunderbird-brand-name }
--    .description = Access your email, calendars, and contacts in one fast app.
-+    .label =
-+        { -thunderbird-brand-name }
-+        .description = Access your email, calendars, and contacts in one fast app.
- 
- more-from-moz-solo-card-1 =
--    .label = { -solo-ai-brand-name }
--    .description = Create your website instantly and connect your own custom domain for free.
-+    .label =
-+        { -solo-ai-brand-name }
-+        .description = Create your website instantly and connect your own custom domain for free.
- 
- more-from-moz-new-products-card2 =
--    .label = { -vendor-short-name } New Products
--    .description = Explore our latest ideas and experimental technologies.
-+    .label =
-+        { -vendor-short-name } New Products
-+        .description = Explore our latest ideas and experimental technologies.
- 
- more-from-moz-mozilla-monitor-box-link =
-     .label = Get { -monitor-brand-short-name }
+     .label = { -relay-brand-name }

@@ -1,3 +1,5 @@
+diff --git a/modules/libpref/init/all.js b/modules/libpref/init/all.js
+index d740a8988b..845a0c8c4e 100644
 --- a/modules/libpref/init/all.js
 +++ b/modules/libpref/init/all.js
 @@ -1,3 +1,13 @@
@@ -14,7 +16,7 @@
  // This Source Code Form is subject to the terms of the Mozilla Public
  // License, v. 2.0. If a copy of the MPL was not distributed with this
  // file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-@@ -187,7 +197,13 @@
+@@ -195,7 +205,13 @@ pref("mathml.disabled",    false);
  pref("media.throttle-factor", 2);
  
  // Master HTML5 media volume scale.
@@ -29,7 +31,7 @@
  
  // Whether we should play videos opened in a "video document", i.e. videos
  // opened as top-level documents, as opposed to inside a media element.
-@@ -531,14 +547,23 @@
+@@ -529,14 +545,27 @@ pref("toolkit.tabbox.switchByScrolling", false);
  
  // Telemetry settings.
  // Server to submit telemetry pings to.
@@ -44,7 +46,11 @@
 +// 🛡️ GORILLA UNLEASHED - H.264 HARD-LOCK
 +// Rationale: Ensure hardware decoding on legacy Intel hardware.
 +pref("media.av1.enabled", false);
-+pref("media.webm.enabled", false);
++// GORILLA/WIN 2026-09-14: webm must stay ON. WebCodecs decides VP8 support by
++// checking the WebM/Ogg containers (dom/media/webcodecs/WebCodecsUtils.cpp
++// GuessContainers), and WhatsApp Web decodes call video with WebCodecs VP8.
++// Linux compensates with a 01.MEDIA code override; Windows has no such patch.
++pref("media.webm.enabled", true);
 +pref("media.vp9.enabled", false);
 +
 +// 🛡️ GORILLA UNLEASHED - TELEMETRY STARVATION
@@ -60,8 +66,8 @@
 +
  
  // DAP related preferences
- pref("toolkit.telemetry.dap_enabled", false);
-@@ -783,8 +808,8 @@
+ pref("toolkit.telemetry.dap.logLevel", "Warn");
+@@ -781,8 +810,8 @@ pref("dom.storage.snapshot_gradual_prefill", 4096);
  pref("dom.storage.snapshot_reusing", true);
  pref("dom.storage.client_validation", true);
  
@@ -72,7 +78,7 @@
  
  // Enable search in <select> dropdowns (more than 40 options)
  pref("dom.forms.selectSearch", false);
-@@ -860,9 +885,6 @@
+@@ -858,9 +887,6 @@ pref("privacy.purge_trackers.max_purge_count", 100);
  // interaction directly).
  pref("privacy.purge_trackers.consider_entity_list", false);
  
@@ -82,7 +88,7 @@
  pref("dom.event.contextmenu.enabled",       true);
  
  pref("javascript.enabled",                  true);
-@@ -2878,7 +2900,7 @@
+@@ -2872,7 +2898,7 @@ pref("font.size.monospace.x-math", 13);
  #if defined(ANDROID)
    // We use the bundled Charis SIL Compact as serif font for Firefox for Android
  
@@ -91,9 +97,9 @@
  
    pref("font.name-list.serif.ar", "Noto Naskh Arabic, Noto Serif, Droid Serif");
    pref("font.name-list.sans-serif.ar", "Noto Naskh Arabic, Roboto, Google Sans, Droid Sans");
-@@ -3019,6 +3041,20 @@
- pref("signon.storage.rust.active", false);
- pref("signon.storage.rust.migrationAttempts", 0);
+@@ -3025,6 +3051,20 @@ pref("signon.storage.rust.restoreAttemptsVersion", 0);
+ pref("signon.storage.rust.restoreVersion", 0);
+ pref("signon.storage.rust.restoreTargetVersion", 1);
  
 +#ifdef NIGHTLY_BUILD
 +  pref("signon.rustMirror.enabled", true);
@@ -112,7 +118,7 @@
  // Satchel (Form Manager) prefs
  pref("browser.formfill.debug",            false);
  pref("browser.formfill.enable",           true);
-@@ -3980,13 +4016,6 @@
+@@ -4027,13 +4067,6 @@ pref("dom.postMessage.sharedArrayBuffer.bypassCOOP_COEP.insecure.enabled", false
  pref("dom.postMessage.sharedArrayBuffer.bypassCOOP_COEP.insecure.enabled", false, locked);
  #endif
  
@@ -126,19 +132,25 @@
  // Preferences for the form autofill toolkit component.
  // The truthy values of "extensions.formautofill.addresses.available"
  // is "on" and "detect",
-@@ -3998,11 +4027,8 @@
- 
- #if !defined(ANDROID)
- pref("extensions.formautofill.addresses.supported", "on");
--// Use ML for address form field detection.
--pref("extensions.formautofill.useml", true);
- #else
+@@ -4053,16 +4086,8 @@ pref("extensions.formautofill.available", "detect");
  pref("extensions.formautofill.addresses.supported", "detect");
--pref("extensions.formautofill.useml", false);
  #endif
- pref("extensions.formautofill.addresses.enabled", true);
- pref("extensions.formautofill.addresses.capture.enabled", true);
-@@ -4126,3 +4152,96 @@
+ 
+-// Use ML for address form field detection.
+-#if defined(XP_WIN) || defined(XP_MACOSX)
+-  #if MOZ_UPDATE_CHANNEL != release && MOZ_UPDATE_CHANNEL != esr
+-    pref("extensions.formautofill.useml", true);
+-  #else
+-    pref("extensions.formautofill.useml", false);
+-  #endif
+-#else
++// GORILLA: ML address-field detection disabled on every platform and channel.
+ pref("extensions.formautofill.useml", false);
+-#endif
+ 
+ // Set at runtime once we have asked the inference process whether the native
+ // ONNX runtime is available. Until then we stay on the regex heuristics.
+@@ -4221,3 +4246,123 @@ pref("general.smoothScroll", true, sticky);
  #ifdef MOZ_ARTIFACT_BUILDS
    pref("telemetry.fog.artifact_build", true);
  #endif
@@ -152,18 +164,42 @@
 +pref("gfx.webrender.force-enabled", true);
 +pref("gfx.webrender.software.opengl", false);
 +pref("media.hardware-video-decoding.force-enabled", true);
++// GORILLA/WIN: VA-API is the Linux media stack; Windows uses Media Foundation
++#ifndef XP_WIN
 +pref("media.ffmpeg.vaapi.enabled", true);
++#endif
++// GORILLA/WIN: as above
++#ifndef XP_WIN
 +pref("media.ffmpeg.vaapi.decode.force-enabled", true);
++#endif
++// GORILLA/WIN: DMABuf is a Linux/GBM buffer mechanism
++#ifndef XP_WIN
 +pref("widget.dmabuf.force-enabled", true);
++#endif
 +// GORILLA: corrected 2026-08-03 — golden rule 1: the GPU process stays OFF on
 +// Wayland (ERROR 9 black-window class); VA-API decodes in RDD, not the GPU
 +// process. These five were true here, contradicting firefox.js — now aligned.
++// GORILLA/WIN: X11 only; no such code path on Windows
++#ifndef XP_WIN
 +pref("gfx.x11-egl.force-enabled", false);
++#endif
 +pref("gfx.canvas.accelerated.force-enabled", true);
++// GORILLA/WIN: Wayland black-window workaround; upstream default is TRUE on XP_WIN
++#ifndef XP_WIN
 +pref("layers.gpu-process.enabled", false);
++#endif
++// GORILLA/WIN: same subsystem as the above
++#ifndef XP_WIN
 +pref("layers.gpu-process.force-enabled", false);
++#endif
++// GORILLA/WIN: hosts Media Foundation hardware decode on Windows; upstream default TRUE on XP_WIN
++#ifndef XP_WIN
 +pref("media.gpu-process-decoder", false);
++#endif
++// GORILLA/WIN: same subsystem as the above
++#ifndef XP_WIN
 +pref("media.gpu-process-decoder.force-enabled", false);
++#endif
 +pref("gfx.blacklist.all", 0);
 +pref("gfx.blacklist.suggested-driver-version", "0.0.0.0");
 +
@@ -172,7 +208,10 @@
 +pref("javascript.options.mem.max", 1024);
 +
 +// --- Bundled Font Preferences ---
++// GORILLA/WIN: fontconfig is the Linux font backend; Windows uses DWrite
++#ifndef XP_WIN
 +pref("gfx.font_rendering.fontconfig.max_generic_substitutions", 5);
++#endif
 +pref("font.name.sans-serif.x-western", "Inter");
 +pref("font.name.monospace.x-western", "JetBrains Mono");
 +pref("font.name.sans-serif.ja", "Meiryo, Yu Gothic, Source Han Sans, Source Han Sans J");

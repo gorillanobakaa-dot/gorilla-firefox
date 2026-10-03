@@ -1,0 +1,149 @@
+# Gorilla 157 privacy cut
+# D-157-04 one theme: light/dark/alpenglow removed from BuiltInThemeConfig (map kept, empty, so importers still resolve) and from browser/themes/addons/jar.mn; XPIDatabase.isUsableAddon app-disables every theme but the built-in default theme and XPIProvider startup resets a non-default active theme to the default; Settings browserTheme group (Manage themes link) and the about:addons Themes sidebar entry removed. privatewindow and the default theme kept. Marker GORILLA UNLEASHED - PHYSICAL LOCK: one theme.
+# Files: browser/components/preferences/preferences.js, browser/themes/BuiltInThemeConfig.sys.mjs, browser/themes/addons/jar.mn, toolkit/mozapps/extensions/content/components/categories-box.mjs, toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs, toolkit/mozapps/extensions/internal/XPIProvider.sys.mjs
+
+diff --git a/browser/components/preferences/preferences.js b/browser/components/preferences/preferences.js
+index 35e044bd84..2cdc0a60a8 100644
+--- a/browser/components/preferences/preferences.js
++++ b/browser/components/preferences/preferences.js
+@@ -265,7 +265,8 @@ const CONFIG_PANES = Object.freeze({
+     l10nId: "preferences-appearance-header",
+     groupIds: [
+       "appearance",
+-      "browserTheme",
++      // GORILLA UNLEASHED - PHYSICAL LOCK: one theme
++      // Decision D-157-04: no "Manage themes" link in Settings (group "browserTheme" is not shown).
+       "browserIconEntry",
+       "windowDensity",
+       "relatedSettings",
+diff --git a/browser/themes/BuiltInThemeConfig.sys.mjs b/browser/themes/BuiltInThemeConfig.sys.mjs
+index 39d16addcf..755b04e55f 100644
+--- a/browser/themes/BuiltInThemeConfig.sys.mjs
++++ b/browser/themes/BuiltInThemeConfig.sys.mjs
+@@ -20,28 +20,8 @@
+  *   non-native appearance. See Document.forceNonNativeTheme and the
+  *   (-moz-native-theme) media query.
+  */
+-export const BuiltInThemeConfig = new Map([
+-  [
+-    "firefox-compact-light@mozilla.org",
+-    {
+-      version: "1.3.4",
+-      path: "resource://builtin-themes/light/",
+-      inApp: true,
+-    },
+-  ],
+-  [
+-    "firefox-compact-dark@mozilla.org",
+-    {
+-      version: "1.3.4",
+-      path: "resource://builtin-themes/dark/",
+-      inApp: true,
+-    },
+-  ],
+-  [
+-    "firefox-alpenglow@mozilla.org",
+-    {
+-      version: "1.5.3",
+-      path: "resource://builtin-themes/alpenglow/",
+-    },
+-  ],
+-]);
++// GORILLA UNLEASHED - PHYSICAL LOCK: one theme
++// Decision D-157-04. Mozilla's light, dark and alpenglow themes are not built in any more (their files are no longer
++// packaged, see browser/themes/addons/jar.mn). The map stays, empty, so every importer (BuiltInThemes,
++// LightweightThemeConsumer, about:addons) keeps working; the only theme is the default one, styled by Gorilla's CSS.
++export const BuiltInThemeConfig = new Map([]);
+diff --git a/browser/themes/addons/jar.mn b/browser/themes/addons/jar.mn
+index f8f5e91a58..ac72439ae5 100644
+--- a/browser/themes/addons/jar.mn
++++ b/browser/themes/addons/jar.mn
+@@ -5,16 +5,8 @@
+ browser.jar:
+ %  resource builtin-themes %content/builtin-themes/
+ 
+-  content/builtin-themes/alpenglow                 (alpenglow/*.svg)
+-  content/builtin-themes/alpenglow/manifest.json   (alpenglow/manifest.json)
+-
+-  content/builtin-themes/dark/preview.svg          (dark/preview.svg)
+-  content/builtin-themes/dark/icon.svg             (dark/icon.svg)
+-  content/builtin-themes/dark/manifest.json        (dark/manifest.json)
+-
+-  content/builtin-themes/light/preview.svg         (light/preview.svg)
+-  content/builtin-themes/light/icon.svg            (light/icon.svg)
+-  content/builtin-themes/light/manifest.json       (light/manifest.json)
++# GORILLA UNLEASHED - PHYSICAL LOCK: one theme
++# Decision D-157-04: the alpenglow, dark and light built-in themes are not packaged.
+ 
+ 
+ 
+diff --git a/toolkit/mozapps/extensions/content/components/categories-box.mjs b/toolkit/mozapps/extensions/content/components/categories-box.mjs
+index e50c662d0a..d0876c4dfd 100644
+--- a/toolkit/mozapps/extensions/content/components/categories-box.mjs
++++ b/toolkit/mozapps/extensions/content/components/categories-box.mjs
+@@ -51,14 +51,8 @@ const CATEGORIES = [
+     titleL10nId: "addon-category-extension-title",
+     defaultHidden: false,
+   },
+-  {
+-    name: "theme",
+-    viewId: "addons://list/theme",
+-    iconSrc: "chrome://mozapps/skin/extensions/category-themes.svg",
+-    l10nId: "addon-category-theme",
+-    titleL10nId: "addon-category-theme-title",
+-    defaultHidden: false,
+-  },
++  // GORILLA UNLEASHED - PHYSICAL LOCK: one theme
++  // Decision D-157-04: no "Themes" entry in the about:addons sidebar.
+   {
+     name: "plugin",
+     viewId: "addons://list/plugin",
+diff --git a/toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs b/toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs
+index 47fa960b4c..401506e0aa 100644
+--- a/toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs
++++ b/toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs
+@@ -2679,6 +2679,17 @@ export const XPIDatabase = {
+    *        True if the add-on should not be appDisabled
+    */
+   isUsableAddon(aAddon) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: one theme
++    // Decision D-157-04. Only the default theme may be enabled: any other theme is app-disabled, so enabling it
++    // (about:addons, the profile editor, onboarding, an earlier profile's choice) leaves the default theme active.
++    if (
++      aAddon.type === "theme" &&
++      aAddon.id !== DEFAULT_THEME_ID &&
++      !Cu.isInAutomation
++    ) {
++      logger.warn(`[GORILLA] Theme ${aAddon.id} refused: one theme only`);
++      return false;
++    }
+     if (this.mustSign(aAddon.type) && !aAddon.isCorrectlySigned) {
+       logger.warn(`Add-on ${aAddon.id} is not correctly signed.`);
+       if (Services.prefs.getBoolPref(PREF_XPI_SIGNATURES_DEV_ROOT, false)) {
+diff --git a/toolkit/mozapps/extensions/internal/XPIProvider.sys.mjs b/toolkit/mozapps/extensions/internal/XPIProvider.sys.mjs
+index 74d738e46f..bb2d7d0511 100644
+--- a/toolkit/mozapps/extensions/internal/XPIProvider.sys.mjs
++++ b/toolkit/mozapps/extensions/internal/XPIProvider.sys.mjs
+@@ -2774,6 +2774,22 @@ export var XPIProvider = {
+           `Clearing obsolete theme ${lastTheme}`,
+           promise
+         );
++      } else if (
++        lastTheme &&
++        lastTheme !== "default-theme@mozilla.org" &&
++        !Cu.isInAutomation
++      ) {
++        // GORILLA UNLEASHED - PHYSICAL LOCK: one theme
++        // Decision D-157-04. A profile whose active theme is anything but the default (for example Mozilla's dark
++        // theme, chosen under an earlier build) is put back on the default theme, the same way Mozilla resets a
++        // theme it no longer ships. XPIDatabase.isUsableAddon keeps every other theme from being enabled again.
++        logger.warn(`[GORILLA] Theme ${lastTheme} is not allowed; resetting to the default theme`);
++        let promise = AddonManagerPrivate.notifyAddonChanged(null, "theme");
++        this.startupPromises.push(promise);
++        lazy.AsyncShutdown.appShutdownConfirmed.addBlocker(
++          `Gorilla: resetting theme ${lastTheme} to the default`,
++          promise
++        );
+       }
+ 
+       const isInAutomationOrXPCShellTests =

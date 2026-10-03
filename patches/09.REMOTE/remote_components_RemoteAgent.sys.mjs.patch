@@ -1,21 +1,22 @@
+diff --git a/remote/components/RemoteAgent.sys.mjs b/remote/components/RemoteAgent.sys.mjs
+index 9b884927ef..e734a22714 100644
 --- a/remote/components/RemoteAgent.sys.mjs
 +++ b/remote/components/RemoteAgent.sys.mjs
-@@ -43,7 +43,13 @@
+@@ -51,7 +51,12 @@ class RemoteAgentParentProcess {
    constructor() {
      this.#allowHosts = null;
      this.#allowOrigins = null;
--    this.#allowSystemAccess = Services.env.exists(ENV_ALLOW_SYSTEM_ACCESS);
+-    this.#allowSystemAccess = Services.env.get(ENV_ALLOW_SYSTEM_ACCESS) == "1";
 +
-+    // 🦍 GORILLA UNLEASHED - PHYSICAL LOCK
-+    // We have completely lobotomized the Remote Agent / WebDriver BiDi backdoor.
-+    // Standard Firefox allows enabling system access via env var.
-+    // In this build, it is hard-coded to FALSE. No flag or env var can wake it.
-+    this.#allowSystemAccess = false; 
-+
++    // GORILLA UNLEASHED - PHYSICAL LOCK
++    // The Remote Agent / WebDriver BiDi system-access backdoor is disabled.
++    // Upstream reads it from an environment variable; here it is hard-coded
++    // to false so no flag or env var can wake it.
++    this.#allowSystemAccess = false;
+ 
      this.#browserStartupFinished = lazy.Deferred();
      this.#enabled = false;
- 
-@@ -94,15 +100,9 @@
+@@ -107,15 +112,9 @@ class RemoteAgentParentProcess {
    }
  
    set allowSystemAccess(value) {
@@ -34,7 +35,7 @@
    }
  
    /**
-@@ -427,11 +427,17 @@
+@@ -468,11 +467,17 @@ class RemoteAgentParentProcess {
        case "command-line-startup":
          Services.obs.removeObserver(this, topic);
  

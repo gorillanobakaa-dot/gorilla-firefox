@@ -1,6 +1,8 @@
+diff --git a/toolkit/locales/en-US/toolkit/updates/history.ftl b/toolkit/locales/en-US/toolkit/updates/history.ftl
+index 4d94cdc1a9..2b9d5b0843 100644
 --- a/toolkit/locales/en-US/toolkit/updates/history.ftl
 +++ b/toolkit/locales/en-US/toolkit/updates/history.ftl
-@@ -1,13 +1,13 @@
+@@ -1,13 +1,12 @@
  # This Source Code Form is subject to the terms of the Mozilla Public
  # License, v. 2.0. If a copy of the MPL was not distributed with this
  # file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -10,11 +12,9 @@
  history-intro = The following updates have been installed
  
  close-button-label =
--    .buttonlabelcancel = Close
+     .buttonlabelcancel = Close
 -    .title = Update History
-+    .buttonlabelcancel =
-+        Close
-+        .title = Update Gorilla History
++    .title = Update Gorilla History
  
  no-updates-label = No updates installed yet
  name-header = Update Name

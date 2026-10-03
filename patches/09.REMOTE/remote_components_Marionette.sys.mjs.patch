@@ -1,6 +1,8 @@
+diff --git a/remote/components/Marionette.sys.mjs b/remote/components/Marionette.sys.mjs
+index 444c4b0a57..3b9f0ba717 100644
 --- a/remote/components/Marionette.sys.mjs
 +++ b/remote/components/Marionette.sys.mjs
-@@ -51,8 +51,11 @@
+@@ -60,8 +60,11 @@ class MarionetteParentProcess {
      this.server = null;
      this._activePortPath;
  
@@ -12,9 +14,9 @@
 +    // In this build, it is hard-coded to FALSE. No flag or env var can wake it.
 +    this.enabled = false; 
  
-     this.#browserStartupFinished = lazy.Deferred();
-   }
-@@ -72,14 +75,9 @@
+     // Whether the running instance belongs to a browser automation session.
+     // True for command line startup. Optional for startAtRuntime.
+@@ -90,14 +93,9 @@ class MarionetteParentProcess {
    }
  
    set enabled(value) {
@@ -25,14 +27,14 @@
 -    }
 -
 -    this._enabled = value;
--    lazy.logger.info(`Marionette enabled`);
-+    // 🦍 GORILLA UNLEASHED - PHYSICAL LOCK
+-    lazy.logger.info(value ? "Marionette enabled" : "Marionette disabled");
++    // GORILLA UNLEASHED - PHYSICAL LOCK
 +    // This setter is now a dead end. Nothing can enable Marionette.
 +    this._enabled = false;
    }
  
    get running() {
-@@ -123,7 +121,10 @@
+@@ -154,7 +152,10 @@ class MarionetteParentProcess {
        case "command-line-startup":
          Services.obs.removeObserver(this, topic);
  

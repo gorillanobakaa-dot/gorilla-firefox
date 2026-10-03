@@ -1,0 +1,24 @@
+# Gorilla 157 privacy cut
+# D-157-05 uBlock only: installTemporaryAddon (about:debugging Load Temporary Add-on) bypassed the install cuts; it now throws unless Cu.isInAutomation. Marker GORILLA UNLEASHED - PHYSICAL LOCK: no temporary add-ons. Bundled uBlock path untouched.
+# Files: toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs
+
+diff --git a/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs b/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs
+index 3d152fdd8d..3a0ce3e8cd 100644
+--- a/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs
++++ b/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs
+@@ -4850,6 +4850,15 @@ export var XPIInstall = {
+    *        same ID is already installed.
+    */
+   async installTemporaryAddon(aFile) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no temporary add-ons
++    // Decision D-157-05 (uBlock Origin only). about:debugging "Load Temporary Add-on" (and the remote debugging
++    // protocol's installTemporaryAddon) activate an add-on through _activateAddon directly, so they bypassed the
++    // installAddon/install() refusals above. Outside automated tests this route is now refused too. The bundled
++    // uBlock Origin is installed by GorillaBuiltinExtensions and is not affected.
++    if (!Cu.isInAutomation) {
++      logger.error(`[GORILLA] Temporary add-on installation blocked: ${aFile.path}`);
++      throw new Error("[GORILLA] Temporary add-ons are disabled in this build");
++    }
+     let installLocation = XPIExports.XPIInternal.TemporaryInstallLocation;
+ 
+     if (XPIExports.XPIInternal.isXPI(aFile.leafName)) {

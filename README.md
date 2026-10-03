@@ -62,9 +62,9 @@ and that is a fair conclusion to reach.
 | **You need** | Debian / Ubuntu / Mint, 64-bit | Windows 10 or 11, 64-bit | ~25 GB free disk + a few hours |
 | **Go to** | **[Part 1](#part-1--just-give-me-the-browser)** ⬇ | **[windows/README.md](windows/README.md)** ⬇ | **[Part 2](#part-2--build-it-yourself)** ⬇ |
 
-> 📖 **Want the whole rationale?** Every one of the 441 patches, grouped by
-> topic, in plain language *and* in technical detail, with the honest cost of
-> each: **[WHAT-WE-CHANGED-AND-WHY.md](WHAT-WE-CHANGED-AND-WHY.md)**
+> 📖 **Want the whole rationale?** The changes, grouped by topic, in plain
+> language *and* in technical detail, with the honest cost of each (its
+> patch counts describe an earlier set, not the 157 one below): **[WHAT-WE-CHANGED-AND-WHY.md](WHAT-WE-CHANGED-AND-WHY.md)**
 
 > 🪟 **Windows users:** Windows will block the download and then block the
 > install, and hides the "carry on" button both times. Nothing is wrong with
@@ -194,31 +194,61 @@ Every change is a **patch** — a small, readable file showing exactly what was
 changed — and beside each group sits a document explaining it **twice**: once in
 plain English, once for developers. Nothing is hidden.
 
-| Folder | What it changes |
-|---|---|
-| `patches/01.MEDIA` | Video & audio — hardware decoding, speaker tuning |
-| `patches/02.GPU` | Wakes up old Intel graphics chips |
-| `patches/03.NETWORKING` | Network speed tuning |
-| `patches/05.PREFS` | The settings baked into the browser |
-| `patches/07.TOOLKIT` | Removes the AI features |
-| `patches/08.Look` | The black theme and the gorilla |
-| `patches/09.REMOTE` | Locks out remote control / automation |
-| `patches/13.TELEMETRY.KILL` | Switches off the phone-home |
-| *…and 6 more* | 04, 06, 10, 11, 12, 14 |
+The groups are applied in this order. Counts are what the folder holds now
+(patches · new files · byte-exact replacements · deletions).
 
-Open any folder and read the file whose name starts with **`MASTER_PROJECT_LOG`** —
-that's the full story of that part, in both plain English and developer detail.
+| Folder | What it changes | Contents |
+|---|---|---|
+| `patches/01.MEDIA` | Video & audio for the Linux stack — VA-API hardware decoding, PulseAudio tuning. **Not applied to the 157 Windows build** (Linux-only); still cut against 154 | 20 · 0 · 0 · 0 |
+| `patches/02.GPU` | The graphics blocklist: old Intel/AMD/NVIDIA chips are no longer refused GPU features (`GfxInfoBase.cpp`, `GfxDriverInfo.cpp`, `gfxPlatform.cpp`) | 3 · 0 · 0 · 0 |
+| `patches/03.NETWORKING` | Network tuning in C++: DNS resolver pool and negative cache, HTTP/3 socket buffer sizes, upload chunk size | 3 · 0 · 0 · 0 |
+| `patches/04.PERFORMANCE` | Cycle-collector/GC scheduling tightened for low-core machines, telemetry compiled out of the JS stencil code, a `Maybe` build-compatibility fix | 4 · 0 · 0 · 0 |
+| `patches/05.PREFS` | The settings baked into the browser (`firefox.js`, `all.js`, `StaticPrefList.yaml`, locale default) | 4 · 0 · 0 · 0 |
+| `patches/06.QUOTA` | Storage quota | 1 · 0 · 0 · 0 |
+| `patches/07.TOOLKIT` | Removes AI, suggestion and remote features: context-menu AI, Quick Suggest and search suggestions, Merino, Nimbus experiments, translations, add-on and theme install paths, the search config dump | 13 · 0 · 0 · 0 |
+| `patches/08.Look` | The black theme, the gorilla branding (`browser/branding/gorilla`, installer artwork) and the reworded English strings | 232 · 82 · 1 · 0 |
+| `patches/09.REMOTE` | Locks out remote control / automation (Marionette, Remote Agent) | 2 · 0 · 0 · 0 |
+| `patches/10.OVERRIDES` | `user.js` for the profile only; nothing in the source tree | 0 · 1 · 0 · 0 |
+| `patches/11.FONT.SYSTEM` | Font list handling (DirectWrite, fontconfig, FreeType, platform font list) | 4 · 0 · 0 · 0 |
+| `patches/12.MOZAMBIQUE.DRILL` | Normandy recipe runner and Nimbus Remote Settings loader neutralised, plus `distribution/policies.json` | 2 · 1 · 0 · 0 |
+| `patches/13.TELEMETRY.KILL` | Glean telemetry switched off in `glean-core`, FOG and memory telemetry | 22 · 0 · 0 · 0 |
+| `patches/14.EGRESS.LOCKDOWN` | Documents only (the forensic audit and hardening plan); no source changes | 0 · 0 · 0 · 0 |
+| `patches/16.SNAPSHOT.DELTA.2026-08-12` | Every file the August 2026 build changed that groups 01–14 do not name: browser chrome JS/CSS, urlbar, tabs, sidebar, settings, ASRouter, theme tokens | 84 · 0 · 0 · 0 |
+| `patches/20.SNAPSHOT.DELTA.155.0.1` | Everything else the 155.0.1 build changed: bundled uBlock Origin (656 files), the AI Window stub, built-in extension registration, the AI excision (432 deleted files: vendored `llama.cpp`/ggml, `aiwindow`, `genai`, urlbar ML, Firefox View chats), the Windows installer's 7-Zip stub (`7zSD.Win32.sfx`) replaced | 8 · 659 · 1 · 432 |
+| `patches/21.PORT.FIXES.157` | Repairs needed to carry the set onto Firefox 157: IPDL preprocessing, a misplaced hunk, a broken override, the Windows sandbox level, the About-window branding | 5 · 0 · 2 · 0 |
+| `patches/22.EGRESS.LOCKDOWN.157` | Every network caller, identifier and helper executable cut at the source for 157 (telemetry, Remote Settings, Normandy, Merino, GMP on demand, Safe Browsing lists, captive portal, push, geolocation, AMO, new-tab feeds, MITM priming, search partner codes, translations, extra themes, offline OneCRL, the never-calls-home pref block) | 28 · 0 · 0 · 0 |
 
-### Two patch sets, two Firefox versions
+Each patch in 21 and 22 starts with a comment giving its reason, and each of
+those folders has a `README.md` listing them. For the older groups, open the
+folder and read the file whose name starts with **`MASTER_PROJECT_LOG`** — the
+story of that part, written when it was first made (for Firefox 154).
+
+### Which Firefox `patches/` is for
+
+`patches/` is cut against **Firefox 157.0** (tag `FIREFOX_157_0_RELEASE`,
+commit `fdd757a2e09c9471cddf383e64e631e4ce178499`) and is exactly what the
+Windows 157.0 build was made from. Every patch applies there with
+`patch -p1 --forward --fuzz=0`; no fuzz is needed.
+
+It was checked by replaying it: start from pristine 157.0, apply groups 02–22
+in the order above (patches, then `NEW_FILES/`, then `REPLACE_FILES/`, then
+`DELETED_FILES.manifest.txt`), and the resulting git tree is
+`e33d7eb7e60f954e8007cc17fbe606b571f104ca`, the same tree hash as the source
+that was compiled. See `patches/BASELINE.txt`.
+
+Two things have not caught up yet: `patches/apply.sh` copies `NEW_FILES/` but
+does not yet write `REPLACE_FILES/` or remove the files in
+`DELETED_FILES.manifest.txt`, and `recreate.sh` (the Linux builder) still
+expects the 154 nightly baseline for `patches/`. For a Linux build, use the 155
+set:
 
 | Folder | Baseline | Builds |
 |---|---|---|
-| `patches/` | Firefox 154.0a1 nightly, no pinned changeset | the 154 releases |
-| `patchset-155.0b4/` | Firefox 155.0b4, pinned by SHA256 | `155.0-3` and later |
+| `patches/` | Firefox 157.0 release, pinned commit | the 157 Windows build |
+| `patchset-155.0b4/` | Firefox 155.0b4, pinned by SHA256 | `155.0-3` and later (Linux) |
 
 They are cut against different upstream sources and must never be applied to
-the same tree. `recreate.sh` uses `patches/` by default; set
-`GORILLA_PATCHSET` to build the 155 line:
+the same tree.
 
 ```bash
 GORILLA_PATCHSET="$PWD/patchset-155.0b4" ./recreate.sh ~/firefox-src

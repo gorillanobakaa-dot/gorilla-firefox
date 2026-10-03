@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/browser/preferences/fonts.ftl b/browser/locales/en-US/browser/preferences/fonts.ftl
+index 0f4269e8be..9b1770b6f7 100644
 --- a/browser/locales/en-US/browser/preferences/fonts.ftl
 +++ b/browser/locales/en-US/browser/preferences/fonts.ftl
 @@ -1,7 +1,6 @@
@@ -8,7 +10,7 @@
  fonts-window =
      .title = Fonts
  
-@@ -9,7 +8,6 @@
+@@ -9,7 +8,6 @@ fonts-window-close =
      .key = w
  
  ## Font groups by language
@@ -16,7 +18,7 @@
  fonts-langgroup-header = Fonts for
      .accesskey = F
  
-@@ -74,7 +72,6 @@
+@@ -74,7 +72,6 @@ fonts-langgroup-other =
      .label = Other Writing Systems
  
  ## Default fonts and their sizes
@@ -24,15 +26,12 @@
  fonts-proportional-header = Proportional
      .accesskey = P
  
-@@ -105,8 +102,9 @@
+@@ -105,7 +102,7 @@ fonts-minsize-none =
      .label = None
  
  fonts-allow-own =
 -    .label = Allow pages to choose their own fonts, instead of your selections above
--    .accesskey = A
-+    .label =
-+        Allow Gorilla pages to choose their own fonts, instead of your selections above
-+        .accesskey = A
++    .label = Allow Gorilla pages to choose their own fonts, instead of your selections above
+     .accesskey = A
  
  # Variables:
- #   $name {string, "Arial"} - Name of the default font

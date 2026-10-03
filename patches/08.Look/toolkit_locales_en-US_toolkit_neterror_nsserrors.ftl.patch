@@ -1,3 +1,5 @@
+diff --git a/toolkit/locales/en-US/toolkit/neterror/nsserrors.ftl b/toolkit/locales/en-US/toolkit/neterror/nsserrors.ftl
+index b2ebc9d107..b6d6f234ad 100644
 --- a/toolkit/locales/en-US/toolkit/neterror/nsserrors.ftl
 +++ b/toolkit/locales/en-US/toolkit/neterror/nsserrors.ftl
 @@ -1,17 +1,14 @@
@@ -19,7 +21,7 @@
  
      Your certificate contains the same serial number as another certificate issued by the certificate authority. Please get a new certificate containing a unique serial number.
  
-@@ -117,7 +114,7 @@
+@@ -117,7 +114,7 @@ ssl-error-internal-error-alert = Peer reports it experienced an internal error.
  ssl-error-user-canceled-alert = Peer user canceled handshake.
  ssl-error-no-renegotiation-alert = Peer does not permit renegotiation of SSL security parameters.
  ssl-error-server-cache-not-configured = SSL server cache not configured and not disabled for this socket.
@@ -28,7 +30,7 @@
  ssl-error-certificate-unobtainable-alert = SSL peer could not obtain your certificate from the supplied URL.
  ssl-error-unrecognized-name-alert = SSL peer has no certificate for the requested DNS name.
  ssl-error-bad-cert-status-response-alert = SSL peer was unable to get an OCSP response for its certificate.
-@@ -129,7 +126,7 @@
+@@ -129,7 +126,7 @@ ssl-error-renegotiation-not-allowed = Renegotiation is not allowed on this SSL s
  ssl-error-unsafe-negotiation = Peer attempted old style (potentially vulnerable) handshake.
  ssl-error-rx-unexpected-uncompressed-record = SSL received an unexpected uncompressed record.
  ssl-error-weak-server-ephemeral-dh-key = SSL received a weak ephemeral Diffie-Hellman key in Server Key Exchange handshake message.
@@ -37,7 +39,7 @@
  ssl-error-feature-not-supported-for-ssl2 = SSL feature not supported for SSL 2.0 connections.
  ssl-error-feature-not-supported-for-servers = SSL feature not supported for servers.
  ssl-error-feature-not-supported-for-clients = SSL feature not supported for clients.
-@@ -142,15 +139,15 @@
+@@ -142,15 +139,15 @@ ssl-error-rx-unexpected-cert-status = SSL received an unexpected Certificate Sta
  ssl-error-unsupported-hash-algorithm = Unsupported hash algorithm used by TLS peer.
  ssl-error-digest-failure = Digest function failed.
  ssl-error-incorrect-signature-algorithm = Incorrect signature algorithm specified in a digitally-signed element.
@@ -57,7 +59,7 @@
  
  sec-error-io = An I/O error occurred during security authorization.
  sec-error-library-failure = security library failure.
-@@ -186,14 +183,14 @@
+@@ -186,14 +183,14 @@ sec-error-expired-issuer-certificate = The certificate issuer’s certificate ha
  sec-error-crl-expired = The CRL for the certificate’s issuer has expired. Update it or check your system date and time.
  sec-error-crl-bad-signature = The CRL for the certificate’s issuer has an invalid signature.
  sec-error-crl-invalid = New CRL has an invalid format.
@@ -75,7 +77,7 @@
  sec-error-old-crl = New CRL is not later than the current one.
  sec-error-no-email-cert = Not encrypted or signed: you do not yet have an email certificate.
  sec-error-no-recipient-certs-query = Not encrypted: you do not have certificates for each of the recipients.
-@@ -219,13 +216,13 @@
+@@ -219,13 +216,13 @@ sec-error-baggage-not-created = error while creating baggage object
  sec-error-bad-export-algorithm = Required algorithm is not allowed.
  sec-error-exporting-certificates = Error attempting to export certificates.
  sec-error-importing-certificates = Error attempting to import certificates.
@@ -93,7 +95,7 @@
  sec-error-pkcs12-privacy-password-incorrect = Unable to import. Incorrect privacy password.
  sec-error-pkcs12-cert-collision = Unable to import. Same nickname already exists in database.
  sec-error-user-cancelled = The user pressed cancel.
-@@ -238,8 +235,8 @@
+@@ -238,8 +235,8 @@ sec-error-pkcs12-unable-to-import-key = Unable to import. Error attempting to im
  sec-error-pkcs12-importing-cert-chain = Unable to import. Error attempting to import certificate chain.
  sec-error-pkcs12-unable-to-locate-object-by-name = Unable to export. Unable to locate certificate or key by nickname.
  sec-error-pkcs12-unable-to-export-key = Unable to export. Private Key could not be located and exported.
@@ -104,7 +106,7 @@
  sec-error-pkcs12-key-database-not-initialized = Unable to export. Key database corrupt or deleted.
  sec-error-keygen-fail = Unable to generate public/private key pair.
  sec-error-invalid-password = Password entered is invalid. Please pick a different one.
-@@ -289,8 +286,8 @@
+@@ -289,8 +286,8 @@ sec-error-ocsp-invalid-signing-cert = Invalid OCSP signing certificate in OCSP r
  sec-error-revoked-certificate-crl = Certificate is revoked in issuer’s certificate revocation list.
  sec-error-revoked-certificate-ocsp = Issuer’s OCSP responder reports certificate is revoked.
  sec-error-crl-invalid-version = Issuer’s Certificate Revocation List has an unknown version number.
@@ -115,7 +117,7 @@
  sec-error-unknown-object-type = Unknown object type specified.
  sec-error-incompatible-pkcs11 = PKCS #11 driver violates the spec in an incompatible way.
  sec-error-no-event = No new slot event is available at this time.
-@@ -302,16 +299,16 @@
+@@ -302,16 +299,16 @@ sec-error-ocsp-bad-signature = OCSP response has an invalid signature.
  sec-error-out-of-search-limits = Cert validation search is out of search limits
  sec-error-invalid-policy-mapping = Policy mapping contains anypolicy
  sec-error-policy-validation-failed = Cert chain fails policy validation
@@ -135,7 +137,7 @@
  sec-error-crl-import-failed = Error attempting to import a CRL.
  sec-error-expired-password = The password expired.
  sec-error-locked-password = The password is locked.
-@@ -320,7 +317,7 @@
+@@ -320,7 +317,7 @@ sec-error-bad-crl-dp-url = Invalid or unsupported URL in CRL distribution point
  sec-error-cert-signature-algorithm-disabled = The certificate was signed using a signature algorithm that is disabled because it is not secure.
  
  mozilla-pkix-error-key-pinning-failure = The server uses key pinning (HPKP) but no trusted certificate chain could be constructed that matches the pinset. Key pinning violations cannot be overridden.

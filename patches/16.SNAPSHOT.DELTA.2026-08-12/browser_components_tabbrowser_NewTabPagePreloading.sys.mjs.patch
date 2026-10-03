@@ -1,6 +1,8 @@
+diff --git a/browser/components/tabbrowser/NewTabPagePreloading.sys.mjs b/browser/components/tabbrowser/NewTabPagePreloading.sys.mjs
+index 9b4f3e2496..ef52528646 100644
 --- a/browser/components/tabbrowser/NewTabPagePreloading.sys.mjs
 +++ b/browser/components/tabbrowser/NewTabPagePreloading.sys.mjs
-@@ -13,8 +13,6 @@
+@@ -13,8 +13,6 @@ const lazy = {};
  
  ChromeUtils.defineESModuleGetters(lazy, {
    AboutNewTab: "resource:///modules/AboutNewTab.sys.mjs",
@@ -9,7 +11,7 @@
    BrowserWindowTracker: "resource:///modules/BrowserWindowTracker.sys.mjs",
    PrivateBrowsingUtils: "resource://gre/modules/PrivateBrowsingUtils.sys.mjs",
  });
-@@ -66,13 +64,11 @@
+@@ -66,13 +64,11 @@ export let NewTabPagePreloading = {
     */
    _adoptBrowserFromOtherWindow(window) {
      let winPrivate = lazy.PrivateBrowsingUtils.isWindowPrivate(window);
@@ -23,7 +25,7 @@
            w.gBrowser &&
            w.gBrowser.preloadedBrowser
          );
-@@ -110,12 +106,9 @@
+@@ -110,12 +106,9 @@ export let NewTabPagePreloading = {
  
      // Don't bother creating a preload browser if we're not in the top set of windows:
      let windowPrivate = lazy.PrivateBrowsingUtils.isWindowPrivate(window);

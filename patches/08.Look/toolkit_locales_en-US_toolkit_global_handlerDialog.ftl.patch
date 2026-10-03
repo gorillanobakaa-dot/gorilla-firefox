@@ -1,3 +1,5 @@
+diff --git a/toolkit/locales/en-US/toolkit/global/handlerDialog.ftl b/toolkit/locales/en-US/toolkit/global/handlerDialog.ftl
+index b490492934..75f6a34df7 100644
 --- a/toolkit/locales/en-US/toolkit/global/handlerDialog.ftl
 +++ b/toolkit/locales/en-US/toolkit/global/handlerDialog.ftl
 @@ -1,47 +1,35 @@
@@ -59,7 +61,7 @@
  
  # Warning given to the user that the current page is trying to open their digital wallet app
  wallet-custom-scheme-warning-host-app = Opening a <strong>{ $scheme }</strong> link allows <strong>{ $host }</strong> to request your real identity with <strong>{ $appName }</strong>. Only continue if you trust this site.
-@@ -61,25 +49,22 @@
+@@ -61,25 +49,20 @@ wallet-custom-scheme-warning = Opening a <strong>{ $scheme }</strong> link allow
  ## Variables:
  ##  $host (string) - The hostname that is initiating the request
  ##  $scheme (string) - The type of link that's being opened.
@@ -81,20 +83,18 @@
  permission-dialog-btn-open-link =
 -      .label = Open Link
 -      .accessKey = O
-+    .label =
-+        Open Link
-+        .accessKey = O
++    .label = Open Link
++    .accessKey = O
  
  permission-dialog-btn-choose-app =
 -      .label = Choose Application
 -      .accessKey = A
-+    .label =
-+        Choose Application
-+        .accessKey = A
++    .label = Choose Application
++    .accessKey = A
  
  permission-dialog-unset-description = You’ll need to choose an application.
  
-@@ -88,32 +73,34 @@
+@@ -88,35 +71,34 @@ permission-dialog-set-change-app-link = Choose a different application.
  ## Chooser dialog
  ## Variables:
  ##  $scheme (string) - The type of link that's being opened.
@@ -102,16 +102,14 @@
  chooser-window =
 -      .title = Choose Application
 -      .style = min-width: 26em; min-height: 26em;
-+    .title =
-+        Choose Application
-+        .style = min-width: 26em; min-height: 26em;
++    .title = Choose Application
++    .style = min-width: 26em; min-height: 26em;
  
  chooser-dialog =
 -      .buttonlabelaccept = Open Link
 -      .buttonaccesskeyaccept = O
-+    .buttonlabelaccept =
-+        Open Link
-+        .buttonaccesskeyaccept = O
++    .buttonlabelaccept = Open Link
++    .buttonaccesskeyaccept = O
  
  chooser-dialog-description = Choose an application to open the { $scheme } link.
  
@@ -136,11 +134,13 @@
  choose-app-btn =
 -      .label = Choose…
 -      .accessKey = C
-+    .label =
-+        Choose…
-+        .accessKey = C
++    .label = Choose…
++    .accessKey = C
  choose-other-app-window-title = Another Application…
  
  # Displayed under the name of a protocol handler in the Launch Application dialog.
 -choose-dialog-privatebrowsing-disabled = Disabled in Private Windows
 +choose-dialog-privatebrowsing-disabled = Disabled in Private Gorilla Windows
+ 
+ ## Mailto handler picker
+ ## Shown when the user clicks a mailto: link and lets them pick which configured

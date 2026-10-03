@@ -1,6 +1,8 @@
+diff --git a/browser/base/content/utilityOverlay.js b/browser/base/content/utilityOverlay.js
+index 4cc01f7f04..1850b7cbae 100644
 --- a/browser/base/content/utilityOverlay.js
 +++ b/browser/base/content/utilityOverlay.js
-@@ -12,8 +12,6 @@
+@@ -12,8 +12,6 @@ var { XPCOMUtils } = ChromeUtils.importESModule(
  
  ChromeUtils.defineESModuleGetters(this, {
    AboutNewTab: "resource:///modules/AboutNewTab.sys.mjs",
@@ -8,8 +10,8 @@
 -    "moz-src:///browser/components/aiwindow/ui/modules/AIWindow.sys.mjs",
    BrowserUtils: "resource://gre/modules/BrowserUtils.sys.mjs",
    BrowserWindowTracker: "resource:///modules/BrowserWindowTracker.sys.mjs",
-   ContextualIdentityService:
-@@ -64,9 +62,6 @@
+   ContainerCreationPanel:
+@@ -67,9 +65,6 @@ Object.defineProperty(this, "BROWSER_NEW_TAB_URL", {
          return "about:privatebrowsing";
        }
      }

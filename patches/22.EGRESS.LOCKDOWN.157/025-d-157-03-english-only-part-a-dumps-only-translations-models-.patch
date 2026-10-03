@@ -1,0 +1,20 @@
+# Gorilla 157 privacy cut
+# D-157-03 English only (part a, dumps only): translations-models.json and translations-wasm.json are no longer packaged under defaults/settings/main. Their only reader is TranslationsParent's Remote Settings clients, which return an empty list without a dump (sync is cut). The Translations CODE is NOT removed: see the report (window start-up, ML engine, LanguageDetector and C++ about: importers). Marker GORILLA UNLEASHED - PHYSICAL LOCK: English only.
+# Files: services/settings/dumps/main/moz.build
+
+diff --git a/services/settings/dumps/main/moz.build b/services/settings/dumps/main/moz.build
+index ee5e57c5b4..3ddf420224 100644
+--- a/services/settings/dumps/main/moz.build
++++ b/services/settings/dumps/main/moz.build
+@@ -31,8 +31,9 @@ if not CONFIG["MOZ_BUILD_APP"].startswith("mobile/"):
+         "search-config-overrides-v2.json",
+         "search-config-v2.json",
+         "search-default-override-allowlist.json",
+-        "translations-models.json",
+-        "translations-wasm.json",
++        # GORILLA UNLEASHED - PHYSICAL LOCK: English only
++        # Decision D-157-03: the translations-models and translations-wasm dumps are not packaged. Their only reader,
++        # TranslationsParent's Remote Settings clients, gets an empty list without them (sync is cut in this build).
+         "url-classifier-skip-urls.json",
+         "url-parser-default-unknown-schemes-interventions.json",
+         "websites-with-shared-credential-backends.json",

@@ -1,3 +1,5 @@
+diff --git a/toolkit/locales/en-US/toolkit/main-window/autocomplete.ftl b/toolkit/locales/en-US/toolkit/main-window/autocomplete.ftl
+index 0c1071a3d3..3608bdc2f9 100644
 --- a/toolkit/locales/en-US/toolkit/main-window/autocomplete.ftl
 +++ b/toolkit/locales/en-US/toolkit/main-window/autocomplete.ftl
 @@ -1,12 +1,9 @@
@@ -13,9 +15,11 @@
  autocomplete-import-logins-chrome =
      <div data-l10n-name="line1">Import your login from Google Chrome</div>
      <div data-l10n-name="line2">for { $host } and other sites</div>
-@@ -18,5 +15,4 @@
+@@ -18,7 +15,6 @@ autocomplete-import-logins-chromium-edge =
      <div data-l10n-name="line2">for { $host } and other sites</div>
  
  ##
 -
  autocomplete-import-learn-more = Learn more
+ 
+ ## Secondary actions shown on form autocomplete dropdown rows.

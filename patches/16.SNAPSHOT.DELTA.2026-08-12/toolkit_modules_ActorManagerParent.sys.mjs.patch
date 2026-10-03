@@ -1,6 +1,8 @@
+diff --git a/toolkit/modules/ActorManagerParent.sys.mjs b/toolkit/modules/ActorManagerParent.sys.mjs
+index c63bcb4c3b..25b07e25b6 100644
 --- a/toolkit/modules/ActorManagerParent.sys.mjs
 +++ b/toolkit/modules/ActorManagerParent.sys.mjs
-@@ -51,17 +51,7 @@
+@@ -64,19 +64,7 @@ let JSPROCESSACTORS = {
      },
    },
  
@@ -8,10 +10,12 @@
 -  MLEngine: {
 -    remoteTypes: ["inference"],
 -    parent: {
--      esModuleURI: "resource://gre/actors/MLEngineParent.sys.mjs",
+-      esModuleURI:
+-        "moz-src:///toolkit/components/ml/actors/MLEngineParent.sys.mjs",
 -    },
 -    child: {
--      esModuleURI: "resource://gre/actors/MLEngineChild.sys.mjs",
+-      esModuleURI:
+-        "moz-src:///toolkit/components/ml/actors/MLEngineChild.sys.mjs",
 -    },
 -    enablePreference: "browser.ml.enable",
 -  },

@@ -1,3 +1,5 @@
+diff --git a/js/src/frontend/Stencil.cpp b/js/src/frontend/Stencil.cpp
+index eddb5996f8..724b91ef2e 100644
 --- a/js/src/frontend/Stencil.cpp
 +++ b/js/src/frontend/Stencil.cpp
 @@ -4,9 +4,17 @@
@@ -18,7 +20,7 @@
  #include "mozilla/Maybe.h"                  // mozilla::Maybe
  #include "mozilla/OperatorNewExtensions.h"  // mozilla::KnownNotNull
  #include "mozilla/PodOperations.h"          // mozilla::PodCopy
-@@ -3104,8 +3112,10 @@
+@@ -3102,8 +3110,10 @@ bool CompilationStencil::delazifySelfHostedFunction(
        JS_LOG(selfHosted, Debug,
               "self_hosted_cache: reusing JIT code for script '%s'",
               nameStr.get());
@@ -29,7 +31,7 @@
  
        if (!cx->zone()->ensureJitZoneExists(cx)) {
          return false;
-@@ -3135,7 +3145,9 @@
+@@ -3133,7 +3143,9 @@ bool CompilationStencil::delazifySelfHostedFunction(
        JS_LOG(selfHosted, Debug,
               "self_hosted_cache: new JIT code entry for script '%s'",
               nameStr.get());

@@ -1,3 +1,5 @@
+diff --git a/toolkit/locales/en-US/toolkit/main-window/findbar.ftl b/toolkit/locales/en-US/toolkit/main-window/findbar.ftl
+index a2f93310f7..f9c2b4f525 100644
 --- a/toolkit/locales/en-US/toolkit/main-window/findbar.ftl
 +++ b/toolkit/locales/en-US/toolkit/main-window/findbar.ftl
 @@ -1,9 +1,7 @@
@@ -10,7 +12,7 @@
  findbar-next =
      .tooltiptext = Find the next occurrence of the phrase
  findbar-previous =
-@@ -13,35 +11,39 @@
+@@ -13,12 +11,13 @@ findbar-find-button-close =
      .tooltiptext = Close find bar
  
  findbar-highlight-all2 =
@@ -28,31 +30,8 @@
 +        .tooltiptext = Highlight all occurrences of the phrase
  
  findbar-case-sensitive =
--    .label = Match Case
--    .accesskey = C
--    .tooltiptext = Search with case sensitivity
-+    .label =
-+        Match Case
-+        .accesskey = C
-+        .tooltiptext = Search with case sensitivity
- 
- findbar-match-diacritics =
--    .label = Match Diacritics
--    .accesskey = i
--    .tooltiptext = Distinguish between accented letters and their base letters (for example, when searching for “resume”, “résumé” will not be matched)
-+    .label =
-+        Match Diacritics
-+        .accesskey = i
-+        .tooltiptext = Distinguish between accented letters and their base letters (for example, when searching for “resume”, “résumé” will not be matched)
- 
- findbar-entire-word =
--    .label = Whole Words
--    .accesskey = W
--    .tooltiptext = Search whole words only
-+    .label =
-+        Whole Words
-+        .accesskey = W
-+        .tooltiptext = Search whole words only
+     .label = Match Case
+@@ -37,11 +36,11 @@ findbar-entire-word =
  
  findbar-not-found = Phrase not found
  
@@ -67,7 +46,7 @@
  findbar-fast-find =
      .placeholder = Quick find
  findbar-fast-find-links =
-@@ -59,16 +61,18 @@
+@@ -59,16 +58,18 @@ findbar-entire-word-status =
  #   $total (Number): Total count of matches
  findbar-found-matches =
      .value =

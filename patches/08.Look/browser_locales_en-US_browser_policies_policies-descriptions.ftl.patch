@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/browser/policies/policies-descriptions.ftl b/browser/locales/en-US/browser/policies/policies-descriptions.ftl
+index 5a0c599251..7b8f9c758f 100644
 --- a/browser/locales/en-US/browser/policies/policies-descriptions.ftl
 +++ b/browser/locales/en-US/browser/policies/policies-descriptions.ftl
 @@ -1,21 +1,19 @@
@@ -23,7 +25,7 @@
  
  policy-AppAutoUpdate = Enable or disable automatic application update.
  
-@@ -33,17 +31,17 @@
+@@ -33,17 +31,17 @@ policy-AutoLaunchProtocolsFromOrigins = Define a list of external protocols that
  
  policy-BackgroundAppUpdate2 = Enable or disable the background updater.
  
@@ -46,9 +48,9 @@
  
  policy-CaptivePortal = Enable or disable captive portal support.
  
-@@ -60,15 +58,15 @@
+@@ -67,15 +65,15 @@ policy-DisabledCiphers = Disable ciphers.
  
- policy-DisabledCiphers = Disable ciphers.
+ policy-DefaultBrowserSettingEnabled = Control whether the user can set { -brand-short-name } as the default browser.
  
 -policy-DefaultDownloadDirectory = Set the default download directory.
 +policy-DefaultDownloadDirectory = Set the default Gorilla download directory.
@@ -65,7 +67,7 @@
  
  policy-DisableDeveloperTools = Block access to the developer tools.
  
-@@ -80,13 +78,13 @@
+@@ -87,13 +85,13 @@ policy-DisableFeedbackCommands = Disable commands to send feedback from the Help
  policy-DisableFirefoxAccounts1 = Disable account-based services, including sync.
  
  # Firefox Screenshots is the name of the feature, and should not be translated.
@@ -79,9 +81,9 @@
 -policy-DisableFormHistory = Don’t remember search and form history.
 +policy-DisableFormHistory = Don’t remember search and form Gorilla history.
  
- policy-DisablePrimaryPasswordCreation = If true, a Primary Password can’t be created.
+ policy-DisableLaunchOnLogin = Prevent { -brand-short-name } from launching automatically when the user logs in.
  
-@@ -94,52 +92,52 @@
+@@ -103,52 +101,52 @@ policy-DisablePasswordReveal = Do not allow passwords to be revealed in saved lo
  
  policy-DisablePrivateBrowsing = Disable Private Browsing.
  
@@ -147,7 +149,7 @@
  
  policy-FirefoxHome2 = Configure { -firefox-home-brand-name }.
  
-@@ -164,21 +162,19 @@
+@@ -173,21 +171,19 @@ policy-InstallAddonsPermission = Allow certain websites to install add-ons.
  
  policy-IPProtectionAvailable = Prevent the built-in VPN from being available to users.
  
@@ -172,7 +174,7 @@
  
  policy-ManualAppUpdateOnly = Allow manual updates only and do not notify the user about updates.
  
-@@ -188,17 +184,17 @@
+@@ -197,17 +193,17 @@ policy-PrintingEnabled = Enable or disable printing.
  
  policy-NetworkPrediction = Enable or disable network prediction (DNS prefetching).
  
@@ -194,7 +196,7 @@
  
  policy-PasswordManagerEnabled = Enable saving passwords to the password manager.
  
-@@ -221,9 +217,9 @@
+@@ -230,9 +226,9 @@ policy-Preferences = Set and lock the value for a subset of preferences.
  
  policy-PrivateBrowsingModeAvailability = Set availability of private browsing mode.
  
@@ -206,7 +208,7 @@
  
  policy-RelaunchRequired = Require { -brand-short-name } to be relaunched within a given period and notify the user of the upcoming relaunch.
  
-@@ -233,25 +229,25 @@
+@@ -242,25 +238,25 @@ policy-SanitizeOnShutdown2 = Clear navigation data on shutdown.
  
  policy-SearchBar = Set the default location of the search bar. The user is still allowed to customize it.
  
@@ -236,7 +238,7 @@
  
  policy-SupportMenu = Add a custom support menu item to the help menu.
  
-@@ -266,7 +262,7 @@
+@@ -275,7 +271,7 @@ policy-VisualSearchEnabled = Enable or disable visual search.
  # “format” refers to the format used for the value of this policy.
  policy-WebsiteFilter = Block websites from being visited. See documentation for more details on the format.
  

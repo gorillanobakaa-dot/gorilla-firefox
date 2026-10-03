@@ -1,6 +1,8 @@
+diff --git a/toolkit/mozapps/extensions/content/aboutaddons.css b/toolkit/mozapps/extensions/content/aboutaddons.css
+index 219971a5a8..1053ccbb3b 100644
 --- a/toolkit/mozapps/extensions/content/aboutaddons.css
 +++ b/toolkit/mozapps/extensions/content/aboutaddons.css
-@@ -51,6 +51,19 @@
+@@ -69,6 +69,19 @@ h2 {
    overflow: hidden auto;
  }
  
@@ -18,9 +20,9 @@
 +}
 +
  .category-badge {
-   min-width: var(--dimension-20);
+   min-width: 20px;
    background-color: var(--color-accent-primary);
-@@ -328,7 +341,13 @@
+@@ -432,7 +445,13 @@ theme-preview {
  }
  
  .theme-enable-button {
@@ -35,7 +37,7 @@
  }
  
  .addon-description {
-@@ -357,6 +376,12 @@
+@@ -461,6 +480,12 @@ addon-card:not([expanded]) .addon-description {
    align-self: center;
  }
  
@@ -47,8 +49,8 @@
 +
  /* Recommended add-ons on list views */
  .recommended-heading {
-   margin-bottom: 24px;
-@@ -535,11 +560,31 @@
+   margin-bottom: var(--space-medium);
+@@ -643,11 +668,31 @@ button.addon-detail-description-toggle {
    margin-inline-start: 8px;
  }
  
@@ -85,7 +87,7 @@
  }
  
  panel-item[action="remove"]::part(button) {
-@@ -705,7 +750,7 @@
+@@ -813,7 +858,7 @@ button.tab-button:-moz-focusring {
    box-shadow: none;
  }
  
@@ -94,19 +96,19 @@
    display: none;
  }
  
-@@ -733,13 +778,35 @@
+@@ -863,3 +908,43 @@ section:not(:empty) ~ :is(#empty-addons-message, #empty-addons-promo) {
+     --addons-promo-text-padding-inline: 0;
    }
  }
- 
--@media -moz-pref("browser.nova.enabled") {
--  [is="recommended-footer"] > .amo-link-container,
--  #empty-addons-message {
--    display: none;
--  }
--
--  addon-list:not([type="extension"]) #empty-addons-promo {
--    display: none;
--  }
++
++
++/* ==========================================================
++ * GORILLA OVERRIDES
++ * Appended rather than patched in place: these are additive
++ * overrides, and the cascade already gives later rules
++ * priority. Upstream can restructure this file freely.
++ * ========================================================== */
++
 +/* ============================================================
 + * GORILLA UNLEASHED — ABOUT:ADDONS LOBOTOMY
 + * Excise: saved/disabled themes, "Feeling creative?",
@@ -137,5 +139,4 @@
 +.theme-recommendation,
 +.amo-link-container {
 +  display: none !important;
- }
-+
++}

@@ -1,3 +1,5 @@
+diff --git a/toolkit/locales/en-US/chrome/global/commonDialogs.properties b/toolkit/locales/en-US/chrome/global/commonDialogs.properties
+index fa9abaca12..7e69dd5099 100644
 --- a/toolkit/locales/en-US/chrome/global/commonDialogs.properties
 +++ b/toolkit/locales/en-US/chrome/global/commonDialogs.properties
 @@ -1,7 +1,6 @@
@@ -8,7 +10,7 @@
  Alert=Alert
  Confirm=Confirm
  ConfirmCheck=Confirm
-@@ -19,9 +18,9 @@
+@@ -19,9 +18,9 @@ Save=&Save
  Revert=&Revert
  DontSave=Do&n’t Save
  ScriptDlgGenericHeading=[JavaScript Application]

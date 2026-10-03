@@ -1,6 +1,8 @@
+diff --git a/browser/themes/shared/customizableui/customizeMode.css b/browser/themes/shared/customizableui/customizeMode.css
+index 3265969a33..4109dc3347 100644
 --- a/browser/themes/shared/customizableui/customizeMode.css
 +++ b/browser/themes/shared/customizableui/customizeMode.css
-@@ -25,6 +25,15 @@
+@@ -25,6 +25,15 @@ toolbar[overflowable][customizing] > .customization-target {
    overflow: clip;
  }
  

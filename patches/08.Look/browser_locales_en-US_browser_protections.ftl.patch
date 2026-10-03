@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/browser/protections.ftl b/browser/locales/en-US/browser/protections.ftl
+index 5a20984cb9..3e44f18340 100644
 --- a/browser/locales/en-US/browser/protections.ftl
 +++ b/browser/locales/en-US/browser/protections.ftl
 @@ -1,27 +1,26 @@
@@ -35,7 +37,7 @@
  # Weekly summary of the graph when the graph is empty in Private Mode
  graph-week-summary-private-window = Trackers { -brand-short-name } blocked this week
  
-@@ -32,13 +31,13 @@
+@@ -32,13 +31,13 @@ protection-report-page-summary = { -brand-short-name } can protect your privacy
  # This message shows when at least some protections are turned on, we are more assertive compared to the message above, Firefox is actively protecting you.
  protection-report-page-summary-default = { -brand-short-name } protects your privacy behind the scenes while you browse. This is a personalized summary of those protections, including tools to take control of your online security.
  
@@ -52,7 +54,7 @@
  
  # This string is used to label the X axis of a graph. Other days of the week are generated via Intl.DateTimeFormat,
  # capitalization for this string should match the output for your locale.
-@@ -48,7 +47,7 @@
+@@ -48,7 +47,7 @@ graph-today = Today
  graph-legend-description = A graph containing the total number of each type of tracker blocked this week.
  
  social-tab-title = Social Media Trackers
@@ -61,7 +63,7 @@
  
  cookie-tab-title = Cross-Site Tracking Cookies
  cookie-tab-content = These cookies follow you from site to site to gather data about what you do online. They are set by third parties such as advertisers and analytics companies. Blocking cross-site tracking cookies reduces the number of ads that follow you around. <a data-l10n-name="learn-more-link">Learn more</a>
-@@ -57,46 +56,47 @@
+@@ -57,46 +56,46 @@ tracker-tab-title = Tracking Content
  tracker-tab-description = Websites may load external ads, videos, and other content with tracking code. Blocking tracking content can help sites load faster, but some buttons, forms, and login fields might not work. <a data-l10n-name="learn-more-link">Learn more</a>
  
  fingerprinter-tab-title = Fingerprinters
@@ -74,9 +76,8 @@
  protections-close-button2 =
 -  .aria-label = Close
 -  .title = Close
-+    .aria-label =
-+        Close
-+        .title = Close
++    .aria-label = Close
++    .title = Close
  
  mobile-app-title = Block ad trackers across more devices
 -mobile-app-card-content = Use the mobile browser with built-in protection against ad tracking.
@@ -124,7 +125,7 @@
  lockwise-how-it-works-link = How it works
  
  monitor-title = Look out for data breaches
-@@ -104,69 +104,69 @@
+@@ -104,69 +103,69 @@ monitor-link = How it works
  monitor-header-content-no-account = Check { -monitor-brand-name } to see if you’ve been part of a known data breach, and get alerts about new breaches.
  monitor-header-content-signed-in = { -monitor-brand-name } warns you if your info has appeared in a known data breach.
  monitor-sign-up-link = Sign up for breach alerts
@@ -215,7 +216,7 @@
  monitor-breaches-resolved-title = Nice! You’ve resolved all known breaches.
  monitor-breaches-resolved-description = If your email appears in any new breaches, we will let you know.
  
-@@ -174,9 +174,9 @@
+@@ -174,9 +173,9 @@ monitor-breaches-resolved-description = If your email appears in any new breache
  # $numBreachesResolved (Number) - Number of breaches marked as resolved by the user on Monitor.
  # $numBreaches (Number) - Number of breaches in which a user's data was involved, detected by Monitor.
  monitor-partial-breaches-title =
@@ -228,7 +229,7 @@
  
  # Variables:
  # $percentageResolved (Number) - Percentage of breaches marked as resolved by a user on Monitor.
-@@ -187,7 +187,7 @@
+@@ -187,7 +186,7 @@ monitor-partial-breaches-motivation-title-middle = Keep it up!
  monitor-partial-breaches-motivation-title-end = Almost done! Keep it up.
  monitor-partial-breaches-motivation-description = Resolve the rest of your breaches on { -monitor-brand-short-name }.
  monitor-resolve-breaches-link = Resolve breaches
@@ -237,7 +238,7 @@
  
  ## The title attribute is used to display the type of protection.
  ## The aria-label is spoken by screen readers to make the visual graph accessible to blind users.
-@@ -195,42 +195,46 @@
+@@ -195,42 +194,46 @@ monitor-resolve-breaches-link = Resolve breaches
  ## Variables:
  ##   $count (Number) - Number of specific trackers
  ##   $percentage (Number) - Percentage this type of tracker contributes to the whole graph
@@ -315,7 +316,7 @@
  
  # Privacy Metrics Card
  privacy-metrics-title = Privacy Protections
-@@ -238,45 +242,44 @@
+@@ -238,45 +241,44 @@ privacy-metrics-title = Privacy Protections
  #   $count (Number) - Total number of trackers blocked this week
  privacy-metrics-blocked-this-week =
      { $count ->
@@ -373,7 +374,7 @@
  protections-vpn-header-content = Protect your entire device with { -mozilla-vpn-brand-name }. One tap encrypts all traffic and hides your location.
  protections-get-vpn-link = Get { -mozilla-vpn-brand-name }
  
-@@ -285,9 +288,9 @@
+@@ -285,9 +287,9 @@ protections-vpn-title-subscribed = VPN: Subscribed
  #   $count (number): Number of devices
  protections-vpn-header-content-subscribed =
      { $count ->

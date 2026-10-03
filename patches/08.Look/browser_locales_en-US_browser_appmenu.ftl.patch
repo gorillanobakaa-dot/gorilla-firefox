@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/browser/appmenu.ftl b/browser/locales/en-US/browser/appmenu.ftl
+index 451657fd11..6a039247b4 100644
 --- a/browser/locales/en-US/browser/appmenu.ftl
 +++ b/browser/locales/en-US/browser/appmenu.ftl
 @@ -1,17 +1,15 @@
@@ -20,16 +22,16 @@
  
  appmenuitem-banner-update-unsupported =
      .label = Unable to update — system incompatible
-@@ -21,7 +19,7 @@
+@@ -20,7 +18,7 @@ appmenuitem-banner-update-restart =
+     .label = Update available — restart now
  
- # Fresh Firefox refers to the new updated UI
- appmenu-nova-update-promo =
--    .message = Get a fresh { -brand-short-name }. Keep all your tabs.
-+    .message = Get a fresh { -brand-short-name }. Keep all your Gorilla tabs.
+ appmenu-nova-update-title = Restart to update { -brand-short-name }
+-appmenu-nova-update-description = Your tabs will reopen.
++appmenu-nova-update-description = Your Gorilla tabs will reopen.
  
- appmenu-nova-update-link = Restart to update
+ appmenu-nova-fxa-sign-in = Sign in
  
-@@ -33,29 +31,29 @@
+@@ -30,29 +28,29 @@ appmenu-nova-switch-device-promo =
  appmenu-nova-switch-device-link = How to migrate your data
  
  appmenuitem-new-tab =
@@ -69,9 +71,9 @@
 +    .label = Translate Gorilla Page…
  appmenuitem-zoom =
      .value = Zoom
- appmenuitem-more-tools =
-@@ -64,68 +62,71 @@
-     .label = Help
+ 
+@@ -67,9 +65,10 @@ appmenuitem-help-and-report =
+     .label = Help and Report
  appmenuitem-exit2 =
      .label =
 +        
@@ -82,18 +84,8 @@
 +        *[other] Exit
          }
  appmenu-menu-button-closed2 =
--    .tooltiptext = Open application menu
--    .label = { -brand-short-name }
-+    .tooltiptext =
-+        Open application menu
-+        .label = { -brand-short-name }
- appmenu-menu-button-opened2 =
--    .tooltiptext = Close application menu
--    .label = { -brand-short-name }
-+    .tooltiptext =
-+        Close application menu
-+        .label = { -brand-short-name }
- 
+     .tooltiptext = Open application menu
+@@ -81,54 +80,52 @@ appmenu-menu-button-opened2 =
  # Settings is now used to access the browser settings across all platforms,
  # instead of Options or Preferences.
  appmenuitem-settings =
@@ -125,17 +117,15 @@
  appmenu-remote-tabs-showmore =
 -  .label = Show more tabs
 -  .tooltiptext = Show more tabs from this device
-+    .label =
-+        Show more Gorilla tabs
-+        .tooltiptext = Show more Gorilla tabs from this device
++    .label = Show more Gorilla tabs
++    .tooltiptext = Show more Gorilla tabs from this device
  
  # This is shown as the label for an element to show inactive tabs from this device.
  appmenu-remote-tabs-show-inactive-tabs =
 -  .label = Inactive tabs
 -  .tooltiptext = See inactive tabs on this device
-+    .label =
-+        Inactive Gorilla tabs
-+        .tooltiptext = See inactive Gorilla tabs on this device
++    .label = Inactive Gorilla tabs
++    .tooltiptext = See inactive Gorilla tabs on this device
  
  # This is shown beneath the name of a device when that device has no open tabs
 -appmenu-remote-tabs-notabs = No open tabs
@@ -165,16 +155,18 @@
 -appmenuitem-fxa-sign-in = Sign in to { -brand-product-name }
 +appmenuitem-fxa-sign-in = Gorilla Sign In
  appmenuitem-fxa-manage-account = Manage account
- appmenu-account-header = Account
- # Variables
-@@ -133,240 +134,256 @@
+ 
+ fxa-menu-sync-status-on = Sync is On
+@@ -189,7 +186,7 @@ appmenu-account-header = Account
  # 3 hours ago, etc.)
  appmenu-fxa-last-sync = Last synced { $time }
      .label = Last synced { $time }
--appmenu-fxa-sync-and-save-data2 = Sync and save data
-+appmenu-fxa-sync-and-save-data2 = Sync and save Gorilla data
+-appmenu-fxa-sync-and-save-data2 = Sync and Save Data
++appmenu-fxa-sync-and-save-data2 = Sync and Save Gorilla Data
  appmenu-fxa-signed-in-label = Sign In
- appmenu-fxa-setup-sync =
+ 
+ # Sign-in promo shown in the app menu when signed out and no menu message or
+@@ -202,10 +199,10 @@ appmenu-fxa-setup-sync =
      .label = Turn On Syncing…
  appmenu-fxa-setup-sync-new = Turn On
  appmenuitem-save-page =
@@ -187,170 +179,62 @@
  
  ## The Firefox Profiler – The popup is the UI to turn on the profiler, and record
  ## performance profiles. To enable it go to profiler.firefox.com and click
- ## "Enable Profiler Menu Button".
--
- profiler-button-dropmarker =
--    .label = Open the profiler panel
--    .tooltiptext = Open the profiler panel
-+    .label =
-+        Open the profiler panel
-+        .tooltiptext = Open the profiler panel
+@@ -217,15 +214,15 @@ profiler-button-dropmarker =
  
  profiler-popup-button-idle =
--  .label = Profiler
+   .label = Profiler
 -  .tooltiptext = Record a performance profile
-+    .label =
-+        Profiler
-+        .tooltiptext = Record a performance Gorilla profile
++  .tooltiptext = Record a performance Gorilla profile
  
  profiler-popup-button-recording =
--  .label = Profiler
+   .label = Profiler
 -  .tooltiptext = The profiler is recording a profile
-+    .label =
-+        Profiler
-+        .tooltiptext = The profiler is recording a Gorilla profile
++  .tooltiptext = The profiler is recording a Gorilla profile
  
  profiler-popup-button-capturing =
--  .label = Profiler
+   .label = Profiler
 -  .tooltiptext = The profiler is capturing a profile
-+    .label =
-+        Profiler
-+        .tooltiptext = The profiler is capturing a Gorilla profile
++  .tooltiptext = The profiler is capturing a Gorilla profile
  
  profiler-popup-header-text = { -profiler-brand-name }
  
- profiler-popup-reveal-description-button =
--  .aria-label = Reveal more information
-+    .aria-label = Reveal more information
- 
- profiler-popup-description-title =
--  .value = Record, analyze, share
-+    .value = Record, analyze, share
- 
--profiler-popup-description =
--  Collaborate on performance issues by publishing profiles to share with your team.
-+profiler-popup-description = Collaborate on performance issues by publishing Gorilla profiles to share with your team.
- 
- profiler-popup-learn-more-button =
--  .label = Learn more
-+    .label = Learn more
+@@ -242,11 +239,11 @@ profiler-popup-learn-more-button =
+   .label = Learn more
  
  profiler-popup-settings =
 -  .value = Settings
-+    .value = Gorilla Settings
++  .value = Gorilla Settings
  
  # This link takes the user to about:profiling, and is only visible with the Custom preset.
  profiler-popup-edit-settings-button =
 -  .label = Edit Settings…
-+    .label = Edit Gorilla Settings…
++  .label = Edit Gorilla Settings…
  
  profiler-popup-recording-screen = Recording…
  
- profiler-popup-start-recording-button =
--  .label = Start Recording
-+    .label = Start Recording
- 
- profiler-popup-discard-button =
--  .label = Discard
-+    .label = Discard
- 
- profiler-popup-capture-button =
--  .label = Capture
-+    .label = Capture
- 
- profiler-popup-start-shortcut =
--  { PLATFORM() ->
--      [macos] ⌃⇧1
--     *[other] Ctrl+Shift+1
--  }
-+    { PLATFORM() ->
-+    [macos] ⌃⇧1
-+    *[other] Ctrl+Shift+1
-+    }
- 
- profiler-popup-capture-shortcut =
--  { PLATFORM() ->
--      [macos] ⌃⇧2
--     *[other] Ctrl+Shift+2
--  }
-+    { PLATFORM() ->
-+    [macos] ⌃⇧2
-+    *[other] Ctrl+Shift+2
-+    }
- 
- ## Profiler presets
- ## They are shown in the popup's select box.
--
- # Presets and their l10n IDs are defined in the file
- # devtools/client/performance-new/shared/background.sys.mjs
- # Please take care that the same values are also defined in devtools' perftools.ftl.
--
- profiler-popup-presets-web-developer-description = Recommended preset for most web app debugging, with low overhead.
- profiler-popup-presets-web-developer-label =
--  .label = Web Developer
-+    .label = Web Developer
- 
- profiler-popup-presets-firefox-description = Recommended preset for profiling { -brand-shorter-name }.
- profiler-popup-presets-firefox-label =
--  .label = { -brand-shorter-name }
-+    .label = { -brand-shorter-name }
- 
- profiler-popup-presets-graphics-description = Preset for investigating graphics bugs in { -brand-shorter-name }.
- profiler-popup-presets-graphics-label =
--  .label = Graphics
-+    .label = Graphics
- 
- profiler-popup-presets-media-description2 = Preset for investigating audio and video bugs in { -brand-shorter-name }.
- profiler-popup-presets-media-label =
--  .label = Media
-+    .label = Media
- 
- profiler-popup-presets-ml-description = Preset for investigating machine learning bugs in { -brand-shorter-name }.
- profiler-popup-presets-ml-label =
--  .label = Machine Learning
-+    .label = Machine Learning
- 
- profiler-popup-presets-networking-description = Preset for investigating networking bugs in { -brand-shorter-name }.
- profiler-popup-presets-networking-label =
--  .label = Networking
--
--profiler-popup-presets-networking-with-logs-description = Preset for investigating networking bugs in { -brand-shorter-name }, including networking logs. These logs may contain sensitive information such as the URLs you visit.
--profiler-popup-presets-networking-with-logs-label =
--  .label = Networking with Logs
-+    .label = Networking
- 
- profiler-popup-presets-power-description = Preset for investigating power use bugs in { -brand-shorter-name }, with low overhead.
- # "Power" is used in the sense of energy (electricity used by the computer).
+@@ -311,7 +308,7 @@ profiler-popup-presets-power-description = Preset for investigating power use bu
  profiler-popup-presets-power-label =
--  .label = Power
-+    .label = Power
+   .label = Power
  
 -profiler-popup-presets-debug-description = Preset for debugging in { -brand-shorter-name }. High overhead, do not use for performance work but use for focusing on understanding browser behavior.
 +profiler-popup-presets-debug-description = Preset for debugging in { -brand-shorter-name }. High overhead, do not use for performance work but use for focusing on understanding Gorilla browser behavior.
  profiler-popup-presets-debug-label =
--  .label = Debug
-+    .label = Debug
+   .label = Debug
  
- profiler-popup-presets-web-compat-description = Recommended preset for debugging web compatibility issues in websites, rather than tracking performance.
- profiler-popup-presets-web-compat-label =
--  .label = Web Compat
-+    .label = Web Compat
- 
- profiler-popup-presets-custom-label =
--  .label = Custom
-+    .label = Custom
- 
+@@ -325,7 +322,7 @@ profiler-popup-presets-custom-label =
  ## History panel
--
+ 
  appmenu-manage-history =
 -    .label = Manage history
 +    .label = Manage Gorilla history
- appmenu-restore-session =
+ 
+ ## Sync promo shown at the bottom of the History and Bookmarks panels. Its
+ ## variant depends on the user's account and Sync state. The sign-in heading and
+@@ -354,14 +351,14 @@ appmenu-restore-session =
      .label = Restore previous session
  appmenu-clear-history =
--    .label = Clear recent history…
+     .label = Clear recent history…
 -appmenu-recent-history-subheader = Recent history
-+    .label = Clear Recent Gorilla History…
 +appmenu-recent-history-subheader = Recent Gorilla history
  appmenu-recently-closed-tabs =
 -    .label = Recently closed tabs
@@ -364,70 +248,10 @@
 +    .label = Search Gorilla history
  
  ## Help panel
--
- appmenu-help-header =
-     .title = { -brand-shorter-name } help
- appmenu-about =
--    .label = About { -brand-shorter-name }
--    .accesskey = A
-+    .label =
-+        About { -brand-shorter-name }
-+        .accesskey = A
- appmenu-get-help =
--    .label = Get help
--    .accesskey = h
-+    .label =
-+        Get help
-+        .accesskey = h
- appmenu-help-more-troubleshooting-info =
--    .label = More troubleshooting information
--    .accesskey = t
-+    .label =
-+        More troubleshooting information
-+        .accesskey = t
- appmenu-help-share-ideas =
--    .label = Share ideas and feedback…
--    .accesskey = S
-+    .label =
-+        Share ideas and feedback…
-+        .accesskey = S
- appmenu-help-switch-device =
-     .label = Switching to a new device
  
- ## appmenu-help-enter-troubleshoot-mode and appmenu-help-exit-troubleshoot-mode
- ## are mutually exclusive, so it's possible to use the same accesskey for both.
--
- appmenu-help-enter-troubleshoot-mode2 =
--    .label = Troubleshoot Mode…
--    .accesskey = M
-+    .label =
-+        Troubleshoot Mode…
-+        .accesskey = M
- appmenu-help-exit-troubleshoot-mode =
--    .label = Turn Troubleshoot Mode off
--    .accesskey = M
-+    .label =
-+        Turn Troubleshoot Mode off
-+        .accesskey = M
- 
- ## appmenu-help-report-deceptive-site and appmenu-help-not-deceptive
- ## are mutually exclusive, so it's possible to use the same accesskey for both.
--
- appmenu-help-report-deceptive-site =
--    .label = Report deceptive site…
--    .accesskey = d
-+    .label =
-+        Report deceptive site…
-+        .accesskey = d
- appmenu-help-not-deceptive =
--    .label = This isn’t a deceptive site…
--    .accesskey = d
-+    .label =
-+        This isn’t a deceptive site…
-+        .accesskey = d
- 
+@@ -411,15 +408,15 @@ appmenu-help-not-deceptive =
  ## More Tools
--
+ 
  appmenu-customizetoolbar =
 -    .label = Customize toolbar…
 +    .label = Customize Gorilla toolbar…
@@ -437,88 +261,19 @@
      .label = Edit PDF…
  
 -appmenu-developer-tools-subheader = Browser tools
-+appmenu-developer-tools-subheader = Gorilla Browser Tools
++appmenu-developer-tools-subheader = Gorilla Browser tools
  appmenu-developer-tools-extensions =
 -    .label = Extensions for developers
 +    .label = Gorilla Extensions for developers
  appmenuitem-report-broken-site =
--  .label = Report Broken Site
-+    .label = Report Broken Site
+   .label = Report Broken Site
  
- ## Panel for privacy and security products
--
- appmenuitem-sign-in-account = Sign in to your account
+@@ -472,7 +469,7 @@ fxa-menu-device-send-current-page =
  
--appmenuitem-monitor-title2 = Stay Ahead of Identity Theft
--appmenuitem-monitor-description2 = Get alerts about data breaches
-+appmenuitem-monitor-title = { -monitor-brand-short-name }
-+appmenuitem-monitor-description = Get data breach alerts
- appmenuitem-relay-title = { -relay-brand-short-name }
--appmenuitem-relay-title2 = Keep Your Email Private
--appmenuitem-relay-description2 = Helps prevent spam in your inbox
-+appmenuitem-relay-description = Mask your real email and phone
- appmenuitem-services-relay-description = Launch email masks dashboard
--appmenuitem-vpn-title2 = Hide Your Location with { -mozilla-vpn-brand-name }
--appmenuitem-vpn-description3 = Make your browsing harder to trace
-+appmenuitem-vpn-title = { -mozilla-vpn-brand-name }
-+appmenuitem-vpn-description-2 = Get whole-device protection
- 
- appmenu-services-header = My services
- # "Mozilla" is intentionally hardcoded to prevent forks from replacing it
- # with their own vendor name, since these tools are created and maintained by
- # Mozilla.
--appmenu-other-protection-header3 = Privacy tools
-+appmenu-other-protection-header2 = Try other protection tools from Gorilla:
- 
- ## Profiles panel
--
--appmenu-profiles-header = Profiles
--appmenu-all-profiles =
--    .label = All Profiles
--appmenu-secure-sync-header = Secure sync
--
  appmenu-profiles-2 =
--    .label = Profiles
+     .label = Profiles
 -appmenu-other-profiles = Other profiles
-+    .label = Gorilla Profiles
 +appmenu-other-profiles = Other Gorilla profiles
  appmenu-manage-profiles =
--    .label = Manage Profiles
-+    .label = Manage Gorilla profiles
+     .label = Manage Profiles
  appmenu-copy-profile =
--    .label = Copy This Profile
-+    .label = Copy this Gorilla profile
-+appmenu-create-profile =
-+    .label = New Gorilla profile
-+appmenu-edit-profile =
-+    .aria-label = Edit Gorilla profile
-+
-+# GORILLA REPAIR 2026-07-31: messages required by FF154 code, grafted
-+# verbatim from the vanilla vault file (branding flows via -brand terms).
-+appmenu-all-profiles =
-+    .label = All Profiles
- appmenu-create-profile2 =
-     .label = Create a New Profile
--appmenu-edit-profile =
--    .aria-label = Edit profile
- appmenu-edit-this-profile =
-     .label = Edit This Profile
-+appmenuitem-monitor-description2 = Get alerts about data breaches
-+appmenuitem-monitor-title2 = Stay Ahead of Identity Theft
-+appmenuitem-relay-description2 = Helps prevent spam in your inbox
-+appmenuitem-relay-title2 = Keep Your Email Private
-+appmenuitem-vpn-description3 = Make your browsing harder to trace
-+
-+appmenuitem-vpn-title2 = Hide Your Location with { -mozilla-vpn-brand-name }
-+appmenu-other-protection-header3 = Privacy tools
-+
-+## Profiles panel
-+
- appmenu-profile-current-in-use = Current profile in use
-+appmenu-profiles-header = Profiles
-+appmenu-secure-sync-header = Secure sync
-+
-+profiler-popup-presets-networking-with-logs-description = Preset for investigating networking bugs in { -brand-shorter-name }, including networking logs. These logs may contain sensitive information such as the URLs you visit.
-+profiler-popup-presets-networking-with-logs-label =
-+  .label = Networking with Logs
-+

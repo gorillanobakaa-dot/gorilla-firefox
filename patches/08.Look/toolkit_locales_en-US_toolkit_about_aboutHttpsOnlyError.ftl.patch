@@ -1,3 +1,5 @@
+diff --git a/toolkit/locales/en-US/toolkit/about/aboutHttpsOnlyError.ftl b/toolkit/locales/en-US/toolkit/about/aboutHttpsOnlyError.ftl
+index 85242568ba..535e1276b0 100644
 --- a/toolkit/locales/en-US/toolkit/about/aboutHttpsOnlyError.ftl
 +++ b/toolkit/locales/en-US/toolkit/about/aboutHttpsOnlyError.ftl
 @@ -1,7 +1,6 @@
@@ -8,7 +10,7 @@
  about-httpsonly-title-alert = HTTPS-Only Mode Alert
  about-httpsonly-title-site-not-available = Secure Site Not Available
  
-@@ -21,7 +20,6 @@
+@@ -21,7 +20,6 @@ about-httpsonly-link-learn-more = Learn More…
  ## Suggestion Box that only shows up if a secure connection to www can be established
  ## Variables:
  ##   $websiteUrl (String) - Url of the website that can be securely loaded with these alternatives. Example: example.com

@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/browser/newtab/asrouter.ftl b/browser/locales/en-US/browser/newtab/asrouter.ftl
+index 817e392bfa..739948cca5 100644
 --- a/browser/locales/en-US/browser/newtab/asrouter.ftl
 +++ b/browser/locales/en-US/browser/newtab/asrouter.ftl
 @@ -1,28 +1,25 @@
@@ -36,15 +38,14 @@
  
  cfr-doorhanger-extension-learn-more-link = Learn more
  
-@@ -36,119 +33,117 @@
+@@ -36,119 +33,113 @@ cfr-doorhanger-extension-author = by { $name }
  cfr-doorhanger-extension-notification = Recommendation
  # .a11y-announcement is extracted in JS and announced via A11y.announce.
  cfr-doorhanger-extension-notification2 = Recommendation
 -  .tooltiptext = Extension recommendation
 -  .a11y-announcement = Extension recommendation available
-+    .tooltiptext =
-+        Gorilla Extension recommendation
-+        .a11y-announcement = Gorilla Extension recommendation available
++    .tooltiptext = Gorilla Extension recommendation
++    .a11y-announcement = Gorilla Extension recommendation available
  
  # This is a notification displayed in the address bar.
  # When clicked it opens a panel with a message for the user.
@@ -52,9 +53,8 @@
  cfr-doorhanger-feature-notification = Recommendation
 -  .tooltiptext = Feature recommendation
 -  .a11y-announcement = Feature recommendation available
-+    .tooltiptext =
-+        Feature recommendation
-+        .a11y-announcement = Feature recommendation available
++    .tooltiptext = Feature recommendation
++    .a11y-announcement = Feature recommendation available
  
  ## Add-on statistics
  ## These strings are used to display the total number of
@@ -96,9 +96,8 @@
  cfr-doorhanger-bookmark-fxa-close-btn-tooltip =
 -  .aria-label = Close button
 -  .title = Close
-+    .aria-label =
-+        Close button
-+        .title = Close
++    .aria-label = Close button
++    .title = Close
  
  fxa-adoption-addresses-backup-title = Let’s back up your saved addresses
  fxa-adoption-addresses-backup-subtitle = Protect your saved addresses by syncing them to your devices with encryption.
@@ -120,9 +119,8 @@
  cfr-whatsnew-button =
 -  .label = What’s New
 -  .tooltiptext = What’s New
-+    .label =
-+        What’s New
-+        .tooltiptext = What’s New
++    .label = What’s New
++    .tooltiptext = What’s New
  
  cfr-whatsnew-release-notes-link-text = Read the release notes
  
@@ -194,7 +192,7 @@
  }
  spotlight-pin-secondary-button = Not now
  
-@@ -164,7 +159,6 @@
+@@ -164,7 +155,6 @@ spotlight-pin-secondary-button = Not now
  ##
  ## The button labels are fitted into narrow fixed-width buttons by
  ## Windows and therefore must be as narrow as possible.
@@ -202,21 +200,7 @@
  mr2022-background-update-toast-title = New { -brand-short-name }. More private. Fewer trackers. No compromises.
  mr2022-background-update-toast-text = Try the newest { -brand-short-name } now, upgraded with our strongest anti-tracking protection yet.
  
-@@ -181,13 +175,11 @@
- mr2022-background-update-toast-secondary-button-label = Remind Me Later
- 
- ## Cookie Banner Handling CFR
--
- cookie-banner-blocker-onboarding-header = { -brand-short-name } just refused a cookie banner for you
- cookie-banner-blocker-onboarding-body = Less distractions, less cookies tracking you on this site.
- cookie-banner-blocker-onboarding-learn-more = Learn more
- 
- ## These strings are used in the Fox doodle Pin/set default spotlights
--
- july-jam-headline = We’ve got you covered
- july-jam-body = Every month, { -brand-short-name } blocks an average of 3,000+ trackers per user, giving you safe, speedy access to the good internet.
- july-jam-set-default-primary = Open my links with { -brand-short-name }
-@@ -195,17 +187,15 @@
+@@ -189,17 +179,15 @@ fox-doodle-pin-headline = Welcome back
  
  # “indie” is short for the term “independent”.
  # In this instance, free from outside influence or control.
@@ -236,7 +220,7 @@
  # “Sign on the dotted line” is an idiomatic English expression about
  # where to place your signature.
  # If this expression doesn’t have a direct translation, please
-@@ -220,18 +210,16 @@
+@@ -214,18 +202,16 @@ annotations-make-default-pdf-primary-cta-label = Set as default
  annotations-make-default-pdf-next-label = Next
  
  ## FxA sync CFR
@@ -259,7 +243,7 @@
  device-migration-fxa-spotlight-heavy-user-primary-button = Get started
  
  device-migration-fxa-spotlight-older-device-header = Peace of mind, from { -brand-product-name }
-@@ -239,15 +227,14 @@
+@@ -233,15 +219,14 @@ device-migration-fxa-spotlight-older-device-body = An account keeps your importa
  device-migration-fxa-spotlight-older-device-primary-button = Create an account
  
  device-migration-fxa-spotlight-getting-new-device-header-2 = New device in your future?
@@ -277,50 +261,7 @@
  # The question portion of the following message should have the <strong> and </strong> tags surrounding it.
  pdf-default-notification-message = <strong>Make { -brand-short-name } your default PDF reader?</strong> Use { -brand-short-name } to read and edit PDFs saved to your computer.
  pdf-default-notification-set-default-button =
-@@ -256,37 +243,33 @@
-     .label = Not now
- 
- ## Launch on login infobar notification
--
- launch-on-login-infobar-message = <strong>Open { -brand-short-name } every time you restart your computer?</strong> Now you can set { -brand-short-name } to open automatically when you restart your device.
- launch-on-login-learnmore = Learn more
- launch-on-login-infobar-confirm-button = Yes, open { -brand-short-name }
--  .accesskey = Y
-+    .accesskey = Y
- launch-on-login-infobar-reject-button = Not now
--  .accesskey = N
-+    .accesskey = N
- 
- ## These string variants are used when the “launch on login” infobar
- ## notification is displayed for a second time.
--
--launch-on-login-infobar-final-message = <strong>Open { -brand-short-name } every time you restart your computer?</strong> To manage your Startup preferences, search “startup” in settings.
-+launch-on-login-infobar-final-message = <strong>Open { -brand-short-name } every time you restart your computer?</strong> To manage your Startup preferences, search “startup” in Gorilla settings.
- launch-on-login-infobar-final-reject-button = No thanks
--  .accesskey = N
-+    .accesskey = N
- 
- ## Launch on login spotlight
- ##
- ## Shown as a spotlight message when the user closes the browser, offering to set
- ## { -brand-short-name } to launch when the computer starts up.
--
- launch-on-login-spotlight-title = Open { -brand-short-name } next time your computer starts up?
- launch-on-login-spotlight-startup-checkbox = Launch { -brand-short-name } at startup
- launch-on-login-spotlight-pin-taskbar-checkbox = Pin to taskbar
- # This checkbox label intentionally matches “startup-restore-windows-and-tabs”
- # in the Settings (preferences.ftl). Localizers can reuse the existing
- # translation suggested by translation memory.
--launch-on-login-spotlight-restore-checkbox = Open previous windows and tabs
-+launch-on-login-spotlight-restore-checkbox = Open previous Gorilla windows and Gorilla tabs
- launch-on-login-spotlight-primary-button = Save and close { -brand-short-name }
- 
- ## Tail Fox Set Default Spotlight
--
- # This title is displayed together with the picture of a running fox with a long tail.
- # In English, this is a figure of speech meaning 'stop something from following you'.
- # If the localization of this message is challenging, consider using a simplified
-@@ -297,117 +280,113 @@
+@@ -275,32 +260,28 @@ tail-fox-spotlight-primary-button = Open my links with { -brand-short-name }
  tail-fox-spotlight-secondary-button = Not now
  
  ## Welcome Back Spotlight and Import
@@ -338,15 +279,13 @@
  root-certificate-succession-infobar-primary-button =
 -  .label = Update now
 -  .accesskey = U
-+    .label =
-+        Update now
-+        .accesskey = U
++    .label = Update now
++    .accesskey = U
  root-certificate-succession-infobar-secondary-button =
 -  .label = Later
 -  .accesskey = L
-+    .label =
-+        Later
-+        .accesskey = L
++    .label = Later
++    .accesskey = L
  
  ## Root Certificate Succession Windows Background Notification
 -
@@ -359,14 +298,9 @@
  ## FxA Menu Message variants
 -
  fxa-menu-message-close-button =
--    .title = Close
--    .aria-label = Close
-+    .title =
-+        Close
-+        .aria-label = Close
- 
- fxa-menu-message-sign-up-button = Sign up
- fxa-menu-message-sign-in-button = Sign in
+     .title = Close
+     .aria-label = Close
+@@ -310,82 +291,79 @@ fxa-menu-message-sign-in-button = Sign in
  fxa-menu-message-sync-button = Start syncing
  
  fxa-menu-message-sync-devices-primary-text = Sync all your devices
@@ -476,7 +410,7 @@
  
  # In English, "dropped" is a colloquial form for released.
  windows-10-eos-feature-toast-subtitle = By popular request, { -brand-product-name } just dropped new features to keep your browsing streamlined and focused.
-@@ -415,12 +394,11 @@
+@@ -393,12 +371,11 @@ windows-10-eos-feature-toast-whats-new-button = See what’s new
  windows-10-eos-feature-toast-dismiss-button = Dismiss
  
  ## Windows 10 EoS Global Infobar
@@ -492,7 +426,7 @@
  
  ## ETP (Enhanced Tracking Protection) Strict exceptions infobar
  ##
-@@ -428,58 +406,57 @@
+@@ -406,61 +383,60 @@ windows-10-eos-global-infobar-learn-more-link = Learn more
  ## Enhanced Tracking Protection's Strict mode is causing website functionality
  ## issues. The infobar offers users the option to apply automatic exceptions
  ## to fix common site breakage by unblocking essential elements.
@@ -571,3 +505,6 @@
  nova-early-access-infobar-primary-button = Got it
 -  .accesskey = G
 +    .accesskey = G
+ 
+ ## Firefox launch options spotlight
+ ##

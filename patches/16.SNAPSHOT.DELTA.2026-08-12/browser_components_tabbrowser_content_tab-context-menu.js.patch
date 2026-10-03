@@ -1,6 +1,8 @@
+diff --git a/browser/components/tabbrowser/content/tab-context-menu.js b/browser/components/tabbrowser/content/tab-context-menu.js
+index 694225ca00..f0f5c7590d 100644
 --- a/browser/components/tabbrowser/content/tab-context-menu.js
 +++ b/browser/components/tabbrowser/content/tab-context-menu.js
-@@ -840,26 +840,15 @@
+@@ -840,26 +840,15 @@ var TabContextMenu = {
      contextUnpinSelectedTabs.hidden =
        !this.contextTab.pinned || !this.multiselected;
  
@@ -35,11 +37,11 @@
      }
  
      // Move Tab items
-@@ -1445,7 +1434,6 @@
- };
+@@ -1461,7 +1450,6 @@ XPCOMUtils.defineLazyPreferenceGetter(
+ );
  
  ChromeUtils.defineESModuleGetters(TabContextMenu, {
 -  GenAI: "resource:///modules/GenAI.sys.mjs",
    MenuSectionLayout: "resource:///modules/MenuSectionLayout.sys.mjs",
+   Tabbrowser: "moz-src:///browser/components/tabbrowser/Tabbrowser.sys.mjs",
    TabNotes: "moz-src:///browser/components/tabnotes/TabNotes.sys.mjs",
- });

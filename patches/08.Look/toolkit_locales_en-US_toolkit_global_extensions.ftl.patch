@@ -1,3 +1,5 @@
+diff --git a/toolkit/locales/en-US/toolkit/global/extensions.ftl b/toolkit/locales/en-US/toolkit/global/extensions.ftl
+index 272a8bb04b..20c6aee5a9 100644
 --- a/toolkit/locales/en-US/toolkit/global/extensions.ftl
 +++ b/toolkit/locales/en-US/toolkit/global/extensions.ftl
 @@ -1,23 +1,20 @@
@@ -26,65 +28,35 @@
  
  webext-perms-header-update-required-perms = New required permissions:
  
-@@ -35,41 +32,47 @@
+@@ -35,7 +32,6 @@ webext-perms-header-update-data-collection-perms = New required data collection:
  webext-perms-header-optional-data-collection-perms = New data collection:
  
  ##
 -
  webext-perms-add =
--    .label = Add
--    .accesskey = A
-+    .label =
-+        Add
-+        .accesskey = A
- webext-perms-cancel =
--    .label = Cancel
--    .accesskey = C
-+    .label =
-+        Cancel
-+        .accesskey = C
+     .label = Add
+     .accesskey = A
+@@ -43,8 +39,8 @@ webext-perms-cancel =
+     .label = Cancel
+     .accesskey = C
  
 -webext-perms-sideload-text = Another program on your computer installed an add-on that may affect your browser. Please review this add-on’s permissions requests and choose to Enable or Cancel (to leave it disabled).
 -webext-perms-sideload-text-no-perms = Another program on your computer installed an add-on that may affect your browser. Please choose to Enable or Cancel (to leave it disabled).
 +webext-perms-sideload-text = Another program on your computer installed an add-on that may affect your Gorilla browser. Please review this add-on’s permissions requests and choose to Enable or Cancel (to leave it disabled).
 +webext-perms-sideload-text-no-perms = Another program on your computer installed an add-on that may affect your Gorilla browser. Please choose to Enable or Cancel (to leave it disabled).
  webext-perms-sideload-enable =
--    .label = Enable
--    .accesskey = E
-+    .label =
-+        Enable
-+        .accesskey = E
- webext-perms-sideload-cancel =
--    .label = Cancel
--    .accesskey = C
-+    .label =
-+        Cancel
-+        .accesskey = C
+     .label = Enable
+     .accesskey = E
+@@ -54,7 +50,7 @@ webext-perms-sideload-cancel =
  
  # Variables:
  #   $extension (String): replaced with the localized name of the extension.
 -webext-perms-update-text2 = { $extension } has been updated. You must approve new permissions before the updated version will install. Choosing “Cancel” will maintain your current extension version.
 +webext-perms-update-text2 = { $extension } has been updated. You must approve new permissions before the updated version will install. Choosing “Cancel” will maintain your current Gorilla extension version.
  webext-perms-update-accept =
--    .label = Update
--    .accesskey = U
-+    .label =
-+        Update
-+        .accesskey = U
- 
- webext-perms-optional-perms-list-intro = It wants to:
- webext-perms-optional-perms-allow =
--    .label = Allow
--    .accesskey = A
-+    .label =
-+        Allow
-+        .accesskey = A
- webext-perms-optional-perms-deny =
--    .label = Deny
--    .accesskey = D
-+    .label =
-+        Deny
-+        .accesskey = D
+     .label = Update
+     .accesskey = U
+@@ -69,7 +65,7 @@ webext-perms-optional-perms-deny =
  
  webext-perms-host-description-all-urls = Access your data for all websites
  
@@ -93,7 +65,7 @@
  
  # Variables:
  #   $domain (String): will be replaced by the DNS domain for which a webextension is requesting access (e.g., mozilla.org)
-@@ -92,34 +95,33 @@
+@@ -92,34 +88,33 @@ webext-perms-host-description-one-domain = Access your data for sites in { $doma
  #     (the list of domains will follow this string).
  webext-perms-host-description-multiple-domains =
      { $domainCount ->
@@ -136,7 +108,7 @@
  
  # Variables:
  #   $extension (String): replaced with the localized name of the extension.
-@@ -131,23 +133,19 @@
+@@ -131,23 +126,19 @@ webext-perms-optional-text-with-data-collection-only = { $extension } requests a
  ## Note, this string will be used as raw markup. Avoid characters like <, >, &
  ## Variables:
  ##   $hostname (String): the hostname of the site the add-on is being installed from.
@@ -162,7 +134,7 @@
  
      You will be able to choose which devices the website can access.
  
-@@ -158,17 +156,14 @@
+@@ -158,17 +149,14 @@ webext-site-perms-description-gated-perms-webserial =
  ## Variables:
  ##   $extension (String): replaced with the localized name of the extension being installed.
  ##   $hostname (String): will be replaced by the DNS host name for which a webextension enables permissions.

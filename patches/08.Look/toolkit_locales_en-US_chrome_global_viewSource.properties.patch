@@ -1,3 +1,5 @@
+diff --git a/toolkit/locales/en-US/chrome/global/viewSource.properties b/toolkit/locales/en-US/chrome/global/viewSource.properties
+index 93ed26b640..bf7a7fde73 100644
 --- a/toolkit/locales/en-US/chrome/global/viewSource.properties
 +++ b/toolkit/locales/en-US/chrome/global/viewSource.properties
 @@ -1,16 +1,15 @@

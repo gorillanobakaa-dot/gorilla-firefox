@@ -1,6 +1,8 @@
+diff --git a/third_party/rust/glean-core/src/metrics/numerator.rs b/third_party/rust/glean-core/src/metrics/numerator.rs
+index c47fa4b2bf..aca06978f8 100644
 --- a/third_party/rust/glean-core/src/metrics/numerator.rs
 +++ b/third_party/rust/glean-core/src/metrics/numerator.rs
-@@ -42,6 +42,7 @@
+@@ -42,6 +42,7 @@ impl NumeratorMetric {
      ///
      /// Logs an error if the `amount` is negative.
      pub fn add_to_numerator(&self, amount: i32) {

@@ -1,0 +1,1760 @@
+# Gorilla 157 privacy cut
+# D-157-03 English only: Firefox Translations removed at source (GORILLA UNLEASHED - PHYSICAL LOCK: no translations). Not packaged: chrome://global/content/translations/ (toolkit jar.mn emptied), chrome://browser/content/translations/ (browser jar.mn emptied), translations/panel.css and translations-companion.svg (jar.inc.mn). Actors TranslationsEngine, Translations and AboutTranslations unregistered (ActorManagerParent) and not installed; actors/moz.build installs only actors/stub/TranslationsParent.sys.mjs as resource://gre/actors/TranslationsParent.sys.mjs (disabled, no languages, downloads refused, no network). about:translations removed (nsAboutRedirector.cpp, components.conf). Browser window: translations panels, urlbar translations button, app menu Translate and Translations items, context menu Translate selection, cmd_translate/cmd_openAboutTranslations, TranslationsParent/SelectTranslationsPanel/FullPageTranslationsPanel lazy getters, the enabled-state observer and ensurePrefObservers removed (browser-init.js, browser.js, browser.js.globals, main-popupset, navigator-toolbox, browser-sets, appmenu-viewcache, browser-context, nsContextMenu, browser.xhtml, webext-panels.xhtml); the location-change hook dropped from BrowserComponents.manifest; urlbar translate quick action removed; Settings legacy Translations section (initTranslations, showTranslationsSettings, #translationsGroup) removed. Kept: the CLD2 language detector (EXTRA_JS_MODULES.translations: LanguageDetector.sys.mjs, cld-worker.js, .mem) for browser.i18n.detectLanguage and Reader View, and its eval allowlist entry in nsContentSecurityUtils.cpp. translations.ftl stays packaged (deleting or emptying it trips the unexplained-deletion and Fluent lost-message checks); no window markup links it any more.
+# Files: browser/base/content/appmenu-viewcache.inc.xhtml, browser/base/content/browser-context.inc.xhtml, browser/base/content/browser-context.js, browser/base/content/browser-init.js, browser/base/content/browser-sets.inc.xhtml, browser/base/content/browser-sets.js, browser/base/content/browser.js, browser/base/content/browser.js.globals, browser/base/content/browser.xhtml, browser/base/content/main-popupset.inc.xhtml, browser/base/content/main-popupset.js, browser/base/content/navigator-toolbox.inc.xhtml, browser/base/content/navigator-toolbox.js, browser/base/content/nsContextMenu.sys.mjs, browser/base/content/webext-panels.xhtml, browser/components/BrowserComponents.manifest, browser/components/preferences/main.inc.xhtml, browser/components/preferences/main.js, browser/components/translations/jar.mn, browser/components/translations/moz.build, browser/components/urlbar/QuickActionsLoaderDefault.sys.mjs, browser/themes/shared/jar.inc.mn, browser/themes/shared/urlbar.css, docshell/base/nsAboutRedirector.cpp, docshell/build/components.conf, toolkit/components/translations/actors/moz.build, toolkit/components/translations/actors/stub/TranslationsParent.sys.mjs, toolkit/components/translations/jar.mn, toolkit/components/translations/moz.build, toolkit/modules/ActorManagerParent.sys.mjs
+
+diff --git a/browser/base/content/appmenu-viewcache.inc.xhtml b/browser/base/content/appmenu-viewcache.inc.xhtml
+index 7cdf275309..edd03d660f 100644
+--- a/browser/base/content/appmenu-viewcache.inc.xhtml
++++ b/browser/base/content/appmenu-viewcache.inc.xhtml
+@@ -164,10 +164,7 @@
+                      data-l10n-id="appmenuitem-save-page"
+                      key="key_savePage"
+                      command="Browser:SavePage"/>
+-      <toolbarbutton id="appMenu-translate-button"
+-                     class="subviewbutton"
+-                     data-l10n-id="appmenuitem-translate"
+-                     command="cmd_translate"/>
++      <!-- GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): no "Translate page" menu item -->
+       <toolbarbutton id="appMenu-find-button2"
+                      class="subviewbutton"
+                      data-l10n-id="appmenuitem-find-in-page"
+@@ -489,10 +486,7 @@
+                      class="subviewbutton"
+                      data-l10n-id="appmenu-customizetoolbar"
+                      command="cmd_CustomizeToolbars"/>
+-      <toolbarbutton id="appmenu-abouttranslations-button"
+-                     class="subviewbutton"
+-                     data-l10n-id="appmenu-abouttranslations"
+-                     command="cmd_openAboutTranslations"/>
++      <!-- GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): no "Translations" (about:translations) item -->
+       <toolbarbutton id="appmenu-edit-pdf-button"
+                      class="subviewbutton"
+                      data-l10n-id="appmenu-edit-pdf"
+diff --git a/browser/base/content/browser-context.inc.xhtml b/browser/base/content/browser-context.inc.xhtml
+index 621be24e4e..2d0d710354 100644
+--- a/browser/base/content/browser-context.inc.xhtml
++++ b/browser/base/content/browser-context.inc.xhtml
+@@ -367,8 +367,7 @@
+                 data-l10n-id="main-context-menu-add-engine"/>
+       <menuitem id="context-searchselect"/>
+       <menuitem id="context-searchselect-private"/>
+-      <menuitem id="context-translate-selection"
+-                data-l10n-id="main-context-menu-translate-selection"/>
++      <!-- GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): no "Translate selection" item -->
+       <menu id="context-ask-chat"/>
+ 
+       <menuseparator id="frame-sep"/>
+diff --git a/browser/base/content/browser-context.js b/browser/base/content/browser-context.js
+index 042341cecb..d9f9853757 100644
+--- a/browser/base/content/browser-context.js
++++ b/browser/base/content/browser-context.js
+@@ -209,9 +209,7 @@ document.addEventListener(
+           });
+           break;
+         }
+-        case "context-translate-selection":
+-          gContextMenu.openSelectTranslationsPanel(event);
+-          break;
++        // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): no context-translate-selection item.
+         case "context-showonlythisframe":
+           gContextMenu.showOnlyThisFrame();
+           break;
+diff --git a/browser/base/content/browser-init.js b/browser/base/content/browser-init.js
+index f3a1c3d636..56f8ca2bbf 100644
+--- a/browser/base/content/browser-init.js
++++ b/browser/base/content/browser-init.js
+@@ -16,48 +16,8 @@ var gBrowserInit = {
+   idleTasksFinished: Promise.withResolvers(),
+   _reducedProtectionPrefObserver: null,
+ 
+-  /**
+-   * Handles considerations when the enabled state of the Translations feature
+-   * changes during runtime, such as being blocked or re-enabled in the AI Settings.
+-   */
+-  _translationsEnabledStateObserver: {
+-    observe(_subject, topic, data) {
+-      if (topic !== "translations:enabled-state-changed") {
+-        console.warn(`received unexpected topic: ${topic}`);
+-        return;
+-      }
+-
+-      // Ensures that the Application Menu correctly includes or omits the translate-page menu item.
+-      XULBrowserWindow._updateElementsForContentType();
+-
+-      if (data === "enabled") {
+-        // When the feature is re-enabled, ensure that actor instances exist for all tabs.
+-        // This loop is synchronous, but should be lightweight to instantiate only the actor objects.
+-        // Any expensive work is scheduled asynchronously to the event loop by the actor itself after construction.
+-        for (const tab of gBrowser.tabs) {
+-          try {
+-            const windowGlobal =
+-              tab.linkedBrowser?.browsingContext?.currentWindowGlobal;
+-
+-            if (
+-              !windowGlobal ||
+-              windowGlobal.isClosed ||
+-              !windowGlobal.isCurrentGlobal
+-            ) {
+-              // This tab's windowGlobal is not relevant to create a Translations actor.
+-              continue;
+-            }
+-
+-            // Ensure that a Translations actor instance is (re)created for each open tab that is allowed to have one.
+-            windowGlobal.getActor("Translations");
+-          } catch {
+-            // Not every tab is allowed to have a Translations actor, which is okay.
+-            // See ActorManagerParent for the official allow list of URLs.
+-          }
+-        }
+-      }
+-    },
+-  },
++  // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): the Translations enabled-state observer is gone
++  // (no Translations actor to re-create, no translate menu item to show).
+ 
+   _setupFirstContentWindowPaintPromise() {
+     let lastTransactionId = window.windowUtils.lastTransactionId;
+@@ -288,18 +248,8 @@ var gBrowserInit = {
+     gBrowser.addEventListener("DOMUpdateBlockedRedirect", e =>
+       PopupAndRedirectBlockerObserver.handleEvent(e)
+     );
+-    gBrowser.addEventListener(
+-      "TranslationsParent:LanguageState",
+-      FullPageTranslationsPanel
+-    );
+-    gBrowser.addEventListener(
+-      "TranslationsParent:OfferTranslation",
+-      FullPageTranslationsPanel
+-    );
+-    gBrowser.tabContainer.addEventListener("TabSelect", () => {
+-      FullPageTranslationsPanel.onLocationChange(gBrowser.selectedBrowser);
+-    });
+-    gBrowser.addTabsProgressListener(FullPageTranslationsPanel);
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): no FullPageTranslationsPanel listeners
++    // (LanguageState/OfferTranslation events, TabSelect, tabs progress listener); the panel is not packaged.
+ 
+     window.addEventListener("AppCommand", HandleAppCommandEvent, true);
+ 
+@@ -499,11 +449,8 @@ var gBrowserInit = {
+     Services.obs.addObserver(gXPInstallObserver, "addon-install-confirmation");
+     Services.obs.addObserver(gKeywordURIFixup, "keyword-uri-fixup");
+     Services.obs.addObserver(gLocaleChangeObserver, "intl:app-locales-changed");
+-    TranslationsParent.ensurePrefObservers();
+-    Services.obs.addObserver(
+-      this._translationsEnabledStateObserver,
+-      "translations:enabled-state-changed"
+-    );
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): no TranslationsParent pref observers and no
++    // translations:enabled-state-changed observer.
+ 
+     BrowserUtils.callModulesFromCategory(
+       {
+@@ -1204,10 +1151,7 @@ var gBrowserInit = {
+         gLocaleChangeObserver,
+         "intl:app-locales-changed"
+       );
+-      Services.obs.removeObserver(
+-        this._translationsEnabledStateObserver,
+-        "translations:enabled-state-changed"
+-      );
++      // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): no translations observer to remove.
+     }
+ 
+     BrowserUtils.callModulesFromCategory(
+diff --git a/browser/base/content/browser-sets.inc.xhtml b/browser/base/content/browser-sets.inc.xhtml
+index 223691fb0c..ed0427e2d0 100644
+--- a/browser/base/content/browser-sets.inc.xhtml
++++ b/browser/base/content/browser-sets.inc.xhtml
+@@ -54,8 +54,7 @@
+     <command id="cmd_findSelection" />
+ #endif
+     <command id="cmd_reportBrokenSite"/>
+-    <command id="cmd_translate" />
+-    <command id="cmd_openAboutTranslations" />
++    <!-- GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): cmd_translate and cmd_openAboutTranslations removed -->
+     <command id="cmd_editPDF" />
+     <command id="cmd_openReferrals" />
+     <!-- work-around bug 392512 -->
+diff --git a/browser/base/content/browser-sets.js b/browser/base/content/browser-sets.js
+index 75b67bbd65..289234596a 100644
+--- a/browser/base/content/browser-sets.js
++++ b/browser/base/content/browser-sets.js
+@@ -7,7 +7,7 @@ document.addEventListener(
+   () => {
+     const lazy = {};
+     ChromeUtils.defineESModuleGetters(lazy, {
+-      TranslationsParent: "resource://gre/actors/TranslationsParent.sys.mjs",
++      // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): TranslationsParent getter removed
+       ContainerCreationPanel:
+         "chrome://browser/content/usercontext/ContainerCreationPanel.mjs",
+       Referrals: "resource:///modules/referrals/Referrals.sys.mjs",
+@@ -128,15 +128,8 @@ document.addEventListener(
+           case "cmd_findSelection":
+             gLazyFindCommand("onFindSelectionCommand");
+             break;
+-          case "cmd_translate":
+-            FullPageTranslationsPanel.open(event);
+-            break;
+-          case "cmd_openAboutTranslations":
+-            lazy.TranslationsParent.openAboutTranslationsPage({
+-              browserWindow: window,
+-              targetLanguage: "derive",
+-            }).catch(console.error);
+-            break;
++          // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): cmd_translate and
++          // cmd_openAboutTranslations removed.
+           case "cmd_editPDF":
+             switchToTabHavingURI("about:pdf", true);
+             break;
+diff --git a/browser/base/content/browser.js b/browser/base/content/browser.js
+index 145a0aa81f..496fece99e 100644
+--- a/browser/base/content/browser.js
++++ b/browser/base/content/browser.js
+@@ -110,7 +110,7 @@ ChromeUtils.defineESModuleGetters(this, {
+   ToolbarDropHandler:
+     "moz-src:///browser/components/customizableui/ToolbarDropHandler.sys.mjs",
+   ToolbarIconColor: "moz-src:///browser/themes/ToolbarIconColor.sys.mjs",
+-  TranslationsParent: "resource://gre/actors/TranslationsParent.sys.mjs",
++  // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): TranslationsParent getter removed
+   UIDensityTelemetry: "moz-src:///browser/modules/UIDensityTelemetry.sys.mjs",
+   UITour: "moz-src:///browser/components/uitour/UITour.sys.mjs",
+   UpdateUtils: "resource://gre/modules/UpdateUtils.sys.mjs",
+@@ -216,16 +216,8 @@ XPCOMUtils.defineLazyScriptGetter(
+   "gPermissionPanel",
+   "chrome://browser/content/browser-sitePermissionPanel.js"
+ );
+-XPCOMUtils.defineLazyScriptGetter(
+-  this,
+-  "SelectTranslationsPanel",
+-  "chrome://browser/content/translations/selectTranslationsPanel.js"
+-);
+-XPCOMUtils.defineLazyScriptGetter(
+-  this,
+-  "FullPageTranslationsPanel",
+-  "chrome://browser/content/translations/fullPageTranslationsPanel.js"
+-);
++// GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): no SelectTranslationsPanel or
++// FullPageTranslationsPanel lazy script getters (chrome://browser/content/translations/ is not packaged).
+ XPCOMUtils.defineLazyScriptGetter(
+   this,
+   "gProtectionsHandler",
+@@ -1974,17 +1966,8 @@ var XULBrowserWindow = {
+       "repair-text-encoding"
+     ));
+   },
+-  get _menuItemForTranslations() {
+-    delete this._menuItemForTranslations;
+-    return (this._menuItemForTranslations =
+-      document.getElementById("cmd_translate"));
+-  },
+-  get _moreToolsTranslateMenuItem() {
+-    delete this._moreToolsTranslateMenuItem;
+-    return (this._moreToolsTranslateMenuItem = document.getElementById(
+-      "cmd_openAboutTranslations"
+-    ));
+-  },
++  // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): no cmd_translate / cmd_openAboutTranslations
++  // menu item getters (the commands are gone).
+ 
+   setDefaultStatus(status) {
+     this.defaultStatus = status;
+@@ -2422,18 +2405,7 @@ var XULBrowserWindow = {
+       }
+     }
+ 
+-    if (TranslationsParent.isFullPageTranslationsRestrictedForPage(gBrowser)) {
+-      this._menuItemForTranslations.setAttribute("disabled", "true");
+-    } else {
+-      this._menuItemForTranslations.removeAttribute("disabled");
+-    }
+-
+-    const shouldShowTranslationsMenuItems =
+-      TranslationsParent.AIFeature.isEnabled &&
+-      TranslationsParent.getIsTranslationsEngineSupported();
+-
+-    this._menuItemForTranslations.hidden = !shouldShowTranslationsMenuItems;
+-    this._moreToolsTranslateMenuItem.hidden = !shouldShowTranslationsMenuItems;
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): no translate menu items to enable or show.
+   },
+ 
+   /**
+diff --git a/browser/base/content/browser.js.globals b/browser/base/content/browser.js.globals
+index efde1bf247..5ee738141d 100644
+--- a/browser/base/content/browser.js.globals
++++ b/browser/base/content/browser.js.globals
+@@ -138,7 +138,6 @@
+   "TabsSetupFlowManager",
+   "TaskbarTabsChrome",
+   "TelemetryEnvironment",
+-  "TranslationsParent",
+   "UIDensityTelemetry",
+   "UITour",
+   "UpdateUtils",
+@@ -175,8 +174,6 @@
+   "FullScreen",
+   "gIdentityHandler",
+   "gPermissionPanel",
+-  "SelectTranslationsPanel",
+-  "FullPageTranslationsPanel",
+   "gProtectionsHandler",
+   "gGestureSupport",
+   "gHistorySwipeAnimation",
+diff --git a/browser/base/content/browser.xhtml b/browser/base/content/browser.xhtml
+index 9a7d30d910..1c463b1dfa 100644
+--- a/browser/base/content/browser.xhtml
++++ b/browser/base/content/browser.xhtml
+@@ -46,7 +46,7 @@
+     href="chrome://browser/skin/customizableui/panelUI.css"
+   />
+   <link rel="stylesheet" href="chrome://browser/skin/downloads/downloads.css" />
+-  <link rel="stylesheet" href="chrome://browser/skin/translations/panel.css" />
++  <!-- GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): translations panel.css not linked -->
+   <link rel="stylesheet" href="chrome://browser/skin/places/tree-icons.css" />
+   <link rel="stylesheet" href="chrome://browser/skin/places/editBookmark.css" />
+   <link
+@@ -85,7 +85,7 @@
+   <link rel="localization" href="browser/tabbrowser.ftl"/>
+   <link rel="localization" href="browser/taskbartabs.ftl"/>
+   <link rel="localization" href="browser/toolbarContextMenu.ftl"/>
+-  <link rel="localization" href="browser/translations.ftl" />
++  <!-- GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): translations.ftl not linked -->
+   <link rel="localization" href="browser/unifiedExtensions.ftl"/>
+   <link rel="localization" href="browser/webrtcIndicator.ftl"/>
+   <link rel="localization" href="browser/webrtc-preview.ftl"/>
+diff --git a/browser/base/content/main-popupset.inc.xhtml b/browser/base/content/main-popupset.inc.xhtml
+index b50ff71ace..bb0f4b66e3 100644
+--- a/browser/base/content/main-popupset.inc.xhtml
++++ b/browser/base/content/main-popupset.inc.xhtml
+@@ -863,8 +863,7 @@
+ #include ../../components/controlcenter/content/protectionsPanel.inc.xhtml
+ #include ../../components/downloads/content/downloadsPanel.inc.xhtml
+ #include ../../components/sharing/content/sharePanel.inc.xhtml
+-#include ../../components/translations/content/selectTranslationsPanel.inc.xhtml
+-#include ../../components/translations/content/fullPageTranslationsPanel.inc.xhtml
++<!-- GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): the select and full-page translations panels are not included -->
+ #include ../../components/tabbrowser/content/browser-allTabsMenu.inc.xhtml
+ 
+   <tooltip id="dynamic-shortcut-tooltip"/>
+@@ -985,43 +984,8 @@
+               id="unified-extensions-context-menu-report-extension"/>
+   </menupopup>
+ 
+-  <menupopup id="full-page-translations-panel-settings-menupopup">
+-    <menuitem class="always-offer-translations-menuitem"
+-              data-l10n-id="translations-panel-settings-always-offer-translation"
+-              type="checkbox"
+-              autocheck="false"
+-              id="translations-panel-settings-always-offer-translation"/>
+-    <menuitem class="always-translate-language-menuitem"
+-              data-l10n-id="translations-panel-settings-always-translate-unknown-language"
+-              type="checkbox"
+-              autocheck="false"
+-              id="translations-panel-settings-always-translate"/>
+-    <menuitem class="never-translate-language-menuitem"
+-              data-l10n-id="translations-panel-settings-never-translate-unknown-language"
+-              type="checkbox"
+-              autocheck="false"
+-              id="translations-panel-settings-never-translate"/>
+-    <menuseparator/>
+-    <menuitem class="never-translate-site-menuitem"
+-              data-l10n-id="translations-panel-settings-never-translate-site"
+-              type="checkbox"
+-              autocheck="false"
+-              id="translations-panel-settings-never-translate-site"/>
+-    <menuseparator/>
+-    <menuitem class="manage-languages-menuitem"
+-              data-l10n-id="translations-panel-settings-manage-languages"
+-              id="translations-panel-manage-languages"/>
+-    <menuitem data-l10n-id="translations-panel-settings-about2"
+-              id="translations-panel-about"/>
+-  </menupopup>
+-
+-  <menupopup id="select-translations-panel-settings-menupopup">
+-    <menuitem id="select-translations-panel-open-settings-page-menuitem"
+-              class="manage-languages-menuitem"
+-              data-l10n-id="select-translations-panel-open-translations-settings-menuitem"/>
+-    <menuitem id="select-translations-panel-about-translations-menuitem"
+-              data-l10n-id="translations-panel-settings-about2"/>
+-  </menupopup>
++  <!-- GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): the full-page and select translations
++       settings menupopups are removed -->
+ 
+   <panel id="private-browsing-info-panel"
+          class="private-browsing-info-panel"
+diff --git a/browser/base/content/main-popupset.js b/browser/base/content/main-popupset.js
+index a2ed8f3b73..150398cae3 100644
+--- a/browser/base/content/main-popupset.js
++++ b/browser/base/content/main-popupset.js
+@@ -430,33 +430,8 @@ document.addEventListener(
+           gUnifiedExtensions.reportExtension(event.target.parentElement);
+           break;
+ 
+-        // == full-page-translations-panel-settings-menupopup ==
+-        case "translations-panel-settings-always-offer-translation":
+-          FullPageTranslationsPanel.onAlwaysOfferTranslations();
+-          break;
+-        case "translations-panel-settings-always-translate":
+-          FullPageTranslationsPanel.onAlwaysTranslateLanguage();
+-          break;
+-        case "translations-panel-settings-never-translate":
+-          FullPageTranslationsPanel.onNeverTranslateLanguage();
+-          break;
+-        case "translations-panel-settings-never-translate-site":
+-          FullPageTranslationsPanel.onNeverTranslateSite();
+-          break;
+-        case "translations-panel-manage-languages":
+-          FullPageTranslationsPanel.openManageLanguages();
+-          break;
+-        case "translations-panel-about":
+-          FullPageTranslationsPanel.onAboutTranslations();
+-          break;
+-
+-        // == select-translations-panel-settings-menupopup ==
+-        case "select-translations-panel-open-settings-page-menuitem":
+-          SelectTranslationsPanel.openTranslationsSettingsPage();
+-          break;
+-        case "select-translations-panel-about-translations-menuitem":
+-          SelectTranslationsPanel.onAboutTranslations();
+-          break;
++        // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): the full-page and select translations
++        // settings menupopup commands are removed with their menupopups.
+ 
+         // == customizationPanelItemContextMenu ==
+         case "customizationPanelItemContextMenuManageExtension":
+@@ -725,9 +700,7 @@ document.addEventListener(
+         case "sharing-tabs-warning-panel":
+           gSharedTabWarning.sharedTabWarningShown();
+           break;
+-        case "full-page-translations-panel-settings-menupopup":
+-          FullPageTranslationsPanel.handleSettingsPopupShownEvent();
+-          break;
++        // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): no translations settings popup
+       }
+     });
+ 
+@@ -744,13 +717,8 @@ document.addEventListener(
+       }
+     });
+ 
+-    mainPopupSet.addEventListener("popuphidden", event => {
+-      switch (event.target.id) {
+-        case "full-page-translations-panel-settings-menupopup":
+-          FullPageTranslationsPanel.handleSettingsPopupHiddenEvent();
+-          break;
+-      }
+-    });
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): the popuphidden listener only served the
++    // full-page translations settings popup, so it is removed.
+   },
+   { once: true }
+ );
+diff --git a/browser/base/content/navigator-toolbox.inc.xhtml b/browser/base/content/navigator-toolbox.inc.xhtml
+index 12c2379290..9c15dfc9aa 100644
+--- a/browser/base/content/navigator-toolbox.inc.xhtml
++++ b/browser/base/content/navigator-toolbox.inc.xhtml
+@@ -394,15 +394,7 @@
+                   hidden="true">
+               <image class="urlbar-icon"/>
+             </hbox>
+-            <hbox id="translations-button"
+-                  class="urlbar-page-action"
+-                  role="button"
+-                  data-l10n-id="urlbar-translations-button2"
+-                  hidden="true">
+-              <image class="urlbar-icon" id="translations-button-icon" />
+-              <image class="urlbar-icon" id="translations-button-circle-arrows" />
+-              <html:span id="translations-button-locale" aria-hidden="true" />
+-            </hbox>
++            <!-- GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): no translations button in the address bar -->
+             <toolbarbutton id="urlbar-zoom-button"
+                     tooltip="dynamic-shortcut-tooltip"
+                     hidden="true"/>
+diff --git a/browser/base/content/navigator-toolbox.js b/browser/base/content/navigator-toolbox.js
+index 6fbf4b9c08..485b719672 100644
+--- a/browser/base/content/navigator-toolbox.js
++++ b/browser/base/content/navigator-toolbox.js
+@@ -216,10 +216,10 @@ document.addEventListener(
+         #tracking-protection-icon-container,
+         #identity-icon-box,
+         #identity-permission-box,
+-        #translations-button,
+         #split-view-button,
+         #smartwindow-ask-button
+         `);
++      // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): #translations-button removed from the selector.
+       if (!element) {
+         return;
+       }
+@@ -303,9 +303,7 @@ document.addEventListener(
+           PageProxyClickHandler(event);
+           break;
+ 
+-        case "translations-button":
+-          FullPageTranslationsPanel.open(event);
+-          break;
++        // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): no translations-button case.
+ 
+         case "split-view-button":
+           if (isLeftClick) {
+@@ -337,7 +335,6 @@ document.addEventListener(
+         #trust-icon-container,
+         #identity-icon-box,
+         #identity-permission-box,
+-        #translations-button,
+         #alltabs-button,
+         #pageActionButton,
+         #downloads-button,
+@@ -348,6 +345,7 @@ document.addEventListener(
+         #split-view-button,
+         #smartwindow-ask-button
+       `);
++      // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): #translations-button removed from the selector.
+       if (!element) {
+         return;
+       }
+@@ -408,9 +406,7 @@ document.addEventListener(
+           gPermissionPanel.handleIdentityButtonEvent(event);
+           break;
+ 
+-        case "translations-button":
+-          FullPageTranslationsPanel.open(event);
+-          break;
++        // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): no translations-button case.
+ 
+         case "alltabs-button":
+           gTabsPanel.showAllTabsPanel(event, "alltabs-button");
+diff --git a/browser/base/content/nsContextMenu.sys.mjs b/browser/base/content/nsContextMenu.sys.mjs
+index f2009c1e7c..2ec6d2c353 100644
+--- a/browser/base/content/nsContextMenu.sys.mjs
++++ b/browser/base/content/nsContextMenu.sys.mjs
+@@ -25,9 +25,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
+   SearchUIUtils: "moz-src:///browser/components/search/SearchUIUtils.sys.mjs",
+   SearchUtils: "moz-src:///toolkit/components/search/SearchUtils.sys.mjs",
+   ShortcutUtils: "resource://gre/modules/ShortcutUtils.sys.mjs",
+-  TranslationsParent: "resource://gre/actors/TranslationsParent.sys.mjs",
+-  TranslationsUtils:
+-    "chrome://global/content/translations/TranslationsUtils.mjs",
++  // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): TranslationsParent and TranslationsUtils removed
+   WebsiteFilter: "resource:///modules/policies/WebsiteFilter.sys.mjs",
+ });
+ 
+@@ -103,14 +101,7 @@ const IMAGE_ONLY_PROTOCOLS = [
+ ];
+ 
+ export class nsContextMenu {
+-  /**
+-   * A promise to retrieve the translations language pair
+-   * if the context menu was opened in a context relevant to
+-   * open the SelectTranslationsPanel.
+-   *
+-   * @type {Promise<{sourceLanguage: string, targetLanguage: string}>}
+-   */
+-  #translationsLangPairPromise;
++  // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): no translations language-pair promise.
+ 
+   /**
+    * The value of the `main-context-menu-new-feature-badge` l10n string. Fetched
+@@ -917,7 +908,7 @@ export class nsContextMenu {
+     }
+ 
+     this.showAndFormatSearchContextItem();
+-    this.showTranslateSelectionItem();
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): no translate-selection item.
+     // GORILLA: EXCISED — no GenAI ask-chat item (genai module removed).
+ 
+     // srcdoc cannot be opened separately due to concerns about web
+@@ -2640,143 +2631,9 @@ export class nsContextMenu {
+     this.window.openTrustedLinkIn(drmInfoURL, dest);
+   }
+ 
+-  /**
+-   * Opens the SelectTranslationsPanel singleton instance.
+-   *
+-   * @param {Event} event - The triggering event for opening the panel.
+-   */
+-  openSelectTranslationsPanel(event) {
+-    const context = this.contentData.context;
+-    let screenX = context.screenXDevPx / this.window.devicePixelRatio;
+-    let screenY = context.screenYDevPx / this.window.devicePixelRatio;
+-    this.window.SelectTranslationsPanel.open(
+-      event,
+-      screenX,
+-      screenY,
+-      this.#getTextToTranslate(),
+-      this.isTextSelected,
+-      this.#translationsLangPairPromise
+-    ).catch(console.error);
+-  }
+-
+-  /**
+-   * Localizes the translate-selection menuitem.
+-   *
+-   * The item will either be localized with a target language's display name
+-   * or localized in a generic way without a target language.
+-   *
+-   * @param {Element} translateSelectionItem
+-   * @returns {Promise<void>}
+-   */
+-  async localizeTranslateSelectionItem(translateSelectionItem) {
+-    const { sourceLanguage, targetLanguage } =
+-      await this.#translationsLangPairPromise;
+-
+-    if (targetLanguage) {
+-      if (
+-        lazy.TranslationsUtils.langTagsMatch(sourceLanguage, targetLanguage)
+-      ) {
+-        translateSelectionItem.removeAttribute("target-language");
+-        this.document.l10n.setAttributes(
+-          translateSelectionItem,
+-          this.isTextSelected
+-            ? "main-context-menu-translate-selection"
+-            : "main-context-menu-translate-link-text"
+-        );
+-        return;
+-      }
+-
+-      let displayName;
+-
+-      try {
+-        const languageDisplayNames =
+-          lazy.TranslationsParent.createLanguageDisplayNames();
+-        displayName = languageDisplayNames.of(targetLanguage);
+-      } catch {
+-        // languageDisplayNames.of threw, do nothing.
+-      }
+-
+-      if (displayName) {
+-        translateSelectionItem.setAttribute("target-language", targetLanguage);
+-        this.document.l10n.setAttributes(
+-          translateSelectionItem,
+-          this.isTextSelected
+-            ? "main-context-menu-translate-selection-to-language"
+-            : "main-context-menu-translate-link-text-to-language",
+-          { language: displayName }
+-        );
+-        return;
+-      }
+-    }
+-
+-    // Either no to-language exists, or an error occurred,
+-    // so localize the menuitem without a target language.
+-    translateSelectionItem.removeAttribute("target-language");
+-    this.document.l10n.setAttributes(
+-      translateSelectionItem,
+-      this.isTextSelected
+-        ? "main-context-menu-translate-selection"
+-        : "main-context-menu-translate-link-text"
+-    );
+-  }
+-
+-  /**
+-   * Fetches text for translation, prioritizing selected text over link text.
+-   *
+-   * @returns {string} The text to translate.
+-   */
+-  #getTextToTranslate() {
+-    if (this.isTextSelected) {
+-      // If there is an active selection, we will always offer to translate.
+-      return this.selectionInfo.fullText.trim();
+-    }
+-
+-    const linkText = this.linkTextStr.trim();
+-    if (!linkText) {
+-      // There was no underlying link text, so do not offer to translate.
+-      return "";
+-    }
+-
+-    if (URL.canParse(linkText)) {
+-      // The underlying link text is a URL, we should not offer to translate.
+-      return "";
+-    }
+-
+-    // Since the underlying link text is not a URL, we should offer to translate it.
+-    return linkText;
+-  }
+-
+-  /**
+-   * Displays or hides the translate-selection item in the context menu.
+-   */
+-  showTranslateSelectionItem() {
+-    const translateSelectionItem = this.document.getElementById(
+-      "context-translate-selection"
+-    );
+-    const translationsEnabled = lazy.TranslationsParent.AIFeature.isEnabled;
+-    const selectTranslationsEnabled = Services.prefs.getBoolPref(
+-      "browser.translations.select.enable"
+-    );
+-
+-    const textToTranslate = this.#getTextToTranslate();
+-
+-    translateSelectionItem.hidden =
+-      // Only show the item if the feature is enabled.
+-      !(translationsEnabled && selectTranslationsEnabled) ||
+-      // Only show the item if Translations is supported on this hardware.
+-      !lazy.TranslationsParent.getIsTranslationsEngineSupported() ||
+-      // If there is no text to translate, we have nothing to do.
+-      textToTranslate.length === 0;
+-
+-    if (translateSelectionItem.hidden) {
+-      translateSelectionItem.removeAttribute("target-language");
+-      return;
+-    }
+-
+-    this.#translationsLangPairPromise =
+-      this.window.SelectTranslationsPanel.getLangPairPromise(textToTranslate);
+-    this.localizeTranslateSelectionItem(translateSelectionItem);
+-  }
++  // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): openSelectTranslationsPanel,
++  // localizeTranslateSelectionItem, #getTextToTranslate and showTranslateSelectionItem are removed with the
++  // "Translate selection" context menu item and the select translations panel.
+ 
+   // Formats the 'Search <engine> for "<selection or link text>"' context menu.
+   showAndFormatSearchContextItem() {
+diff --git a/browser/base/content/webext-panels.xhtml b/browser/base/content/webext-panels.xhtml
+index 0292961548..c43b1031cb 100644
+--- a/browser/base/content/webext-panels.xhtml
++++ b/browser/base/content/webext-panels.xhtml
+@@ -30,7 +30,7 @@
+     <html:link rel="localization" href="toolkit/global/textActions.ftl"/>
+     <html:link rel="localization" href="browser/browserContext.ftl"/>
+     <html:link rel="localization" href="browser/aiWindow.ftl"/>
+-    <html:link rel="localization" href="browser/translations.ftl"/>
++    <!-- GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): translations.ftl not linked -->
+     <html:link rel="localization" href="browser/sidebar.ftl"/>
+   </linkset>
+ 
+diff --git a/browser/components/BrowserComponents.manifest b/browser/components/BrowserComponents.manifest
+index ec9ce62eeb..e06db88750 100644
+--- a/browser/components/BrowserComponents.manifest
++++ b/browser/components/BrowserComponents.manifest
+@@ -113,7 +113,7 @@ category browser-window-location-change moz-src:///browser/components/urlbar/Url
+ category browser-window-location-change moz-src:///browser/components/urlbar/ActionsProviderContextualSearch.sys.mjs ActionsProviderContextualSearch.onLocationChange
+ category browser-window-location-change resource:///modules/asrouter/CFRPageActions.sys.mjs CFRPageActions.onLocationChange
+ category browser-window-location-change resource:///actors/AboutReaderParent.sys.mjs AboutReaderParent.onLocationChange
+-category browser-window-location-change resource://gre/actors/TranslationsParent.sys.mjs TranslationsParent.onLocationChange
++# GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): TranslationsParent.onLocationChange hook removed
+ category browser-window-location-change moz-src:///toolkit/components/pictureinpicture/PictureInPicture.sys.mjs PictureInPicture.onLocationChange
+ 
+ category browser-window-unload-begin chrome://browser/content/browser-customtitlebar.js CustomTitlebar.uninit
+diff --git a/browser/components/preferences/main.inc.xhtml b/browser/components/preferences/main.inc.xhtml
+index fb437455fb..a2da392dcb 100644
+--- a/browser/components/preferences/main.inc.xhtml
++++ b/browser/components/preferences/main.inc.xhtml
+@@ -107,31 +107,8 @@
+             data-l10n-args='{"localeName": "und"}'
+             preference="intl.regional_prefs.use_os_locales"/>
+ 
+-  <!-- This Translations UI is the pre-settings-redesign UI and should be removed
+-       when getting ready for the settings redesign to fully ship. -->
+-  <vbox id="translationsGroup" data-srd-groupid="translations" hidden="true" data-subcategory="translations">
+-    <label><html:h2 data-l10n-id="translations-manage-header"/></label>
+-    <hbox id="translations-manage-description" align="center">
+-      <description flex="1" data-l10n-id="translations-manage-intro-2"/>
+-      <button id="translations-manage-settings-button"
+-              is="highlightable-button"
+-              class="accessory-button"
+-              data-l10n-id="translations-manage-settings-button"/>
+-    </hbox>
+-    <vbox>
+-      <html:div id="translations-manage-install-list" tabindex="-1">
+-        <hbox class="translations-manage-language">
+-          <label data-l10n-id="translations-manage-download-description"></label>
+-          <button id="translations-manage-install-all"
+-                  data-l10n-id="translations-manage-language-download-all-button"></button>
+-          <button id="translations-manage-delete-all"
+-                  data-l10n-id="translations-manage-language-remove-all-button"></button>
+-        </hbox>
+-        <!-- The downloadable languages will be listed here. -->
+-      </html:div>
+-      <description id="translations-manage-error" hidden="true"></description>
+-    </vbox>
+-  </vbox>
++  <!-- GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): the legacy Translations section
++       (#translationsGroup: language downloads and the translations settings dialog button) is removed. -->
+ </groupbox>
+ 
+ <!-- This Translations UI is compatible with the settings redesign -->
+diff --git a/browser/components/preferences/main.js b/browser/components/preferences/main.js
+index 1fa5c6a247..1f6402b964 100644
+--- a/browser/components/preferences/main.js
++++ b/browser/components/preferences/main.js
+@@ -49,9 +49,9 @@ ChromeUtils.defineESModuleGetters(this, {
+   BackgroundUpdate: "resource://gre/modules/BackgroundUpdate.sys.mjs",
+   UpdateListener: "resource://gre/modules/UpdateListener.sys.mjs",
+   MigrationUtils: "resource:///modules/MigrationUtils.sys.mjs",
++  // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): TranslationsParent is the stub (always
++  // disabled, no languages); translations.js reads it through this global. TranslationsUtils is not packaged.
+   TranslationsParent: "resource://gre/actors/TranslationsParent.sys.mjs",
+-  TranslationsUtils:
+-    "chrome://global/content/translations/TranslationsUtils.mjs",
+   LaunchOnLogin: "resource://gre/modules/LaunchOnLogin.sys.mjs",
+   NimbusFeatures: "resource://nimbus/ExperimentAPI.sys.mjs",
+   FormAutofillPreferences:
+@@ -664,7 +664,8 @@ var gMainPane = {
+       gMainPane.initPrimaryBrowserLanguageUI();
+     }
+ 
+-    gMainPane.initTranslations();
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): the legacy Translations section
++    // (initTranslations, language downloads) is removed.
+ 
+     // Initialize settings groups from the config object.
+     initSettingGroup("browserLayout");
+@@ -808,435 +809,8 @@ var gMainPane = {
+     return undefined;
+   },
+ 
+-  /**
+-   * Initialize the translations view.
+-   */
+-  async initTranslations() {
+-    let legacyTranslationsVisible = Preferences.getSetting(
+-      "legacyTranslationsVisible"
+-    );
+-    /**
+-     * Which phase a language download is in.
+-     *
+-     * @typedef {"downloaded" | "loading" | "uninstalled"} DownloadPhase
+-     */
+-
+-    let translationsGroup = document.getElementById("translationsGroup");
+-    let setTranslationsGroupVisbility = () => {
+-      // Immediately show the group so that the async load of the component does
+-      // not cause the layout to jump. The group will be empty initially.
+-      translationsGroup.hidden = !legacyTranslationsVisible.visible;
+-      translationsGroup.classList.toggle(
+-        "setting-hidden",
+-        translationsGroup.hidden
+-      );
+-    };
+-    setTranslationsGroupVisbility();
+-
+-    legacyTranslationsVisible.on("change", setTranslationsGroupVisbility);
+-    window.addEventListener(
+-      "unload",
+-      () =>
+-        legacyTranslationsVisible.off("change", setTranslationsGroupVisbility),
+-      { once: true }
+-    );
+-
+-    class TranslationsState {
+-      /**
+-       * The fully initialized state.
+-       *
+-       * @param {object} supportedLanguages
+-       * @param {Array<{ langTag: string, displayName: string}>} languageList
+-       * @param {Map<string, DownloadPhase>} downloadPhases
+-       */
+-      constructor(supportedLanguages, languageList, downloadPhases) {
+-        this.supportedLanguages = supportedLanguages;
+-        this.languageList = languageList;
+-        this.downloadPhases = downloadPhases;
+-      }
+-
+-      /**
+-       * Handles all of the async initialization logic.
+-       */
+-      static async create() {
+-        const supportedLanguages =
+-          await TranslationsParent.getSupportedLanguages();
+-        const languageList =
+-          TranslationsParent.getLanguageList(supportedLanguages);
+-        const downloadPhases =
+-          await TranslationsState.createDownloadPhases(languageList);
+-
+-        if (supportedLanguages.languagePairs.length === 0) {
+-          throw new Error(
+-            "The supported languages list was empty. RemoteSettings may not be available at the moment."
+-          );
+-        }
+-
+-        return new TranslationsState(
+-          supportedLanguages,
+-          languageList,
+-          downloadPhases
+-        );
+-      }
+-
+-      /**
+-       * Determine the download phase of each language file.
+-       *
+-       * @param {Array<{ langTag: string, displayName: string}>} languageList
+-       * @returns {Promise<Map<string, DownloadPhase>>} Map the language tag to whether it is downloaded.
+-       */
+-      static async createDownloadPhases(languageList) {
+-        const downloadPhases = new Map();
+-        for (const { langTag } of languageList) {
+-          downloadPhases.set(
+-            langTag,
+-            (await TranslationsParent.hasAllFilesForLanguage(langTag))
+-              ? "downloaded"
+-              : "uninstalled"
+-          );
+-        }
+-        return downloadPhases;
+-      }
+-    }
+-
+-    class TranslationsView {
+-      /** @type {Map<string, XULButton>} */
+-      deleteButtons = new Map();
+-      /** @type {Map<string, XULButton>} */
+-      downloadButtons = new Map();
+-
+-      /**
+-       * @param {TranslationsState} state
+-       */
+-      constructor(state) {
+-        this.state = state;
+-        this.elements = {
+-          settingsButton: document.getElementById(
+-            "translations-manage-settings-button"
+-          ),
+-          installList: document.getElementById(
+-            "translations-manage-install-list"
+-          ),
+-          installAll: document.getElementById(
+-            "translations-manage-install-all"
+-          ),
+-          deleteAll: document.getElementById("translations-manage-delete-all"),
+-          error: document.getElementById("translations-manage-error"),
+-        };
+-        this.setup();
+-      }
+-
+-      setup() {
+-        this.buildLanguageList();
+-
+-        this.elements.settingsButton.addEventListener(
+-          "command",
+-          gMainPane.showTranslationsSettings
+-        );
+-        this.elements.installAll.addEventListener(
+-          "command",
+-          this.handleInstallAll
+-        );
+-        this.elements.deleteAll.addEventListener(
+-          "command",
+-          this.handleDeleteAll
+-        );
+-
+-        Services.obs.addObserver(this, "intl:app-locales-changed");
+-      }
+-
+-      destroy() {
+-        Services.obs.removeObserver(this, "intl:app-locales-changed");
+-      }
+-
+-      handleInstallAll = async () => {
+-        this.hideError();
+-        this.disableButtons(true);
+-        try {
+-          await TranslationsParent.downloadAllFiles();
+-          this.markAllDownloadPhases("downloaded");
+-        } catch (error) {
+-          TranslationsView.showError(
+-            "translations-manage-error-download",
+-            error
+-          );
+-          await this.reloadDownloadPhases();
+-          this.updateAllButtons();
+-        }
+-        this.disableButtons(false);
+-      };
+-
+-      handleDeleteAll = async () => {
+-        this.hideError();
+-        this.disableButtons(true);
+-        try {
+-          await TranslationsUtils.deleteAllLanguageFiles();
+-          this.markAllDownloadPhases("uninstalled");
+-        } catch (error) {
+-          TranslationsView.showError("translations-manage-error-remove", error);
+-          // The download phases are invalidated with the error and must be reloaded.
+-          await this.reloadDownloadPhases();
+-          console.error(error);
+-        }
+-        this.disableButtons(false);
+-      };
+-
+-      /**
+-       * @param {string} langTag
+-       * @returns {Function}
+-       */
+-      getDownloadButtonHandler(langTag) {
+-        return async () => {
+-          this.hideError();
+-          this.updateDownloadPhase(langTag, "loading");
+-          try {
+-            await TranslationsParent.downloadLanguageFiles(langTag);
+-            this.updateDownloadPhase(langTag, "downloaded");
+-          } catch (error) {
+-            TranslationsView.showError(
+-              "translations-manage-error-download",
+-              error
+-            );
+-            this.updateDownloadPhase(langTag, "uninstalled");
+-          }
+-        };
+-      }
+-
+-      /**
+-       * @param {string} langTag
+-       * @returns {Function}
+-       */
+-      getDeleteButtonHandler(langTag) {
+-        return async () => {
+-          this.hideError();
+-          this.updateDownloadPhase(langTag, "loading");
+-          try {
+-            await TranslationsParent.deleteLanguageFiles(langTag);
+-            this.updateDownloadPhase(langTag, "uninstalled");
+-          } catch (error) {
+-            TranslationsView.showError(
+-              "translations-manage-error-remove",
+-              error
+-            );
+-            // The download phases are invalidated with the error and must be reloaded.
+-            await this.reloadDownloadPhases();
+-          }
+-        };
+-      }
+-
+-      buildLanguageList() {
+-        const listFragment = document.createDocumentFragment();
+-
+-        for (const { langTag, displayName } of this.state.languageList) {
+-          const hboxRow = document.createXULElement("hbox");
+-          hboxRow.classList.add("translations-manage-language");
+-          hboxRow.setAttribute("data-lang-tag", langTag);
+-
+-          const languageLabel = document.createXULElement("label");
+-          languageLabel.textContent = displayName; // The display name is already localized.
+-
+-          const downloadButton = document.createXULElement("button");
+-          const deleteButton = document.createXULElement("button");
+-
+-          downloadButton.addEventListener(
+-            "command",
+-            this.getDownloadButtonHandler(langTag)
+-          );
+-          deleteButton.addEventListener(
+-            "command",
+-            this.getDeleteButtonHandler(langTag)
+-          );
+-
+-          document.l10n.setAttributes(
+-            downloadButton,
+-            "translations-manage-language-download-button"
+-          );
+-          document.l10n.setAttributes(
+-            deleteButton,
+-            "translations-manage-language-remove-button"
+-          );
+-
+-          downloadButton.hidden = true;
+-          deleteButton.hidden = true;
+-
+-          this.deleteButtons.set(langTag, deleteButton);
+-          this.downloadButtons.set(langTag, downloadButton);
+-
+-          hboxRow.appendChild(languageLabel);
+-          hboxRow.appendChild(downloadButton);
+-          hboxRow.appendChild(deleteButton);
+-          listFragment.appendChild(hboxRow);
+-        }
+-        this.updateAllButtons();
+-        this.elements.installList.appendChild(listFragment);
+-      }
+-
+-      /**
+-       * Update the DownloadPhase for a single langTag.
+-       *
+-       * @param {string} langTag
+-       * @param {DownloadPhase} downloadPhase
+-       */
+-      updateDownloadPhase(langTag, downloadPhase) {
+-        this.state.downloadPhases.set(langTag, downloadPhase);
+-        this.updateButton(langTag, downloadPhase);
+-        this.updateHeaderButtons();
+-      }
+-
+-      /**
+-       * Recreates the download map when the state is invalidated.
+-       */
+-      async reloadDownloadPhases() {
+-        this.state.downloadPhases =
+-          await TranslationsState.createDownloadPhases(this.state.languageList);
+-        this.updateAllButtons();
+-      }
+-
+-      /**
+-       * Set all the downloads.
+-       *
+-       * @param {DownloadPhase} downloadPhase
+-       */
+-      markAllDownloadPhases(downloadPhase) {
+-        const { downloadPhases } = this.state;
+-        for (const key of downloadPhases.keys()) {
+-          downloadPhases.set(key, downloadPhase);
+-        }
+-        this.updateAllButtons();
+-      }
+-
+-      /**
+-       * If all languages are downloaded, or no languages are downloaded then
+-       * the visibility of the buttons need to change.
+-       */
+-      updateHeaderButtons() {
+-        let allDownloaded = true;
+-        let allUninstalled = true;
+-        for (const downloadPhase of this.state.downloadPhases.values()) {
+-          if (downloadPhase === "loading") {
+-            // Don't count loading towards this calculation.
+-            continue;
+-          }
+-          allDownloaded &&= downloadPhase === "downloaded";
+-          allUninstalled &&= downloadPhase === "uninstalled";
+-        }
+-
+-        this.elements.installAll.hidden = allDownloaded;
+-        this.elements.deleteAll.hidden = allUninstalled;
+-      }
+-
+-      /**
+-       * Update the buttons according to their download state.
+-       */
+-      updateAllButtons() {
+-        this.updateHeaderButtons();
+-        for (const [langTag, downloadPhase] of this.state.downloadPhases) {
+-          this.updateButton(langTag, downloadPhase);
+-        }
+-      }
+-
+-      /**
+-       * @param {string} langTag
+-       * @param {DownloadPhase} downloadPhase
+-       */
+-      updateButton(langTag, downloadPhase) {
+-        const downloadButton = this.downloadButtons.get(langTag);
+-        const deleteButton = this.deleteButtons.get(langTag);
+-        switch (downloadPhase) {
+-          case "downloaded":
+-            downloadButton.hidden = true;
+-            deleteButton.hidden = false;
+-            downloadButton.removeAttribute("disabled");
+-            break;
+-          case "uninstalled":
+-            downloadButton.hidden = false;
+-            deleteButton.hidden = true;
+-            downloadButton.removeAttribute("disabled");
+-            break;
+-          case "loading":
+-            downloadButton.hidden = false;
+-            deleteButton.hidden = true;
+-            downloadButton.setAttribute("disabled", "true");
+-            break;
+-        }
+-      }
+-
+-      /**
+-       * @param {boolean} isDisabled
+-       */
+-      disableButtons(isDisabled) {
+-        this.elements.installAll.disabled = isDisabled;
+-        this.elements.deleteAll.disabled = isDisabled;
+-        for (const button of this.downloadButtons.values()) {
+-          button.disabled = isDisabled;
+-        }
+-        for (const button of this.deleteButtons.values()) {
+-          button.disabled = isDisabled;
+-        }
+-      }
+-
+-      /**
+-       * This method is static in case an error happens during the creation of the
+-       * TranslationsState.
+-       *
+-       * @param {string} l10nId
+-       * @param {Error} error
+-       */
+-      static showError(l10nId, error) {
+-        console.error(error);
+-        const errorMessage = document.getElementById(
+-          "translations-manage-error"
+-        );
+-        errorMessage.hidden = false;
+-        document.l10n.setAttributes(errorMessage, l10nId);
+-      }
+-
+-      hideError() {
+-        this.elements.error.hidden = true;
+-      }
+-
+-      observe(_subject, topic, _data) {
+-        if (topic === "intl:app-locales-changed") {
+-          this.refreshLanguageListDisplay();
+-        }
+-      }
+-
+-      refreshLanguageListDisplay() {
+-        try {
+-          const languageDisplayNames =
+-            TranslationsParent.createLanguageDisplayNames();
+-
+-          for (const row of this.elements.installList.children) {
+-            const rowLangTag = row.getAttribute("data-lang-tag");
+-            if (!rowLangTag) {
+-              continue;
+-            }
+-
+-            const label = row.querySelector("label");
+-            if (label) {
+-              const newDisplayName = languageDisplayNames.of(rowLangTag);
+-              if (label.textContent !== newDisplayName) {
+-                label.textContent = newDisplayName;
+-              }
+-            }
+-          }
+-        } catch (error) {
+-          console.error(error);
+-        }
+-      }
+-    }
+-
+-    TranslationsState.create().then(
+-      state => {
+-        this._translationsView = new TranslationsView(state);
+-      },
+-      error => {
+-        // This error can happen when a user is not connected to the internet, or
+-        // RemoteSettings is down for some reason.
+-        TranslationsView.showError("translations-manage-error-list", error);
+-      }
+-    );
+-  },
++  // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): initTranslations (the legacy Translations
++  // section: language list, download/remove buttons, error messages) is removed; nothing to download.
+ 
+   initPrimaryBrowserLanguageUI() {
+     // This will register the "command" listener.
+@@ -1547,11 +1121,8 @@ var gMainPane = {
+     }
+   },
+ 
+-  showTranslationsSettings() {
+-    gSubDialog.open(
+-      "chrome://browser/content/preferences/dialogs/translations.xhtml"
+-    );
+-  },
++  // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): showTranslationsSettings removed (its only
++  // caller was the legacy Translations section).
+ 
+   // NETWORK
+   /**
+@@ -1613,12 +1184,7 @@ var gMainPane = {
+ 
+   destroy() {
+     window.removeEventListener("unload", this);
+-
+-    // Clean up the TranslationsView instance if it exists
+-    if (this._translationsView) {
+-      this._translationsView.destroy();
+-      this._translationsView = null;
+-    }
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): no TranslationsView to clean up.
+   },
+ 
+   // nsISupports
+diff --git a/browser/components/translations/jar.mn b/browser/components/translations/jar.mn
+index fe552d2c9a..74f8786fc8 100644
+--- a/browser/components/translations/jar.mn
++++ b/browser/components/translations/jar.mn
+@@ -2,7 +2,7 @@
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ 
+-browser.jar:
+-    content/browser/translations/selectTranslationsPanel.js      (content/selectTranslationsPanel.js)
+-    content/browser/translations/fullPageTranslationsPanel.js    (content/fullPageTranslationsPanel.js)
+-    content/browser/translations/TranslationsPanelShared.sys.mjs (content/TranslationsPanelShared.sys.mjs)
++# GORILLA UNLEASHED - PHYSICAL LOCK: no translations
++# Decision D-157-03 (English only): the full-page and select translations panels are not packaged
++# (chrome://browser/content/translations/ is empty). Their markup is no longer #included by main-popupset.inc.xhtml.
++# The file stays because mozbuild refuses a jar.mn that exists without a JAR_MANIFESTS declaration.
+diff --git a/browser/components/translations/moz.build b/browser/components/translations/moz.build
+index 6c576098c8..0ac04ea334 100644
+--- a/browser/components/translations/moz.build
++++ b/browser/components/translations/moz.build
+@@ -13,4 +13,6 @@ BROWSER_CHROME_MANIFESTS += [
+     "tests/browser/perftest.toml",
+ ]
+ 
++# GORILLA UNLEASHED - PHYSICAL LOCK: no translations (decision D-157-03). The manifest is EMPTIED, not dropped
++# (mozbuild refuses an undeclared jar.mn); nothing under chrome://browser/content/translations/ is packaged.
+ JAR_MANIFESTS += ["jar.mn"]
+diff --git a/browser/components/urlbar/QuickActionsLoaderDefault.sys.mjs b/browser/components/urlbar/QuickActionsLoaderDefault.sys.mjs
+index 691fcea3a1..0a6f86d4e6 100644
+--- a/browser/components/urlbar/QuickActionsLoaderDefault.sys.mjs
++++ b/browser/components/urlbar/QuickActionsLoaderDefault.sys.mjs
+@@ -14,7 +14,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
+   ResetProfile: "resource://gre/modules/ResetProfile.sys.mjs",
+   ScreenshotsUtils:
+     "moz-src:///browser/components/screenshots/ScreenshotsUtils.sys.mjs",
+-  TranslationsParent: "resource://gre/actors/TranslationsParent.sys.mjs",
++  // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): TranslationsParent getter removed
+ });
+ 
+ import { AppConstants } from "resource://gre/modules/AppConstants.sys.mjs";
+@@ -290,28 +290,7 @@ const DEFAULT_ACTIONS = {
+     label: "quickactions-themes",
+     onPick: openAddonsUrl("addons://list/theme"),
+   },
+-  translate: {
+-    l10nCommands: ["quickactions-cmd-translate"],
+-    icon: "chrome://browser/skin/translations-companion.svg",
+-    label: "quickactions-translate",
+-    isUnsupported: () => {
+-      return !(
+-        lazy.TranslationsParent.AIFeature.isEnabled &&
+-        Services.prefs.getBoolPref(
+-          "browser.translations.quickAction.enabled",
+-          false
+-        )
+-      );
+-    },
+-    onPick: async (_queryContext, controller) => {
+-      await lazy.TranslationsParent.openAboutTranslationsPage({
+-        browserWindow: controller.browserWindow,
+-        targetLanguage: "derive",
+-      });
+-
+-      return { focusContent: true };
+-    },
+-  },
++  // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): the "translate" quick action is removed.
+   update: {
+     l10nCommands: ["quickactions-cmd-update"],
+     icon: "chrome://global/skin/icons/update-icon.svg",
+diff --git a/browser/themes/shared/jar.inc.mn b/browser/themes/shared/jar.inc.mn
+index bd6353eaee..2de6745d2a 100644
+--- a/browser/themes/shared/jar.inc.mn
++++ b/browser/themes/shared/jar.inc.mn
+@@ -180,7 +180,7 @@
+   skin/classic/browser/preferences/vpn-logo.svg                (../shared/preferences/vpn-logo.svg)
+   skin/classic/browser/preferences/search.css                  (../shared/preferences/search.css)
+   skin/classic/browser/preferences/siteDataSettings.css        (../shared/preferences/siteDataSettings.css)
+-  skin/classic/browser/translations/panel.css                  (../shared/translations/panel.css)
++# GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): translations/panel.css not packaged
+   skin/classic/browser/fxa/fxa-spinner.svg                     (../shared/fxa/fxa-spinner.svg)
+   skin/classic/browser/fxa/sync-illustration.svg               (../shared/fxa/sync-illustration.svg)
+   skin/classic/browser/fxa/sync-illustration-issue.svg         (../shared/fxa/sync-illustration-issue.svg)
+@@ -285,7 +285,7 @@
+   skin/classic/browser/send-tab.svg                   (../shared/icons/send-tab.svg)
+   skin/classic/browser/tab.svg                        (../shared/icons/tab.svg)
+   skin/classic/browser/tabs.svg                       (../shared/icons/tabs.svg)
+-  skin/classic/browser/translations-companion.svg     (../shared/icons/translations-companion.svg)
++# GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): translations-companion.svg (quick action icon) not packaged
+   skin/classic/browser/translations.svg               (../shared/icons/translations.svg)
+   skin/classic/browser/thumb-down.svg                 (../shared/icons/thumb-down.svg)
+   skin/classic/browser/topsites.svg                   (../shared/icons/topsites.svg)
+diff --git a/browser/themes/shared/urlbar.css b/browser/themes/shared/urlbar.css
+index f340b5fa08..05ab5d6035 100644
+--- a/browser/themes/shared/urlbar.css
++++ b/browser/themes/shared/urlbar.css
+@@ -1188,67 +1188,7 @@ toolbar[inactive="true"] .urlbar,
+   }
+ }
+ 
+-/* Translations button */
+-
+-#translations-button-icon {
+-  list-style-image: url(chrome://browser/skin/translations.svg);
+-  /* The translation icon's right letter is 1px too long, so account for that here.
+-     Don't use margin-inline-end as this is adjusting the art of the icon. */
+-  margin-right: -1px;
+-
+-  #translations-button[translationsactive] > & {
+-    fill: var(--toolbarbutton-icon-fill-attention);
+-    fill-opacity: 1;
+-    margin-inline: var(--space-small);
+-  }
+-}
+-
+-#translations-button-circle-arrows {
+-  height: 16px;
+-  width: 16px;
+-  list-style-image: url("chrome://global/skin/icons/loading.svg");
+-  fill: var(--toolbarbutton-icon-fill-attention);
+-  fill-opacity: 1;
+-  margin-inline-end: var(--space-small);
+-}
+-
+-#translations-button-locale {
+-  background-color: var(--toolbarbutton-icon-fill-attention);
+-  color: var(--toolbarbutton-icon-fill-attention-text);
+-  border-radius: var(--border-radius-small);
+-  font-size: 0.8em;
+-  height: 20px;
+-  min-width: 20px;
+-  text-align: center;
+-  padding-top: 3px;
+-  padding-inline: 1px;
+-  box-sizing: border-box;
+-  margin-inline-end: var(--space-small);
+-  margin-block: -2px;
+-}
+-
+-#translations-button[translationsactive="true"] {
+-  width: auto;
+-}
+-
+-@media (prefers-contrast) and (-moz-platform: windows) {
+-  #translations-button-locale {
+-    font-weight: var(--font-weight-bold);
+-  }
+-
+-  #translations-button[translationsactive]:is(:hover, [open]) > #translations-button-icon {
+-    fill: currentColor;
+-  }
+-
+-  #translations-button:is(:hover, [open]) > #translations-button-locale {
+-    background-color: var(--toolbar-field-background-color);
+-    color: var(--toolbarbutton-icon-fill-attention);
+-  }
+-
+-  #translations-button:is(:hover, [open]) > #translations-button-circle-arrows {
+-    fill: currentColor;
+-  }
+-}
++/* GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): the translations button rules are removed with the button */
+ 
+ /* Zoom button */
+ 
+diff --git a/docshell/base/nsAboutRedirector.cpp b/docshell/base/nsAboutRedirector.cpp
+index 54555e0f79..5a225f1bf9 100644
+--- a/docshell/base/nsAboutRedirector.cpp
++++ b/docshell/base/nsAboutRedirector.cpp
+@@ -220,14 +220,7 @@ static const RedirEntry kRedirMap[] = {
+      nsIAboutModule::ALLOW_SCRIPT},
+     {"telemetry", "chrome://global/content/aboutTelemetry.xhtml",
+      nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::IS_SECURE_CHROME_UI},
+-#ifndef MOZ_WIDGET_ANDROID
+-    {"translations",
+-     "chrome://global/content/translations/about-translations.html",
+-     nsIAboutModule::ALLOW_SCRIPT |
+-         nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+-         nsIAboutModule::URI_MUST_LOAD_IN_CHILD |
+-         nsIAboutModule::URI_CAN_LOAD_IN_PRIVILEGEDABOUT_PROCESS},
+-#endif
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): about:translations removed
+     {"url-classifier", "chrome://global/content/aboutUrlClassifier.xhtml",
+      nsIAboutModule::ALLOW_SCRIPT},
+     {"webrtc", "chrome://global/content/aboutwebrtc/aboutWebrtc.html",
+diff --git a/docshell/build/components.conf b/docshell/build/components.conf
+index 1f86eca920..5f8cd788b1 100644
+--- a/docshell/build/components.conf
++++ b/docshell/build/components.conf
+@@ -42,7 +42,7 @@ if buildconfig.substs['MOZ_WIDGET_TOOLKIT'] != 'android':
+     about_pages.append('profiles')
+ if buildconfig.substs['MOZ_WIDGET_TOOLKIT'] != 'android':
+     about_pages.append('pdf')
+-    about_pages.append('translations')
++    # GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): about:translations removed
+ if buildconfig.substs['MOZ_WIDGET_TOOLKIT'] == 'android':
+     about_pages.append('crashcontentjava')
+     about_pages.append('home')
+diff --git a/toolkit/components/translations/actors/moz.build b/toolkit/components/translations/actors/moz.build
+index 70743e82fd..81ac942c80 100644
+--- a/toolkit/components/translations/actors/moz.build
++++ b/toolkit/components/translations/actors/moz.build
+@@ -2,11 +2,11 @@
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ 
++# GORILLA UNLEASHED - PHYSICAL LOCK: no translations (decision D-157-03).
++# The Translations, TranslationsEngine and AboutTranslations actors are not packaged and not registered
++# (ActorManagerParent). Only a stub is installed as resource://gre/actors/TranslationsParent.sys.mjs: it answers
++# "disabled / no languages" to the Settings, address bar and context menu code that still imports it.
++# FINAL_TARGET_FILES installs by base name, so stub/TranslationsParent.sys.mjs lands as actors/TranslationsParent.sys.mjs.
+ FINAL_TARGET_FILES.actors += [
+-    "AboutTranslationsChild.sys.mjs",
+-    "AboutTranslationsParent.sys.mjs",
+-    "TranslationsChild.sys.mjs",
+-    "TranslationsEngineChild.sys.mjs",
+-    "TranslationsEngineParent.sys.mjs",
+-    "TranslationsParent.sys.mjs",
++    "stub/TranslationsParent.sys.mjs",
+ ]
+diff --git a/toolkit/components/translations/actors/stub/TranslationsParent.sys.mjs b/toolkit/components/translations/actors/stub/TranslationsParent.sys.mjs
+new file mode 100644
+index 0000000000..0ca0616249
+--- /dev/null
++++ b/toolkit/components/translations/actors/stub/TranslationsParent.sys.mjs
+@@ -0,0 +1,127 @@
++/* This Source Code Form is subject to the terms of the Mozilla Public
++ * License, v. 2.0. If a copy of the MPL was not distributed with this
++ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
++
++/**
++ * GORILLA UNLEASHED - PHYSICAL LOCK: no translations
++ *
++ * Decision D-157-03 (English only - no language packs, no translations). Gorilla does not ship Firefox
++ * Translations: no Bergamot engine, no language models, no about:translations, no Translations actors.
++ * This file is installed as resource://gre/actors/TranslationsParent.sys.mjs in place of the real actor
++ * (see ../moz.build) so that code which still imports it (Settings, the address bar quick actions, the
++ * excised ML modules) gets a plain answer: Translations are disabled, there are no languages, nothing
++ * can be downloaded. It never touches the network, Remote Settings or the disk.
++ *
++ * The language detector (resource://gre/modules/translations/LanguageDetector.sys.mjs) is separate and stays.
++ */
++
++const PIVOT_LANGUAGE = "en";
++const ALWAYS_TRANSLATE_LANGS_PREF =
++  "browser.translations.alwaysTranslateLanguages";
++const NEVER_TRANSLATE_LANGS_PREF =
++  "browser.translations.neverTranslateLanguages";
++
++const REMOVED = "GORILLA: Translations are not part of this build";
++
++/** The AIFeature answer: never enabled, never allowed. */
++const DisabledTranslationsFeature = Object.freeze({
++  id: "translations",
++  isEnabled: false,
++  isAllowed: false,
++  isBlocked: true,
++  async enable() {},
++  async block() {},
++  async makeAvailable() {},
++});
++
++export class TranslationsParent {
++  static PIVOT_LANGUAGE = PIVOT_LANGUAGE;
++  static ALWAYS_TRANSLATE_LANGS_PREF = ALWAYS_TRANSLATE_LANGS_PREF;
++  static NEVER_TRANSLATE_LANGS_PREF = NEVER_TRANSLATE_LANGS_PREF;
++
++  static get AIFeature() {
++    return DisabledTranslationsFeature;
++  }
++
++  // State checks: never supported, every page restricted.
++  static getIsTranslationsEngineSupported() {
++    return false;
++  }
++  static isFullPageTranslationsRestrictedForPage() {
++    return true;
++  }
++  static shouldAlwaysTranslateLanguage() {
++    return false;
++  }
++  static shouldNeverTranslateLanguage() {
++    return false;
++  }
++
++  // Window and pref hooks: nothing to observe.
++  static ensurePrefObservers() {}
++  static onLocationChange() {}
++  static onIsEnabledChanged() {}
++
++  // Languages: none.
++  static async getSupportedLanguages() {
++    return { sourceLanguages: [], targetLanguages: [], languagePairs: [] };
++  }
++  static getLanguageList() {
++    return [];
++  }
++  static getPreferredLanguages() {
++    return [];
++  }
++  static createLanguageDisplayNames({
++    fallback = "code",
++    languageDisplay = "standard",
++  } = {}) {
++    return new Services.intl.DisplayNames(Services.locale.appLocaleAsBCP47, {
++      type: "language",
++      languageDisplay,
++      fallback,
++    });
++  }
++
++  // Lists and settings: empty, writes are ignored.
++  static getAlwaysTranslateLanguages() {
++    return [];
++  }
++  static getNeverTranslateLanguages() {
++    return [];
++  }
++  static listNeverTranslateSites() {
++    return [];
++  }
++  static addLangTagToPref() {}
++  static removeLangTagFromPref() {}
++  static setNeverTranslateSiteByOrigin() {}
++
++  // Models and files: there are none, and none can be fetched.
++  static async getMaxSupportedVersionRecords() {
++    return [];
++  }
++  static async getRecordsForTranslatingToAndFromAppLanguage() {
++    return [];
++  }
++  static async hasAllFilesForLanguage() {
++    return false;
++  }
++  static async getLanguageSize() {
++    return 0;
++  }
++  static async getExpectedTranslationDownloadSize() {
++    return 0;
++  }
++  static async downloadLanguageFiles() {
++    throw new Error(REMOVED);
++  }
++  static async downloadAllFiles() {
++    throw new Error(REMOVED);
++  }
++  static async deleteLanguageFiles() {}
++  static async deleteCachedLanguageFiles() {}
++
++  // about:translations does not exist in this build.
++  static async openAboutTranslationsPage() {}
++}
+diff --git a/toolkit/components/translations/jar.mn b/toolkit/components/translations/jar.mn
+index ed20ce2b52..bdd6766bfb 100644
+--- a/toolkit/components/translations/jar.mn
++++ b/toolkit/components/translations/jar.mn
+@@ -2,18 +2,8 @@
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ 
+-toolkit.jar:
+-    content/global/translations/about-translations.html       (content/about-translations.html)
+-    content/global/translations/about-translations.css        (content/about-translations.css)
+-    content/global/translations/about-translations.mjs        (content/about-translations.mjs)
+-    content/global/translations/bergamot-translator.js        (bergamot-translator/bergamot-translator.js)
+-    content/global/translations/translations-document.sys.mjs (content/translations-document.sys.mjs)
+-    content/global/translations/translations-engine.sys.mjs   (content/translations-engine.sys.mjs)
+-    content/global/translations/translations-engine.worker.js (content/translations-engine.worker.js)
+-    content/global/translations/Translator.mjs                (content/Translator.mjs)
+-    content/global/translations/TranslationsTelemetry.sys.mjs (TranslationsTelemetry.sys.mjs)
+-    content/global/translations/TranslationsFeature.sys.mjs   (TranslationsFeature.sys.mjs)
+-    content/global/translations/TranslationsUtils.mjs         (TranslationsUtils.mjs)
+-
+-    # Uncomment the following line to test a local build of Bergamot. It will automatically be loaded in.
+-    # content/global/translations/bergamot-translator.wasm.zst   (bergamot-translator/thirdparty/translations/inference/build-wasm/bergamot-translator.wasm.zst)
++# GORILLA UNLEASHED - PHYSICAL LOCK: no translations
++# Decision D-157-03 (English only): every chrome://global/content/translations/ entry is gone (about:translations,
++# the Bergamot engine and its worker, Translator, TranslationsFeature, TranslationsTelemetry, TranslationsUtils).
++# The language detector stays: it is packaged by moz.build as resource://gre/modules/translations/ (EXTRA_JS_MODULES).
++# The file stays because mozbuild refuses a jar.mn that exists without a JAR_MANIFESTS declaration.
+diff --git a/toolkit/components/translations/moz.build b/toolkit/components/translations/moz.build
+index 08c587aaa3..99b14954df 100644
+--- a/toolkit/components/translations/moz.build
++++ b/toolkit/components/translations/moz.build
+@@ -4,17 +4,23 @@
+ 
+ SPHINX_TREES["/toolkit/components/translations"] = "docs"
+ 
++# GORILLA UNLEASHED - PHYSICAL LOCK: no translations (decision D-157-03). The manifest is EMPTIED, not dropped
++# (mozbuild refuses an undeclared jar.mn); nothing under chrome://global/content/translations/ is packaged.
+ JAR_MANIFESTS += ["jar.mn"]
+ 
+ with Files("**"):
+     BUG_COMPONENT = ("Firefox", "Translations")
+ 
++# GORILLA UNLEASHED - PHYSICAL LOCK: no translations. actors/ now installs only a stub TranslationsParent
++# (actors/stub/) for the Settings and address bar code that still asks "is Translations enabled?" (answer: no).
+ DIRS += ["actors"]
+ 
+ BROWSER_CHROME_MANIFESTS += ["tests/browser/browser.toml"]
+ 
+ XPCSHELL_TESTS_MANIFESTS += ["tests/unit/xpcshell.toml"]
+ 
++# Kept on purpose: the language detector (CLD2, offline, no network) is used by browser.i18n.detectLanguage
++# (ext-i18n.js, ExtensionContent.sys.mjs) and by Reader View (ReaderMode.sys.mjs).
+ EXTRA_JS_MODULES.translations = [
+     "cld2/cld-worker.js",
+     "cld2/cld-worker.js.mem",
+diff --git a/toolkit/modules/ActorManagerParent.sys.mjs b/toolkit/modules/ActorManagerParent.sys.mjs
+index 25b07e25b6..0b333f8894 100644
+--- a/toolkit/modules/ActorManagerParent.sys.mjs
++++ b/toolkit/modules/ActorManagerParent.sys.mjs
+@@ -82,17 +82,7 @@ let JSPROCESSACTORS = {
+     enablePreference: "extensions.backgroundServiceWorker.enabled",
+   },
+ 
+-  // A single process (shared with MLEngine) that controls all of the translations.
+-  TranslationsEngine: {
+-    remoteTypes: ["inference"],
+-    parent: {
+-      esModuleURI: "resource://gre/actors/TranslationsEngineParent.sys.mjs",
+-    },
+-    child: {
+-      esModuleURI: "resource://gre/actors/TranslationsEngineChild.sys.mjs",
+-    },
+-    enablePreference: "browser.translations.enable",
+-  },
++  // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03). TranslationsEngine actor removed (not packaged).
+ };
+ 
+ /**
+@@ -608,34 +598,8 @@ let JSWINDOWACTORS = {
+     safeForUntrustedWebProcess: true,
+   },
+ 
+-  // Determines if a page can be translated, and coordinates communication with the
+-  // translations engine.
+-  Translations: {
+-    parent: {
+-      esModuleURI: "resource://gre/actors/TranslationsParent.sys.mjs",
+-    },
+-    child: {
+-      esModuleURI: "resource://gre/actors/TranslationsChild.sys.mjs",
+-    },
+-    matches: [
+-      "about:blank",
+-      "about:srcdoc",
+-      "file:///*",
+-      "http://*/*",
+-      "https://*/*",
+-      "moz-extension://*",
+-    ],
+-    messageManagerGroups: ["browsers"],
+-    allFrames: true,
+-    enablePreference: "browser.translations.enable",
+-    onPreferenceChanged(isEnabled) {
+-      const { TranslationsParent } = ChromeUtils.importESModule(
+-        "resource://gre/actors/TranslationsParent.sys.mjs"
+-      );
+-      TranslationsParent.onIsEnabledChanged(isEnabled);
+-    },
+-    safeForUntrustedWebProcess: true,
+-  },
++  // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03). Translations actor removed: no page is ever
++  // examined for translation (TranslationsChild is not packaged; TranslationsParent is a stub).
+ 
+   UAWidgets: {
+     child: {
+@@ -801,21 +765,7 @@ if (AppConstants.platform != "android") {
+     remoteTypes: ["privilegedabout"],
+   };
+ 
+-  JSWINDOWACTORS.AboutTranslations = {
+-    parent: {
+-      esModuleURI: "resource://gre/actors/AboutTranslationsParent.sys.mjs",
+-    },
+-    child: {
+-      esModuleURI: "resource://gre/actors/AboutTranslationsChild.sys.mjs",
+-      events: {
+-        // Run the actor before any content of the page appears to inject functions.
+-        DOMDocElementInserted: {},
+-        DOMContentLoaded: {},
+-      },
+-    },
+-    matches: ["about:translations"],
+-    remoteTypes: ["privilegedabout"],
+-  };
++  // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03). AboutTranslations actor removed (no about:translations).
+ 
+   JSWINDOWACTORS.ColorPicker = {
+     parent: {

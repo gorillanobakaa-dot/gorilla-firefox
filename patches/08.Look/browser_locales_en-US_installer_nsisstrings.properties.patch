@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/installer/nsisstrings.properties b/browser/locales/en-US/installer/nsisstrings.properties
+index 971e66cc75..0207ae7f5a 100644
 --- a/browser/locales/en-US/installer/nsisstrings.properties
 +++ b/browser/locales/en-US/installer/nsisstrings.properties
 @@ -1,28 +1,23 @@
@@ -30,7 +32,7 @@
  
  STUB_INSTALLING_LABEL2=Now installing…
  STUB_BLURB_FIRST3=Get ready to roam on the open web
-@@ -35,7 +30,7 @@
+@@ -35,7 +30,7 @@ STUB_BLURB_THIRD2_DEVEDITION=Thank you for being part of the $BrandShortName com
  WARN_MIN_SUPPORTED_OSVER_MSG2=It looks like $BrandShortName can’t be installed. This version of $BrandShortName requires ${MinSupportedVer} or newer. Please click the OK button for additional information.
  WARN_MIN_SUPPORTED_CPU_MSG2=It looks like $BrandShortName can’t be installed. This version of $BrandShortName requires a processor with ${MinSupportedCPU} support. Please click the OK button for additional information.
  WARN_MIN_SUPPORTED_OSVER_CPU_MSG2=It looks like $BrandShortName can’t be installed. This version of $BrandShortName requires ${MinSupportedVer} or newer and a processor with ${MinSupportedCPU} support. Please click the OK button for additional information.

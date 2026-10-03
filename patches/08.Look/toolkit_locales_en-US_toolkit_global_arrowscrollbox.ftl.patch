@@ -1,3 +1,5 @@
+diff --git a/toolkit/locales/en-US/toolkit/global/arrowscrollbox.ftl b/toolkit/locales/en-US/toolkit/global/arrowscrollbox.ftl
+index 34dc9725ec..c42b7b7eb1 100644
 --- a/toolkit/locales/en-US/toolkit/global/arrowscrollbox.ftl
 +++ b/toolkit/locales/en-US/toolkit/global/arrowscrollbox.ftl
 @@ -1,11 +1,9 @@

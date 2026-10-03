@@ -1,3 +1,5 @@
+diff --git a/toolkit/locales/en-US/toolkit/payments/payments.ftl b/toolkit/locales/en-US/toolkit/payments/payments.ftl
+index c806997f40..663a2982c9 100644
 --- a/toolkit/locales/en-US/toolkit/payments/payments.ftl
 +++ b/toolkit/locales/en-US/toolkit/payments/payments.ftl
 @@ -2,7 +2,6 @@
@@ -8,7 +10,7 @@
  # This value isn't used directly, but is defined to avoid duplication
  # in the "credit-card-label-*" strings.
  #
-@@ -15,7 +14,6 @@
+@@ -15,7 +14,6 @@ credit-card-expiration = Expires on { $month }/{ $year }
  ## The description must include a credit card number, and may optionally
  ## include a cardholder name, an expiration date, or both, so we have
  ## four variations.
@@ -16,7 +18,7 @@
  # Label for a credit card with a number only
  #
  # Variables:
-@@ -47,6 +45,5 @@
+@@ -47,6 +45,5 @@ credit-card-label-number-expiration-2 = { $number }, { credit-card-expiration }
  #   $number (String): Partially-redacted credit card number
  #   $name (String): Cardholder name
  #   $type (String): Credit card type

@@ -1,6 +1,8 @@
+diff --git a/third_party/rust/glean-core/src/metrics/rate.rs b/third_party/rust/glean-core/src/metrics/rate.rs
+index 40e920fd2a..24c10e2eb5 100644
 --- a/third_party/rust/glean-core/src/metrics/rate.rs
 +++ b/third_party/rust/glean-core/src/metrics/rate.rs
-@@ -67,6 +67,7 @@
+@@ -67,6 +67,7 @@ impl RateMetric {
      ///
      /// Logs an error if the `amount` is negative.
      pub fn add_to_numerator(&self, amount: i32) {
@@ -8,7 +10,7 @@
          let metric = self.clone();
          crate::launch_with_glean(move |glean| metric.add_to_numerator_sync(glean, amount))
      }
-@@ -107,6 +108,7 @@
+@@ -107,6 +108,7 @@ impl RateMetric {
      ///
      /// Logs an error if the `amount` is negative.
      pub fn add_to_denominator(&self, amount: i32) {

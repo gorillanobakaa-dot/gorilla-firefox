@@ -1,6 +1,8 @@
+diff --git a/third_party/rust/glean-core/src/metrics/datetime.rs b/third_party/rust/glean-core/src/metrics/datetime.rs
+index b6b39a4909..dbe007900c 100644
 --- a/third_party/rust/glean-core/src/metrics/datetime.rs
 +++ b/third_party/rust/glean-core/src/metrics/datetime.rs
-@@ -132,6 +132,7 @@
+@@ -132,6 +132,7 @@ impl DatetimeMetric {
      ///
      /// * `dt` - the optinal datetime to set this to. If missing the current date is used.
      pub fn set(&self, dt: Option<Datetime>) {

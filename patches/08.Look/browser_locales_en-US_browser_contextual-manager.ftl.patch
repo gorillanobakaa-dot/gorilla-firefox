@@ -1,6 +1,8 @@
+diff --git a/browser/locales/en-US/browser/contextual-manager.ftl b/browser/locales/en-US/browser/contextual-manager.ftl
+index 1a1e179a87..e9a47158c3 100644
 --- a/browser/locales/en-US/browser/contextual-manager.ftl
 +++ b/browser/locales/en-US/browser/contextual-manager.ftl
-@@ -1,24 +1,23 @@
+@@ -1,24 +1,22 @@
  # This Source Code Form is subject to the terms of the Mozilla Public
  # License, v. 2.0. If a copy of the MPL was not distributed with this
  # file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -9,10 +11,9 @@
 -  .placeholder = Search passwords
 -  .key = F
 -  .aria-label = Search passwords
-+    .placeholder =
-+        Search passwords
-+        .key = F
-+        .aria-label = Search passwords
++    .placeholder = Search passwords
++    .key = F
++    .aria-label = Search passwords
  
  contextual-manager-menu-more-options-button =
 -  .title = More options
@@ -33,7 +34,7 @@
  contextual-manager-passwords-command-export = Export passwords
  contextual-manager-passwords-command-remove-all = Remove all passwords
  contextual-manager-passwords-command-options = Options
-@@ -27,7 +26,7 @@
+@@ -27,7 +25,7 @@ contextual-manager-passwords-command-help = Help
  contextual-manager-passwords-os-auth-dialog-caption = { -brand-full-name }
  
  # This message can be seen when attempting to export a password in about:logins on Windows.
@@ -42,7 +43,7 @@
  # This message can be seen when attempting to export a password in about:logins
  # The macOS strings are preceded by the operating system with "Firefox is trying to "
  # and includes subtitle of "Enter password for the user "xxx" to allow this." These
-@@ -35,21 +34,21 @@
+@@ -35,21 +33,21 @@ contextual-manager-passwords-export-os-auth-dialog-message-win = To export your
  contextual-manager-passwords-export-os-auth-dialog-message-macosx = export saved passwords
  
  # This message can be seen when attempting to reveal a password in contextual password manager on Windows
@@ -67,7 +68,7 @@
  # The MacOS string is preceded by the operating system with "Firefox is trying to ".
  # Only provide the reason that account verification is needed. Do not put a complete sentence here.
  contextual-manager-passwords-copy-password-os-auth-dialog-message-macosx = copy the saved password
-@@ -60,20 +59,20 @@
+@@ -60,20 +58,20 @@ contextual-manager-passwords-import-file-picker-import-button = Import
  # A description for the .csv file format that may be shown as the file type
  # filter by the operating system.
  contextual-manager-passwords-import-file-picker-csv-filter-title =
@@ -97,15 +98,14 @@
  
  # Variables
  #   $added (number) - Number of added passwords
-@@ -86,18 +85,19 @@
+@@ -86,18 +84,18 @@ contextual-manager-passwords-import-detailed-report = View detailed report
  contextual-manager-passwords-import-success-button = Done
  
  contextual-manager-passwords-import-error-heading-and-message =
 -  .heading = Couldn’t import passwords
 -  .message = Make sure your file includes a column for websites, usernames, and passwords.
-+    .heading =
-+        Couldn’t import passwords
-+        .message = Make sure your Gorilla file includes a column for websites, usernames, and passwords.
++    .heading = Couldn’t import passwords
++    .message = Make sure your Gorilla file includes a column for websites, usernames, and passwords.
  contextual-manager-passwords-import-error-button-try-again = Try again
  contextual-manager-passwords-import-error-button-cancel = Cancel
  contextual-manager-passwords-import-learn-more = Learn about importing passwords
@@ -121,7 +121,7 @@
  # This string recommends to the user that they delete the exported password file that is saved on their local machine.
  contextual-manager-export-passwords-dialog-message = After you export, we recommend deleting it so others who may use this device can’t see your passwords.
  contextual-manager-export-passwords-dialog-confirm-button = Continue with export
-@@ -111,89 +111,90 @@
+@@ -111,89 +109,90 @@ contextual-manager-passwords-export-file-picker-export-button = Export
  # A description for the .csv file format that may be shown as the file type
  # filter by the operating system.
  contextual-manager-passwords-export-file-picker-csv-filter-title =
@@ -243,187 +243,7 @@
  contextual-manager-passwords-delete-password-success-button = Done
  #
  # Radiobutton label to display total number of passwords
-@@ -216,120 +217,130 @@
- contextual-manager-passwords-remove-login-card-cancel-button = Cancel
- 
- contextual-manager-passwords-alert-card =
--  .aria-label = Password alerts
-+    .aria-label = Password alerts
- contextual-manager-passwords-alert-back-button =
--  .label = Back
-+    .label = Back
- contextual-manager-passwords-alert-list =
--  .aria-label = Alert list
-+    .aria-label = Alert list
- 
- contextual-manager-passwords-breached-origin-heading-and-message =
--  .heading = Password change recommended
--  .message = Passwords from this website were reported stolen or leaked. Change your password to protect your account.
-+    .heading =
-+        Password change recommended
-+        .message = Passwords from this website were reported stolen or leaked. Change your password to protect your account.
- contextual-manager-passwords-breached-origin-link-message = How does { -brand-product-name } know about breaches?
- contextual-manager-passwords-change-password-button = Change password
- 
- contextual-manager-passwords-vulnerable-password-heading-and-message =
--  .heading = Password change recommended
--  .message = This password is easily guessable. Change your password to protect your account.
-+    .heading =
-+        Password change recommended
-+        .message = This password is easily guessable. Change your password to protect your account.
- contextual-manager-passwords-vulnerable-password-link-message = How does { -brand-product-name } know about weak passwords?
- 
- contextual-manager-passwords-no-username-heading-and-message =
--  .heading = Add a username
--  .message = Add one to sign in faster.
-+    .heading =
-+        Add a username
-+        .message = Add one to sign in faster.
- contextual-manager-passwords-add-username-button = Add username
- 
- ## Login Form
--
- contextual-manager-passwords-create-label =
--  .label = Add password
-+    .label = Add password
- 
- contextual-manager-passwords-update-label =
--  .label = Update password
-+    .label = Update password
- contextual-manager-passwords-remove-label =
--  .title = Remove password
-+    .title = Remove password
- contextual-manager-passwords-origin-tooltip = Enter the exact address where you’ll sign in to this site.
- contextual-manager-passwords-username-tooltip = Enter the username, email address, or account number you use to sign in.
- contextual-manager-passwords-password-tooltip-2 = Enter the password to sign in to this account.
- 
- ## Password Card
--
- contextual-manager-passwords-list-label =
--  .aria-label = Passwords
-+    .aria-label = Passwords
- 
- contextual-manager-website-icon =
--  .alt = Website Icon
-+    .alt = Website Icon
- contextual-manager-copy-icon =
--  .alt = Copy
-+    .alt = Copy
- contextual-manager-check-icon-username =
--  .alt = Copied
-+    .alt = Copied
- contextual-manager-check-icon-password =
--  .alt = Copied
-+    .alt = Copied
- contextual-manager-alert-icon =
--  .alt = Warning
-+    .alt = Warning
- 
- # Variables
- #   $url (string) - The url associated with the login
- contextual-manager-origin-login-line =
--  .aria-label = Visit { $url }
--  .title = Visit { $url }
-+    .aria-label =
-+        Visit { $url }
-+        .title = Visit { $url }
- # "(Warning)" indicates that a login's origin field has an alert icon.
- # Variables
- #   $url (string) - The url associated with the login
- contextual-manager-origin-login-line-with-alert =
--  .aria-label = Visit { $url } (Warning)
--  .title = Visit { $url } (Warning)
-+    .aria-label =
-+        Visit { $url } (Warning)
-+        .title = Visit { $url } (Warning)
- # Variables
- #   $username (string) - The username associated with the login
- contextual-manager-username-login-line =
--  .aria-label = Copy username { $username }
--  .title = Copy username { $username }
-+    .aria-label =
-+        Copy username { $username }
-+        .title = Copy username { $username }
- # "(Warning)" indicates that a login's username field has an alert icon.
- # Variables
- #   $username (string) - The username associated with the login
- contextual-manager-username-login-line-with-alert =
--  .aria-label = Copy username { $username } (Warning)
--  .title = Copy username { $username } (Warning)
-+    .aria-label =
-+        Copy username { $username } (Warning)
-+        .title = Copy username { $username } (Warning)
- contextual-manager-password-login-line =
--  .aria-label = Copy password
--  .title = Copy password
-+    .aria-label =
-+        Copy password
-+        .title = Copy password
- # "(Warning)" indicates that a login's password field has an alert icon.
- contextual-manager-password-login-line-with-alert =
--  .aria-label = Copy password (Warning)
--  .title = Copy password (Warning)
-+    .aria-label =
-+        Copy password (Warning)
-+        .title = Copy password (Warning)
- contextual-manager-edit-login-button = Edit
--  .tooltiptext = Edit password
-+    .tooltiptext = Edit password
- # Variables
- #   $count (number) - The number of active alerts associated with the login
- contextual-manager-view-alert-heading-2 =
--  .heading =
--    { $count ->
--      [1] View alert
--     *[other] View alerts
--    }
-+    .heading =
-+        
-+        { $count ->
-+        [1] View alert
-+        *[other] View alerts
-+        }
- # Variables
- #   $count (number) - The number of active alerts associated with the login
- contextual-manager-view-alert-button-2 =
--  .tooltiptext =
--    { $count ->
--      [1] Review alert
--     *[other] Review alerts
--    }
-+    .tooltiptext =
-+        
-+        { $count ->
-+        [1] Review alert
-+        *[other] Review alerts
-+        }
- 
- contextual-manager-show-password-button =
--  .aria-label = Show password
--  .title = Show password
-+    .aria-label =
-+        Show password
-+        .title = Show password
- contextual-manager-hide-password-button =
--  .aria-label = Hide password
--  .title = Hide password
-+    .aria-label =
-+        Hide password
-+        .title = Hide password
- 
- # The message displayed when the search text does not match any of the user's saved logins.
- contextual-manager-passwords-no-passwords-found-header =
--  .heading = No passwords found
-+    .heading = No passwords found
- contextual-manager-passwords-no-passwords-found-message-2 = Try a different term and search again.
- 
- ## When the user has no saved passwords, we display the following messages to inform the user they can save
- ## their passwords safely and securely in Firefox:
--
- # This string encourages the user to save their passwords in Firefox (the "safe spot").
- contextual-manager-passwords-no-passwords-header-2 = Save your passwords to a safe spot
- # This string informs that we (Firefox) store all passwords securely and will notify them of any breaches and alerts their
-@@ -342,19 +353,19 @@
+@@ -352,19 +351,18 @@ contextual-manager-passwords-add-manually = Add manually
  
  ## When the user cancels a login that's currently being edited, we display a message to confirm whether
  ## or not the user wants to discard their current edits to the login.
@@ -431,9 +251,8 @@
  contextual-manager-passwords-discard-changes-heading-and-message =
 -  .heading = Close without saving?
 -  .message = Your changes won’t be saved.
-+    .heading =
-+        Close without saving?
-+        .message = Your changes won’t be saved.
++    .heading = Close without saving?
++    .message = Your changes won’t be saved.
  contextual-manager-passwords-discard-changes-close-button = Close
  contextual-manager-passwords-discard-changes-go-back-button = Go back
  

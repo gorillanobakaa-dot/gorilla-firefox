@@ -1,27 +1,16 @@
+diff --git a/browser/locales/en-US/browser/preferences/applicationManager.ftl b/browser/locales/en-US/browser/preferences/applicationManager.ftl
+index f0ee804d0c..bb88fa9757 100644
 --- a/browser/locales/en-US/browser/preferences/applicationManager.ftl
 +++ b/browser/locales/en-US/browser/preferences/applicationManager.ftl
-@@ -1,14 +1,15 @@
+@@ -1,7 +1,6 @@
  # This Source Code Form is subject to the terms of the Mozilla Public
  # License, v. 2.0. If a copy of the MPL was not distributed with this
  # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 -
  app-manager-window2 =
--    .title = Application details
--    .style = min-width: 30em; min-height: 20em;
-+    .title =
-+        Application details
-+        .style = min-width: 30em; min-height: 20em;
- 
- app-manager-remove =
--    .label = Remove
--    .accesskey = R
-+    .label =
-+        Remove
-+        .accesskey = R
- 
- # Variables:
- #   $type (String) - the URI scheme of the link (e.g. mailto:)
-@@ -20,6 +21,5 @@
+     .title = Application details
+     .style = min-width: 30em; min-height: 20em;
+@@ -20,6 +19,5 @@ app-manager-handle-file = The following applications can be used to handle { $ty
  
  ## These strings are followed, on a new line,
  ## by the URL or path of the application.

@@ -1,6 +1,8 @@
+diff --git a/toolkit/locales/en-US/toolkit/global/contextual-identity.ftl b/toolkit/locales/en-US/toolkit/global/contextual-identity.ftl
+index 6561f96d37..36b42c97ec 100644
 --- a/toolkit/locales/en-US/toolkit/global/contextual-identity.ftl
 +++ b/toolkit/locales/en-US/toolkit/global/contextual-identity.ftl
-@@ -1,38 +1,37 @@
+@@ -1,10 +1,8 @@
  # This Source Code Form is subject to the terms of the Mozilla Public
  # License, v. 2.0. If a copy of the MPL was not distributed with this
  # file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -9,55 +11,22 @@
  ## See https://support.mozilla.org/kb/how-use-firefox-containers
 -
  user-context-personal =
--    .label = Personal
--    .accesskey = P
-+    .label =
-+        Personal
-+        .accesskey = P
- user-context-work =
--    .label = Work
--    .accesskey = W
-+    .label =
-+        Work
-+        .accesskey = W
- user-context-banking =
--    .label = Banking
--    .accesskey = B
-+    .label =
-+        Banking
-+        .accesskey = B
- user-context-shopping =
--    .label = Shopping
--    .accesskey = S
-+    .label =
-+        Shopping
-+        .accesskey = S
- 
+     .label = Personal
+     .accesskey = P
+@@ -21,11 +19,8 @@ user-context-shopping =
  ##
--
+ 
  user-context-new-tab =
 -    .label = New Tab
--    .accesskey = N
++    .label = New Gorilla Tab
+     .accesskey = N
 -user-context-add-container =
 -    .label = Add new container
 -    .accesskey = A
-+    .label =
-+        New Gorilla Tab
-+        .accesskey = N
  user-context-manage-containers =
--    .label = Manage containers
--    .accesskey = o
-+    .label =
-+        Manage containers
-+        .accesskey = o
- 
- ## Container colors, shown as selectable swatches in the container
- ## creation/edit dialog.
--
- user-context-color-blue =
-     .label = Blue
- user-context-color-cyan =
-@@ -56,7 +55,6 @@
+     .label = Manage containers
+     .accesskey = o
+@@ -73,7 +68,6 @@ user-context-color-gray =
  
  ## Container icons, shown as selectable swatches in the container
  ## creation/edit dialog.
@@ -65,11 +34,13 @@
  user-context-icon-fingerprint =
      .label = Fingerprint
  user-context-icon-briefcase =
-@@ -85,3 +83,7 @@
+@@ -102,3 +96,8 @@ user-context-icon-circle =
      .label = Dot
  user-context-icon-fence =
      .label = Fence
 +
++
 +user-context-add-container =
 +    .label = Add new container
 +    .accesskey = A
+\ No newline at end of file

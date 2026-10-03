@@ -1,3 +1,5 @@
+diff --git a/toolkit/locales/en-US/toolkit/about/certviewer.ftl b/toolkit/locales/en-US/toolkit/about/certviewer.ftl
+index 36d309b1fa..e5e2bdb3ac 100644
 --- a/toolkit/locales/en-US/toolkit/about/certviewer.ftl
 +++ b/toolkit/locales/en-US/toolkit/about/certviewer.ftl
 @@ -1,16 +1,13 @@
@@ -17,7 +19,7 @@
  certificate-viewer-algorithm = Algorithm
  certificate-viewer-certificate-authority = Certificate Authority
  certificate-viewer-cipher-suite = Cipher Suite
-@@ -91,31 +88,30 @@
+@@ -91,31 +88,30 @@ certificate-viewer-crl-endpoints = CRL Endpoints
  
  # This message is used as a row header in the Miscellaneous section.
  # The associated data cell contains links to download the certificate.
@@ -58,7 +60,7 @@
  # Label for a tab where we haven't found a better label:
  certificate-viewer-unknown-group-label = (unknown)
  
-@@ -123,7 +119,6 @@
+@@ -123,7 +119,6 @@ certificate-viewer-unknown-group-label = (unknown)
  certificate-viewer-unknown-file-name = certificate
  
  ## Labels for tabs displayed in stand-alone about:certificate page

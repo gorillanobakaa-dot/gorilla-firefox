@@ -1,16 +1,17 @@
+diff --git a/browser/components/urlbar/UrlbarProviderSearchSuggestions.sys.mjs b/browser/components/urlbar/UrlbarProviderSearchSuggestions.sys.mjs
+index 060f13d5c6..2cd049134a 100644
 --- a/browser/components/urlbar/UrlbarProviderSearchSuggestions.sys.mjs
 +++ b/browser/components/urlbar/UrlbarProviderSearchSuggestions.sys.mjs
-@@ -23,8 +23,7 @@
+@@ -23,7 +23,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
    UrlbarPrefs: "moz-src:///browser/components/urlbar/UrlbarPrefs.sys.mjs",
    UrlbarProviderTopSites:
      "moz-src:///browser/components/urlbar/UrlbarProviderTopSites.sys.mjs",
 -  UrlbarResult: "chrome://browser/content/urlbar/UrlbarResult.mjs",
--  UrlbarShared: "chrome://browser/content/urlbar/UrlbarShared.mjs",
 +  UrlbarResult: "moz-src:///browser/components/urlbar/UrlbarResult.sys.mjs",
+   UrlbarShared: "chrome://browser/content/urlbar/UrlbarShared.mjs",
    UrlbarSearchUtils:
      "moz-src:///browser/components/urlbar/UrlbarSearchUtils.sys.mjs",
-   UrlbarTokenizer:
-@@ -96,9 +95,9 @@
+@@ -96,9 +96,9 @@ export class UrlbarProviderSearchSuggestions extends UrlbarProvider {
      // If the sources don't include search or the user used a restriction
      // character other than search, don't allow any suggestions.
      if (
@@ -22,7 +23,7 @@
      ) {
        return false;
      }
-@@ -139,13 +138,12 @@
+@@ -139,13 +139,12 @@ export class UrlbarProviderSearchSuggestions extends UrlbarProvider {
      return (
        queryContext.searchString.startsWith("@") ||
        (queryContext.restrictSource &&
@@ -39,7 +40,7 @@
      );
    }
  
-@@ -232,7 +230,7 @@
+@@ -236,7 +235,7 @@ export class UrlbarProviderSearchSuggestions extends UrlbarProvider {
     * @param {UrlbarQueryContext} queryContext
     * @param {(provider: UrlbarProvider, result: UrlbarResult) => void} addCallback
     *   Callback invoked by the provider to add a new result.
@@ -48,7 +49,7 @@
     */
    async startQuery(queryContext, addCallback, controller) {
      let instance = this.queryInstance;
-@@ -262,7 +260,7 @@
+@@ -266,7 +265,7 @@ export class UrlbarProviderSearchSuggestions extends UrlbarProvider {
        lazy.UrlbarTokenizer.isRestrictionToken(queryContext.tokens[0]) &&
        (queryContext.tokens.length > 1 ||
          queryContext.tokens[0].type ==
@@ -57,7 +58,7 @@
      ) {
        leadingRestrictionToken = queryContext.tokens[0].value;
      }
-@@ -271,7 +269,7 @@
+@@ -275,7 +274,7 @@ export class UrlbarProviderSearchSuggestions extends UrlbarProvider {
      // when the search shortcut is used and it's not user typed. Don't strip
      // other restriction chars, so that it's possible to search for things
      // including one of those (e.g. "c#").
@@ -66,7 +67,7 @@
        query = UrlbarUtils.substringAfter(query, leadingRestrictionToken).trim();
      }
  
-@@ -342,14 +340,14 @@
+@@ -346,14 +345,14 @@ export class UrlbarProviderSearchSuggestions extends UrlbarProvider {
        return /** @type {UrlbarResultCommand[]} */ ([
          {
            name: RESULT_MENU_COMMANDS.TRENDING_BLOCK,
@@ -83,7 +84,7 @@
          },
        ]);
      }
-@@ -527,8 +525,8 @@
+@@ -539,8 +538,8 @@ export class UrlbarProviderSearchSuggestions extends UrlbarProvider {
  
          results.push(
            new lazy.UrlbarResult({
@@ -94,7 +95,7 @@
              isRichSuggestion: !!entry.icon,
              richSuggestionIconSize: entry.icon
                ? UrlbarProviderSearchSuggestions.RICH_ICON_SIZE
-@@ -638,13 +636,7 @@
+@@ -650,13 +649,7 @@ export class UrlbarProviderSearchSuggestions extends UrlbarProvider {
     *   Whether we should fetch trending results.
     */
    #shouldFetchTrending(queryContext) {
@@ -109,7 +110,7 @@
    }
  
    /*
-@@ -676,15 +668,15 @@
+@@ -698,15 +691,15 @@ export class UrlbarProviderSearchSuggestions extends UrlbarProvider {
  
  function makeFormHistoryResult(queryContext, engine, entry) {
    return new lazy.UrlbarResult({

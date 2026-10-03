@@ -1,3 +1,5 @@
+diff --git a/toolkit/locales/en-US/toolkit/global/processTypes.ftl b/toolkit/locales/en-US/toolkit/global/processTypes.ftl
+index 2fc9de409e..f07eb01735 100644
 --- a/toolkit/locales/en-US/toolkit/global/processTypes.ftl
 +++ b/toolkit/locales/en-US/toolkit/global/processTypes.ftl
 @@ -1,11 +1,9 @@
@@ -12,7 +14,7 @@
  process-type-web = Web Content
  
  # process used to run privileged about pages,
-@@ -14,12 +12,12 @@
+@@ -14,12 +12,12 @@ process-type-privilegedabout = Privileged About
  
  # process used to run privileged mozilla pages,
  # such as accounts.firefox.com
@@ -28,7 +30,7 @@
  
  # process used to instantiate new child processes
  process-type-forkserver = Fork Server
-@@ -38,9 +36,8 @@
+@@ -38,9 +36,8 @@ process-type-prealloc = Preallocated
  ##
  ## Localization for Gecko process types defined in GeckoProcessTypes.h
  ##
@@ -39,7 +41,7 @@
  
  # process used to communicate with the GPU for
  # graphics acceleration
-@@ -59,15 +56,14 @@
+@@ -59,11 +56,11 @@ process-type-inference = Inference
  process-type-utility = Sandboxed IPC Actor
  process-type-utility-actor-audio-decoder-generic = Utility Generic Audio Decoder
  process-type-utility-actor-audio-decoder-applemedia = Utility AppleMedia
@@ -51,10 +53,6 @@
 -process-type-utility-actor-windows-file-dialog = Utility Windows File Dialog
 +process-type-utility-actor-windows-utils = Utility Gorilla Windows Utils
 +process-type-utility-actor-windows-file-dialog = Utility Gorilla Windows Gorilla File Dialog
+ process-type-utility-actor-hw-inference = Utility Hardware Accelerated Inference
  
  ##
- ## Other
- ##
--
- # fallback
- process-type-unknown = Unknown

@@ -1,6 +1,8 @@
+diff --git a/browser/components/asrouter/modules/ASRouter.sys.mjs b/browser/components/asrouter/modules/ASRouter.sys.mjs
+index 869399e484..e820907b46 100644
 --- a/browser/components/asrouter/modules/ASRouter.sys.mjs
 +++ b/browser/components/asrouter/modules/ASRouter.sys.mjs
-@@ -55,8 +55,6 @@
+@@ -59,8 +59,6 @@ ChromeUtils.defineESModuleGetters(lazy, {
    Spotlight: "resource:///modules/asrouter/Spotlight.sys.mjs",
    ToastNotification: "resource:///modules/asrouter/ToastNotification.sys.mjs",
    ToolbarBadgeHub: "resource:///modules/asrouter/ToolbarBadgeHub.sys.mjs",
@@ -9,7 +11,7 @@
  });
  
  XPCOMUtils.defineLazyPreferenceGetter(
-@@ -2590,9 +2588,6 @@
+@@ -2687,9 +2685,6 @@ export class _ASRouter {
          trigger.context.onThirdPartyPage = isThirdPartyPage(
            browser.documentGlobal.gBrowser?.currentURI
          );

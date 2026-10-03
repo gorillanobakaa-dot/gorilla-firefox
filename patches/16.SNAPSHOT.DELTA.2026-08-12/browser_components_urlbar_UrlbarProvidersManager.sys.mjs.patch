@@ -1,14 +1,16 @@
+diff --git a/browser/components/urlbar/UrlbarProvidersManager.sys.mjs b/browser/components/urlbar/UrlbarProvidersManager.sys.mjs
+index e1aac83cb0..6b15302c5c 100644
 --- a/browser/components/urlbar/UrlbarProvidersManager.sys.mjs
 +++ b/browser/components/urlbar/UrlbarProvidersManager.sys.mjs
-@@ -82,11 +82,6 @@
-     supportedSAPs: ["searchbar", "smartbar", "urlbar"],
+@@ -80,11 +80,6 @@ var localProviderModules = [
+       "moz-src:///browser/components/urlbar/UrlbarProviderCalculator.sys.mjs",
+     supportedSAPs: ["newtab_searchbar", "searchbar", "smartbar", "urlbar"],
    },
-   {
+-  {
 -    name: "UrlbarProviderAiChat",
 -    module: "moz-src:///browser/components/urlbar/UrlbarProviderAiChat.sys.mjs",
 -    supportedSAPs: ["smartbar", "urlbar"],
 -  },
--  {
+   {
      name: "UrlbarProviderClipboard",
      module:
-       "moz-src:///browser/components/urlbar/UrlbarProviderClipboard.sys.mjs",

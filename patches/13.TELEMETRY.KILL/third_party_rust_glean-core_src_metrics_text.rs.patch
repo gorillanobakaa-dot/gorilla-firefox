@@ -1,6 +1,8 @@
+diff --git a/third_party/rust/glean-core/src/metrics/text.rs b/third_party/rust/glean-core/src/metrics/text.rs
+index 12c3c5bd61..2e075aa2b8 100644
 --- a/third_party/rust/glean-core/src/metrics/text.rs
 +++ b/third_party/rust/glean-core/src/metrics/text.rs
-@@ -71,6 +71,7 @@
+@@ -71,6 +71,7 @@ impl TextMetric {
      /// Truncates the value (at codepoint boundaries) if it is longer than `MAX_LENGTH_VALUE` bytes
      /// and logs an error.
      pub fn set(&self, value: String) {

@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/chrome/browser/places/bookmarkProperties.properties b/browser/locales/en-US/chrome/browser/places/bookmarkProperties.properties
+index eb6022b0ee..2bc6bf1a8a 100644
 --- a/browser/locales/en-US/chrome/browser/places/bookmarkProperties.properties
 +++ b/browser/locales/en-US/chrome/browser/places/bookmarkProperties.properties
 @@ -1,17 +1,16 @@

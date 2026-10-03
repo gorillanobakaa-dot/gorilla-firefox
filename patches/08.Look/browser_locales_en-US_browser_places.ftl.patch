@@ -1,6 +1,8 @@
+diff --git a/browser/locales/en-US/browser/places.ftl b/browser/locales/en-US/browser/places.ftl
+index e36c00a396..26be97f9f6 100644
 --- a/browser/locales/en-US/browser/places.ftl
 +++ b/browser/locales/en-US/browser/places.ftl
-@@ -1,299 +1,349 @@
+@@ -1,299 +1,301 @@
  # This Source Code Form is subject to the terms of the Mozilla Public
  # License, v. 2.0. If a copy of the MPL was not distributed with this file,
  # You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -8,45 +10,38 @@
  places-open =
 -  .label = Open
 -  .accesskey = O
-+    .label =
-+        Open
-+        .accesskey = O
++    .label = Open
++    .accesskey = O
  places-open-in-tab =
 -  .label = Open in New Tab
 -  .accesskey = w
-+    .label =
-+        Open in New Gorilla Tab
-+        .accesskey = w
++    .label = Open in New Gorilla Tab
++    .accesskey = w
  places-open-in-container-tab =
 -  .label = Open in New Container Tab
 -  .accesskey = i
-+    .label =
-+        Open in New Gorilla Container Gorilla Tab
-+        .accesskey = i
++    .label = Open in New Gorilla Container Gorilla Tab
++    .accesskey = i
  places-open-all-bookmarks =
 -  .label = Open All Bookmarks
 -  .accesskey = O
-+    .label =
-+        Open All Gorilla Bookmarks
-+        .accesskey = O
++    .label = Open All Gorilla Bookmarks
++    .accesskey = O
  places-open-all-in-tabs =
 -  .label = Open All in Tabs
 -  .accesskey = O
-+    .label =
-+        Open All in Gorilla Tabs
-+        .accesskey = O
++    .label = Open All in Gorilla Tabs
++    .accesskey = O
  places-open-in-window =
 -  .label = Open in New Window
 -  .accesskey = N
-+    .label =
-+        Open in New Gorilla Window
-+        .accesskey = N
++    .label = Open in New Gorilla Window
++    .accesskey = N
  places-open-in-private-window =
 -  .label = Open in New Private Window
 -  .accesskey = P
-+    .label =
-+        Open in New Gorilla Private Gorilla Window
-+        .accesskey = P
++    .label = Open in New Gorilla Private Gorilla Window
++    .accesskey = P
  
  places-empty-bookmarks-folder =
 -  .label = (Empty)
@@ -55,64 +50,54 @@
  places-add-bookmark =
 -  .label = Add Bookmark…
 -  .accesskey = B
-+    .label =
-+        Add Gorilla Bookmark…
-+        .accesskey = B
++    .label = Add Gorilla Bookmark…
++    .accesskey = B
  places-add-folder-contextmenu =
 -  .label = Add Folder…
 -  .accesskey = F
-+    .label =
-+        Add Folder…
-+        .accesskey = F
++    .label = Add Folder…
++    .accesskey = F
  places-add-folder =
 -  .label = Add Folder…
 -  .accesskey = o
-+    .label =
-+        Add Folder…
-+        .accesskey = o
++    .label = Add Folder…
++    .accesskey = o
  places-add-separator =
 -  .label = Add Separator
 -  .accesskey = S
-+    .label =
-+        Add Separator
-+        .accesskey = S
++    .label = Add Separator
++    .accesskey = S
  
  places-view =
 -  .label = View
 -  .accesskey = w
-+    .label =
-+        View
-+        .accesskey = w
++    .label = View
++    .accesskey = w
  places-by-date =
 -  .label = By Date
 -  .accesskey = D
-+    .label =
-+        By Date
-+        .accesskey = D
++    .label = By Date
++    .accesskey = D
  places-by-site =
 -  .label = By Site
 -  .accesskey = S
-+    .label =
-+        By Site
-+        .accesskey = S
++    .label = By Site
++    .accesskey = S
  places-by-most-visited =
 -  .label = By Most Visited
 -  .accesskey = V
-+    .label =
-+        By Most Visited
-+        .accesskey = V
++    .label = By Most Visited
++    .accesskey = V
  places-by-last-visited =
 -  .label = By Last Visited
 -  .accesskey = L
-+    .label =
-+        By Last Visited
-+        .accesskey = L
++    .label = By Last Visited
++    .accesskey = L
  places-by-day-and-site =
 -  .label = By Date and Site
 -  .accesskey = t
-+    .label =
-+        By Date and Site
-+        .accesskey = t
++    .label = By Date and Site
++    .accesskey = t
  
  places-history-search =
 -  .placeholder = Search history
@@ -127,34 +112,29 @@
  places-forget-domain-data =
 -  .label = Forget About This Site…
 -  .accesskey = F
-+    .label =
-+        Forget About This Site…
-+        .accesskey = F
++    .label = Forget About This Site…
++    .accesskey = F
  places-sortby-name =
 -  .label = Sort By Name
 -  .accesskey = r
-+    .label =
-+        Sort By Name
-+        .accesskey = r
++    .label = Sort By Name
++    .accesskey = r
  # places-edit-bookmark and places-edit-generic will show one or the other and can have the same access key.
  places-edit-bookmark =
 -  .label = Edit Bookmark…
 -  .accesskey = E
-+    .label =
-+        Edit Gorilla Bookmark…
-+        .accesskey = E
++    .label = Edit Gorilla Bookmark…
++    .accesskey = E
  places-edit-generic =
 -  .label = Edit…
 -  .accesskey = E
-+    .label =
-+        Edit…
-+        .accesskey = E
++    .label = Edit…
++    .accesskey = E
  places-edit-folder2 =
 -  .label = Edit Folder…
 -  .accesskey = E
-+    .label =
-+        Edit Folder…
-+        .accesskey = E
++    .label = Edit Folder…
++    .accesskey = E
  # Variables
  #   $count (number) - Number of folders to delete
  places-delete-folder =
@@ -205,9 +185,8 @@
  places-show-in-folder =
 -  .label = Show in Folder
 -  .accesskey = F
-+    .label =
-+        Show in Folder
-+        .accesskey = F
++    .label = Show in Folder
++    .accesskey = F
  
  # Variables:
  # $count (number) - The number of elements being selected for removal.
@@ -246,16 +225,14 @@
  places-untag-bookmark =
 -  .label = Remove Tag
 -  .accesskey = R
-+    .label =
-+        Remove Tag
-+        .accesskey = R
++    .label = Remove Tag
++    .accesskey = R
  
  places-manage-bookmarks =
 -  .label = Manage Bookmarks
 -  .accesskey = M
-+    .label =
-+        Manage Gorilla Bookmarks
-+        .accesskey = M
++    .label = Manage Gorilla Bookmarks
++    .accesskey = M
  
  places-library3 =
 -  .title = Library
@@ -265,17 +242,15 @@
 -  .label = Organize
 -  .tooltiptext = Organize your bookmarks
 -  .accesskey = O
-+    .label =
-+        Organize
-+        .tooltiptext = Organize your Gorilla bookmarks
-+        .accesskey = O
++    .label = Organize
++    .tooltiptext = Organize your Gorilla bookmarks
++    .accesskey = O
  
  places-file-close =
 -  .label = Close
 -  .accesskey = C
-+    .label =
-+        Close
-+        .accesskey = C
++    .label = Close
++    .accesskey = C
  
  places-cmd-close =
 -  .key = w
@@ -285,96 +260,83 @@
 -  .label = Views
 -  .tooltiptext = Change your view
 -  .accesskey = V
-+    .label =
-+        Views
-+        .tooltiptext = Change your view
-+        .accesskey = V
++    .label = Views
++    .tooltiptext = Change your view
++    .accesskey = V
  
  places-view-menu-columns =
 -  .label = Show Columns
 -  .accesskey = C
-+    .label =
-+        Show Columns
-+        .accesskey = C
++    .label = Show Columns
++    .accesskey = C
  
  places-view-menu-sort =
 -  .label = Sort
 -  .accesskey = S
-+    .label =
-+        Sort
-+        .accesskey = S
++    .label = Sort
++    .accesskey = S
  
  places-view-sort-unsorted =
 -  .label = Unsorted
 -  .accesskey = U
-+    .label =
-+        Unsorted
-+        .accesskey = U
++    .label = Unsorted
++    .accesskey = U
  
  places-view-sort-ascending =
 -  .label = A > Z Sort Order
 -  .accesskey = A
-+    .label =
-+        A > Z Sort Order
-+        .accesskey = A
++    .label = A > Z Sort Order
++    .accesskey = A
  
  places-view-sort-descending =
 -  .label = Z > A Sort Order
 -  .accesskey = Z
-+    .label =
-+        Z > A Sort Order
-+        .accesskey = Z
++    .label = Z > A Sort Order
++    .accesskey = Z
  
  places-maintenance-button =
 -  .label = Import and Backup
 -  .tooltiptext = Import and backup your bookmarks
 -  .accesskey = I
-+    .label =
-+        Import and Backup
-+        .tooltiptext = Import and backup your Gorilla bookmarks
-+        .accesskey = I
++    .label = Import and Backup
++    .tooltiptext = Import and backup your Gorilla bookmarks
++    .accesskey = I
  
  places-cmd-backup =
 -  .label = Backup…
 -  .accesskey = B
-+    .label =
-+        Backup…
-+        .accesskey = B
++    .label = Backup…
++    .accesskey = B
  
  places-cmd-restore =
 -  .label = Restore
 -  .accesskey = R
-+    .label =
-+        Restore
-+        .accesskey = R
++    .label = Restore
++    .accesskey = R
  
  places-cmd-restore-from-file =
 -  .label = Choose File…
 -  .accesskey = C
-+    .label =
-+        Choose Gorilla File…
-+        .accesskey = C
++    .label = Choose Gorilla File…
++    .accesskey = C
  
  places-import-bookmarks-from-html =
 -  .label = Import Bookmarks from HTML…
 -  .accesskey = I
-+    .label =
-+        Import Gorilla Bookmarks from HTML…
-+        .accesskey = I
++    .label = Import Gorilla Bookmarks from HTML…
++    .accesskey = I
  
  places-export-bookmarks-to-html =
 -  .label = Export Bookmarks to HTML…
 -  .accesskey = E
-+    .label =
-+        Export Gorilla Bookmarks to HTML…
-+        .accesskey = E
++    .label = Export Gorilla Bookmarks to HTML…
++    .accesskey = E
  
  places-import-other-browser =
 -  .label = Import Data from Another Browser…
 -  .accesskey = A
-+    .label =
-+        Import Data from Another Gorilla Browser…
-+        .accesskey = A
++    .label = Import Data from Another Gorilla Browser…
++    .accesskey = A
  
  places-view-sort-col-name =
 -  .label = Name
@@ -407,45 +369,38 @@
  places-view-sortby-name =
 -  .label = Sort by Name
 -  .accesskey = N
-+    .label =
-+        Sort by Name
-+        .accesskey = N
++    .label = Sort by Name
++    .accesskey = N
  places-view-sortby-url =
 -  .label = Sort by Location
 -  .accesskey = L
-+    .label =
-+        Sort by Location
-+        .accesskey = L
++    .label = Sort by Location
++    .accesskey = L
  places-view-sortby-date =
 -  .label = Sort by Most Recent Visit
 -  .accesskey = V
-+    .label =
-+        Sort by Most Recent Visit
-+        .accesskey = V
++    .label = Sort by Most Recent Visit
++    .accesskey = V
  places-view-sortby-visit-count =
 -  .label = Sort by Visit Count
 -  .accesskey = C
-+    .label =
-+        Sort by Visit Count
-+        .accesskey = C
++    .label = Sort by Visit Count
++    .accesskey = C
  places-view-sortby-date-added =
 -  .label = Sort by Added
 -  .accesskey = e
-+    .label =
-+        Sort by Added
-+        .accesskey = e
++    .label = Sort by Added
++    .accesskey = e
  places-view-sortby-last-modified =
 -  .label = Sort by Last Modified
 -  .accesskey = M
-+    .label =
-+        Sort by Last Modified
-+        .accesskey = M
++    .label = Sort by Last Modified
++    .accesskey = M
  places-view-sortby-tags =
 -  .label = Sort by Tags
 -  .accesskey = T
-+    .label =
-+        Sort by Tags
-+        .accesskey = T
++    .label = Sort by Tags
++    .accesskey = T
  
  places-cmd-find-key =
 -  .key = f
@@ -502,6 +457,5 @@
  places-share-folder2 =
 -  .label = Share Folder
 -  .badge = New
-+    .label =
-+        Share Folder
-+        .badge = New
++    .label = Share Folder
++    .badge = New

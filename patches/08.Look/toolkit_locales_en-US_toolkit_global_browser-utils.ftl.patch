@@ -1,3 +1,5 @@
+diff --git a/toolkit/locales/en-US/toolkit/global/browser-utils.ftl b/toolkit/locales/en-US/toolkit/global/browser-utils.ftl
+index 8cdf72016a..a4beb74083 100644
 --- a/toolkit/locales/en-US/toolkit/global/browser-utils.ftl
 +++ b/toolkit/locales/en-US/toolkit/global/browser-utils.ftl
 @@ -1,7 +1,6 @@
@@ -8,7 +10,7 @@
  # Used for data: URLs where we don't have any useful origin information
  browser-utils-url-data = (data)
  
-@@ -10,10 +9,10 @@
+@@ -10,10 +9,10 @@ browser-utils-url-data = (data)
  browser-utils-url-scheme = { $scheme } resource
  # Special case of done-scheme for file:
  # This is used as an eTLD replacement for local files, so make it lower case

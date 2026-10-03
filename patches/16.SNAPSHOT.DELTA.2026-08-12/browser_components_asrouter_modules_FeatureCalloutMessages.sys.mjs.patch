@@ -1,6 +1,8 @@
+diff --git a/browser/components/asrouter/modules/FeatureCalloutMessages.sys.mjs b/browser/components/asrouter/modules/FeatureCalloutMessages.sys.mjs
+index 8ef2025712..c590f7f799 100644
 --- a/browser/components/asrouter/modules/FeatureCalloutMessages.sys.mjs
 +++ b/browser/components/asrouter/modules/FeatureCalloutMessages.sys.mjs
-@@ -1118,265 +1118,6 @@
+@@ -1047,265 +1047,6 @@ const MESSAGES = () => {
          ],
        },
      },

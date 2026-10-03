@@ -1,6 +1,8 @@
+diff --git a/xpcom/base/MemoryTelemetry.cpp b/xpcom/base/MemoryTelemetry.cpp
+index ec24691653..a031104818 100644
 --- a/xpcom/base/MemoryTelemetry.cpp
 +++ b/xpcom/base/MemoryTelemetry.cpp
-@@ -228,15 +228,22 @@
+@@ -228,15 +228,22 @@ nsresult MemoryTelemetry::Shutdown() {
  
  nsresult MemoryTelemetry::GatherReports(
      const std::function<void()>& aCompletionCallback) {

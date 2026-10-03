@@ -1,3 +1,5 @@
+diff --git a/browser/base/content/aboutDialog.css b/browser/base/content/aboutDialog.css
+index 017125bc25..97aab3e124 100644
 --- a/browser/base/content/aboutDialog.css
 +++ b/browser/base/content/aboutDialog.css
 @@ -1,180 +1,71 @@
@@ -11,7 +13,12 @@
 -     across screens with different device DPI, which may cause font metrics
 -     to round differently. */
 -  line-height: 1.5;
-+#aboutDialogContainer {
+-}
+-
+ #aboutDialogContainer {
+-  display: flex;
+-  flex-direction: column;
+-  height: 100%;
 +  background-color: #20123a !important;
 +  color: #fff !important;
 +  display: flex !important;
@@ -21,12 +28,8 @@
 +  min-height: 800px !important;
 +  position: relative !important;
 +  padding: 0 !important;
- }
- 
--#aboutDialogContainer {
--  display: flex;
--  flex-direction: column;
--  height: 100%;
++}
++
 +/* Re-insert the massive Gorilla icon in the center */
 +#clientBox {
 +  display: flex !important;

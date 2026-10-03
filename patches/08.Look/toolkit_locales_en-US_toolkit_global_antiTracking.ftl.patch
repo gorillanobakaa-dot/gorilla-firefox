@@ -1,3 +1,5 @@
+diff --git a/toolkit/locales/en-US/toolkit/global/antiTracking.ftl b/toolkit/locales/en-US/toolkit/global/antiTracking.ftl
+index b8a01c0b22..1d87e1f59d 100644
 --- a/toolkit/locales/en-US/toolkit/global/antiTracking.ftl
 +++ b/toolkit/locales/en-US/toolkit/global/antiTracking.ftl
 @@ -1,7 +1,6 @@

@@ -1,3 +1,5 @@
+diff --git a/toolkit/locales/en-US/toolkit/about/config.ftl b/toolkit/locales/en-US/toolkit/about/config.ftl
+index 88af62a766..3348975edf 100644
 --- a/toolkit/locales/en-US/toolkit/about/config.ftl
 +++ b/toolkit/locales/en-US/toolkit/about/config.ftl
 @@ -1,16 +1,13 @@
@@ -17,7 +19,7 @@
  # This is shown on the page before searching but after the warning is accepted.
  about-config-caution-text = Changing these preferences can impact { -brand-short-name } performance or security.
  
-@@ -36,7 +33,6 @@
+@@ -36,7 +33,6 @@ about-config-pref-delete-button =
      .title = Delete
  
  ## Labels for the type selection radio buttons shown when adding preferences.
@@ -25,7 +27,7 @@
  about-config-pref-add-type-boolean = Boolean
  about-config-pref-add-type-number = Number
  about-config-pref-add-type-string = String
-@@ -47,7 +43,6 @@
+@@ -47,7 +43,6 @@ about-config-pref-add-type-string = String
  ##
  ## Variables:
  ##   $value (String): The full value of the preference.

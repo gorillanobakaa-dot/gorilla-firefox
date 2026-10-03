@@ -1,6 +1,8 @@
+diff --git a/mfbt/Maybe.h b/mfbt/Maybe.h
+index 934a10e5de..e8ec5880e1 100644
 --- a/mfbt/Maybe.h
 +++ b/mfbt/Maybe.h
-@@ -101,13 +101,32 @@
+@@ -101,13 +101,32 @@ struct MaybePoisoner {
    }
  };
  
@@ -35,7 +37,7 @@
  #define MOZ_MAYBE_COPY_OPS()                                                \
    Maybe_CopyMove_Enabler(const Maybe_CopyMove_Enabler& aOther) {            \
      if (downcast(aOther).isSome()) {                                        \
-@@ -398,36 +417,36 @@
+@@ -398,36 +417,36 @@ MOZ_GSL_OWNER MOZ_EMPTY_BASES Maybe : private detail::MaybeStorage<T>,
     * Maybe<T> can be copy-constructed from a Maybe<U> if T is constructible from
     * a const U&.
     */
@@ -82,7 +84,7 @@
    Maybe& operator=(const Maybe<U>& aOther) {
      if (aOther.isSome()) {
        if (mIsSome) {
-@@ -441,12 +460,12 @@
+@@ -441,12 +460,12 @@ MOZ_GSL_OWNER MOZ_EMPTY_BASES Maybe : private detail::MaybeStorage<T>,
      return *this;
    }
  
@@ -99,7 +101,7 @@
    Maybe& operator=(Maybe<U>&& aOther) {
      if (aOther.isSome()) {
        if (mIsSome) {
-@@ -462,8 +481,8 @@
+@@ -462,8 +481,8 @@ MOZ_GSL_OWNER MOZ_EMPTY_BASES Maybe : private detail::MaybeStorage<T>,
      return *this;
    }
  
@@ -110,7 +112,7 @@
    Maybe& operator=(Maybe<U>&& aOther) = delete;
  
    constexpr Maybe& operator=(Nothing) {
-@@ -871,10 +890,9 @@
+@@ -871,10 +890,9 @@ MOZ_GSL_OWNER MOZ_EMPTY_BASES Maybe : private detail::MaybeStorage<T>,
    constexpr void emplace(Args&&... aArgs);
  
    template <typename U>

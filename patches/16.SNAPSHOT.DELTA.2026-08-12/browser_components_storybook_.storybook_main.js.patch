@@ -1,10 +1,12 @@
+diff --git a/browser/components/storybook/.storybook/main.js b/browser/components/storybook/.storybook/main.js
+index c6b033f4b0..8218ab40b5 100644
 --- a/browser/components/storybook/.storybook/main.js
 +++ b/browser/components/storybook/.storybook/main.js
-@@ -43,7 +43,6 @@
+@@ -43,7 +43,6 @@ module.exports = {
      // WebRTC components stories
      `${projectRoot}/browser/components/webrtc/content/**/*.stories.mjs`,
      // AI Window components stories
 -    `${projectRoot}/browser/components/aiwindow/ui/**/*.stories.mjs`,
+     // Genai components stories
+     `${projectRoot}/browser/components/genai/content/**/*.stories.mjs`,
      // Multiline editor components stories
-     `${projectRoot}/browser/components/multilineeditor/**/*.stories.@(mjs|md)`,
-     // Trust Panel components stories

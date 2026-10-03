@@ -1,6 +1,8 @@
+diff --git a/browser/modules/Sanitizer.sys.mjs b/browser/modules/Sanitizer.sys.mjs
+index f0d146337b..d1004a94fc 100644
 --- a/browser/modules/Sanitizer.sys.mjs
 +++ b/browser/modules/Sanitizer.sys.mjs
-@@ -7,10 +7,6 @@
+@@ -7,10 +7,6 @@ import { AppConstants } from "resource://gre/modules/AppConstants.sys.mjs";
  const lazy = {};
  
  ChromeUtils.defineESModuleGetters(lazy, {
@@ -11,7 +13,7 @@
    ContextualIdentityService:
      "moz-src:///toolkit/components/contextualidentity/ContextualIdentityService.sys.mjs",
    FormHistory: "resource://gre/modules/FormHistory.sys.mjs",
-@@ -884,8 +880,6 @@
+@@ -878,8 +874,6 @@ export var Sanitizer = {
          timerId = Glean.browserSanitizer.downloads.start();
          await clearData(range, Ci.nsIClearDataService.CLEAR_DOWNLOADS);
          Glean.browserSanitizer.downloads.stopAndAccumulate(timerId);
@@ -20,7 +22,7 @@
        },
      },
  
-@@ -912,33 +906,11 @@
+@@ -906,33 +900,11 @@ export var Sanitizer = {
          }
          await clearData(range, Ci.nsIClearDataService.CLEAR_MEDIA_DEVICES);
          Glean.browserSanitizer.cookies.stopAndAccumulate(timerId);

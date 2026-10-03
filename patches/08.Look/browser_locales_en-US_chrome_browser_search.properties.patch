@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/chrome/browser/search.properties b/browser/locales/en-US/chrome/browser/search.properties
+index 5aa1af7544..7751711936 100644
 --- a/browser/locales/en-US/chrome/browser/search.properties
 +++ b/browser/locales/en-US/chrome/browser/search.properties
 @@ -1,7 +1,6 @@
@@ -8,7 +10,7 @@
  searchtip=Search using %S
  
  # LOCALIZATION NOTE (searchHeader): this is displayed at the top of the panel
-@@ -13,7 +12,7 @@
+@@ -13,7 +12,7 @@ searchHeader=%S Search
  # search bar equivalent to the url bar's "Paste and Go"
  cmd_pasteAndSearch=Paste & Search
  
@@ -17,7 +19,7 @@
  cmd_clearHistory_accesskey=H
  
  # LOCALIZATION NOTE (searchForSomethingWith2):
-@@ -29,4 +28,4 @@
+@@ -29,4 +28,4 @@ searchWithHeader=Search with:
  
  # LOCALIZATION NOTE (searchSettings):
  # This is the label for the button that opens Search preferences.

@@ -1,22 +1,23 @@
+diff --git a/toolkit/themes/shared/design-system/dist/tokens-brand.css b/toolkit/themes/shared/design-system/dist/tokens-brand.css
+index 97ee586f5c..54e0b7dc72 100644
 --- a/toolkit/themes/shared/design-system/dist/tokens-brand.css
 +++ b/toolkit/themes/shared/design-system/dist/tokens-brand.css
-@@ -7,7 +7,7 @@
+@@ -9,7 +9,7 @@
  
- @import url("chrome://global/skin/design-system/tokens-shared.css");
- 
--@layer tokens-foundation-brand {
+ :root,
+ :host(.anonymous-content-host) {
+-  @layer tokens-foundation-brand {
 +@layer tokens-foundation {
-   :root,
-   :host(.anonymous-content-host) {
      /** background-color **/
-@@ -25,17 +25,39 @@
+     --background-color-box-info: light-dark(var(--color-gray-20), var(--color-gray-80));
+     --background-color-canvas: light-dark(var(--color-white), var(--color-gray-90));
+@@ -25,20 +25,43 @@
      --button-background-color: color-mix(in srgb, currentColor 7%, transparent);
      --button-background-color-hover: color-mix(in srgb, currentColor 14%, transparent);
      --button-background-color-active: color-mix(in srgb, currentColor 21%, transparent);
 -    --button-text-color: light-dark(var(--color-gray-100), var(--color-gray-0));
 +    --button-text-color: light-dark(var(--color-gray-100), var(--color-gray-05));
      --button-text-color-primary: light-dark(var(--color-white), var(--color-gray-100));
- 
 +    /** color **/
 +    --color-accent-attention: light-dark(#2ac3a2, #54ffbd);
 +    --color-accent-primary: light-dark(var(--color-blue-60), var(--color-cyan-30));
@@ -24,12 +25,13 @@
 +    --color-accent-primary-active: light-dark(var(--color-blue-80), var(--color-cyan-10));
 +    --color-accent-primary-selected: light-dark(var(--color-blue-60), var(--color-cyan-30));
 +
+ 
      /** font-size **/
      --font-size-root: 15px;
--    /* 13px (in-content) */
 +    /* 11px / Note this token is to be used in rare cases because its hard to read. Please consult with the Design Systems and A11y teams for case-by-case feedback. */
 +    --font-size-xsmall: 0.733rem;
 +    /* 13px */
+     /* 13px in-content, unset in platform (we want to avoid going too small when the root font size is already quite small) */
      --font-size-small: 0.867rem;
 +    /* 17px */
 +    --font-size-large: 1.133rem;
@@ -46,13 +48,16 @@
 +    --link-color-active: var(--color-accent-primary-active);
 +    --link-color-visited: var(--link-color);
  
+     /** input **/
+     --input-text-color: var(--text-color);
+ 
      /** page **/
      --page-main-content-width: 664px;
 -    --page-space-block-start: 64px;
  
      /** table **/
      --table-header-text-color: light-dark(var(--color-white), var(--color-gray-100));
-@@ -43,7 +65,7 @@
+@@ -46,7 +69,7 @@
      --table-row-background-color-alternate: light-dark(#f0f0f4, var(--color-gray-80));
  
      /** text-color **/
@@ -60,27 +65,20 @@
 +    --text-color: light-dark(var(--color-gray-100), var(--color-gray-05));
      --text-color-accent-primary-selected: light-dark(var(--color-white), var(--color-gray-100));
    }
- }
-@@ -70,7 +92,7 @@
-     :root,
-     :host(.anonymous-content-host) {
+ 
+@@ -60,14 +83,12 @@
+   @layer tokens-forced-colors {
+     @media (forced-colors) {
        /** button **/
 -      --button-background-color-ghost: ButtonFace;
 +      --button-background-color-ghost: var(--button-background-color);
        --button-background-color-ghost-disabled: var(--button-background-color-disabled);
-       --button-background-color-toolbar: var(--button-background-color);
-       --button-background-color-toolbar-disabled: var(--button-background-color-disabled);
-@@ -81,13 +103,3 @@
+       --button-text-color-ghost-disabled: var(--button-text-color-disabled);
      }
    }
- }
--
--@media -moz-pref("browser.nova.enabled") {
--  @layer tokens-foundation-brand-nova {
--    :root,
--    :host(.anonymous-content-host) {
--      /** text-color **/
--      --text-color-accent-primary-selected: light-dark(var(--color-white), var(--color-gray-55));
--    }
--  }
--}
+ 
+-  @media -moz-pref("browser.nova.enabled") {
+-    @layer tokens-foundation-brand-nova {
+       /** background-color **/
+       --background-color-box: light-dark(var(--color-white), var(--color-gray-70));
+       --background-color-box-info: light-dark(var(--color-gray-15), var(--color-gray-65));

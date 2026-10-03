@@ -1,3 +1,5 @@
+diff --git a/toolkit/locales/en-US/chrome/global/resetProfile.properties b/toolkit/locales/en-US/chrome/global/resetProfile.properties
+index c060072990..c398cc3a9a 100644
 --- a/toolkit/locales/en-US/chrome/global/resetProfile.properties
 +++ b/toolkit/locales/en-US/chrome/global/resetProfile.properties
 @@ -1,9 +1,7 @@

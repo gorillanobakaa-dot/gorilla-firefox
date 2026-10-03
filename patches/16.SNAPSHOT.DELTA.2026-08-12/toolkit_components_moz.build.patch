@@ -1,6 +1,8 @@
+diff --git a/toolkit/components/moz.build b/toolkit/components/moz.build
+index d20f936e30..e29787417f 100644
 --- a/toolkit/components/moz.build
 +++ b/toolkit/components/moz.build
-@@ -56,7 +56,7 @@
+@@ -56,7 +56,7 @@ DIRS += [
      "kvstore",
      "media",
      "mediasniffer",
@@ -9,12 +11,12 @@
      "mozintl",
      "mozprotocol",
      "pageextractor",
-@@ -154,7 +154,7 @@
+@@ -160,7 +160,7 @@ if CONFIG["MOZ_UNIFFI_FIXTURES"]:
      DIRS += ["uniffi-bindgen-gecko-js/tests"]
  
  if CONFIG["NIGHTLY_BUILD"]:
 -    DIRS += ["aboutinference"]
 +    pass  # GORILLA excised: aboutinference
  
- UNIFIED_SOURCES += [
-     "/toolkit/components/antitracking/ContentBlockingAllowList.cpp",
+ if CONFIG["OS_ARCH"] == "WINNT":
+     DIRS += ["push"]

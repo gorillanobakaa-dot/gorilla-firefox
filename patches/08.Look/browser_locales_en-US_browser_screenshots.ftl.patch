@@ -1,6 +1,8 @@
+diff --git a/browser/locales/en-US/browser/screenshots.ftl b/browser/locales/en-US/browser/screenshots.ftl
+index a73a2ca875..b3517426ae 100644
 --- a/browser/locales/en-US/browser/screenshots.ftl
 +++ b/browser/locales/en-US/browser/screenshots.ftl
-@@ -1,25 +1,26 @@
+@@ -1,25 +1,25 @@
  # This Source Code Form is subject to the terms of the Mozilla Public
  # License, v. 2.0. If a copy of the MPL was not distributed with this
  # file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -10,9 +12,8 @@
  screenshot-toolbar-button =
 -  .label = Screenshot
 -  .tooltiptext = Take a screenshot ({ $shortcut })
-+    .label =
-+        Screenshot
-+        .tooltiptext = Take a screenshot ({ $shortcut })
++    .label = Screenshot
++    .tooltiptext = Take a screenshot ({ $shortcut })
  
  screenshot-shortcut =
 -  .key = S
@@ -36,15 +37,14 @@
  }
  screenshots-notification-link-copied-title = Link Copied
  screenshots-notification-link-copied-details = The link to your shot has been copied to the clipboard. Press {screenshots-meta-key}-V to paste.
-@@ -31,37 +32,39 @@
+@@ -31,37 +31,36 @@ screenshots-too-large-error-title = Your screenshot was cropped because it was t
  screenshots-too-large-error-details = Try selecting a region that’s smaller than 32,700 pixels on its longest side or 124,900,000 pixels total area.
  
  screenshots-component-retry-button =
 -  .title = Retry screenshot
 -  .aria-label = Retry screenshot
-+    .title =
-+        Retry screenshot
-+        .aria-label = Retry screenshot
++    .title = Retry screenshot
++    .aria-label = Retry screenshot
  
  screenshots-component-cancel-button =
 -  .title =
@@ -66,9 +66,8 @@
  screenshots-component-copy-button-2 = Copy
 -  .title = Copy ({ $shortcut })
 -  .aria-label = Copy
-+    .title =
-+        Copy ({ $shortcut })
-+        .aria-label = Copy
++    .title = Copy ({ $shortcut })
++    .aria-label = Copy
  
  # Variables
  #   $shortcut (String) - A keyboard shortcut for saving/downloading the screenshot.
@@ -76,9 +75,8 @@
 -  .title = Download ({ $shortcut })
 -  .aria-label = Download
 +screenshots-component-download-button-2 = Gorilla Download
-+    .title =
-+        Gorilla Download ({ $shortcut })
-+        .aria-label = Gorilla Download
++    .title = Gorilla Download ({ $shortcut })
++    .aria-label = Gorilla Download
  
  ## The below strings are used to capture keydown events so the strings should
  ## not be changed unless the keyboard layout in the locale requires it.
@@ -91,7 +89,7 @@
  # This string represents the selection size area
  # "×" here represents "by" (i.e 123 by 456)
  # Variables:
-@@ -70,4 +73,4 @@
+@@ -70,4 +69,4 @@ screenshots-component-copy-key = C
  screenshots-overlay-selection-region-size-3 = { $width } × { $height }
  
  screenshots-overlay-preview-face-label =

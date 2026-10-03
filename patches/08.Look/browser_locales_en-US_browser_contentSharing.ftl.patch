@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/browser/contentSharing.ftl b/browser/locales/en-US/browser/contentSharing.ftl
+index 6c4882822d..d67f1d854b 100644
 --- a/browser/locales/en-US/browser/contentSharing.ftl
 +++ b/browser/locales/en-US/browser/contentSharing.ftl
 @@ -1,43 +1,41 @@
@@ -55,7 +57,7 @@
  
  content-sharing-modal-policy = By sharing, you agree to our <a data-l10n-name="aup-link">Acceptable Use Policy</a>
  
-@@ -45,26 +43,29 @@
+@@ -45,26 +43,27 @@ content-sharing-modal-policy = By sharing, you agree to our <a data-l10n-name="a
  # number of links and that the first N links will be shared.
  # The current max is 30.
  content-sharing-modal-too-many-links-2 =
@@ -69,9 +71,8 @@
  content-sharing-modal-no-shareable-links =
 -  .heading = No shareable links included
 -  .message = Only links to web content can be shared.
-+    .heading =
-+        No shareable links included
-+        .message = Only links to web content can be shared.
++    .heading = No shareable links included
++    .message = Only links to web content can be shared.
  
  # Variables:
  #   $count (Number) - The maximum number of pages a user can share at one time
@@ -95,6 +96,5 @@
  content-sharing-modal-generic-error-2 =
 -  .heading = Something went wrong
 -  .message = We couldn’t create your shared page this time. Try again later.
-+    .heading =
-+        Something went wrong
-+        .message = We couldn’t create your shared Gorilla page this time. Try again later.
++    .heading = Something went wrong
++    .message = We couldn’t create your shared Gorilla page this time. Try again later.

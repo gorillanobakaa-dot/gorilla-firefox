@@ -1,3 +1,5 @@
+diff --git a/toolkit/locales/en-US/toolkit/printing/printUI.ftl b/toolkit/locales/en-US/toolkit/printing/printUI.ftl
+index 3e478e0fc4..a43b266f0c 100644
 --- a/toolkit/locales/en-US/toolkit/printing/printUI.ftl
 +++ b/toolkit/locales/en-US/toolkit/printing/printUI.ftl
 @@ -1,7 +1,6 @@
@@ -8,7 +10,7 @@
  printui-title = Print
  # Dialog title to prompt the user for a filename to save print to PDF.
  printui-save-to-pdf-title = Save As
-@@ -10,8 +9,8 @@
+@@ -10,8 +9,8 @@ printui-save-to-pdf-title = Save As
  # $sheetCount (integer) - Number of paper sheets
  printui-sheets-count =
      { $sheetCount ->
@@ -19,7 +21,7 @@
      }
  
  printui-page-range-all = All
-@@ -19,12 +18,13 @@
+@@ -19,12 +18,12 @@ printui-page-range-current = Current
  printui-page-range-odd = Odd
  printui-page-range-even = Even
  printui-page-range-custom = Custom
@@ -31,13 +33,12 @@
  printui-page-custom-range-input =
 -  .aria-label = Enter custom page range
 -  .placeholder = e.g. 2-6, 9, 12-16
-+    .aria-label =
-+        Enter custom Gorilla page range
-+        .placeholder = e.g. 2-6, 9, 12-16
++    .aria-label = Enter custom Gorilla page range
++    .placeholder = e.g. 2-6, 9, 12-16
  
  # Section title for the number of copies to print
  printui-copies-label = Copies
-@@ -37,14 +37,14 @@
+@@ -43,14 +42,14 @@ printui-portrait-2 =
  printui-destination-label = Destination
  printui-destination-pdf-label = Save to PDF
  
@@ -55,7 +56,7 @@
  # Label for input control where user can set the scale percentage
  printui-scale-pcent = Scale
  
-@@ -64,7 +64,6 @@
+@@ -70,7 +69,6 @@ printui-backgrounds-checkbox = Print backgrounds
  ## The "Format" section, select a version of the website to print. Radio
  ## options to select between the original page, selected text only, or a version
  ## where the page is processed with "Reader View".
@@ -63,7 +64,7 @@
  # The section title.
  printui-source-label = Format
  # Option for printing the original page.
-@@ -75,7 +74,6 @@
+@@ -81,7 +79,6 @@ printui-selection-radio = Selection
  printui-simplify-page-radio = Simplified
  
  ##
@@ -71,7 +72,7 @@
  printui-color-mode-label = Color mode
  printui-color-mode-color = Color
  printui-color-mode-bw = Black and white
-@@ -113,7 +111,7 @@
+@@ -119,7 +116,7 @@ printui-loading = Preparing Preview
  printui-preview-label =
      .aria-label = Print Preview
  
@@ -80,7 +81,7 @@
  
  # This is shown next to the Print button with an indefinite loading spinner
  # when the user prints a page and it is being sent to the printer.
-@@ -121,7 +119,6 @@
+@@ -127,7 +124,6 @@ printui-print-progress-indicator = Printing…
  printui-print-progress-indicator-saving = Saving…
  
  ## Paper sizes that may be supported by the Save to PDF destination:
@@ -88,7 +89,7 @@
  printui-paper-a5 = A5
  printui-paper-a4 = A4
  printui-paper-a3 = A3
-@@ -137,7 +134,6 @@
+@@ -143,7 +139,6 @@ printui-paper-legal = US Legal
  printui-paper-tabloid = Tabloid
  
  ## Error messages shown when a user has an invalid input
@@ -96,7 +97,7 @@
  printui-error-invalid-scale = Scale must be a number between 10 and 200.
  printui-error-invalid-margin = Please enter a valid margin for the selected paper size.
  printui-error-invalid-copies = Copies must be a number between 1 and 10000.
-@@ -145,4 +141,4 @@
+@@ -151,4 +146,4 @@ printui-error-invalid-copies = Copies must be a number between 1 and 10000.
  # Variables
  # $numPages (integer) - Number of pages
  printui-error-invalid-range = Range must be a number between 1 and { $numPages }.

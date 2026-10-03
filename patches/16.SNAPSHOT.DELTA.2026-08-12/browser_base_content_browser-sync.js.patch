@@ -1,6 +1,8 @@
+diff --git a/browser/base/content/browser-sync.js b/browser/base/content/browser-sync.js
+index 361c8253d0..7f1f39abea 100644
 --- a/browser/base/content/browser-sync.js
 +++ b/browser/base/content/browser-sync.js
-@@ -16,8 +16,6 @@
+@@ -16,8 +16,6 @@ const { UIState } = ChromeUtils.importESModule(
  );
  
  ChromeUtils.defineESModuleGetters(this, {
@@ -9,7 +11,7 @@
    ASRouter: "resource:///modules/asrouter/ASRouter.sys.mjs",
    EnsureFxAccountsWebChannel:
      "resource://gre/modules/FxAccountsWebChannel.sys.mjs",
-@@ -2603,9 +2601,7 @@
+@@ -3584,9 +3582,7 @@ var gSync = {
        deleteLocalData: false,
      };
  

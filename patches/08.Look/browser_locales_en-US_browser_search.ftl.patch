@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/browser/search.ftl b/browser/locales/en-US/browser/search.ftl
+index 716e62d639..f22c94df07 100644
 --- a/browser/locales/en-US/browser/search.ftl
 +++ b/browser/locales/en-US/browser/search.ftl
 @@ -1,24 +1,20 @@
@@ -27,7 +29,7 @@
  searchbar-submit =
      .tooltiptext = Submit search
  
-@@ -33,40 +29,37 @@
+@@ -33,28 +29,24 @@ searchbar-icon =
  ## Variables
  ## $oldEngine (String) - the search engine to be removed.
  ## $newEngine (String) - the search engine to replace the removed search engine.
@@ -56,19 +58,9 @@
  ## in settings or when adding an HTML form as a search engine.
 -
  add-engine-window =
--    .title = Add Search Engine
--    .style = min-width: 32em;
-+    .title =
-+        Add Search Engine
-+        .style = min-width: 32em;
- 
- edit-engine-window =
--    .title = Edit Search Engine
--    .style = min-width: 32em;
-+    .title =
-+        Edit Search Engine
-+        .style = min-width: 32em;
- 
+     .title = Add Search Engine
+     .style = min-width: 32em;
+@@ -66,7 +58,6 @@ edit-engine-window =
  add-engine-button = Add Custom Engine
  
  ## The following strings are used as input labels.
@@ -76,7 +68,7 @@
  add-engine-name = Search engine name
  add-engine-url2 = URL with %s in place of search term
  add-engine-keyword2 = Keyword (optional)
-@@ -75,16 +68,14 @@
+@@ -75,16 +66,14 @@ add-engine-post-data = POST data with %s in place of search term (leave empty fo
  add-engine-suggest-url = Suggestions URL with %s in place of search term (optional)
  
  ## The following placeholders are shown in the inputs when adding a new engine.
@@ -95,7 +87,7 @@
  add-engine-keyword-exists = That keyword is already being used. Try a different one.
  add-engine-name-exists = That name is already being used. Please choose a different one.
  add-engine-no-name = Please add a name.
-@@ -97,17 +88,18 @@
+@@ -97,7 +86,6 @@ add-engine-missing-terms-url = Try including %s in place of the search term.
  add-engine-missing-terms-post-data = Try including %s in place of the search term.
  
  ## The following strings are used as labels for the dialog's buttons.
@@ -103,21 +95,3 @@
  # buttonlabelextra1 is the label of a button to open the advanced section
  # of the dialog.
  add-engine-dialog2 =
--    .buttonlabelaccept = Add Engine
--    .buttonaccesskeyaccept = A
--    .buttonlabelextra1 = Advanced
-+    .buttonlabelaccept =
-+        Add Engine
-+        .buttonaccesskeyaccept = A
-+        .buttonlabelextra1 = Advanced
- 
- # buttonlabelextra1 is the label of a button to open the advanced section
- # of the dialog.
- edit-engine-dialog =
--    .buttonlabelaccept = Save Engine
--    .buttonaccesskeyaccept = S
--    .buttonlabelextra1 = Advanced
-+    .buttonlabelaccept =
-+        Save Engine
-+        .buttonaccesskeyaccept = S
-+        .buttonlabelextra1 = Advanced

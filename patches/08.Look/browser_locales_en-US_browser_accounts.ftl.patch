@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/browser/accounts.ftl b/browser/locales/en-US/browser/accounts.ftl
+index 456539eeaa..5c15bbe877 100644
 --- a/browser/locales/en-US/browser/accounts.ftl
 +++ b/browser/locales/en-US/browser/accounts.ftl
 @@ -1,7 +1,6 @@
@@ -8,7 +10,7 @@
  # Used as the FxA toolbar menu item value when user has not
  # finished setting up an account.
  account-finish-account-setup = Finish Account Setup
-@@ -18,23 +17,19 @@
+@@ -18,23 +17,19 @@ account-manage-devices = Manage devices…
  
  ## Variables:
  ##   $email (String): = Email address of user's Firefox Account.
@@ -32,7 +34,7 @@
  # The title shown in a notification when either this device or another device
  # has connected to, or disconnected from, a Firefox account.
  account-connection-title-2 = Account
-@@ -55,11 +50,10 @@
+@@ -55,11 +50,10 @@ account-connection-disconnected = This computer has been disconnected.
  ## These strings are used in a notification shown when we're opening
  ## a single tab another device sent us to display.
  ## The body for this notification is the URL of the received tab.
@@ -46,7 +48,7 @@
  
  # Used when a tab from a remote device arrives but the URL must be truncated.
  # Should display the URL with an indication that it's been truncated.
-@@ -71,37 +65,35 @@
+@@ -71,37 +65,35 @@ account-single-tab-arriving-truncated-url = { $url }…
  ## multiple tabs another device or devices sent us to display.
  ## Variables:
  ##   $tabCount (Number): the number of tabs received

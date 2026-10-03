@@ -1,6 +1,8 @@
+diff --git a/browser/modules/BrowserWindowTracker.sys.mjs b/browser/modules/BrowserWindowTracker.sys.mjs
+index e1a8f6d8d2..b9cb613295 100644
 --- a/browser/modules/BrowserWindowTracker.sys.mjs
 +++ b/browser/modules/BrowserWindowTracker.sys.mjs
-@@ -19,8 +19,6 @@
+@@ -19,8 +19,6 @@ XPCOMUtils.defineLazyServiceGetters(lazy, {
  });
  
  ChromeUtils.defineESModuleGetters(lazy, {
@@ -9,7 +11,7 @@
    HomePage: "resource:///modules/HomePage.sys.mjs",
    PrivateBrowsingUtils: "resource://gre/modules/PrivateBrowsingUtils.sys.mjs",
  });
-@@ -344,7 +342,7 @@
+@@ -344,7 +342,7 @@ export const BrowserWindowTracker = {
        fission = undefined,
      } = options;
  

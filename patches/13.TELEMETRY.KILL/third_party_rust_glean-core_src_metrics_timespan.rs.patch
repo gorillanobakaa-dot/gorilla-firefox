@@ -1,6 +1,8 @@
+diff --git a/third_party/rust/glean-core/src/metrics/timespan.rs b/third_party/rust/glean-core/src/metrics/timespan.rs
+index 5ab5f769a4..d4a2d715cc 100644
 --- a/third_party/rust/glean-core/src/metrics/timespan.rs
 +++ b/third_party/rust/glean-core/src/metrics/timespan.rs
-@@ -56,6 +56,7 @@
+@@ -56,6 +56,7 @@ impl TimespanMetric {
      /// [`set_stop`](TimespanMetric::set_stop)): in that case the original start
      /// time will be preserved.
      pub fn start(&self) {
@@ -8,7 +10,7 @@
          let start_time = zeitstempel::now_awake();
  
          let metric = self.clone();
-@@ -88,6 +89,7 @@
+@@ -88,6 +89,7 @@ impl TimespanMetric {
      ///
      /// This will record an error if no [`set_start`](TimespanMetric::set_start) was called.
      pub fn stop(&self) {
@@ -16,7 +18,7 @@
          let stop_time = zeitstempel::now_awake();
  
          let metric = self.clone();
-@@ -143,6 +145,7 @@
+@@ -143,6 +145,7 @@ impl TimespanMetric {
      /// error is recorded if no [`set_start`](TimespanMetric::set_start) was
      /// called.
      pub fn cancel(&self) {
@@ -24,7 +26,7 @@
          let metric = self.clone();
          crate::dispatcher::launch(move || {
              let mut lock = metric
-@@ -168,6 +171,7 @@
+@@ -168,6 +171,7 @@ impl TimespanMetric {
      ///
      /// * `elapsed` - The elapsed time to record.
      pub fn set_raw(&self, elapsed: Duration) {
@@ -32,7 +34,7 @@
          let metric = self.clone();
          crate::launch_with_glean(move |glean| metric.set_raw_sync(glean, elapsed));
      }
-@@ -187,6 +191,7 @@
+@@ -187,6 +191,7 @@ impl TimespanMetric {
      ///
      /// * `elapsed_nanos` - The elapsed time to record, in nanoseconds.
      pub fn set_raw_nanos(&self, elapsed_nanos: i64) {

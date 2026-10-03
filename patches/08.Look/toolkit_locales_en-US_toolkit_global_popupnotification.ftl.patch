@@ -1,6 +1,8 @@
+diff --git a/toolkit/locales/en-US/toolkit/global/popupnotification.ftl b/toolkit/locales/en-US/toolkit/global/popupnotification.ftl
+index c8b6f7110d..ae5f843274 100644
 --- a/toolkit/locales/en-US/toolkit/global/popupnotification.ftl
 +++ b/toolkit/locales/en-US/toolkit/global/popupnotification.ftl
-@@ -1,10 +1,10 @@
+@@ -1,7 +1,6 @@
  # This Source Code Form is subject to the terms of the Mozilla Public
  # License, v. 2.0. If a copy of the MPL was not distributed with this
  # file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -8,9 +10,3 @@
  popup-notification-learn-more = Learn more
  popup-notification-more-actions-button =
      .aria-label = More actions
- popup-notification-default-button2 =
--    .label = OK
--    .accesskey = O
-+    .label =
-+        OK
-+        .accesskey = O

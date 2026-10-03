@@ -1,3 +1,5 @@
+diff --git a/toolkit/locales/en-US/toolkit/about/aboutServiceWorkers.ftl b/toolkit/locales/en-US/toolkit/about/aboutServiceWorkers.ftl
+index 7c77a3d6ff..abfe679a32 100644
 --- a/toolkit/locales/en-US/toolkit/about/aboutServiceWorkers.ftl
 +++ b/toolkit/locales/en-US/toolkit/about/aboutServiceWorkers.ftl
 @@ -1,9 +1,7 @@
@@ -10,7 +12,7 @@
  about-service-workers-title = About Service Workers
  about-service-workers-main-title = Registered Service Workers
  about-service-workers-warning-not-enabled = Service Workers are not enabled.
-@@ -20,7 +18,6 @@
+@@ -20,7 +18,6 @@ origin-title = Origin: { $originTitle }
  ## Variables:
  ##  $name: the name of scope, active cache, waiting cache and the push end point.
  ##  $url: the url of script specification and current worker.

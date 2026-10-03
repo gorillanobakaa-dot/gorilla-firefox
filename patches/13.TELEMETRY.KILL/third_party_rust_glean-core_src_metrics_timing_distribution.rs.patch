@@ -1,6 +1,8 @@
+diff --git a/third_party/rust/glean-core/src/metrics/timing_distribution.rs b/third_party/rust/glean-core/src/metrics/timing_distribution.rs
+index 5620cd3a1e..d31722ce07 100644
 --- a/third_party/rust/glean-core/src/metrics/timing_distribution.rs
 +++ b/third_party/rust/glean-core/src/metrics/timing_distribution.rs
-@@ -153,8 +153,15 @@
+@@ -153,8 +153,15 @@ impl TimingDistributionMetric {
      ///
      /// A unique [`TimerId`] for the new timer.
      pub fn start(&self) -> TimerId {
@@ -17,7 +19,7 @@
          let metric = self.clone();
          crate::launch_with_glean(move |_glean| metric.set_start(id, start_time));
          id
-@@ -192,6 +199,10 @@
+@@ -192,6 +199,10 @@ impl TimingDistributionMetric {
      ///   same timespan metric.
      /// * `stop_time` - Timestamp in nanoseconds.
      pub fn stop_and_accumulate(&self, id: TimerId) {
@@ -28,7 +30,7 @@
          let stop_time = zeitstempel::now_awake();
          let metric = self.clone();
          crate::launch_with_glean(move |glean| metric.set_stop_and_accumulate(glean, id, stop_time));
-@@ -471,6 +482,10 @@
+@@ -471,6 +482,10 @@ impl TimingDistributionMetric {
      /// the application's platforms. Otherwise the resulting data may not share the same
      /// guarantees that other `timing_distribution` metrics' data do.
      pub fn accumulate_raw_duration(&self, duration: Duration) {
@@ -39,7 +41,7 @@
          let duration_ns = duration.as_nanos().try_into().unwrap_or(u64::MAX);
          let metric = self.clone();
          crate::launch_with_glean(move |glean| {
-@@ -666,6 +681,13 @@
+@@ -666,6 +681,13 @@ impl<'a> LocalTimingDistribution<'a> {
      ///
      /// Accumulation happens in-memory only.
      pub fn accumulate(&mut self, sample: u64) {

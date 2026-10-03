@@ -1,6 +1,8 @@
+diff --git a/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs b/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs
+index 536eff2df3..3d152fdd8d 100644
 --- a/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs
 +++ b/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs
-@@ -935,24 +935,16 @@
+@@ -935,24 +935,16 @@ function shouldVerifySignedState(aAddonType, aLocation) {
   *        or undefined if the file wasn't signed.
   */
  export var verifyBundleSignedState = async function (aBundle, aAddon) {
@@ -34,7 +36,7 @@
    }
  };
  
-@@ -1395,6 +1387,14 @@
+@@ -1395,6 +1387,14 @@ class AddonInstall {
     * @throws if installation cannot proceed from the current state
     */
    install() {
@@ -49,7 +51,7 @@
      switch (this.state) {
        case AddonManager.STATE_DOWNLOADED:
          this.checkPrompt();
-@@ -2476,6 +2476,14 @@
+@@ -2476,6 +2476,14 @@ var DownloadAddonInstall = class extends AddonInstall {
    }
  
    install() {
@@ -64,7 +66,7 @@
      switch (this.state) {
        case AddonManager.STATE_AVAILABLE:
          this.startDownload();
-@@ -3580,6 +3588,13 @@
+@@ -3580,6 +3588,13 @@ class DirectoryInstaller {
     *        An nsIFile indicating where the add-on was installed to
     */
    installAddon({ id, source, action = "move" }) {

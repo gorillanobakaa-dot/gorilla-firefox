@@ -1,6 +1,8 @@
+diff --git a/browser/locales/en-US/browser/extensionsUI.ftl b/browser/locales/en-US/browser/extensionsUI.ftl
+index a37a1ba6ad..a158bb694e 100644
 --- a/browser/locales/en-US/browser/extensionsUI.ftl
 +++ b/browser/locales/en-US/browser/extensionsUI.ftl
-@@ -1,39 +1,38 @@
+@@ -1,7 +1,6 @@
  # This Source Code Form is subject to the terms of the Mozilla Public
  # License, v. 2.0. If a copy of the MPL was not distributed with this
  # file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -8,23 +10,7 @@
  # Variables:
  #   $addonName (String): localized named of the extension that is asking to change the default search engine.
  #   $currentEngine (String): name of the current search engine.
- #   $newEngine (String): name of the new search engine.
- webext-default-search-description = { $addonName } would like to change your default search engine from { $currentEngine } to { $newEngine }. Is that OK?
- webext-default-search-yes =
--    .label = Yes
--    .accesskey = Y
-+    .label =
-+        Yes
-+        .accesskey = Y
- webext-default-search-no =
--    .label = No
--    .accesskey = N
-+    .label =
-+        No
-+        .accesskey = N
- 
- # Variables:
- #   $addonName (String): localized named of the extension that was just installed.
+@@ -19,16 +18,12 @@ webext-default-search-no =
  addon-post-install-message = { $addonName } was added.
  
  ## A modal confirmation dialog to allow an extension on quarantined domains.
@@ -43,15 +29,4 @@
 +webext-quarantine-confirmation-line-2 = Allow this Gorilla extension if you trust it to read and change your data on sites restricted by { -vendor-short-name }.
  
  webext-quarantine-confirmation-allow =
--    .label = Allow
--    .accesskey = A
-+    .label =
-+        Allow
-+        .accesskey = A
- 
- webext-quarantine-confirmation-deny =
--    .label = Don’t Allow
--    .accesskey = D
-+    .label =
-+        Don’t Allow
-+        .accesskey = D
+     .label = Allow

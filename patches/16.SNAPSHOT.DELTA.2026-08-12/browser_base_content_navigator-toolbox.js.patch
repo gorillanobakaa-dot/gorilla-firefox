@@ -1,3 +1,5 @@
+diff --git a/browser/base/content/navigator-toolbox.js b/browser/base/content/navigator-toolbox.js
+index a24b4daf86..6fbf4b9c08 100644
 --- a/browser/base/content/navigator-toolbox.js
 +++ b/browser/base/content/navigator-toolbox.js
 @@ -2,11 +2,6 @@
@@ -12,17 +14,7 @@
  document.addEventListener(
    "DOMContentLoaded",
    () => {
-@@ -200,8 +195,7 @@
-         #identity-icon-box,
-         #identity-permission-box,
-         #translations-button,
--        #split-view-button,
--        #smartwindow-ask-button
-+        #split-view-button
-         `);
-       if (!element) {
-         return;
-@@ -296,12 +290,6 @@
+@@ -318,12 +313,6 @@ document.addEventListener(
            }
            break;
  
@@ -35,17 +27,7 @@
          default:
            throw new Error(`Missing case for #${element.id}`);
        }
-@@ -334,8 +322,7 @@
-         #unified-extensions-button,
-         #library-button,
-         #ipprotection-button,
--        #split-view-button,
--        #smartwindow-ask-button
-+        #split-view-button
-       `);
-       if (!element) {
-         return;
-@@ -435,12 +422,6 @@
+@@ -457,12 +446,6 @@ document.addEventListener(
            }
            break;
  

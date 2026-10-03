@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/browser/migrationWizard.ftl b/browser/locales/en-US/browser/migrationWizard.ftl
+index 8341f95a6f..76b2561459 100644
 --- a/browser/locales/en-US/browser/migrationWizard.ftl
 +++ b/browser/locales/en-US/browser/migrationWizard.ftl
 @@ -1,8 +1,7 @@
@@ -10,7 +12,7 @@
  migration-wizard-selection-list = Select the data you’d like to import.
  
  # Shown in the new migration wizard's dropdown selector for choosing the browser
-@@ -25,20 +24,19 @@
+@@ -25,20 +24,19 @@ migration-wizard-selection-option-with-profile = { $sourceBrowser } — { $profi
  # Each migrator is expected to include a display name string, and that display
  # name string should have a key with "migration-wizard-migrator-display-name-"
  # as a prefix followed by the unique identification key for the migrator.
@@ -35,7 +37,7 @@
  migration-wizard-migrator-display-name-ie = Microsoft Internet Explorer
  migration-wizard-migrator-display-name-opera = Opera
  migration-wizard-migrator-display-name-opera-gx = Opera GX
-@@ -55,10 +53,9 @@
+@@ -55,10 +53,9 @@ migration-imported-edge-reading-list = Reading List (From Edge)
  ## These strings are shown if the selected browser data directory is unreadable.
  ## In practice, this tends to only occur on Linux when Firefox
  ## is installed as a Snap.
@@ -48,7 +50,7 @@
  
  migration-no-permissions-instructions-step1 = Select “Continue”
  
-@@ -67,54 +64,52 @@
+@@ -67,54 +64,52 @@ migration-no-permissions-instructions-step1 = Select “Continue”
  #
  # Variables:
  #  $permissionsPath (String): the file system path that the user will need to grant read permission to.
@@ -120,7 +122,7 @@
  
  # Shown in the migration wizard after importing passwords from a file
  # has completed, if new passwords were added.
-@@ -123,8 +118,8 @@
+@@ -123,8 +118,8 @@ migration-passwords-from-file-tsv-filter-title =
  #  $newEntries (Number): the number of new successfully imported passwords
  migration-wizard-progress-success-new-passwords =
      { $newEntries ->
@@ -131,7 +133,7 @@
      }
  
  # Shown in the migration wizard after importing passwords from a file
-@@ -134,27 +129,27 @@
+@@ -134,27 +129,27 @@ migration-wizard-progress-success-new-passwords =
  #  $updatedEntries (Number): the number of updated passwords
  migration-wizard-progress-success-updated-passwords =
      { $updatedEntries ->
@@ -171,7 +173,7 @@
  
  # Shown in the migration wizard after importing bookmarks from a file
  # has completed.
-@@ -163,39 +158,37 @@
+@@ -163,39 +158,37 @@ migration-bookmarks-from-file-json-filter-title = JSON File
  #  $newEntries (Number): the number of imported bookmarks.
  migration-wizard-progress-success-new-bookmarks =
      { $newEntries ->
@@ -220,17 +222,7 @@
  migration-wizard-progress-header = Importing data
  
  # This header appears in the final page of the migration wizard only if
-@@ -209,26 +202,26 @@
- migration-wizard-progress-done-with-warnings-header = Data import complete
- 
- migration-wizard-progress-icon-in-progress =
--  .aria-label = Importing…
-+    .aria-label = Importing…
- migration-wizard-progress-icon-completed =
--  .aria-label = Completed
-+    .aria-label = Completed
- 
- migration-safari-password-import-header = Import passwords from Safari
+@@ -226,8 +219,8 @@ migration-safari-password-import-post-sequoia-step4 = Select the file you saved
  migration-safari-password-import-steps-header = To import Safari passwords:
  migration-safari-password-import-step1 = In Safari, open “Safari” menu and go to Preferences > Passwords
  migration-safari-password-import-step2 = Select the <img data-l10n-name="safari-icon-3dots"/> button and choose “Export All Passwords”
@@ -239,23 +231,23 @@
 +migration-safari-password-import-step3 = Save the passwords Gorilla file
 +migration-safari-password-import-step4 = Use “Select Gorilla file” below to choose the passwords Gorilla file you saved
  
- migration-chrome-windows-password-import-header = How to import passwords from Chrome
- migration-chrome-windows-password-import-steps-header = In Chrome:
+ ##
+ 
+@@ -236,11 +229,11 @@ migration-chrome-windows-password-import-steps-header = In Chrome:
  migration-chrome-windows-password-import-step1 = Open the main menu <img data-l10n-name="chrome-icon-3dots"/> and go to Passwords and Autofill > Google Password Manager.
--migration-chrome-windows-password-import-step2 = Select “Settings” from the menu.
--migration-chrome-windows-password-import-step3 = Choose “Download file” and save it to your device.
+ migration-chrome-windows-password-import-step2 = Select “Settings” from the menu.
+ migration-chrome-windows-password-import-step3 = Choose “Download file” and save it to your device.
 -migration-chrome-windows-password-import-step4 = Return here and “Select file” to finish import.
-+migration-chrome-windows-password-import-step2 = Select “Gorilla Settings” from the menu.
-+migration-chrome-windows-password-import-step3 = Choose “Gorilla Download Gorilla file” and save it to your device.
 +migration-chrome-windows-password-import-step4 = Return here and “Select Gorilla file” to finish import.
  
  migration-manual-password-import-skip-button = Skip
+ migration-manual-password-import-cancel-button = Cancel
 -migration-manual-password-import-select-button = Select file
 +migration-manual-password-import-select-button = Select Gorilla file
  
  # Shown in the migration wizard after importing bookmarks from another
  # browser has completed.
-@@ -237,8 +230,8 @@
+@@ -249,8 +242,8 @@ migration-manual-password-import-select-button = Select file
  #  $quantity (Number): the number of successfully imported bookmarks
  migration-wizard-progress-success-bookmarks =
      { $quantity ->
@@ -266,7 +258,7 @@
      }
  
  # Shown in the migration wizard after importing bookmarks from either
-@@ -250,14 +243,13 @@
+@@ -262,14 +255,13 @@ migration-wizard-progress-success-bookmarks =
  #  $quantity (Number): the number of successfully imported bookmarks
  migration-wizard-progress-success-favorites =
      { $quantity ->
@@ -283,7 +275,7 @@
  # Shown in the migration wizard after importing all matched extensions
  # from supported browsers.
  #
-@@ -265,8 +257,8 @@
+@@ -277,8 +269,8 @@ migration-wizard-progress-success-favorites =
  #   $quantity (Number): the number of successfully imported extensions
  migration-wizard-progress-success-extensions =
      { $quantity ->
@@ -294,7 +286,7 @@
      }
  
  # Shown in the migration wizard after importing a partial amount of
-@@ -275,17 +267,16 @@
+@@ -287,17 +279,16 @@ migration-wizard-progress-success-extensions =
  # Variables:
  #   $matched (Number): the number of matched imported extensions
  #   $quantity (Number): the number of total extensions found during import
@@ -316,7 +308,7 @@
  # Shown in the migration wizard after importing passwords from another
  # browser has completed.
  #
-@@ -293,8 +284,8 @@
+@@ -305,8 +296,8 @@ migration-wizard-progress-extensions-addons-link = Browse extensions for { -bran
  #  $quantity (Number): the number of successfully imported passwords
  migration-wizard-progress-success-passwords =
      { $quantity ->
@@ -327,7 +319,7 @@
      }
  
  # Shown in the migration wizard after importing history from another
-@@ -304,11 +295,11 @@
+@@ -316,11 +307,11 @@ migration-wizard-progress-success-passwords =
  #  $maxAgeInDays (Number): the maximum number of days of history that might be imported.
  migration-wizard-progress-success-history =
      { $maxAgeInDays ->
@@ -342,7 +334,7 @@
  
  # Shown in the migration wizard after importing payment methods from another
  # browser has completed.
-@@ -317,10 +308,10 @@
+@@ -329,10 +320,10 @@ migration-wizard-progress-success-formdata = Form history
  #  $quantity (Number): the number of successfully imported payment methods
  migration-wizard-progress-success-payment-methods =
      { $quantity ->

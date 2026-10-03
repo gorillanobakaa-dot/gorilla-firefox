@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/browser/genai.ftl b/browser/locales/en-US/browser/genai.ftl
+index 068fd7d37e..52d1522ac4 100644
 --- a/browser/locales/en-US/browser/genai.ftl
 +++ b/browser/locales/en-US/browser/genai.ftl
 @@ -1,9 +1,7 @@
@@ -10,7 +12,7 @@
  genai-settings-chat-chatgpt-links = By choosing ChatGPT, you agree to the OpenAI <a data-l10n-name="link1">Terms of Use</a> and <a data-l10n-name="link2">Privacy Policy</a>.
  genai-settings-chat-claude-links = By choosing Anthropic Claude, you agree to the Anthropic <a data-l10n-name="link1">Consumer Terms of Service</a>, <a data-l10n-name="link2">Usage Policy</a>, and <a data-l10n-name="link3">Privacy Policy</a>.
  genai-settings-chat-copilot-links = By choosing Copilot, you agree to the <a data-l10n-name="link1">Copilot AI Experiences Terms</a> and <a data-l10n-name="link2">Microsoft Privacy Statement</a>.
-@@ -17,50 +15,57 @@
+@@ -17,11 +15,10 @@ genai-settings-chat-localhost-links = Bring your own private local chatbot such
  ## These prompts have been made concise and direct in English because some chatbot providers
  ## have character restrictions and being direct reduces the chance for misinterpretation.
  ## When localizing, please be concise and direct, but not at the expense of losing meaning.
@@ -23,73 +25,15 @@
  
  # Prompt purpose: help users understand what a selection covers at a glance
  genai-prompts-summarize =
--    .label = Summarize
--    .value = Please summarize the selection using precise and concise language. Use headers and bulleted lists in the summary, to make it scannable. Maintain the meaning and factual accuracy.
-+    .label =
-+        Summarize
-+        .value = Please summarize the selection using precise and concise language. Use headers and bulleted lists in the summary, to make it scannable. Maintain the meaning and factual accuracy.
- # Prompt purpose: make a selection easier to read
- genai-prompts-simplify =
--    .label = Simplify language
--    .value = Please rewrite the selection using short sentences and simple words. Maintain the meaning and factual accuracy.
-+    .label =
-+        Simplify language
-+        .value = Please rewrite the selection using short sentences and simple words. Maintain the meaning and factual accuracy.
- # Prompt purpose: test understanding of selection in an interactive way
- genai-prompts-quiz =
--    .label = Quiz me
--    .value = Please quiz me on this selection. Ask me a variety of types of questions, for example multiple choice, true or false, and short answer. Wait for my response before moving on to the next question.
-+    .label =
-+        Quiz me
-+        .value = Please quiz me on this selection. Ask me a variety of types of questions, for example multiple choice, true or false, and short answer. Wait for my response before moving on to the next question.
- # Prompt purpose: helps users understand words, phrases, concepts
- genai-prompts-explain =
--    .label = Explain this
--    .value = Please explain the key concepts in this selection, using simple words. Also, use examples.
-+    .label =
-+        Explain this
-+        .value = Please explain the key concepts in this selection, using simple words. Also, use examples.
- # Prompt purpose: writing tool that helps users with spelling and grammar mistakes and produce a response that identifies errors and rewrites the inputted text correctly
- genai-prompts-proofread =
--    .label = Proofread
--    .value = Please proofread the selection for spelling and grammar errors. Identify any mistakes and provide a corrected version of the text. Maintain the meaning and factual accuracy and output the list of proposed corrections first, followed by the final, corrected version of the text.
-+    .label =
-+        Proofread
-+        .value = Please proofread the selection for spelling and grammar errors. Identify any mistakes and provide a corrected version of the text. Maintain the meaning and factual accuracy and output the list of proposed corrections first, followed by the final, corrected version of the text.
+@@ -45,7 +42,6 @@ genai-prompts-proofread =
+     .value = Please proofread the selection for spelling and grammar errors. Identify any mistakes and provide a corrected version of the text. Maintain the meaning and factual accuracy and output the list of proposed corrections first, followed by the final, corrected version of the text.
  
  ## Chatbot menu shortcuts
 -
  genai-menu-ask-smart-window =
--    .label = Ask…
--    .accesskey = z
-+    .label =
-+        Ask…
-+        .accesskey = z
- genai-menu-no-provider-2 =
--    .label = Ask an AI Chatbot
--    .accesskey = z
-+    .label =
-+        Ask an AI Chatbot
-+        .accesskey = z
- genai-menu-choose-chatbot =
-     .label = Choose an AI Chatbot
- genai-menu-ask-generic-2 =
--    .label = Ask AI Chatbot
--    .accesskey = z
-+    .label =
-+        Ask AI Chatbot
-+        .accesskey = z
- # $provider (string) - name of the provider
- genai-menu-ask-provider-2 =
--    .label = Ask { $provider }
--    .accesskey = z
-+    .label =
-+        Ask { $provider }
-+        .accesskey = z
- genai-menu-open-generic =
-     .label = Open AI Chatbot
- # $provider (string) - name of the provider
-@@ -72,13 +77,13 @@
+     .label = Ask…
+     .accesskey = z
+@@ -72,13 +68,13 @@ genai-menu-remove-generic =
  genai-menu-remove-provider =
      .label = Remove { $provider }
  genai-menu-remove-sidebar =
@@ -105,7 +49,7 @@
  
  genai-input-ask-smart-window =
      .placeholder = Ask…
-@@ -91,28 +96,29 @@
+@@ -91,28 +87,29 @@ genai-input-ask-provider =
  # $selectionLength (number) - selected text length
  # $maxLength (number) - max length of what can be selected
  genai-shortcuts-selected-warning-generic =
@@ -143,7 +87,7 @@
  genai-header-close-button =
      .title = Close
  
-@@ -131,33 +137,30 @@
+@@ -131,33 +128,30 @@ genai-options-about-chatbot =
      .label = About AI chatbots in { -brand-short-name }
  
  ## Chatbot message
@@ -188,8 +132,8 @@
  # "Switch anytime" refers to allowing the user to switch to a different chatbot.
  genai-onboarding-choose-description = Switch anytime. For help choosing, <a data-l10n-name="learn-more">learn more about each chatbot</a>.
  genai-onboarding-primary = Continue
-@@ -176,18 +179,16 @@
-     .title = Le Chat Mistral
+@@ -176,18 +170,16 @@ genai-onboarding-lechat-tooltip-2 =
+     .title = Mistral Vibe
  
  ## Model Optin Component
 -
@@ -210,7 +154,7 @@
  # ‘min’ is short for “minute”
  # ‘mins’ is short for “minutes”
  # An estimate for how long it takes to read an article,
-@@ -197,8 +198,8 @@
+@@ -197,8 +189,8 @@ genai-model-optin-cancel =
  #   $range (String): The range of minutes as a localised string. Examples: "3-7", "~1".
  link-preview-reading-time =
      { $rangePlural ->
@@ -221,7 +165,7 @@
      }
  
  # Error message displayed when a link preview cannot be generated
-@@ -218,13 +219,14 @@
+@@ -218,13 +210,13 @@ link-preview-generation-retry = Try again
  
  # Button that opens the Link Preview settings
  link-preview-settings-button =
@@ -229,18 +173,16 @@
 +    .title = Link Preview Gorilla Settings
  
  link-preview-settings-enable =
--    .label = Enable link previews
+     .label = Enable link previews
 -    .description = See the page title, description, and more when you use the shortcut or right-click on a link.
-+    .label =
-+        Enable link previews
-+        .description = See the Gorilla page title, description, and more when you use the shortcut or right-click on a link.
++    .description = See the Gorilla page title, description, and more when you use the shortcut or right-click on a link.
  link-preview-settings-key-points =
 -    .label = Allow AI to read the beginning of the page and generate key points
 +    .label = Allow AI to read the beginning of the Gorilla page and generate key points
  link-preview-settings-long-press =
      .label = Shortcut: Click and hold the link for 1 second (long press)
  
-@@ -232,7 +234,7 @@
+@@ -232,7 +224,7 @@ link-preview-settings-long-press =
  link-preview-optin-title = See more with AI?
  
  # Message that appears when user is shown the opt-in flow for link previews

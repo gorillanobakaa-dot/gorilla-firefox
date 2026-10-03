@@ -1,6 +1,8 @@
+diff --git a/browser/components/customizableui/CustomizableUI.sys.mjs b/browser/components/customizableui/CustomizableUI.sys.mjs
+index 04e60a96a3..0370bcf7d2 100644
 --- a/browser/components/customizableui/CustomizableUI.sys.mjs
 +++ b/browser/components/customizableui/CustomizableUI.sys.mjs
-@@ -1951,6 +1951,7 @@
+@@ -2006,6 +2006,7 @@ var CustomizableUIInternal = {
      gNavToolbox.palette = document.getElementById(
        "BrowserToolbarPalette"
      ).content;
@@ -8,7 +10,7 @@
  
      let isVerticalTabs = Services.prefs.getBoolPref(
        kPrefSidebarVerticalTabsEnabled,
-@@ -3161,6 +3162,22 @@
+@@ -3216,6 +3217,22 @@ var CustomizableUIInternal = {
     * @returns {Array<WidgetGroupWrapper|XULWidgetGroupWrapper>}
     */
    getUnusedWidgets(aWindowPalette) {
@@ -31,7 +33,7 @@
      let window = aWindowPalette.documentGlobal;
      let isWindowPrivate = lazy.PrivateBrowsingUtils.isWindowPrivate(window);
      // We use a Set because there can be overlap between the widgets in
-@@ -7261,7 +7278,9 @@
+@@ -7368,7 +7385,9 @@ function XULWidgetGroupWrapper(aWidgetId) {
      if (!instance) {
        // Toolbar palettes aren't part of the document, so elements in there
        // won't be found via document.getElementById().

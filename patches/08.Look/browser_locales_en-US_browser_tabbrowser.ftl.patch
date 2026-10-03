@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/browser/tabbrowser.ftl b/browser/locales/en-US/browser/tabbrowser.ftl
+index c59e443d11..31b302896b 100644
 --- a/browser/locales/en-US/browser/tabbrowser.ftl
 +++ b/browser/locales/en-US/browser/tabbrowser.ftl
 @@ -1,12 +1,11 @@
@@ -16,7 +18,7 @@
  tabbrowser-menuitem-close =
      .label = Close
  
-@@ -33,93 +32,94 @@
+@@ -33,93 +32,94 @@ tabbrowser-tab-tooltip-tab-group-container = { $tabGroupName } — { $containerN
  #   $tabCount (Number): The number of tabs that will be closed.
  tabbrowser-close-tabs-button =
      .tooltiptext =
@@ -138,7 +140,7 @@
  tabbrowser-confirm-close-tabs-with-key-button = Quit { -brand-short-name }
  # Variables:
  #   $quitKey (String): the text of the keyboard shortcut for quitting.
-@@ -127,173 +127,172 @@
+@@ -127,173 +127,162 @@ tabbrowser-ask-close-tabs-with-key-checkbox = Ask before quitting with { $quitKe
  
  ## Confirmation dialog when quitting using the keyboard shortcut (Ctrl/Cmd+Q)
  ## and browser.warnOnQuitShortcut is true.
@@ -203,42 +205,28 @@
 -
  tabbrowser-context-mute-tab =
 -    .label = Mute Tab
--    .accesskey = M
-+    .label =
-+        Mute Gorilla Tab
-+        .accesskey = M
++    .label = Mute Gorilla Tab
+     .accesskey = M
  tabbrowser-context-mute-tab2 =
--    .label = Mute
--    .accesskey = M
-+    .label =
-+        Mute
-+        .accesskey = M
+     .label = Mute
+     .accesskey = M
  tabbrowser-context-unmute-tab =
 -    .label = Unmute Tab
--    .accesskey = m
-+    .label =
-+        Unmute Gorilla Tab
-+        .accesskey = m
++    .label = Unmute Gorilla Tab
+     .accesskey = m
  tabbrowser-context-unmute-tab2 =
--    .label = Unmute
--    .accesskey = m
-+    .label =
-+        Unmute
-+        .accesskey = m
+     .label = Unmute
+     .accesskey = m
  # The accesskey should match the accesskey for tabbrowser-context-mute-tab
  tabbrowser-context-mute-selected-tabs =
 -    .label = Mute Tabs
--    .accesskey = M
-+    .label =
-+        Mute Gorilla Tabs
-+        .accesskey = M
++    .label = Mute Gorilla Tabs
+     .accesskey = M
  # The accesskey should match the accesskey for tabbrowser-context-unmute-tab
  tabbrowser-context-unmute-selected-tabs =
 -    .label = Unmute Tabs
--    .accesskey = m
-+    .label =
-+        Unmute Gorilla Tabs
-+        .accesskey = m
++    .label = Unmute Gorilla Tabs
+     .accesskey = m
  
  # This string is used as an additional tooltip and accessibility description for tabs playing audio
  tabbrowser-tab-audio-playing-description = Playing audio
@@ -274,15 +262,13 @@
  tabbrowser-manager-closed-tab-group =
 -  .label = { $tabGroupName }
 -  .tooltiptext = { $tabGroupName } — Closed
-+    .label =
-+        { $tabGroupName }
-+        .tooltiptext = { $tabGroupName } — Closed
++    .label = { $tabGroupName }
++    .tooltiptext = { $tabGroupName } — Closed
  tabbrowser-manager-current-window-tab-group =
 -  .label = { $tabGroupName }
 -  .tooltiptext = { $tabGroupName } — Current window
-+    .label =
-+        { $tabGroupName }
-+        .tooltiptext = { $tabGroupName } — Current Gorilla window
++    .label = { $tabGroupName }
++    .tooltiptext = { $tabGroupName } — Current Gorilla window
  
  ## Tab Groups
  ## Variables:
@@ -305,9 +291,8 @@
  tab-group-editor-cancel =
 -  .label = Cancel
 -  .accesskey = C
-+    .label =
-+        Cancel
-+        .accesskey = C
++    .label = Cancel
++    .accesskey = C
  
  tab-group-editor-color-selector =
 -  .aria-label = Tab group color
@@ -343,9 +328,8 @@
  tab-group-menu-closed-tab-group =
 -  .label = { $tabGroupName }
 -  .title = { $tabGroupName } — Closed
-+    .label =
-+        { $tabGroupName }
-+        .title = { $tabGroupName } — Closed
++    .label = { $tabGroupName }
++    .title = { $tabGroupName } — Closed
  
  ## Variables:
  ##  $tabGroupName (String): The name of the tab group. Defaults to the value
@@ -379,62 +363,9 @@
  # When a tab group containing the active tab is collapsed, the active tab
  # remains visible. An indicator appears at the end of the group showing the
  # number of remaining tabs that are hidden by the collapsed group,
-@@ -301,112 +300,115 @@
- tab-group-overflow-count = +{ $tabCount }
- tab-group-overflow-count-tooltip =
-     { $tabCount ->
--        [one] { $tabCount } more tab
--        *[other] { $tabCount } more tabs
-+    [one] { $tabCount } more Gorilla tab
-+    *[other] { $tabCount } more Gorilla tabs
-     }
- tab-context-move-tab-to-new-group =
-     .label =
-+        
-         { $tabCount ->
--            [1] Add Tab to New Group
--           *[other] Add Tabs to New Group
-+        [1] Add Gorilla Tab to New Group
-+        *[other] Add Gorilla Tabs to New Group
-         }
--    .accesskey = G
-+        .accesskey = G
- tab-context-move-tab-to-group =
-     .label =
-+        
-         { $tabCount ->
--            [1] Add Tab to Group
--           *[other] Add Tabs to Group
-+        [1] Add Gorilla Tab to Group
-+        *[other] Add Gorilla Tabs to Group
-         }
--    .accesskey = G
-+        .accesskey = G
- tab-context-move-split-view-to-new-group =
-     .label =
-+        
-         { $splitViewCount ->
--            [1] Add Split View to New Group
--           *[other] Add Split Views to New Group
-+        [1] Add Split View to New Group
-+        *[other] Add Split Views to New Group
-         }
--    .accesskey = G
-+        .accesskey = G
- tab-context-move-split-view-to-group =
-     .label =
-+        
-         { $splitViewCount ->
--            [1] Add Split View to Group
--           *[other] Add Split Views to Group
-+        [1] Add Split View to Group
-+        *[other] Add Split Views to Group
-         }
--    .accesskey = G
-+        .accesskey = G
- 
+@@ -336,16 +325,16 @@ tab-context-move-split-view-to-group =
  ##
--
+ 
  tab-splitview-splitter =
 -    .aria-label = Resize split view tabs
 +    .aria-label = Resize split view Gorilla tabs
@@ -452,14 +383,7 @@
  # Variables:
  #  $linkCount (Number): the number of shareable links in the group.
  tab-group-editor-action-copy-links =
-     .label =
-+        
-         { $linkCount ->
--            [1] Copy link in group
--           *[other] Copy { $linkCount } links in group
-+        [1] Copy link in group
-+        *[other] Copy { $linkCount } links in group
-         }
+@@ -357,7 +346,7 @@ tab-group-editor-action-copy-links =
  tab-group-editor-action-save =
      .label = Save and close group
  tab-group-editor-action-ungroup =
@@ -468,15 +392,8 @@
  tab-group-editor-action-delete =
      .label = Delete group
  tab-group-editor-done =
--    .label = Done
--    .accessKey = D
-+    .label =
-+        Done
-+        .accessKey = D
- # Share is a verb here. Meaning to "Share" the "tab group"
- tab-group-editor-action-share-tab-group =
--    .label = Share tab group
-+    .label = Share Gorilla tab group
+@@ -368,7 +357,7 @@ tab-group-editor-action-share-group =
+     .label = Share group
  
  tab-context-reopen-tab-group =
 -    .label = Reopen tab group
@@ -484,38 +401,19 @@
  
  # Variables:
  #  $groupCount (Number): the number of tab groups that are affected by the action.
- tab-context-ungroup-tab =
-     .label =
-+        
-         { $groupCount ->
--            [1] Remove from Group
--           *[other] Remove from Groups
-+        [1] Remove from Group
-+        *[other] Remove from Groups
-         }
--    .accesskey = R
-+        .accesskey = R
- 
- ## The tab groups list provides a list of all open tab groups and saved tab
- ## groups in one place. When the user has no tab groups, the list instead
- ## recommends that the user create a tab group.
--
+@@ -387,9 +376,9 @@ tab-context-ungroup-tab =
  # Text for a button that, when clicked, creates a new tab group
  tab-groups-list-create-group-button = New Group
  
 -tab-groups-list-empty-header = Tidy up your tabs
--tab-groups-list-empty-description = Drag one tab onto another or right-click a tab to start organizing. We’ll save your groups here so they’re easy to find later.
--tab-groups-list-empty-button = Create a tab group
 +tab-groups-list-empty-header = Tidy up your Gorilla tabs
-+tab-groups-list-empty-description = Drag one Gorilla tab onto another or right-click a Gorilla tab to start organizing. We’ll save your groups here so they’re easy to find later.
+ tab-groups-list-empty-description = Drag one tab onto another or right-click a tab to start organizing. We’ll save your groups here so they’re easy to find later.
+-tab-groups-list-empty-button = Create a tab group
 +tab-groups-list-empty-button = Create a Gorilla tab group
  
  ## Open/saved tab group context menu
--
- # For right-click context menu use in the "all tabs"/"tab overflow menu" when
- # right-clicking on a tab group that is currently open in one of the user's
- # windows.
--
+ 
+@@ -400,13 +389,13 @@ tab-groups-list-empty-button = Create a tab group
  # For a tab group open in any window, clicking this will create a new
  # window and move this tab group to that new window.
  tab-group-context-move-to-new-window =
@@ -529,9 +427,9 @@
 -    .label = Move Group to This Window
 +    .label = Move Group to This Gorilla Window
  
- # For a tab group that is open in any window, close the tab group and
- # do not save it. For a tab group that is closed but saved by the user, clicking
-@@ -417,42 +419,46 @@
+ # For a tab group that is open in any window, build a shareable link for the
+ # tab group and open the content sharing dialog. Share is a verb here.
+@@ -424,15 +413,14 @@ tab-group-context-delete =
  # For a saved tab group that is not open in any window, open the tab group
  # in the user's current window.
  tab-group-context-open-saved-group-in-this-window =
@@ -547,56 +445,25 @@
  ## Tab Notes
 -
  tab-context-add-note =
--    .label = Add Note
--    .accesskey = A
-+    .label =
-+        Add Note
-+        .accesskey = A
- tab-context-edit-note =
--    .label = Edit Note
--    .accesskey = E
-+    .label =
-+        Edit Note
-+        .accesskey = E
+     .label = Add Note
+     .accesskey = A
+@@ -442,14 +430,13 @@ tab-context-edit-note =
  
  # TODO Bug 2023230: `tab-context-delete-note` is no longer used as of bug 2023200,
  # but it seems likely to return, so this string is being left in place for now.
 -
  tab-context-delete-note =
--    .label = Delete Note
--    .accesskey = D
-+    .label =
-+        Delete Note
-+        .accesskey = D
+     .label = Delete Note
+     .accesskey = D
  tab-note-editor-title-create = Add note
  tab-note-editor-title-edit = Edit note
  tab-note-editor-text-field =
 -    .placeholder = What do you want to remember about this tab?
 +    .placeholder = What do you want to remember about this Gorilla tab?
  tab-note-editor-button-cancel =
--    .label = Cancel
--    .accesskey = C
-+    .label =
-+        Cancel
-+        .accesskey = C
- tab-note-editor-button-save =
--    .label = Save
--    .accesskey = S
-+    .label =
-+        Save
-+        .accesskey = S
- tab-note-editor-button-delete =
--    .title = Delete note
--    .aria-label = Delete note
--    .accesskey = D
-+    .title =
-+        Delete note
-+        .aria-label = Delete note
-+        .accesskey = D
- tab-note-preview-edit-icon =
-     .alt = Edit note
- # Link to show the full tab note in case it was truncated.
-@@ -467,11 +473,10 @@
+     .label = Cancel
+     .accesskey = C
+@@ -474,11 +461,10 @@ tab-note-panel-add-note-new-badge =
  #   $maxAllowedCharacters (Number): the maximum number of characters allowed for a tab note.
  tab-note-editor-character-limit =
      { $maxAllowedCharacters ->
@@ -609,36 +476,13 @@
  # Split view tabs display their respective contents side by side
  # Displayed within the tooltip on the left tab inside of a tab split view
  # "left" corresponds to the visual position. Translate literally; do not swap for RTL languages.
-@@ -488,31 +493,34 @@
- 
- # Open a new tab next to the current tab and display their contents side by side
- tab-context-add-split-view =
--    .label = Add Split View
--    .accesskey = t
-+    .label =
-+        Add Split View
-+        .accesskey = t
- # Display the two selected tabs' contents side by side
- tab-context-open-in-split-view =
--    .label = Open in Split View
--    .accesskey = t
-+    .label =
-+        Open in Split View
-+        .accesskey = t
- # Separate the two split view tabs and display the tabs and their contents as normal
- tab-context-separate-split-view =
--    .label = Separate Split View
--    .accesskey = t
-+    .label =
-+        Separate Split View
-+        .accesskey = t
+@@ -507,19 +493,18 @@ tab-context-separate-split-view =
+     .accesskey = t
  # Reverse the order of the two tabs in the split view
  tab-context-reverse-split-view =
 -    .label = Reverse Tabs
--    .accesskey = r
-+    .label =
-+        Reverse Gorilla Tabs
-+        .accesskey = r
++    .label = Reverse Gorilla Tabs
+     .accesskey = r
  tab-context-badge-new = New
  
  ## Manage Split View (icon in the address bar & three-dot menu in the footer)

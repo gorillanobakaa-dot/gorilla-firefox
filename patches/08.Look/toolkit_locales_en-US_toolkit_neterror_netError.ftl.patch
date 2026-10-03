@@ -1,3 +1,5 @@
+diff --git a/toolkit/locales/en-US/toolkit/neterror/netError.ftl b/toolkit/locales/en-US/toolkit/neterror/netError.ftl
+index 4a2e4127c9..a70aaa4987 100644
 --- a/toolkit/locales/en-US/toolkit/neterror/netError.ftl
 +++ b/toolkit/locales/en-US/toolkit/neterror/netError.ftl
 @@ -1,13 +1,11 @@
@@ -16,11 +18,7 @@
  neterror-captive-portal-page-title = Log in to network
  neterror-dns-not-found-title = Server Not Found
  neterror-malformed-uri-page-title = Invalid URL
-@@ -15,40 +13,37 @@
- problem-with-this-site-title = Looks like there’s a problem with this site
- 
- ## Error page actions
--
+@@ -19,15 +17,15 @@ problem-with-this-site-title = Looks like there’s a problem with this site
  neterror-advanced-button = Advanced…
  neterror-copy-to-clipboard-button = Copy text to clipboard
  neterror-learn-more-link = Learn more…
@@ -38,13 +36,11 @@
 +neterror-settings-button = Change DNS Gorilla settings
  neterror-view-certificate-link = View Certificate
  
- ##
--
--neterror-pref-reset = It looks like your network security settings might be causing this. Do you want the default settings to be restored?
-+neterror-pref-reset = It looks like your network security Gorilla settings might be causing this. Do you want the default Gorilla settings to be restored?
+ ## Search call-to-action shown on the online dnsNotFound error page when
+@@ -89,19 +87,19 @@ neterror-sslkeylogging-warning =
  
  ## Specific error messages
--
+ 
 -neterror-generic-error = { -brand-short-name } can’t load this page for some reason.
 +neterror-generic-error = { -brand-short-name } can’t load this Gorilla page for some reason.
  
@@ -65,7 +61,7 @@
  
  neterror-captive-portal = You must log in to this network before you can access the internet.
  
-@@ -70,7 +65,6 @@
+@@ -123,7 +121,6 @@ neterror-dns-not-found-offline-hint-reconnect = Disconnect and reconnect to Wi-F
  ## Variables:
  ##   $hostname (String) - Hostname of the website to which the user was trying to connect.
  ##   $trrDomain (String) - Hostname of the DNS over HTTPS server that is currently in use.
@@ -73,7 +69,7 @@
  neterror-dns-not-found-trr-only-reason2 = { -brand-short-name } can’t protect your request for this site’s address through our secure DNS provider. Here’s why:
  neterror-dns-not-found-trr-third-party-warning2 = You can continue with your default DNS resolver. However, a third-party might be able to see what websites you visit.
  
-@@ -83,16 +77,15 @@
+@@ -136,16 +133,15 @@ neterror-dns-not-found-system-sleep = System is in sleep mode.
  neterror-dns-not-found-trr-unknown-problem = Unexpected problem.
  
  ##
@@ -95,7 +91,7 @@
  
  neterror-unknown-protocol = You might need to install other software to open this address.
  
-@@ -104,13 +97,13 @@
+@@ -157,13 +153,13 @@ neterror-not-cached-intro = The requested document is not available in { -brand-
  neterror-not-cached-sensitive = As a security precaution, { -brand-short-name } does not automatically re-request sensitive documents.
  neterror-not-cached-try-again = Click Try Again to re-request the document from the website.
  
@@ -112,7 +108,7 @@
  neterror-proxy-connect-failure-contact-admin = Contact your network administrator to make sure the proxy server is working.
  
  neterror-content-encoding-error = Please contact the website owners to inform them of this problem.
-@@ -121,7 +114,7 @@
+@@ -174,7 +170,7 @@ neterror-unsafe-content-type = Please contact the website owners to inform them
  # $hostname (String) - Hostname of the website to which the user was trying to connect.
  neterror-basic-http-auth = { -brand-short-name } doesn’t trust { $hostname } because the connection isn’t secure. Try changing the URL to HTTPS.
  
@@ -121,7 +117,7 @@
  neterror-nss-failure-contact-website = Please contact the website owners to inform them of this problem.
  
  # Variables:
-@@ -138,7 +131,7 @@
+@@ -191,7 +187,7 @@ certerror-expired-cert-intro = { -brand-short-name } detected an issue and did n
  # $mitm (String) - The name of the software intercepting communications between you and the website (or “man in the middle”)
  certerror-mitm = <b>{ $hostname }</b> is most likely a safe site, but a secure connection could not be established. This issue is caused by <b>{ $mitm }</b>, which is either software on your computer or your network.
  
@@ -130,7 +126,7 @@
  neterror-corrupted-content-contact-website = Please contact the website owners to inform them of this problem.
  
  # Do not translate "SSL_ERROR_UNSUPPORTED_VERSION".
-@@ -153,9 +146,9 @@
+@@ -206,9 +202,9 @@ neterror-inadequate-security-code = Error code: NS_ERROR_NET_INADEQUATE_SECURITY
  # Variables:
  # $hostname (String) - Hostname of the website to which the user was trying to connect.
  # $now (Date) - The current datetime, to be formatted as a date
@@ -142,7 +138,7 @@
  neterror-network-protocol-error-contact-website = Please contact the website owners to inform them of this problem.
  
  certerror-expired-cert-second-para = It’s likely the website’s certificate is expired, which prevents { -brand-short-name } from connecting securely. If you visit this site, attackers could try to steal information like your passwords, emails, or credit card details.
-@@ -169,7 +162,7 @@
+@@ -222,7 +218,7 @@ certerror-unknown-issuer-what-can-you-do-about-it-contact-admin = If you are on
  # Variables:
  # $hostname (String) - Hostname of the website to which the user was trying to connect.
  # $now (Date) - The current datetime, to be formatted as a date
@@ -151,7 +147,7 @@
  certerror-expired-cert-what-can-you-do-about-it-contact-website = If your clock is already set to the right time, the website is likely misconfigured, and there is nothing you can do to resolve the issue. You can notify the website’s administrator about the problem.
  
  certerror-bad-cert-domain-what-can-you-do-about-it = The issue is most likely with the website, and there is nothing you can do to resolve it. You can notify the website’s administrator about the problem.
-@@ -200,12 +193,10 @@
+@@ -253,12 +249,10 @@ certerror-coep-learn-more = Learn more about Cross Origin Embedder Policies (COE
  neterror-response-status-code = Error code: { $responsestatus } { $responsestatustext }
  
  ## Felt Privacy V1 Strings
@@ -164,7 +160,7 @@
  fp-neterror-connection-intro = { -brand-short-name } can’t create a secure connection to the server at { $hostname }.
  fp-neterror-offline-intro = { -brand-short-name } can’t connect to the server at <strong>{ $hostname }</strong>
  fp-neterror-offline-intro-2 = { -brand-short-name } can’t connect to the server at <strong>{ $hostname }</strong>.
-@@ -218,9 +209,9 @@
+@@ -271,9 +265,9 @@ fp-neterror-http-error-intro = The server at <strong>{ $hostname }</strong> sent
  # Variables:
  #   $hostname (String) - Hostname of the website to which the user was trying to connect.
  fp-neterror-invalid-header-value-intro = <strong>{ $hostname }</strong> sent back a header with empty characters not allowed by web security standards.

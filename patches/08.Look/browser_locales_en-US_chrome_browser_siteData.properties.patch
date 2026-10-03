@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/chrome/browser/siteData.properties b/browser/locales/en-US/chrome/browser/siteData.properties
+index a6bc660746..69a9a24482 100644
 --- a/browser/locales/en-US/chrome/browser/siteData.properties
 +++ b/browser/locales/en-US/chrome/browser/siteData.properties
 @@ -1,7 +1,6 @@

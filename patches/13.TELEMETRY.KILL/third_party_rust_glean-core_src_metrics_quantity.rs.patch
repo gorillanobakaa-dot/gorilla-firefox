@@ -1,6 +1,8 @@
+diff --git a/third_party/rust/glean-core/src/metrics/quantity.rs b/third_party/rust/glean-core/src/metrics/quantity.rs
+index 137569b53e..6e975eda0c 100644
 --- a/third_party/rust/glean-core/src/metrics/quantity.rs
 +++ b/third_party/rust/glean-core/src/metrics/quantity.rs
-@@ -64,6 +64,7 @@
+@@ -64,6 +64,7 @@ impl QuantityMetric {
      ///
      /// Logs an error if the `value` is negative.
      pub fn set(&self, value: i64) {

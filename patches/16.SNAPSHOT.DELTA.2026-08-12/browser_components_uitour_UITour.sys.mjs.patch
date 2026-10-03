@@ -1,6 +1,8 @@
+diff --git a/browser/components/uitour/UITour.sys.mjs b/browser/components/uitour/UITour.sys.mjs
+index 7c3b82d275..fb6f8d359b 100644
 --- a/browser/components/uitour/UITour.sys.mjs
 +++ b/browser/components/uitour/UITour.sys.mjs
-@@ -8,8 +8,6 @@
+@@ -8,8 +8,6 @@ const lazy = {};
  
  ChromeUtils.defineESModuleGetters(lazy, {
    AboutReaderParent: "resource:///actors/AboutReaderParent.sys.mjs",
@@ -8,8 +10,8 @@
 -    "moz-src:///browser/components/aiwindow/ui/modules/AIWindow.sys.mjs",
    AppProvidedConfigEngine:
      "moz-src:///toolkit/components/search/ConfigSearchEngine.sys.mjs",
-   BrowserUsageTelemetry: "resource:///modules/BrowserUsageTelemetry.sys.mjs",
-@@ -492,26 +490,6 @@
+   ASRouter: "resource:///modules/asrouter/ASRouter.sys.mjs",
+@@ -500,25 +498,7 @@ export var UITour = {
          break;
        }
  
@@ -22,8 +24,8 @@
 -            "available"
 -          );
 -        }
--
--        lazy.AIWindow.launchWindow(browser).then(success => {
+ 
+-        lazy.AIWindow.launchWindow(browser, false, "bedrock").then(success => {
 -          if (!success) {
 -            lazy.log.warn(
 -              "showFirefoxAccountsForAIWindow: Failed to launch Smart Window"
@@ -32,7 +34,6 @@
 -        });
 -        break;
 -      }
--
+ 
        case "showConnectAnotherDevice": {
          lazy.FxAccounts.config
-           .promiseConnectDeviceURI(data.entrypoint || "uitour")

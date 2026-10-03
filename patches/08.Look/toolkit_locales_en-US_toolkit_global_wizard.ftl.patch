@@ -1,6 +1,8 @@
+diff --git a/toolkit/locales/en-US/toolkit/global/wizard.ftl b/toolkit/locales/en-US/toolkit/global/wizard.ftl
+index b8ef359fa7..f43a8225d6 100644
 --- a/toolkit/locales/en-US/toolkit/global/wizard.ftl
 +++ b/toolkit/locales/en-US/toolkit/global/wizard.ftl
-@@ -1,37 +1,42 @@
+@@ -1,37 +1,36 @@
  # This Source Code Form is subject to the terms of the Mozilla Public
  # License, v. 2.0. If a copy of the MPL was not distributed with this
  # file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -8,40 +10,34 @@
  wizard-macos-button-back =
 -  .label = Go Back
 -  .accesskey = B
-+    .label =
-+        Go Back
-+        .accesskey = B
++    .label = Go Back
++    .accesskey = B
  wizard-linux-button-back =
 -  .label = Back
 -  .accesskey = B
-+    .label =
-+        Back
-+        .accesskey = B
++    .label = Back
++    .accesskey = B
  wizard-win-button-back =
 -  .label = < Back
 -  .accesskey = B
-+    .label =
-+        < Back
-+        .accesskey = B
++    .label = < Back
++    .accesskey = B
  
  wizard-macos-button-next =
 -  .label = Continue
 -  .accesskey = C
-+    .label =
-+        Continue
-+        .accesskey = C
++    .label = Continue
++    .accesskey = C
  wizard-linux-button-next =
 -  .label = Next
 -  .accesskey = N
-+    .label =
-+        Next
-+        .accesskey = N
++    .label = Next
++    .accesskey = N
  wizard-win-button-next =
 -  .label = Next >
 -  .accesskey = N
-+    .label =
-+        Next >
-+        .accesskey = N
++    .label = Next >
++    .accesskey = N
  
  wizard-macos-button-finish =
 -  .label = Done

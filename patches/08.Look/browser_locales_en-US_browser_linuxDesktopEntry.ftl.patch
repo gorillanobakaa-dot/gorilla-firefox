@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/browser/linuxDesktopEntry.ftl b/browser/locales/en-US/browser/linuxDesktopEntry.ftl
+index 9c70c34eb1..ee6176ac3a 100644
 --- a/browser/locales/en-US/browser/linuxDesktopEntry.ftl
 +++ b/browser/locales/en-US/browser/linuxDesktopEntry.ftl
 @@ -1,26 +1,23 @@

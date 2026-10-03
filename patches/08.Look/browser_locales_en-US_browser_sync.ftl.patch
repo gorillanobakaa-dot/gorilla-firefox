@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/browser/sync.ftl b/browser/locales/en-US/browser/sync.ftl
+index cb6274a972..afe822516c 100644
 --- a/browser/locales/en-US/browser/sync.ftl
 +++ b/browser/locales/en-US/browser/sync.ftl
 @@ -1,7 +1,6 @@
@@ -8,7 +10,7 @@
  fxa-toolbar-sync-syncing2 = Syncing…
  
  sync-disconnect-dialog-title2 = Disconnect?
-@@ -11,10 +10,10 @@
+@@ -11,10 +10,10 @@ sync-disconnect-dialog-button = Disconnect
  fxa-signout-dialog-title2 = Sign out of your account?
  fxa-signout-dialog-body = Synced data will remain in your account.
  fxa-signout-dialog2-button = Sign out
@@ -21,7 +23,7 @@
  fxa-menu-turn-on-sync =
      .value = Turn on sync
  fxa-menu-turn-on-sync-default = Turn on sync
-@@ -26,37 +25,37 @@
+@@ -26,37 +25,37 @@ fxa-menu-connect-another-device =
  # The following string intentionally omits the word "tab" from the singular and includes it in the plural.
  fxa-menu-send-to-device =
      .label =
@@ -69,7 +71,7 @@
  
  fxa-menu-sign-out =
      .label = Sign out…
-@@ -70,36 +69,33 @@
+@@ -97,36 +96,33 @@ fxa-avatar-tooltip =
      .tooltiptext = Sign in to your account
  
  ## Dialog strings that we show the user when signing into Mozilla account/setting up sync
@@ -112,7 +114,7 @@
  
  # Dialog 2 - account signed in on another profile without option to merge
  sync-account-in-use-header = Account already in use
-@@ -107,22 +103,22 @@
+@@ -134,22 +130,22 @@ sync-account-in-use-header = Account already in use
  # Variables:
  #   $acctEmail (String) - Email of the account signing into sync.
  #   $otherProfile (String) - Name of the other profile that is associated with the account

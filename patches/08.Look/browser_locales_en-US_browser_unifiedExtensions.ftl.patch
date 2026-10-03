@@ -1,41 +1,32 @@
+diff --git a/browser/locales/en-US/browser/unifiedExtensions.ftl b/browser/locales/en-US/browser/unifiedExtensions.ftl
+index 0ee9dd480c..0949e5bcdd 100644
 --- a/browser/locales/en-US/browser/unifiedExtensions.ftl
 +++ b/browser/locales/en-US/browser/unifiedExtensions.ftl
-@@ -1,26 +1,22 @@
- # This Source Code Form is subject to the terms of the Mozilla Public
- # License, v. 2.0. If a copy of the MPL was not distributed with this
- # file, You can obtain one at http://mozilla.org/MPL/2.0/.
--
- ### These strings appear in the Unified Extensions panel.
--
+@@ -6,17 +6,17 @@
+ 
  ## Panel
--
+ 
 -unified-extensions-header-title = Extensions
 +unified-extensions-header-title = Gorilla Extensions
  unified-extensions-manage-extensions =
 -    .label = Manage extensions
 +    .label = Manage Gorilla extensions
  unified-extensions-discover-extensions =
--    .label = Discover extensions
+     .label = Discover extensions
 -unified-extensions-empty-reason-private-browsing-not-allowed = You have extensions installed, but not enabled in private windows
 -unified-extensions-empty-reason-extension-not-enabled = You have extensions installed, but not enabled
-+    .label = Discover Gorilla extensions
 +unified-extensions-empty-reason-private-browsing-not-allowed = You have Gorilla extensions installed, but not enabled in private Gorilla windows
 +unified-extensions-empty-reason-extension-not-enabled = You have Gorilla extensions installed, but not enabled
- # In this headline, “Level up” means to enhance your browsing experience.
--unified-extensions-empty-reason-zero-extensions-onboarding = Level up your browsing with extensions
+ # In this headline, "go a long way", means that even a small number of extensions can have a big impact.
+ unified-extensions-empty-reason-zero-extensions-onboarding2 = A few extensions go a long way
 -unified-extensions-empty-content-explain-enable2 = Select “{ unified-extensions-manage-extensions.label }” to enable them in settings.
 -unified-extensions-empty-content-explain-manage2 = Select “{ unified-extensions-manage-extensions.label }” to manage them in settings.
-+unified-extensions-empty-reason-zero-extensions-onboarding = Level up your browsing with Gorilla extensions
 +unified-extensions-empty-content-explain-enable2 = Select “{ unified-extensions-manage-extensions.label }” to enable them in Gorilla settings.
 +unified-extensions-empty-content-explain-manage2 = Select “{ unified-extensions-manage-extensions.label }” to manage them in Gorilla settings.
- unified-extensions-empty-content-explain-extensions-onboarding = Personalize { -brand-short-name } by changing how it looks and performs or boosting privacy and safety.
+ unified-extensions-empty-content-explain-extensions-onboarding2 = We’ve got recommendations to help you improve focus, privacy, and more.
  
  ## An extension in the main list
--
- # Each extension in the unified extensions panel (list) has a secondary button
- # to open a context menu. This string is used for each of these buttons.
- # Variables:
-@@ -28,25 +24,24 @@
+@@ -28,25 +28,24 @@ unified-extensions-empty-content-explain-extensions-onboarding2 = We’ve got re
  unified-extensions-item-open-menu =
      .aria-label = Open menu for { $extensionName }
  
@@ -66,7 +57,7 @@
  
  unified-extensions-context-menu-move-widget-up =
      .label = Move Up
-@@ -55,52 +50,56 @@
+@@ -55,52 +54,55 @@ unified-extensions-context-menu-move-widget-down =
      .label = Move Down
  
  ## Notifications
@@ -79,9 +70,8 @@
  unified-extensions-mb-quarantined-domain-message-3 =
 -    .heading = Some extensions are not allowed
 -    .message = To protect your data, some extensions can’t read or change data on this site. Use the extension’s settings to allow on sites restricted by { -vendor-short-name }.
-+    .heading =
-+        Some Gorilla extensions are not allowed
-+        .message = To protect your data, some Gorilla extensions can’t read or change data on this site. Use the Gorilla extension’s Gorilla settings to allow on sites restricted by { -vendor-short-name }.
++    .heading = Some Gorilla extensions are not allowed
++    .message = To protect your data, some Gorilla extensions can’t read or change data on this site. Use the Gorilla extension’s Gorilla settings to allow on sites restricted by { -vendor-short-name }.
  
  unified-extensions-mb-quarantined-domain-learn-more = Learn more
 -    .aria-label = Learn more: Some extensions are not allowed

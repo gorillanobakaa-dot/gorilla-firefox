@@ -1,16 +1,17 @@
+diff --git a/browser/components/urlbar/UrlbarProviderQuickSuggest.sys.mjs b/browser/components/urlbar/UrlbarProviderQuickSuggest.sys.mjs
+index 25b5fee8dc..114592710f 100644
 --- a/browser/components/urlbar/UrlbarProviderQuickSuggest.sys.mjs
 +++ b/browser/components/urlbar/UrlbarProviderQuickSuggest.sys.mjs
-@@ -15,8 +15,7 @@
+@@ -12,7 +12,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
    QuickSuggest: "moz-src:///browser/components/urlbar/QuickSuggest.sys.mjs",
    SearchUtils: "moz-src:///toolkit/components/search/SearchUtils.sys.mjs",
    UrlbarPrefs: "moz-src:///browser/components/urlbar/UrlbarPrefs.sys.mjs",
 -  UrlbarResult: "chrome://browser/content/urlbar/UrlbarResult.mjs",
--  UrlbarShared: "chrome://browser/content/urlbar/UrlbarShared.mjs",
 +  UrlbarResult: "moz-src:///browser/components/urlbar/UrlbarResult.sys.mjs",
+   UrlbarShared: "chrome://browser/content/urlbar/UrlbarShared.mjs",
    UrlbarSearchUtils:
      "moz-src:///browser/components/urlbar/UrlbarSearchUtils.sys.mjs",
- });
-@@ -54,37 +53,8 @@
+@@ -51,37 +51,8 @@ export class UrlbarProviderQuickSuggest extends UrlbarProvider {
     * @param {UrlbarQueryContext} queryContext The query context object
     */
    async isActive(queryContext) {
@@ -50,7 +51,7 @@
    }
  
    /**
-@@ -489,8 +459,8 @@
+@@ -501,8 +472,8 @@ export class UrlbarProviderQuickSuggest extends UrlbarProvider {
      }
  
      return new lazy.UrlbarResult({

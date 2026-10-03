@@ -1,0 +1,295 @@
+# Gorilla 157 privacy cut
+# D-157-23: all 32 partnerCode values removed from the search config dump (firefox-b-d and every other Mozilla partner code); SearchEngine.#encodeParams skips an empty {partnerCode} param, so search URLs stay valid without client=/pc=/fr=; the hard-coded Google new-tab widget code firefox-b-exp1 blanked (GORILLA UNLEASHED - PHYSICAL LOCK comment there; JSON cannot carry one)
+# Files: services/settings/dumps/main/search-config-v2.json, toolkit/components/search/ConfigSearchEngine.sys.mjs
+
+diff --git a/services/settings/dumps/main/search-config-v2.json b/services/settings/dumps/main/search-config-v2.json
+index 392fe3b71a..98507abac8 100644
+--- a/services/settings/dumps/main/search-config-v2.json
++++ b/services/settings/dumps/main/search-config-v2.json
+@@ -194,7 +194,6 @@
+           "environment": {
+             "allRegionsAndLocales": true
+           },
+-          "partnerCode": "firefox-b-d",
+           "subVariants": [
+             {
+               "environment": {
+@@ -202,7 +201,6 @@
+                   "esr"
+                 ]
+               },
+-              "partnerCode": "firefox-b-e",
+               "telemetrySuffix": "b-e"
+             },
+             {
+@@ -214,7 +212,6 @@
+                   "focus-ios"
+                 ]
+               },
+-              "partnerCode": "firefox-b-m",
+               "telemetrySuffix": "b-m"
+             }
+           ],
+@@ -253,7 +250,6 @@
+               "us"
+             ]
+           },
+-          "partnerCode": "firefox-b-1-d",
+           "subVariants": [
+             {
+               "environment": {
+@@ -264,7 +260,6 @@
+                   "us"
+                 ]
+               },
+-              "partnerCode": "firefox-b-1-e",
+               "telemetrySuffix": "b-1-e"
+             },
+             {
+@@ -276,7 +271,6 @@
+                   "focus-ios"
+                 ]
+               },
+-              "partnerCode": "firefox-b-1-m",
+               "telemetrySuffix": "b-1-m"
+             },
+             {
+@@ -288,7 +282,6 @@
+                   "aura-001"
+                 ]
+               },
+-              "partnerCode": "firefox-b-1-ar",
+               "telemetrySuffix": "b-1-ar"
+             },
+             {
+@@ -302,7 +295,6 @@
+                   "xiaomi-001"
+                 ]
+               },
+-              "partnerCode": "firefox-b-1-dt",
+               "telemetrySuffix": "b-1-dt"
+             }
+           ],
+@@ -333,7 +325,6 @@
+               "canonical-001"
+             ]
+           },
+-          "partnerCode": "ubuntu",
+           "telemetrySuffix": "canonical",
+           "urls": {
+             "search": {
+@@ -356,7 +347,6 @@
+               "canonical-002"
+             ]
+           },
+-          "partnerCode": "ubuntu-sn",
+           "telemetrySuffix": "ubuntu-sn",
+           "urls": {
+             "search": {
+@@ -383,7 +373,6 @@
+               "by"
+             ]
+           },
+-          "partnerCode": "firefox-b-lm",
+           "telemetrySuffix": "b-lm",
+           "urls": {
+             "search": {
+@@ -413,7 +402,6 @@
+               "us"
+             ]
+           },
+-          "partnerCode": "firefox-b-1-lm",
+           "telemetrySuffix": "b-1-lm",
+           "urls": {
+             "search": {
+@@ -447,7 +435,6 @@
+               "by"
+             ]
+           },
+-          "partnerCode": "firefox-b-vv",
+           "telemetrySuffix": "b-vv",
+           "urls": {
+             "search": {
+@@ -477,7 +464,6 @@
+               "by"
+             ]
+           },
+-          "partnerCode": "firefox-b-tf",
+           "telemetrySuffix": "b-tf",
+           "urls": {
+             "search": {
+@@ -508,7 +494,6 @@
+               "by"
+             ]
+           },
+-          "partnerCode": "firefox-b-ar",
+           "telemetrySuffix": "b-ar",
+           "urls": {
+             "search": {
+@@ -541,7 +526,6 @@
+               "by"
+             ]
+           },
+-          "partnerCode": "firefox-b-dt",
+           "telemetrySuffix": "b-dt",
+           "urls": {
+             "search": {
+@@ -1055,7 +1039,6 @@
+         ],
+         "classification": "unknown",
+         "name": "Perplexity",
+-        "partnerCode": "firefox",
+         "urls": {
+           "search": {
+             "base": "https://www.perplexity.ai/search",
+@@ -1163,7 +1146,6 @@
+         ],
+         "classification": "general",
+         "name": "Qwant",
+-        "partnerCode": "brz-moz",
+         "urls": {
+           "search": {
+             "base": "https://www.qwant.com/",
+@@ -1206,8 +1188,7 @@
+                   "firefox-android",
+                   "focus-android"
+                 ]
+-              },
+-              "partnerCode": "ff_android"
++              }
+             },
+             {
+               "environment": {
+@@ -1215,8 +1196,7 @@
+                   "firefox-ios",
+                   "focus-ios"
+                 ]
+-              },
+-              "partnerCode": "ff_ios"
++              }
+             }
+           ]
+         },
+@@ -1238,8 +1218,7 @@
+                   "firefox-android",
+                   "focus-android"
+                 ]
+-              },
+-              "partnerCode": "ff_android"
++              }
+             },
+             {
+               "environment": {
+@@ -1247,8 +1226,7 @@
+                   "firefox-ios",
+                   "focus-ios"
+                 ]
+-              },
+-              "partnerCode": "ff_ios"
++              }
+             }
+           ]
+         },
+@@ -1259,7 +1237,6 @@
+               "qwant-002"
+             ]
+           },
+-          "partnerCode": "firefoxqwant",
+           "telemetrySuffix": "qwant"
+         }
+       ]
+@@ -1268,7 +1245,6 @@
+       "base": {
+         "classification": "unknown",
+         "name": "Qwant Junior",
+-        "partnerCode": "firefoxqwant",
+         "urls": {
+           "search": {
+             "base": "https://www.qwantjunior.com/",
+@@ -1404,7 +1380,6 @@
+       "base": {
+         "classification": "unknown",
+         "name": "Salidzini.lv",
+-        "partnerCode": "firefox-plugin",
+         "urls": {
+           "search": {
+             "base": "https://www.salidzini.lv/search.php",
+@@ -1444,8 +1419,7 @@
+                   "firefox-ios",
+                   "focus-ios"
+                 ]
+-              },
+-              "partnerCode": "firefox_mobile"
++              }
+             }
+           ]
+         }
+@@ -1455,7 +1429,6 @@
+       "base": {
+         "classification": "unknown",
+         "name": "Seznam",
+-        "partnerCode": "firefox",
+         "urls": {
+           "search": {
+             "base": "https://search.seznam.cz/",
+@@ -1494,8 +1467,7 @@
+                   "firefox-ios",
+                   "focus-ios"
+                 ]
+-              },
+-              "partnerCode": "SearchBox"
++              }
+             }
+           ]
+         }
+@@ -1508,7 +1480,6 @@
+         ],
+         "classification": "general",
+         "name": "Startpage",
+-        "partnerCode": "startpage.apex.desktop",
+         "urls": {
+           "search": {
+             "base": "https://www.startpage.com/sp/search",
+@@ -1555,8 +1526,7 @@
+                   "firefox-android",
+                   "focus-android"
+                 ]
+-              },
+-              "partnerCode": "startpage.apex.android"
++              }
+             },
+             {
+               "environment": {
+@@ -1564,8 +1534,7 @@
+                   "firefox-ios",
+                   "focus-ios"
+                 ]
+-              },
+-              "partnerCode": "startpage.apex.ios"
++              }
+             }
+           ]
+         },
+@@ -6024,7 +5993,6 @@
+       "base": {
+         "classification": "general",
+         "name": "Yahoo! JAPAN",
+-        "partnerCode": "mozff",
+         "urls": {
+           "search": {
+             "base": "https://search.yahoo.co.jp/search",
+diff --git a/toolkit/components/search/ConfigSearchEngine.sys.mjs b/toolkit/components/search/ConfigSearchEngine.sys.mjs
+index 2186215520..558441364b 100644
+--- a/toolkit/components/search/ConfigSearchEngine.sys.mjs
++++ b/toolkit/components/search/ConfigSearchEngine.sys.mjs
+@@ -725,7 +725,9 @@ export class ConfigSearchEngine extends SearchEngine {
+         });
+       }
+       partnerCodeMap.set("newtab_search_widget", {
+-        partnerCode: "firefox-b-exp1",
++        // GORILLA UNLEASHED - PHYSICAL LOCK: no search partner code (D-157-23). An empty
++        // partner code drops the client= parameter from the URL (SearchEngine.#encodeParams).
++        partnerCode: "",
+         telemetryId: "google-b-exp1",
+       });
+     }

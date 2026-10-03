@@ -1,3 +1,5 @@
+diff --git a/toolkit/locales/en-US/toolkit/pdfviewer/viewer.ftl b/toolkit/locales/en-US/toolkit/pdfviewer/viewer.ftl
+index 1d0e9ed02a..b8ba317650 100644
 --- a/toolkit/locales/en-US/toolkit/pdfviewer/viewer.ftl
 +++ b/toolkit/locales/en-US/toolkit/pdfviewer/viewer.ftl
 @@ -1,19 +1,17 @@
@@ -23,7 +25,7 @@
  
  # Variables:
  #   $pagesCount (Number) - the total number of pages in the document
-@@ -37,7 +35,7 @@
+@@ -37,7 +35,7 @@ pdfjs-presentation-mode-button =
      .title = Switch to Presentation Mode
  pdfjs-presentation-mode-button-label = Presentation Mode
  pdfjs-open-file-button =
@@ -32,7 +34,7 @@
  pdfjs-open-file-button-label = Open
  pdfjs-print-button =
      .title = Print
-@@ -48,28 +46,27 @@
+@@ -48,28 +46,27 @@ pdfjs-save-button-label = Save
  
  # Used in Firefox for Android as a tooltip for the download button (“download” is a verb).
  pdfjs-download-button =
@@ -69,7 +71,7 @@
  pdfjs-page-rotate-cw-button =
      .title = Rotate Clockwise
  pdfjs-page-rotate-cw-button-label = Rotate Clockwise
-@@ -83,8 +80,8 @@
+@@ -83,8 +80,8 @@ pdfjs-cursor-hand-tool-button =
      .title = Enable Hand Tool
  pdfjs-cursor-hand-tool-button-label = Hand Tool
  pdfjs-scroll-page-button =
@@ -80,7 +82,7 @@
  pdfjs-scroll-vertical-button =
      .title = Use Vertical Scrolling
  pdfjs-scroll-vertical-button-label = Vertical Scrolling
-@@ -95,22 +92,21 @@
+@@ -95,22 +92,21 @@ pdfjs-scroll-wrapped-button =
      .title = Use Wrapped Scrolling
  pdfjs-scroll-wrapped-button-label = Wrapped Scrolling
  pdfjs-spread-none-button =
@@ -108,7 +110,7 @@
  
  # Variables:
  #   $kb (Number) - the PDF file size in kilobytes
-@@ -136,8 +132,8 @@
+@@ -136,8 +132,8 @@ pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "sh
  pdfjs-document-properties-creator = Creator:
  pdfjs-document-properties-producer = PDF Producer:
  pdfjs-document-properties-version = PDF Version:
@@ -119,7 +121,7 @@
  pdfjs-document-properties-page-size-unit-inches = in
  pdfjs-document-properties-page-size-unit-millimeters = mm
  pdfjs-document-properties-page-size-orientation-portrait = portrait
-@@ -153,12 +149,10 @@
+@@ -153,12 +149,10 @@ pdfjs-document-properties-page-size-name-legal = Legal
  ##   $unit (String) - the unit of measurement of the (current) page
  ##   $name (String) - the name of the (current) page
  ##   $orientation (String) - the orientation of the (current) page
@@ -132,7 +134,7 @@
  # The linearization status of the document; usually called "Fast Web View" in
  # English locales of Adobe software.
  pdfjs-document-properties-linearized = Fast Web View:
-@@ -167,7 +161,6 @@
+@@ -167,7 +161,6 @@ pdfjs-document-properties-linearized-no = No
  pdfjs-document-properties-close-button = Close
  
  ## Print
@@ -140,7 +142,7 @@
  pdfjs-print-progress-message = Preparing document for printing…
  
  # Variables:
-@@ -175,11 +168,10 @@
+@@ -175,11 +168,10 @@ pdfjs-print-progress-message = Preparing document for printing…
  pdfjs-print-progress-percent = { $progress }%
  
  pdfjs-print-progress-close-button = Cancel
@@ -153,7 +155,7 @@
  pdfjs-current-outline-item-button =
      .title = Find Current Outline Item
  pdfjs-current-outline-item-button-label = Current Outline Item
-@@ -189,28 +181,27 @@
+@@ -189,25 +181,23 @@ pdfjs-findbar-button-label = Find
  pdfjs-additional-layers = Additional Layers
  
  ## Thumbnails panel item (tooltip and alt text for images)
@@ -180,15 +182,9 @@
  ## Find panel button title and messages
 -
  pdfjs-find-input =
--    .title = Find
--    .placeholder = Find in document…
-+    .title =
-+        Find
-+        .placeholder = Find in document…
- pdfjs-find-previous-button =
-     .title = Find the previous occurrence of the phrase
- pdfjs-find-previous-button-label = Previous
-@@ -229,24 +220,23 @@
+     .title = Find
+     .placeholder = Find in document…
+@@ -229,24 +219,23 @@ pdfjs-find-reached-bottom = Reached end of document, continued from top
  #   $total (Number) - the total number of matches in the document
  pdfjs-find-match-count =
      { $total ->
@@ -219,7 +215,7 @@
  pdfjs-page-scale-auto = Automatic Zoom
  pdfjs-page-scale-actual = Actual Size
  
-@@ -255,22 +245,19 @@
+@@ -255,22 +244,19 @@ pdfjs-page-scale-actual = Actual Size
  pdfjs-page-scale-percent = { $scale }%
  
  ## PDF page
@@ -246,7 +242,7 @@
  # Variables:
  #   $dateObj (Date) - the modification date and time of the annotation
  pdfjs-annotation-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
-@@ -284,15 +271,13 @@
+@@ -284,15 +270,13 @@ pdfjs-text-annotation-type =
      .alt = [{ $type } Annotation]
  
  ## Password
@@ -263,32 +259,7 @@
  pdfjs-editor-free-text-button =
      .title = Text
  pdfjs-editor-color-picker-free-text-input =
-@@ -310,23 +295,25 @@
-     .title = Highlight
- pdfjs-editor-highlight-button-label = Highlight
- pdfjs-highlight-floating-button1 =
--    .title = Highlight
--    .aria-label = Highlight
-+    .title =
-+        Highlight
-+        .aria-label = Highlight
- pdfjs-highlight-floating-button-label = Highlight
- pdfjs-comment-floating-button =
--    .title = Comment
--    .aria-label = Comment
-+    .title =
-+        Comment
-+        .aria-label = Comment
- pdfjs-comment-floating-button-label = Comment
- pdfjs-editor-comment-button =
--    .title = Comment
--    .aria-label = Comment
-+    .title =
-+        Comment
-+        .aria-label = Comment
- pdfjs-editor-comment-button-label = Comment
- pdfjs-editor-signature-button =
-     .title = Add signature
+@@ -326,7 +310,6 @@ pdfjs-editor-signature-button =
  pdfjs-editor-signature-button-label = Add signature
  
  ## Default editor aria labels
@@ -296,7 +267,7 @@
  # “Highlight” is a noun, the string is used on the editor for highlights.
  pdfjs-editor-highlight-editor =
      .aria-label = Highlight editor
-@@ -344,7 +331,6 @@
+@@ -344,7 +327,6 @@ pdfjs-editor-stamp-editor =
      .aria-label = Image editor
  
  ## Remove button for the various kind of editor.
@@ -304,7 +275,7 @@
  pdfjs-editor-remove-ink-button =
      .title = Remove drawing
  pdfjs-editor-remove-freetext-button =
-@@ -357,7 +343,6 @@
+@@ -357,7 +339,6 @@ pdfjs-editor-remove-signature-button =
      .title = Remove signature
  
  ##
@@ -312,18 +283,7 @@
  # Editor Parameters
  pdfjs-editor-free-text-color-input = Color
  pdfjs-editor-free-text-size-input = Size
-@@ -385,29 +370,30 @@
- 
- # .default-content is used as a placeholder in an empty text editor.
- pdfjs-free-text2 =
--    .aria-label = Text Editor
--    .default-content = Start typing…
-+    .aria-label =
-+        Text Editor
-+        .default-content = Start typing…
- 
- # Used to show how many comments are present in the pdf file.
- # Variables:
+@@ -393,21 +374,20 @@ pdfjs-free-text2 =
  #   $count (Number) - the number of comments.
  pdfjs-editor-comments-sidebar-title =
      { $count ->
@@ -337,9 +297,8 @@
 -    .title = Close the sidebar
 -    .aria-label = Close the sidebar
 -pdfjs-editor-comments-sidebar-close-button-label = Close the sidebar
-+    .title =
-+        Close the Gorilla sidebar
-+        .aria-label = Close the Gorilla sidebar
++    .title = Close the Gorilla sidebar
++    .aria-label = Close the Gorilla sidebar
 +pdfjs-editor-comments-sidebar-close-button-label = Close the Gorilla sidebar
  
  # Instructional copy to add a comment by selecting text or an annotations.
@@ -351,7 +310,7 @@
  # Alternative text (alt text) helps when people can't see the image.
  pdfjs-editor-alt-text-button =
      .aria-label = Alt text
-@@ -431,7 +417,6 @@
+@@ -431,7 +411,6 @@ pdfjs-editor-alt-text-textarea =
  
  ## Editor resizers
  ## This is used in an aria label to help to understand the role of the resizer.
@@ -359,7 +318,7 @@
  pdfjs-editor-resizer-top-left =
      .aria-label = Top left corner — resize
  pdfjs-editor-resizer-top-middle =
-@@ -450,7 +435,6 @@
+@@ -450,7 +429,6 @@ pdfjs-editor-resizer-middle-left =
      .aria-label = Middle left — resize
  
  ## Color picker
@@ -367,7 +326,7 @@
  # This means "Color used to highlight text"
  pdfjs-editor-highlight-colorpicker-label = Highlight color
  
-@@ -471,14 +455,12 @@
+@@ -471,14 +449,12 @@ pdfjs-editor-colorpicker-red =
  
  ## Show all highlights
  ## This is a toggle button to show/hide all the highlights.
@@ -382,7 +341,7 @@
  # Modal header positioned above a text box where users can edit the alt text.
  pdfjs-editor-new-alt-text-dialog-edit-label = Edit alt text (image description)
  
-@@ -528,12 +510,11 @@
+@@ -528,12 +504,11 @@ pdfjs-editor-new-alt-text-to-review-button-label = Review alt text
  pdfjs-editor-new-alt-text-generated-alt-text-with-disclaimer = Created automatically: { $generatedAltText }
  
  ## Image alt-text settings
@@ -398,7 +357,7 @@
  pdfjs-editor-alt-text-settings-automatic-title = Automatic alt text
  pdfjs-editor-alt-text-settings-create-model-button-label = Create alt text automatically
  pdfjs-editor-alt-text-settings-create-model-description = Suggests descriptions to help people who can’t see the image or when the image doesn’t load.
-@@ -544,7 +525,6 @@
+@@ -544,7 +519,6 @@ pdfjs-editor-alt-text-settings-show-dialog-description = Helps you make sure all
  pdfjs-editor-alt-text-settings-close-button = Close
  
  ## Accessibility labels (announced by screen readers) for objects added to the editor.
@@ -406,7 +365,7 @@
  pdfjs-editor-highlight-added-alert = Highlight added
  pdfjs-editor-freetext-added-alert = Text added
  pdfjs-editor-ink-added-alert = Drawing added
-@@ -552,7 +532,6 @@
+@@ -552,7 +526,6 @@ pdfjs-editor-stamp-added-alert = Image added
  pdfjs-editor-signature-added-alert = Signature added
  
  ## "Annotations removed" bar
@@ -414,7 +373,7 @@
  pdfjs-editor-undo-bar-message-highlight = Highlight removed
  pdfjs-editor-undo-bar-message-freetext = Text removed
  pdfjs-editor-undo-bar-message-ink = Drawing removed
-@@ -563,8 +542,8 @@
+@@ -563,8 +536,8 @@ pdfjs-editor-undo-bar-message-comment = Comment removed
  #   $count (Number) - the number of removed annotations.
  pdfjs-editor-undo-bar-message-multiple =
      { $count ->
@@ -425,7 +384,7 @@
      }
  
  pdfjs-editor-undo-bar-undo-button =
-@@ -575,12 +554,10 @@
+@@ -575,12 +548,10 @@ pdfjs-editor-undo-bar-close-button =
  pdfjs-editor-undo-bar-close-button-label = Close
  
  ## Add a signature dialog
@@ -438,21 +397,15 @@
  # Type is a verb (you can type your name as signature)
  pdfjs-editor-add-signature-type-button = Type
      .title = Type
-@@ -591,10 +568,10 @@
+@@ -591,7 +562,6 @@ pdfjs-editor-add-signature-image-button = Image
      .title = Image
  
  ## Tab panels
 -
  pdfjs-editor-add-signature-type-input =
--    .aria-label = Type your signature
--    .placeholder = Type your signature
-+    .aria-label =
-+        Type your signature
-+        .placeholder = Type your signature
- pdfjs-editor-add-signature-draw-placeholder = Draw your signature
- pdfjs-editor-add-signature-draw-thickness-range-label = Thickness
- 
-@@ -603,15 +580,14 @@
+     .aria-label = Type your signature
+     .placeholder = Type your signature
+@@ -603,15 +573,14 @@ pdfjs-editor-add-signature-draw-thickness-range-label = Thickness
  pdfjs-editor-add-signature-draw-thickness-range =
      .title = Drawing thickness: { $thickness }
  
@@ -471,7 +424,7 @@
  pdfjs-editor-add-signature-description-label = Description (alt text)
  pdfjs-editor-add-signature-description-input =
      .title = Description (alt text)
-@@ -630,30 +606,24 @@
+@@ -630,30 +599,24 @@ pdfjs-editor-add-signature-image-no-data-error-description = Please try uploadin
  pdfjs-editor-add-signature-error-close-button = Close
  
  ## Dialog buttons
@@ -502,7 +455,7 @@
  pdfjs-show-comment-button =
      .title = Show comment
  
-@@ -665,7 +635,6 @@
+@@ -665,7 +628,6 @@ pdfjs-editor-delete-comment-popup-button =
      .title = Remove comment
  
  ##  Edit a comment dialog
@@ -510,7 +463,7 @@
  # An existing comment is edited
  pdfjs-editor-edit-comment-dialog-title-when-editing = Edit comment
  pdfjs-editor-edit-comment-dialog-save-button-when-editing = Update
-@@ -680,7 +649,6 @@
+@@ -680,7 +642,6 @@ pdfjs-editor-edit-comment-dialog-text-input =
  pdfjs-editor-edit-comment-dialog-cancel-button = Cancel
  
  ## Edit a comment button in the editor toolbar
@@ -518,7 +471,7 @@
  pdfjs-editor-add-comment-button =
      .title = Add comment
  
-@@ -690,44 +658,43 @@
+@@ -690,44 +651,43 @@ pdfjs-editor-add-comment-button =
  ##  - attachments;
  ##  - layers.
  ## The thumbnails view is used to edit the pdf: remove/insert pages, ...
@@ -575,53 +528,7 @@
  pdfjs-views-manager-pages-status-action-button-label = Manage
  pdfjs-views-manager-pages-status-copy-button-label = Copy
  pdfjs-views-manager-pages-status-cut-button-label = Cut
-@@ -738,33 +705,33 @@
- #   $count (Number) - the number of selected pages to be cut.
- pdfjs-views-manager-status-undo-cut-label =
-     { $count ->
--        [one] 1 page cut
--        *[other] { $count } pages cut
-+    [one] 1 Gorilla page cut
-+    *[other] { $count } Gorilla pages cut
-     }
- 
- # Variables:
- #   $count (Number) - the number of selected pages to be copied.
- pdfjs-views-manager-pages-status-undo-copy-label =
-     { $count ->
--        [one] 1 page copied
--        *[other] { $count } pages copied
-+    [one] 1 Gorilla page copied
-+    *[other] { $count } Gorilla pages copied
-     }
- 
- # Variables:
- #   $count (Number) - the number of selected pages to be deleted.
- pdfjs-views-manager-pages-status-undo-delete-label =
-     { $count ->
--        [one] 1 page deleted
--        *[other] { $count } pages deleted
-+    [one] 1 Gorilla page deleted
-+    *[other] { $count } Gorilla pages deleted
-     }
- 
--pdfjs-views-manager-pages-status-waiting-ready-label = Getting your file ready…
--pdfjs-views-manager-pages-status-waiting-uploading-label = Uploading file…
-+pdfjs-views-manager-pages-status-waiting-ready-label = Getting your Gorilla file ready…
-+pdfjs-views-manager-pages-status-waiting-uploading-label = Uploading Gorilla file…
- 
--pdfjs-views-manager-status-warning-cut-label = Couldn’t cut. Refresh page and try again.
--pdfjs-views-manager-status-warning-copy-label = Couldn’t copy. Refresh page and try again.
--pdfjs-views-manager-status-warning-delete-label = Couldn’t delete. Refresh page and try again.
--pdfjs-views-manager-status-warning-save-label = Couldn’t save. Refresh page and try again.
-+pdfjs-views-manager-status-warning-cut-label = Couldn’t cut. Refresh Gorilla page and try again.
-+pdfjs-views-manager-status-warning-copy-label = Couldn’t copy. Refresh Gorilla page and try again.
-+pdfjs-views-manager-status-warning-delete-label = Couldn’t delete. Refresh Gorilla page and try again.
-+pdfjs-views-manager-status-warning-save-label = Couldn’t save. Refresh Gorilla page and try again.
- pdfjs-views-manager-status-undo-button-label = Undo
- pdfjs-views-manager-status-done-button-label = Done
- pdfjs-views-manager-status-close-button =
-@@ -773,21 +740,21 @@
+@@ -766,21 +726,21 @@ pdfjs-views-manager-status-close-button-label = Close
  
  pdfjs-views-manager-paste-button-label = Paste
  pdfjs-views-manager-paste-button-before =

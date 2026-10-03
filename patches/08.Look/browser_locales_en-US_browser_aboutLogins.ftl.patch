@@ -1,6 +1,8 @@
+diff --git a/browser/locales/en-US/browser/aboutLogins.ftl b/browser/locales/en-US/browser/aboutLogins.ftl
+index 5d8b8dc8f3..e58d7e9715 100644
 --- a/browser/locales/en-US/browser/aboutLogins.ftl
 +++ b/browser/locales/en-US/browser/aboutLogins.ftl
-@@ -2,58 +2,56 @@
+@@ -2,58 +2,55 @@
  # License, v. 2.0. If a copy of the MPL was not distributed with this
  # file, You can obtain one at http://mozilla.org/MPL/2.0/.
  # NOTE: New strings should use the about-logins- prefix.
@@ -10,9 +12,8 @@
  about-logins-login-filter2 =
 -  .placeholder = Search Passwords
 -  .key = F
-+    .placeholder =
-+        Search Passwords
-+        .key = F
++    .placeholder = Search Passwords
++    .key = F
  
  create-login-button =
 -  .title = Add password
@@ -80,7 +81,7 @@
  login-list-sort-label-text = Sort by:
  login-list-name-option = Name (A-Z)
  login-list-name-reverse-option = Name (Z-A)
-@@ -73,9 +71,9 @@
+@@ -73,9 +70,9 @@ login-list-item-title-new-login2 = Add password
  
  login-list-item-subtitle-missing-username = (no username)
  about-logins-list-item-breach-icon =
@@ -92,7 +93,7 @@
  about-logins-list-section-breach = Breached websites
  about-logins-list-section-vulnerable = Vulnerable passwords
  about-logins-list-section-nothing = No alert
-@@ -84,16 +82,14 @@
+@@ -84,16 +81,14 @@ about-logins-list-section-yesterday = Yesterday
  about-logins-list-section-week = Last 7 days
  
  ## Introduction screen
@@ -111,7 +112,7 @@
  # Header for adding a password
  about-logins-login-item-new-login-title = Add password
  login-item-edit-button = Edit
-@@ -105,17 +101,17 @@
+@@ -105,17 +100,17 @@ about-logins-origin-tooltip2 = Enter the full address and make sure it’s an ex
  about-logins-edit-password-tooltip = Make sure you’re saving your current password for this site. Changing the password here does not change it with { $webTitle }.
  about-logins-add-password-tooltip = Make sure you’re saving your current password for this site.
  login-item-origin =
@@ -133,7 +134,7 @@
  login-item-copy-password-button-text = Copy
  login-item-copied-password-button-text = Copied!
  about-logins-login-item-save-changes-button = Save
-@@ -125,7 +121,6 @@
+@@ -125,7 +120,6 @@ login-item-cancel-button = Cancel
  ## The date is displayed in a timeline showing the password evolution.
  ## A label is displayed under the date to describe the type of change.
  ## (e.g. updated, created, etc.)
@@ -141,7 +142,7 @@
  # Variables
  #   $datetime (date) - Event date
  login-item-timeline-point-date = { DATETIME($datetime, day: "numeric", month: "short", year: "numeric") }
-@@ -134,57 +129,54 @@
+@@ -134,57 +128,53 @@ login-item-timeline-action-updated = Updated
  login-item-timeline-action-used = Used
  
  ## OS Authentication dialog
@@ -199,9 +200,8 @@
  master-password-reload-button =
 -  .label = Log in
 -  .accesskey = L
-+    .label =
-+        Log in
-+        .accesskey = L
++    .label = Log in
++    .accesskey = L
  
  ## Dialogs
 -
@@ -212,7 +212,7 @@
  
  # Title for modal to confirm the removal of one saved password
  about-logins-confirm-delete-dialog-title = Remove password?
-@@ -194,52 +186,51 @@
+@@ -194,52 +184,51 @@ about-logins-confirm-remove-dialog-confirm-button = Remove
  
  ## Variables
  ##   $count (number) - Number of items
@@ -285,7 +285,7 @@
  about-logins-confirm-export-dialog-confirm-button2 = Continue with export
  
  about-logins-alert-import-message = View detailed Import Summary
-@@ -249,7 +240,6 @@
+@@ -249,7 +238,6 @@ confirm-discard-changes-dialog-message = All unsaved changes will be lost.
  confirm-discard-changes-dialog-confirm-button = Discard
  
  ## Breach Alert notification
@@ -293,7 +293,7 @@
  about-logins-breach-alert-title = Website Breach
  breach-alert-text = Passwords were leaked or stolen from this website since you last updated your login details. Change your password to protect your account.
  about-logins-breach-alert-date = This breach occurred on { DATETIME($date, day: "numeric", month: "long", year: "numeric") }
-@@ -258,7 +248,6 @@
+@@ -258,7 +246,6 @@ about-logins-breach-alert-date = This breach occurred on { DATETIME($date, day:
  about-logins-breach-alert-link = Go to { $hostname }
  
  ## Vulnerable Password notification
@@ -301,7 +301,7 @@
  about-logins-vulnerable-alert-title = Vulnerable Password
  about-logins-vulnerable-alert-text2 = This password has been used on another account that was likely in a data breach. Reusing credentials puts all your accounts at risk. Change this password.
  # Variables:
-@@ -267,7 +256,6 @@
+@@ -267,7 +254,6 @@ about-logins-vulnerable-alert-link = Go to { $hostname }
  about-logins-vulnerable-alert-learn-more-link = Learn more
  
  ## Error Messages
@@ -309,7 +309,7 @@
  # This is an error message that appears when a user attempts to save
  # a new login that is identical to an existing saved login.
  # Variables:
-@@ -278,7 +266,6 @@
+@@ -278,7 +264,6 @@ about-logins-error-message-duplicate-login-with-link = An entry for { $loginTitl
  about-logins-error-message-default = An error occurred while trying to save this password.
  
  ## Login Export Dialog
@@ -317,7 +317,7 @@
  # Title of the file picker dialog
  about-logins-export-file-picker-title2 = Export Passwords from { -brand-short-name }
  # The default file name shown in the file picker when exporting saved logins.
-@@ -288,65 +275,63 @@
+@@ -288,65 +273,63 @@ about-logins-export-file-picker-export-button = Export
  # A description for the .csv file format that may be shown as the file type
  # filter by the operating system.
  about-logins-export-file-picker-csv-filter-title =
@@ -413,7 +413,7 @@
  about-logins-import-dialog-error-no-logins-imported = No logins have been imported
  about-logins-import-dialog-error-learn-more = Learn more
  about-logins-import-dialog-error-try-import-again = Try Import Again…
-@@ -367,31 +352,28 @@
+@@ -367,31 +350,28 @@ about-logins-import-report-row-description-error = Error: Missing field
  ##
  ## Variables:
  ##  $field (String) - The name of the field from the CSV file for example url, username or password

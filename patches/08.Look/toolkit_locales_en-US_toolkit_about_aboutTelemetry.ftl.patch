@@ -1,3 +1,5 @@
+diff --git a/toolkit/locales/en-US/toolkit/about/aboutTelemetry.ftl b/toolkit/locales/en-US/toolkit/about/aboutTelemetry.ftl
+index 4749a04551..db8a735a7f 100644
 --- a/toolkit/locales/en-US/toolkit/about/aboutTelemetry.ftl
 +++ b/toolkit/locales/en-US/toolkit/about/aboutTelemetry.ftl
 @@ -1,7 +1,6 @@
@@ -8,7 +10,7 @@
  about-telemetry-ping-data-source = Ping data source:
  about-telemetry-show-current-data = Current data
  about-telemetry-show-archived-ping-data = Archived ping data
-@@ -17,9 +16,9 @@
+@@ -17,9 +16,9 @@ about-telemetry-next-ping = >>
  about-telemetry-page-title = Telemetry Data
  about-telemetry-current-store = Current Store:
  about-telemetry-more-information = Looking for more information?
@@ -21,7 +23,7 @@
  about-telemetry-telemetry-probe-dictionary = The <a data-l10n-name="probe-dictionary-link">Probe Dictionary</a> provides details and descriptions for the probes collected by Telemetry.
  about-telemetry-show-in-Firefox-json-viewer = Open in the JSON viewer
  about-telemetry-home-section = Home
-@@ -45,16 +44,16 @@
+@@ -45,16 +44,16 @@ about-telemetry-hide-stack-symbols = Show raw stack data
  #   $channel (string) - Represents the corresponding release data string
  about-telemetry-data-type =
      { $channel ->
@@ -42,7 +44,7 @@
      }
  # Example Output: 1 sample, average = 0, sum = 0
  # Variables:
-@@ -63,12 +62,12 @@
+@@ -63,12 +62,12 @@ about-telemetry-upload-type =
  #   $sum (number) - Sum of histogram samples
  about-telemetry-histogram-stats =
      { $sampleCount ->

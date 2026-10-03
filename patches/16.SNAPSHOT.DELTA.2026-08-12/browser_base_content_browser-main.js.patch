@@ -1,6 +1,8 @@
+diff --git a/browser/base/content/browser-main.js b/browser/base/content/browser-main.js
+index b100876fc1..85059f73b3 100644
 --- a/browser/base/content/browser-main.js
 +++ b/browser/base/content/browser-main.js
-@@ -31,9 +31,6 @@
+@@ -32,9 +32,6 @@
    Services.scriptloader.loadSubScript("chrome://browser/content/places/places-menupopup.js", this);
    Services.scriptloader.loadSubScript("chrome://browser/content/search/autocomplete-popup.js", this);
    Services.scriptloader.loadSubScript("chrome://browser/content/search/searchbar.js", this);
@@ -8,5 +10,5 @@
 -    ChromeUtils.importESModule("chrome://browser/content/urlbar/SmartbarInput.mjs", { global: "current" });
 -  }
    ChromeUtils.importESModule("chrome://browser/content/urlbar/UrlbarInput.mjs", { global: "current" });
+   ChromeUtils.importESModule("chrome://browser/content/urlbar/SearchbarInput.mjs", { global: "current" });
  }
- 

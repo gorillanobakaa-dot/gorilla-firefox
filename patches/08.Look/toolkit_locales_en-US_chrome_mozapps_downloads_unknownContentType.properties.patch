@@ -1,3 +1,5 @@
+diff --git a/toolkit/locales/en-US/chrome/mozapps/downloads/unknownContentType.properties b/toolkit/locales/en-US/chrome/mozapps/downloads/unknownContentType.properties
+index 6097759d0a..8b89929149 100644
 --- a/toolkit/locales/en-US/chrome/mozapps/downloads/unknownContentType.properties
 +++ b/toolkit/locales/en-US/chrome/mozapps/downloads/unknownContentType.properties
 @@ -1,21 +1,20 @@

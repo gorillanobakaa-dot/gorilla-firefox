@@ -1,6 +1,8 @@
+diff --git a/browser/components/preferences/main.js b/browser/components/preferences/main.js
+index a8de115331..1fa5c6a247 100644
 --- a/browser/components/preferences/main.js
 +++ b/browser/components/preferences/main.js
-@@ -32,7 +32,6 @@
+@@ -48,7 +48,6 @@ const { DefaultBrowserHelper } = importIntoWindow(
  ChromeUtils.defineESModuleGetters(this, {
    BackgroundUpdate: "resource://gre/modules/BackgroundUpdate.sys.mjs",
    UpdateListener: "resource://gre/modules/UpdateListener.sys.mjs",

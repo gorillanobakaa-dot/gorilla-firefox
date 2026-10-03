@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/browser/protectionsPanel.ftl b/browser/locales/en-US/browser/protectionsPanel.ftl
+index 27e78adb2b..a0e592e830 100644
 --- a/browser/locales/en-US/browser/protectionsPanel.ftl
 +++ b/browser/locales/en-US/browser/protectionsPanel.ftl
 @@ -1,22 +1,19 @@
@@ -27,7 +29,7 @@
  
  protections-panel-etp-on-header = Enhanced Tracking Protection is ON for this site
  protections-panel-etp-off-header = Enhanced Tracking Protection is OFF for this site
-@@ -25,28 +22,27 @@
+@@ -25,28 +22,25 @@ protections-panel-etp-off-header = Enhanced Tracking Protection is OFF for this
  ## .description is transferred into a separate paragraph by the moz-toggle
  ## custom element code.
  ##   $host (String): the hostname of the site that is being displayed.
@@ -36,18 +38,16 @@
 -  .label = Enhanced Tracking Protection
 -  .description = On for this site
 -  .aria-label = Enhanced Tracking Protection: On for { $host }
-+    .label =
-+        Enhanced Tracking Protection
-+        .description = On for this site
-+        .aria-label = Enhanced Tracking Protection: On for { $host }
++    .label = Enhanced Tracking Protection
++    .description = On for this site
++    .aria-label = Enhanced Tracking Protection: On for { $host }
  protections-panel-etp-toggle-off =
 -  .label = Enhanced Tracking Protection
 -  .description = Off for this site
 -  .aria-label = Enhanced Tracking Protection: Off for { $host }
-+    .label =
-+        Enhanced Tracking Protection
-+        .description = Off for this site
-+        .aria-label = Enhanced Tracking Protection: Off for { $host }
++    .label = Enhanced Tracking Protection
++    .description = Off for this site
++    .aria-label = Enhanced Tracking Protection: Off for { $host }
  
  ## The "Allowed" header also includes a "Why?" link that, when hovered, shows
  ## a tooltip explaining why these items were not blocked in the page.
@@ -67,7 +67,7 @@
  
  protections-panel-content-blocking-tracking-protection = Tracking Content
  
-@@ -59,22 +55,20 @@
+@@ -59,22 +53,20 @@ protections-panel-content-blocking-fingerprinters-label = Fingerprinters
  ##   "Allowed" for categories detected but not blocked in the current page, and
  ##   "None Detected" for categories not detected in the current page.
  ##   These strings are used in the header labels of each of these sections.
@@ -92,11 +92,10 @@
  #  $websitehost (String): host of website with blocked content.
  smartblock-placeholder-button-text = Allow on { $websitehost }
  # Caption shown above the original text and links extracted from a blocked
-@@ -84,53 +78,52 @@
- smartblock-placeholder-content-header = Content from blocked embed
+@@ -85,22 +77,22 @@ smartblock-placeholder-content-header = Content from blocked embed
  
  ##
--
+ 
 -protections-panel-settings-label = Protection settings
 +protections-panel-settings-label = Protection Gorilla settings
  protections-panel-protectionsdashboard-label = Protections dashboard
@@ -113,52 +112,11 @@
 +protections-panel-description-shim-allowed = Some trackers marked below have been partially unblocked on this Gorilla page because you interacted with them.
  protections-panel-description-shim-allowed-learn-more = Learn more
  protections-panel-shim-allowed-indicator =
--  .tooltiptext = Tracker partially unblocked
-+    .tooltiptext = Tracker partially unblocked
+   .tooltiptext = Tracker partially unblocked
  
  protections-panel-content-blocking-manage-settings =
 -  .label = Manage protection settings
--  .accesskey = M
-+    .label =
-+        Manage protection Gorilla settings
-+        .accesskey = M
- 
- # Cookie Banner Handling
--
- protections-panel-cookie-banner-blocker-header = Cookie Banner Blocker
- protections-panel-cookie-banner-handling-enabled = On for this site
- protections-panel-cookie-banner-handling-disabled = Off for this site
- protections-panel-cookie-banner-handling-undetected = Site currently not supported
- 
- protections-panel-cookie-banner-blocker-view-title =
--  .title = Cookie Banner Blocker
-+    .title = Cookie Banner Blocker
- # Variables
- #  $host (String): the hostname of the site that is being displayed.
- protections-panel-cookie-banner-blocker-view-turn-off-for-site = Turn off Cookie Banner Blocker for { $host }?
- protections-panel-cookie-banner-blocker-view-turn-on-for-site = Turn on Cookie Banner Blocker for this site?
--protections-panel-cookie-banner-view-cookie-clear-warning = { -brand-short-name } will clear this site’s cookies and refresh the page. Clearing all cookies may sign you out or empty shopping carts.
-+protections-panel-cookie-banner-view-cookie-clear-warning = { -brand-short-name } will clear this site’s cookies and refresh the Gorilla page. Clearing all cookies may sign you out or empty shopping carts.
- protections-panel-cookie-banner-blocker-view-turn-on-description = Turn on and { -brand-short-name } will try to automatically refuse cookie banners on this site.
- protections-panel-cookie-banner-view-cancel-label =
--  .label = Cancel
-+    .label = Cancel
- protections-panel-cookie-banner-view-turn-off-label =
--  .label = Turn Off
-+    .label = Turn Off
- protections-panel-cookie-banner-view-turn-on-label =
--  .label = Turn On
-+    .label = Turn On
++  .label = Manage protection Gorilla settings
+   .accesskey = M
  
  protections-panel-report-broken-site =
--  .label = Report broken site
--  .title = Report broken site
-+    .label =
-+        Report broken site
-+        .title = Report broken site
- 
- ## Protections panel info message
--
- cfr-protections-panel-header = Browse without being followed
- cfr-protections-panel-body = Keep your data to yourself. { -brand-short-name } protects you from many of the most common trackers that follow what you do online.
- cfr-protections-panel-link-text = Learn more

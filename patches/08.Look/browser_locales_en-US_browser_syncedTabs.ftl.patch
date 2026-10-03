@@ -1,6 +1,8 @@
+diff --git a/browser/locales/en-US/browser/syncedTabs.ftl b/browser/locales/en-US/browser/syncedTabs.ftl
+index 9a23fab95f..1e4a7458e0 100644
 --- a/browser/locales/en-US/browser/syncedTabs.ftl
 +++ b/browser/locales/en-US/browser/syncedTabs.ftl
-@@ -1,68 +1,77 @@
+@@ -1,55 +1,52 @@
  # This Source Code Form is subject to the terms of the Mozilla Public
  # License, v. 2.0. If a copy of the MPL was not distributed with this
  # file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -29,35 +31,24 @@
  ## window. The bookmarks manager context's strings are located in places.ftl.
 -
  synced-tabs-context-open =
--    .label = Open
--    .accesskey = O
-+    .label =
-+        Open
-+        .accesskey = O
+     .label = Open
+     .accesskey = O
  synced-tabs-context-open-in-tab =
 -    .label = Open in New Tab
--    .accesskey = w
-+    .label =
-+        Open in New Gorilla Tab
-+        .accesskey = w
++    .label = Open in New Gorilla Tab
+     .accesskey = w
  synced-tabs-context-open-in-container-tab =
 -    .label = Open in New Container Tab
--    .accesskey = i
-+    .label =
-+        Open in New Container Gorilla Tab
-+        .accesskey = i
++    .label = Open in New Container Gorilla Tab
+     .accesskey = i
  synced-tabs-context-open-in-window =
 -    .label = Open in New Window
--    .accesskey = N
-+    .label =
-+        Open in New Gorilla Window
-+        .accesskey = N
++    .label = Open in New Gorilla Window
+     .accesskey = N
  synced-tabs-context-open-in-private-window =
 -    .label = Open in New Private Window
--    .accesskey = P
-+    .label =
-+        Open in New Private Gorilla Window
-+        .accesskey = P
++    .label = Open in New Private Gorilla Window
+     .accesskey = P
  
  ##
 -
@@ -68,50 +59,18 @@
  # consistently with the "Bookmark Tab…" string there.
  synced-tabs-context-bookmark =
 -    .label = Bookmark Tab…
--    .accesskey = B
-+    .label =
-+        Gorilla Bookmark Tab…
-+        .accesskey = B
++    .label = Gorilla Bookmark Tab…
+     .accesskey = B
  synced-tabs-context-copy =
--    .label = Copy
--    .accesskey = C
-+    .label =
-+        Copy
-+        .accesskey = C
+     .label = Copy
+     .accesskey = C
  synced-tabs-context-open-all-in-tabs =
 -    .label = Open All in Tabs
--    .accesskey = O
-+    .label =
-+        Open All in Gorilla Tabs
-+        .accesskey = O
++    .label = Open All in Gorilla Tabs
+     .accesskey = O
  synced-tabs-context-manage-devices =
--    .label = Manage Devices…
--    .accesskey = D
-+    .label =
-+        Manage Devices…
-+        .accesskey = D
- synced-tabs-context-manage-this-device =
--    .label = Manage This Device
--    .accesskey = T
-+    .label =
-+        Manage This Device
-+        .accesskey = T
- synced-tabs-context-connect-another-device =
--    .label = Connect Another Device
--    .accesskey = A
-+    .label =
-+        Connect Another Device
-+        .accesskey = A
- synced-tabs-context-sync-now =
--    .label = Sync Now
--    .accesskey = S
-+    .label =
-+        Sync Now
-+        .accesskey = S
- synced-tabs-fxa-sign-in = Sign in to sync
- synced-tabs-turn-on-sync = Turn on sync
- 
-@@ -70,4 +79,4 @@
+     .label = Manage Devices…
+@@ -70,4 +67,4 @@ synced-tabs-turn-on-sync = Turn on sync
  # send a push to the device to close said tab
  # Variables
  # $deviceName - the name of the device the user is closing a tab for

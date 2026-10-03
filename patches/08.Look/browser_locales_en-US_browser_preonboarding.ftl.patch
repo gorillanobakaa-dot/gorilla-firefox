@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/browser/preonboarding.ftl b/browser/locales/en-US/browser/preonboarding.ftl
+index 9da26db0e9..3f242ffaec 100644
 --- a/browser/locales/en-US/browser/preonboarding.ftl
 +++ b/browser/locales/en-US/browser/preonboarding.ftl
 @@ -1,17 +1,15 @@
@@ -21,7 +23,7 @@
  
  # Label for header style button that toggles showing the Terms of Use
  preonboarding-terms-of-use-header-button-title = Read our Terms of Use
-@@ -33,4 +31,4 @@
+@@ -33,4 +31,4 @@ preonboarding-header-button-description = Read More
  preonboarding-checklist-interaction-data-label = Send technical and interaction data to { -vendor-short-name }
  preonboarding-checklist-interaction-data-description = Data about your device, hardware configuration, and how you use { -brand-product-name } helps improve features, performance, and stability for users everywhere.
  preonboarding-checklist-crash-reports-label = Automatically send crash reports

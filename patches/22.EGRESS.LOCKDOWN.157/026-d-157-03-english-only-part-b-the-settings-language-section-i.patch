@@ -1,0 +1,64 @@
+# Gorilla 157 privacy cut
+# D-157-03 English only (part b): the Settings Language section is hidden. Legacy pane: browserLanguage, websiteLanguage and translations setting-groups and the languagesGroup groupbox lose data-category and gain data-hidden-from-search (the technique Settings uses for retired legacy sections). Redesigned pane: the languages pane keeps only spellCheck; the translations subpage is never visible. Marker GORILLA UNLEASHED - PHYSICAL LOCK: English only.
+# Files: browser/components/preferences/main.inc.xhtml, browser/components/preferences/preferences.js
+
+diff --git a/browser/components/preferences/main.inc.xhtml b/browser/components/preferences/main.inc.xhtml
+index f6badc31b6..fb437455fb 100644
+--- a/browser/components/preferences/main.inc.xhtml
++++ b/browser/components/preferences/main.inc.xhtml
+@@ -60,9 +60,12 @@
+ 
+ 
+ <!-- Languages -->
+-<html:setting-group groupid="browserLanguage" data-srd-migrated="" hidden="true" data-category="paneGeneral"></html:setting-group>
+-<html:setting-group groupid="websiteLanguage" data-srd-migrated="" hidden="true" data-category="paneGeneral"></html:setting-group>
+-<groupbox id="languagesGroup" data-category="paneGeneral" hidden="true" data-srd-groupid="browserLanguage">
++<!-- GORILLA UNLEASHED - PHYSICAL LOCK: English only
++     Decision D-157-03: the Language section (browser language, website languages, translations) is never shown.
++     Same technique Settings uses for a retired legacy section: no data-category, data-hidden-from-search. -->
++<html:setting-group groupid="browserLanguage" data-srd-migrated="" hidden="true" data-hidden-from-search="true"></html:setting-group>
++<html:setting-group groupid="websiteLanguage" data-srd-migrated="" hidden="true" data-hidden-from-search="true"></html:setting-group>
++<groupbox id="languagesGroup" hidden="true" data-hidden-from-search="true" data-srd-groupid="browserLanguage">
+   <label><html:h2 data-l10n-id="language-header"/></label>
+ 
+   <vbox id="browserLanguagesBox" align="start" hidden="true">
+@@ -132,7 +135,8 @@
+ </groupbox>
+ 
+ <!-- This Translations UI is compatible with the settings redesign -->
+-<html:setting-group data-category="paneGeneral" groupid="translations" data-srd-migrated="" hidden="true"/>
++<!-- GORILLA UNLEASHED - PHYSICAL LOCK: English only (Translations group never shown) -->
++<html:setting-group groupid="translations" data-srd-migrated="" hidden="true" data-hidden-from-search="true"/>
+ 
+ <html:setting-group data-category="paneGeneral" groupid="spellCheck" data-srd-migrated="" hidden="true"/>
+ 
+diff --git a/browser/components/preferences/preferences.js b/browser/components/preferences/preferences.js
+index 2cdc0a60a8..33f145c145 100644
+--- a/browser/components/preferences/preferences.js
++++ b/browser/components/preferences/preferences.js
+@@ -348,12 +348,9 @@ const CONFIG_PANES = Object.freeze({
+   languages: {
+     l10nId: "preferences-languages-header3",
+     iconSrc: "chrome://browser/skin/translations.svg",
+-    groupIds: [
+-      "browserLanguage",
+-      "websiteLanguage",
+-      "translations",
+-      "spellCheck",
+-    ],
++    // GORILLA UNLEASHED - PHYSICAL LOCK: English only
++    // Decision D-157-03: no browser-language, website-language or translations groups; spell checking stays.
++    groupIds: ["spellCheck"],
+     module: "chrome://browser/content/preferences/config/languages.mjs",
+     visible: () => srdSectionEnabled("languages"),
+   },
+@@ -493,7 +490,8 @@ const CONFIG_PANES = Object.freeze({
+     ],
+     iconSrc: "chrome://browser/skin/translations.svg",
+     module: "chrome://browser/content/preferences/config/translations.mjs",
+-    visible: () => srdSectionEnabled("translations"),
++    // GORILLA UNLEASHED - PHYSICAL LOCK: English only (the Translations subpage is never shown)
++    visible: () => false,
+   },
+   vpnSiteRules: {
+     parent: "privacy",

@@ -1,5 +1,10 @@
 # Gorilla Unleashed — Firefox 154 patch set
 
+> **This folder now holds the Firefox 157.0 set** (the Windows 157.0 build), not the 154 set
+> described below. Baseline, apply order and the replay proof: [`BASELINE.txt`](BASELINE.txt). The
+> text below is the original 154 guide, kept for its history; `apply.sh` does not yet write
+> `REPLACE_FILES/` or remove the files in `DELETED_FILES.manifest.txt`.
+
 **🧸 In plain words:** this folder is *every change* that turns a normal Firefox 154 into
 Gorilla Unleashed — the hardware-video tuning, the low-RAM prefs, the theme, and the removal of
 telemetry / AI / ads — stored as small text "patch" files. Point them at a clean copy of Firefox

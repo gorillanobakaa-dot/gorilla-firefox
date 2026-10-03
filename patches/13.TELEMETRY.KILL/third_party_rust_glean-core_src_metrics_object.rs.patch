@@ -1,6 +1,8 @@
+diff --git a/third_party/rust/glean-core/src/metrics/object.rs b/third_party/rust/glean-core/src/metrics/object.rs
+index cbb5af36c7..aff1794c2a 100644
 --- a/third_party/rust/glean-core/src/metrics/object.rs
 +++ b/third_party/rust/glean-core/src/metrics/object.rs
-@@ -65,6 +65,7 @@
+@@ -65,6 +65,7 @@ impl ObjectMetric {
      ///
      /// * `value` - the value to set.
      pub fn set(&self, value: JsonValue) {
@@ -8,7 +10,7 @@
          let metric = self.clone();
          crate::launch_with_glean(move |glean| metric.set_sync(glean, value))
      }
-@@ -80,6 +81,7 @@
+@@ -80,6 +81,7 @@ impl ObjectMetric {
      ///
      /// * `object` - JSON representation of the object to set.
      pub fn set_string(&self, object: String) {
@@ -16,7 +18,7 @@
          let metric = self.clone();
          crate::launch_with_glean(move |glean| {
              let object = match serde_json::from_str(&object) {
-@@ -100,6 +102,7 @@
+@@ -100,6 +102,7 @@ impl ObjectMetric {
      // TODO(bug 1691073): This can probably go once we have a more generic mechanism to record
      // errors
      pub fn record_schema_error(&self) {

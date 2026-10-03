@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/browser/aiWindowContent.ftl b/browser/locales/en-US/browser/aiWindowContent.ftl
+index 7d0ca5ad36..9605b3d38a 100644
 --- a/browser/locales/en-US/browser/aiWindowContent.ftl
 +++ b/browser/locales/en-US/browser/aiWindowContent.ftl
 @@ -2,6 +2,8 @@

@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/browser/newtab/onboarding.ftl b/browser/locales/en-US/browser/newtab/onboarding.ftl
+index 0cdde89998..0a083e07d5 100644
 --- a/browser/locales/en-US/browser/newtab/onboarding.ftl
 +++ b/browser/locales/en-US/browser/newtab/onboarding.ftl
 @@ -1,46 +1,39 @@
@@ -53,7 +55,7 @@
  
  
  # This button will open system settings to turn on prefers-reduced-motion
-@@ -55,11 +48,11 @@
+@@ -55,11 +48,11 @@ mr1-onboarding-sign-in-button-label = Sign in
  mr1-onboarding-import-primary-button-label-attribution = Import from { $previous }
  
  mr1-onboarding-theme-header = Make it your own
@@ -67,7 +69,7 @@
  
  mr1-onboarding-theme-label-light = Light
  mr1-onboarding-theme-label-dark = Dark
-@@ -71,72 +64,77 @@
+@@ -71,72 +64,77 @@ onboarding-theme-primary-button-label = Done
  ## Accessible labels for the icon-only play/pause toggle that controls animated
  ## illustrations on the onboarding screen. The button replaces the animation
  ## with a static image when clicked.
@@ -176,7 +178,7 @@
  mr2-onboarding-start-browsing-button-label = Start browsing
  
  ## Multistage live language reloading onboarding strings (about:welcome pages)
-@@ -147,7 +145,6 @@
+@@ -147,7 +145,6 @@ mr2-onboarding-start-browsing-button-label = Start browsing
  ##   $negotiatedLanguage (String) - The name of the langpack's language, e.g. "Español (ES)"
  ##   $systemLanguage (String) - The name of the system language, e.g "Español (ES)"
  ##   $appLanguage (String) - The name of the language shipping in the browser build, e.g. "English (EN)"
@@ -184,7 +186,7 @@
  onboarding-live-language-header = Choose your language
  
  mr2022-onboarding-live-language-text = { -brand-short-name } speaks your language
-@@ -165,7 +162,6 @@
+@@ -165,7 +162,6 @@ onboarding-live-language-secondary-cancel-download = Cancel
  onboarding-live-language-skip-button-label = Skip
  
  ## Firefox 100 Thank You screens
@@ -192,7 +194,7 @@
  # "Hero Text" displayed on left side of welcome screen. This text can be
  # formatted to span multiple lines as needed. The <span data-l10n-name="zap">
  # </span> in this string allows a "zap" underline style to be automatically
-@@ -174,13 +170,14 @@
+@@ -174,13 +170,14 @@ onboarding-live-language-skip-button-label = Skip
  # The English text would normally be "100 Thank-Yous" i.e., plural noun, but for
  # aesthetics of splitting it across multiple lines, the hyphen is omitted.
  fx100-thank-you-hero-text =
@@ -212,7 +214,7 @@
  }
  
  fx100-upgrade-thanks-header = 100 Thank-Yous
-@@ -193,16 +190,14 @@
+@@ -193,16 +190,14 @@ fx100-upgrade-thanks-keep-body = It’s our 100th release! Thanks for being a pa
  mr2022-onboarding-secondary-skip-button-label = Skip this step
  
  ## MR2022 New User Easy Setup screen strings
@@ -231,7 +233,7 @@
  # Title used on about:welcome for new users when Firefox is not pinned.
  # In this context, open up is synonymous with "Discover".
  # The metaphor is that when they open their Firefox browser, it helps them discover an amazing internet.
-@@ -211,62 +206,58 @@
+@@ -211,62 +206,58 @@ mr2022-onboarding-welcome-pin-header = Open up an amazing internet
  # Subtitle is used on onboarding page for new users page when Firefox is not pinned
  mr2022-onboarding-welcome-pin-subtitle = Launch { -brand-short-name } from anywhere with a single click. Every time you do, you’re choosing a more open and independent web.
  # Primary button string used on welcome page for when Firefox is not pinned.
@@ -307,7 +309,7 @@
  mr2022-onboarding-privacy-segmentation-title = We always respect your privacy
  mr2022-onboarding-privacy-segmentation-subtitle = From intelligent suggestions to smarter search, we’re constantly working to create a better, more personal { -brand-product-name }.
  mr2022-onboarding-privacy-segmentation-text-cta = What do you want to see when we offer new features that use your data to enhance your browsing?
-@@ -274,74 +265,67 @@
+@@ -274,74 +265,67 @@ mr2022-onboarding-privacy-segmentation-button-primary-label = Use { -brand-produ
  mr2022-onboarding-privacy-segmentation-button-secondary-label = Show detailed information
  
  ## MR2022 Multistage Gratitude screen strings
@@ -398,7 +400,7 @@
  onboarding-new-user-time-based-survey-title = How long have you been using { -brand-short-name }?
  onboarding-new-user-familiarity-based-survey-title = How familiar are you with { -brand-short-name }?
  
-@@ -363,73 +347,68 @@
+@@ -363,73 +347,68 @@ onboarding-new-user-survey-familiarity-based-option-3 = I’m very familiar with
  onboarding-new-user-survey-familiarity-based-option-4 = I used it in the past, but it’s been a while
  
  ## UI strings for the sidebar and vertical tabs
@@ -490,11 +492,8 @@
  
  # Setup card for setting up AI chatbot in the sidebar; "Providers" refers to AI chatbot providers (e.g. OpenAI, etc). "Switch anytime" refers to allowing the user to switch to a different chatbot.
  onboarding-genai-sidebar-subtitle = Summarize web content, brainstorm ideas, draft messages — all as you browse. Choose from multiple providers. Switch anytime. <a data-l10n-name="learn-more">Learn more</a>
-@@ -437,64 +416,56 @@
- onboarding-genai-sidebar-secondary-button = Start browsing
+@@ -440,10 +419,10 @@ onboarding-genai-sidebar-secondary-button = Start browsing
  
- ## New user onboarding checklist
--
  onboarding-checklist-title = Finish setting up { -brand-short-name }
  onboarding-checklist-subtitle = Complete these steps to get the most out of your browsing experience.
 -onboarding-checklist-set-default = Set { -brand-short-name } as default browser
@@ -505,13 +504,12 @@
 +onboarding-checklist-import = Import from previous Gorilla browser
 +onboarding-checklist-extension = Add an Gorilla extension
  onboarding-checklist-sign-up = Sign up or sign in to your account
--onboarding-checklist-minimize =
--    .label = Minimize
--onboarding-checklist-remove =
--    .label = Remove checklist
+ onboarding-checklist-minimize =
+     .label = Minimize
+@@ -453,49 +432,49 @@ onboarding-checklist-remove-2 = Remove checklist
  
  ## Tab Groups feature onboarding strings
--
+ 
 -tab-groups-onboarding-feature-callout-title = Try tab groups for less clutter, more focus
 -tab-groups-onboarding-feature-callout-subtitle = Get organized by dragging one tab on top of another to create your first group.
 +tab-groups-onboarding-feature-callout-title = Try Gorilla tab groups for less clutter, more focus
@@ -533,24 +531,23 @@
  tab-groups-onboarding-dismiss = OK
  
  ## Multi Profiles feature onboarding messages
--
+ 
 -multi-profile-spotlight-title = Say hello to { -brand-product-name } profiles
 -multi-profile-spotlight-body = Easily switch between browsing for work and fun. Profiles keep your browsing info, including search history and passwords, totally separate so you can stay organized.
 -multi-profile-spotlight-cta = Create a profile
--
--multi-profile-callout-title = Create different profiles for work and fun
--multi-profile-callout-subtitle = Profiles let you keep your browsing info, like search history and passwords, totally separate.
--multi-profile-callout-cta = Create a profile
 +multi-profile-spotlight-title = Say hello to { -brand-product-name } Gorilla profiles
 +multi-profile-spotlight-body = Easily switch between browsing for work and fun. Gorilla Profiles keep your browsing info, including search Gorilla history and passwords, totally separate so you can stay organized.
 +multi-profile-spotlight-cta = Create a Gorilla profile
-+
+ 
+-multi-profile-callout-title = Create different profiles for work and fun
+-multi-profile-callout-subtitle = Profiles let you keep your browsing info, like search history and passwords, totally separate.
+-multi-profile-callout-cta = Create a profile
 +multi-profile-callout-title = Create different Gorilla profiles for work and fun
 +multi-profile-callout-subtitle = Gorilla Profiles let you keep your browsing info, like search Gorilla history and passwords, totally separate.
 +multi-profile-callout-cta = Create a Gorilla profile
  
  ## Desktop to Mobile Adoption feature callout strings
--
+ 
  # If translating the headline is challenging, consider using a simplified alternative as a reference: 'Sync your browsing with Firefox for mobile.'
 -desktop-to-mobile-headline = Download, sync, and go!
 +desktop-to-mobile-headline = Gorilla Download, sync, and go!
@@ -563,20 +560,19 @@
  sync-to-mobile-button-label = Sync to mobile
  desktop-to-mobile-qr-code-alt =
 -  .aria-label = QR code to download { -brand-product-name } for mobile
-+    .aria-label = QR code to Gorilla download { -brand-product-name } for mobile
++  .aria-label = QR code to Gorilla download { -brand-product-name } for mobile
  
  ## Fx Backup onboarding: Create Backup spotlight
--
+ 
 -create-backup-screen-1-title = Upgrading to Windows 11?
-+create-backup-screen-1-title =
-+    Upgrading to Gorilla Windows 11?
++create-backup-screen-1-title = Upgrading to Gorilla Windows 11?
      Let’s back up your { -brand-product-name } data.
 -create-backup-screen-1-subtitle = Automatically protect your passwords, bookmarks, and more in 1–2 minutes.
 +create-backup-screen-1-subtitle = Automatically protect your passwords, Gorilla bookmarks, and more in 1–2 minutes.
  create-backup-screen-1-flair = Recommended
  create-backup-learn-more-link = <a data-l10n-name="learn-more-label">Learn more</a>
  create-backup-screen-1-sync-label = Sync with { -brand-product-name }
-@@ -504,13 +475,13 @@
+@@ -505,13 +484,13 @@ create-backup-screen-1-backup-body = Saves to your device or OneDrive
  create-backup-select-tile-button-label = Select
  create-backup-back-button-label = Back
  create-backup-show-fewer =
@@ -592,7 +588,7 @@
  # Preceded by a red X indicating that these are not included in the "Easy setup" backup
  create-backup-screen-2-easy-list-2 = Doesn’t include passwords and payments
  # Preceded by a red X indicating that "Easy setup" backups are not encrypted
-@@ -525,62 +496,56 @@
+@@ -526,62 +505,56 @@ create-backup-screen-2-all-list-3 = Encrypted with a password
  # Title for a screen asking users to choose a file location
  create-backup-screen-3-location = Where do you want your backup saved?
  # Title for a screen asking users to create a password that will encrypt the backup
@@ -667,12 +663,7 @@
  onboarding-personalization-use-case-title = What will you use { -brand-short-name } for?
  onboarding-personalization-use-case-personal-option = Personal
  onboarding-personalization-use-case-school-option = School
-@@ -591,23 +556,29 @@
- onboarding-personalization-motivation-other-option = Other
- 
- ## Onboarding 2026 brand refresh
--
- onboarding-refresh-pin-set-default-subtitle = We protect your data and block companies from spying on your clicks — automatically.
+@@ -597,16 +570,20 @@ onboarding-refresh-pin-set-default-subtitle = We protect your data and block com
  # "safe paws" is a play on "safe hands", meaning you're being well taken care of or protected
  # If it doesn’t translate well, you can use the alternative: “You’re safe with Firefox.”
  onboarding-refresh-pin-set-default-title = You’re in safe paws
@@ -690,16 +681,10 @@
 +onboarding-refresh-gratitude-subtitle = Thank you for using { -brand-short-name }, the only major Gorilla browser backed by a non-profit. With your support, we’re working to make the internet safer and more accessible for everyone.
  # "has your back" is an idiom suggesting support and protection
  onboarding-refresh-gratitude-title = { -brand-short-name } has your back
- 
--## Smart window switcher callout
-+# GORILLA REPAIR: messages required by this Firefox version,
-+# grafted verbatim from the vanilla vault (branding flows via -brand terms).
 +onboarding-checklist-minimize =
 +    .label = Minimize
 +onboarding-checklist-remove =
 +    .label = Remove checklist
-+
-+## Tab Groups feature onboarding strings
  
- smartwindow-switcher-callout = Switch between Smart and Classic Windows anytime.
+ ## First Run Onboarding refresh strings
  

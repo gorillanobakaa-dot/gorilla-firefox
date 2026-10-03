@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/browser/panicButton.ftl b/browser/locales/en-US/browser/panicButton.ftl
+index e4b0f2ef20..9eccf5b9f8 100644
 --- a/browser/locales/en-US/browser/panicButton.ftl
 +++ b/browser/locales/en-US/browser/panicButton.ftl
 @@ -1,8 +1,7 @@
@@ -10,7 +12,7 @@
  panic-button-undo-warning = This action cannot be undone.
  panic-button-forget-button =
      .label = Forget!
-@@ -10,7 +9,6 @@
+@@ -10,7 +9,6 @@ panic-button-forget-button =
  ## These strings are combined to form a complete sentence starting with
  ## panic-main-timeframe-desc. For example: "Forget the last: Five minutes".
  ## Please ensure that this remains the case in the translation.
@@ -18,7 +20,7 @@
  panic-main-timeframe-desc = Forget the last:
  panic-button-5min =
      .label = Five minutes
-@@ -24,8 +22,7 @@
+@@ -24,8 +22,7 @@ panic-button-day =
  ## Please ensure that this remains the case in the translation.
  ## Note also that some strings include <strong> tags for emphasis on the
  ## words "Cookies", "History", "Tabs" and "Windows". The translation should do the same.

@@ -1,3 +1,5 @@
+diff --git a/third_party/rust/glean-core/.cargo-checksum.json b/third_party/rust/glean-core/.cargo-checksum.json
+index fe05288eb5..f0e3e60bea 100644
 --- a/third_party/rust/glean-core/.cargo-checksum.json
 +++ b/third_party/rust/glean-core/.cargo-checksum.json
 @@ -1 +1 @@

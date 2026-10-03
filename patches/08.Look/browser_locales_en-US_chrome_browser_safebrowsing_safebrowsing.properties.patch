@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/chrome/browser/safebrowsing/safebrowsing.properties b/browser/locales/en-US/chrome/browser/safebrowsing/safebrowsing.properties
+index aa72ddbffd..26a6f4c8bf 100644
 --- a/browser/locales/en-US/chrome/browser/safebrowsing/safebrowsing.properties
 +++ b/browser/locales/en-US/chrome/browser/safebrowsing/safebrowsing.properties
 @@ -1,6 +1,5 @@

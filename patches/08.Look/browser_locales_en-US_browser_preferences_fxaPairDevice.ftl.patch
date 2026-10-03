@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/browser/preferences/fxaPairDevice.ftl b/browser/locales/en-US/browser/preferences/fxaPairDevice.ftl
+index 9090377b52..f5ff62c225 100644
 --- a/browser/locales/en-US/browser/preferences/fxaPairDevice.ftl
 +++ b/browser/locales/en-US/browser/preferences/fxaPairDevice.ftl
 @@ -1,7 +1,6 @@

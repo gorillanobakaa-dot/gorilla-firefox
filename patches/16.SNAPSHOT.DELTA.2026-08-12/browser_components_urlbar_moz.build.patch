@@ -1,13 +1,15 @@
+diff --git a/browser/components/urlbar/moz.build b/browser/components/urlbar/moz.build
+index 97d734c9a1..620855be5a 100644
 --- a/browser/components/urlbar/moz.build
 +++ b/browser/components/urlbar/moz.build
-@@ -17,14 +17,12 @@
+@@ -19,14 +19,12 @@ MOZ_SRC_FILES += [
      "MerinoClient.sys.mjs",
      "QuickActionsLoaderDefault.sys.mjs",
      "QuickSuggest.sys.mjs",
 -    "SmartbarMentionsPanelSearch.sys.mjs",
      "UrlbarMuxerStandard.sys.mjs",
+     "UrlbarNewTabComponentRegistrant.sys.mjs",
      "UrlbarParentController.sys.mjs",
-     "UrlbarParentControllerProxy.sys.mjs",
      "UrlbarPrefs.sys.mjs",
      "UrlbarProviderAboutPages.sys.mjs",
      "UrlbarProviderActionsSearchMode.sys.mjs",
@@ -15,7 +17,7 @@
      "UrlbarProviderAliasEngines.sys.mjs",
      "UrlbarProviderAutofill.sys.mjs",
      "UrlbarProviderBookmarkKeywords.sys.mjs",
-@@ -71,11 +69,9 @@
+@@ -73,11 +71,9 @@ MOZ_SRC_FILES += [
      "private/ImpressionCaps.sys.mjs",
      "private/MarketSuggestions.sys.mjs",
      "private/MDNSuggestions.sys.mjs",

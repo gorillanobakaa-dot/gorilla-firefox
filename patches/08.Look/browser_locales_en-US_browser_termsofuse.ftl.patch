@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/browser/termsofuse.ftl b/browser/locales/en-US/browser/termsofuse.ftl
+index a5e181a01a..c6e270e735 100644
 --- a/browser/locales/en-US/browser/termsofuse.ftl
 +++ b/browser/locales/en-US/browser/termsofuse.ftl
 @@ -1,9 +1,7 @@
@@ -10,7 +12,7 @@
  #  Full infobar message, with inline links to the Terms of Use and Privacy Notice that will be added at runtime.
  existing-user-tou-message = <strong>Update</strong> We’ve introduced a { -brand-short-name } <a data-l10n-name="terms-of-use-link">Terms of Use</a> and updated our <a data-l10n-name="privacy-notice-link">Privacy Notice</a>. Please take a moment to review and accept.
  
-@@ -17,7 +15,6 @@
+@@ -17,7 +15,6 @@ existing-user-tou-learn-more = Learn more
  existing-user-tou-accept = Accept
  
  ## Existing User Terms of Use Spotlight

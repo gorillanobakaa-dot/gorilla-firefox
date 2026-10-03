@@ -1,3 +1,5 @@
+diff --git a/browser/themes/addons/moz.build b/browser/themes/addons/moz.build
+index 1ba7b0ebab..f8a9e344ef 100644
 --- a/browser/themes/addons/moz.build
 +++ b/browser/themes/addons/moz.build
 @@ -4,15 +4,7 @@
@@ -17,7 +19,7 @@
  
  GeneratedFile(
      "privatewindow/manifest.json",
-@@ -24,19 +16,4 @@
+@@ -24,24 +16,4 @@ GeneratedFile(
      ],
  )
  
@@ -29,10 +31,15 @@
 -        "aiwindow-nova/manifest.in.json",
 -        "/browser/themes/shared/tabbrowser/tab.nova.tokens.json",
 -        "/browser/themes/shared/urlbar/urlbarview.tokens.json",
--        "/toolkit/themes/shared/design-system/src/tokens/base/background.nova.tokens.json",
+-        "/toolkit/themes/shared/design-system/src/tokens/base/background.tokens.json",
 -        "/toolkit/themes/shared/design-system/src/tokens/base/color.tokens.json",
 -        "/toolkit/themes/shared/design-system/src/tokens/base/color.nova.tokens.json",
--        "/toolkit/themes/shared/design-system/src/tokens/base/text.nova.tokens.json",
+-        "/toolkit/themes/shared/design-system/src/tokens/base/focus.tokens.json",
+-        "/toolkit/themes/shared/design-system/src/tokens/base/text.tokens.json",
+-        "/toolkit/themes/shared/design-system/src/tokens/components/card.tokens.json",
+-        "/toolkit/themes/shared/design-system/src/tokens/components/card.nova.tokens.json",
+-        "/toolkit/themes/shared/design-system/src/tokens/components/sidebar.tokens.json",
+-        "/toolkit/themes/shared/design-system/src/tokens/components/toolbar.tokens.json",
 -        "/toolkit/themes/shared/design-system/src/tokens/components/toolbar.nova.tokens.json",
 -        "/toolkit/themes/shared/design-system/src/tokens/components/toolbarbutton.nova.tokens.json",
 -    ],

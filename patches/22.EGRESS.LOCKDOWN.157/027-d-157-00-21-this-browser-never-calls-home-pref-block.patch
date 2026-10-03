@@ -1,0 +1,103 @@
+# Gorilla 157 privacy cut
+# D-157-00..21: THIS BROWSER NEVER CALLS HOME pref block
+# Files: browser/app/profile/firefox.js
+
+diff --git a/browser/app/profile/firefox.js b/browser/app/profile/firefox.js
+index 2685e67126..dd359322e7 100644
+--- a/browser/app/profile/firefox.js
++++ b/browser/app/profile/firefox.js
+@@ -4091,3 +4091,94 @@ pref("identity.fxaccounts.enabled", false, locked);
+ // 2048 is what every Linux build ships. See NOT_HARDENING in
+ // working scripts/fix_prefs_last_wins.py.
+ pref("network.captive-portal-service.enabled", false, locked);
++
++// -- GORILLA 2026-10-02: THIS BROWSER NEVER CALLS HOME -------------------------------------------------------------
++// Maintainer's decisions D-157-03 to D-157-07 and D-157-12 to D-157-24 (Gorilla.firefox/decisions/PRODUCT-DECISIONS.yaml).
++// Last in the file on purpose: Mozilla's RELEASE_OR_BETA block earlier in this file re-enabled the language switcher.
++// The one accepted compromise is video (Widevine, OpenH264), downloaded only when a page needs it.
++
++// D-157-03 English only
++pref("intl.multilingual.enabled", false, locked);
++pref("intl.multilingual.downloadEnabled", false, locked);
++
++// D-157-04 one theme: the frame is always dark
++pref("ui.systemUsesDarkTheme", 1, locked);
++pref("browser.theme.content-theme", 0, locked);
++pref("browser.theme.toolbar-theme", 0, locked);
++
++// D-157-05 uBlock only: no chrome-privileged console, no remote debugging
++pref("devtools.chrome.enabled", false, locked);
++pref("devtools.debugger.remote-enabled", false, locked);
++
++// D-157-06 fingerprinting (local time, page dark mode and per-site zoom kept)
++pref("privacy.fingerprintingProtection", true, locked);
++pref("privacy.resistFingerprinting", false);
++pref("privacy.resistFingerprinting.letterboxing", false);
++pref("webgl.enable-debug-renderer-info", false, locked);
++pref("media.peerconnection.ice.no_host", true, locked);
++pref("device.sensors.enabled", false, locked);
++
++// D-157-07 revocation offline only: never ask a certificate authority
++pref("security.OCSP.enabled", 0, locked);
++pref("security.OCSP.require", false, locked);
++
++// D-157-13 no location, ever (desktop browser)
++pref("geo.enabled", false, locked);
++pref("geo.provider.ms-windows-location", false, locked);
++pref("geo.provider.use_winrt", false, locked);
++pref("geo.provider.network.url", "", locked);
++pref("permissions.default.geo", 2, locked);
++
++// D-157-14 no speculative connections, prefetch, pings or beacons
++pref("browser.urlbar.speculativeConnect.enabled", false, locked);
++pref("browser.places.speculativeConnect.enabled", false, locked);
++pref("network.http.speculative-parallel-limit", 0, locked);
++pref("network.dns.disablePrefetch", true, locked);
++pref("network.dns.disablePrefetchFromHTTPS", true, locked);
++pref("network.prefetch-next", false, locked);
++pref("browser.urlbar.dnsResolveSingleWordsAfterSearch", 0, locked);
++pref("browser.send_pings", false, locked);
++pref("beacon.enabled", false, locked);
++
++// D-157-15 no MITM-detection ping to Mozilla
++pref("security.certerrors.mitm.priming.enabled", false, locked);
++pref("security.certerrors.mitm.priming.endpoint", "", locked);
++
++// D-157-16 web pages may not probe the local network without asking
++pref("network.lna.blocking", true, locked);
++
++// D-157-17 Windows: no single sign-on, no Windows certificate store (antivirus/proxy interception roots)
++pref("network.http.windows-sso.enabled", false, locked);
++pref("network.http.microsoft-entra-sso.enabled", false, locked);
++pref("security.enterprise_roots.enabled", false, locked);
++pref("security.certerrors.mitm.auto_enable_enterprise_roots", false, locked);
++
++// D-157-18 no third-party DNS (no DNS-over-HTTPS rollout to Cloudflare)
++pref("network.trr.mode", 5, locked);
++
++// D-157-19 no remote download verdicts, no search-engine or region fetches
++pref("browser.safebrowsing.downloads.remote.enabled", false, locked);
++pref("browser.safebrowsing.downloads.remote.url", "", locked);
++pref("browser.search.suggest.enabled", false, locked);
++pref("browser.urlbar.suggest.searches", false, locked);
++pref("browser.search.update", false, locked);
++pref("browser.region.update.enabled", false, locked);
++pref("browser.region.network.url", "", locked);
++
++// D-157-20 no backup feature (its default folder is OneDrive), no profile manager (its tour loads CDN images)
++pref("browser.backup.enabled", false, locked);
++pref("browser.backup.scheduled.enabled", false, locked);
++pref("browser.profiles.enabled", false, locked);
++
++// D-157-21 no add-on or usage reporting machinery, even dormant
++pref("extensions.update.enabled", false, locked);
++pref("extensions.systemAddon.update.enabled", false, locked);
++pref("extensions.getAddons.cache.enabled", false, locked);
++pref("datareporting.usage.uploadEnabled", false, locked);
++pref("network.connectivity-service.enabled", false, locked);
++
++// D-157-12 the compromise: video for YouTube, Netflix and calls (fetched only when a page needs it)
++pref("media.eme.enabled", true, locked);
++pref("media.gmp-widevinecdm.enabled", true, locked);
++pref("media.gmp-gmpopenh264.enabled", true, locked);
++// -- end GORILLA 2026-10-02 ------------------------------------------------------------------------------------------

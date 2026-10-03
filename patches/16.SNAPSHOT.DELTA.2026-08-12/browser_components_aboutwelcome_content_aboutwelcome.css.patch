@@ -1,6 +1,8 @@
+diff --git a/browser/components/aboutwelcome/content/aboutwelcome.css b/browser/components/aboutwelcome/content/aboutwelcome.css
+index 6b2ab71d49..c515b4765f 100644
 --- a/browser/components/aboutwelcome/content/aboutwelcome.css
 +++ b/browser/components/aboutwelcome/content/aboutwelcome.css
-@@ -4413,3 +4413,20 @@
+@@ -5197,3 +5197,20 @@ html {
    padding: 0 4px;
    gap: 8px;
  }

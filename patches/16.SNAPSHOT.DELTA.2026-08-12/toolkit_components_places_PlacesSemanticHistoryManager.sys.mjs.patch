@@ -1,9 +1,11 @@
+diff --git a/toolkit/components/places/PlacesSemanticHistoryManager.sys.mjs b/toolkit/components/places/PlacesSemanticHistoryManager.sys.mjs
+index 52e087aaf4..502cb3c423 100644
 --- a/toolkit/components/places/PlacesSemanticHistoryManager.sys.mjs
 +++ b/toolkit/components/places/PlacesSemanticHistoryManager.sys.mjs
-@@ -232,6 +232,16 @@
-       return;
-     }
- 
+@@ -232,6 +232,16 @@ class PlacesSemanticHistoryManager {
+     });
+     this.qualifiedForSemanticSearch =
+       this.embedder.isEnoughPhysicalMemoryAvailable() &&
 +    // GORILLA OVERRIDE: ml stack excised — the embeddings generator no
 +    // longer exists. Finalize immediately: every capability getter reports
 +    // false and the urlbar semantic provider stays inactive (it used to
@@ -14,6 +16,6 @@
 +    if (true) {
 +      return;
 +    }
-     this.embedder = lazy.EmbeddingsGenerator.forPlaces();
-     this.semanticDB = new lazy.PlacesSemanticHistoryDatabase({
-       embeddingSize: this.embedder.embeddingSize,
+       this.embedder.isEnoughCpuCoresAvailable();
+ 
+     lazy.AsyncShutdown.appShutdownConfirmed.addBlocker(

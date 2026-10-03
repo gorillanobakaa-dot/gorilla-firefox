@@ -1,7 +1,9 @@
+diff --git a/browser/components/tabbrowser/content/tabgroup-menu.js b/browser/components/tabbrowser/content/tabgroup-menu.js
+index 8ffbccbab6..54a4ada1a3 100644
 --- a/browser/components/tabbrowser/content/tabgroup-menu.js
 +++ b/browser/components/tabbrowser/content/tabgroup-menu.js
 @@ -17,12 +17,8 @@
-     "moz-src:///browser/components/contentsharing/ContentSharingUtils.sys.mjs"
+     "moz-src:///browser/components/sharing/ContentSharingUtils.sys.mjs"
    );
  
 -  ChromeUtils.importESModule(
@@ -15,7 +17,7 @@
  
    class MozTabbrowserTabGroupMenu extends MozXULElement {
      static COLORS = [
-@@ -647,91 +643,8 @@
+@@ -649,91 +645,8 @@
        if (!this.smartTabGroupsEnabled || this.#smartTabGroupsInitiated) {
          return;
        }

@@ -1,3 +1,5 @@
+diff --git a/toolkit/locales/en-US/toolkit/intl/regionNames.ftl b/toolkit/locales/en-US/toolkit/intl/regionNames.ftl
+index 1ab7a5aec9..f3c9baf2c1 100644
 --- a/toolkit/locales/en-US/toolkit/intl/regionNames.ftl
 +++ b/toolkit/locales/en-US/toolkit/intl/regionNames.ftl
 @@ -1,10 +1,8 @@

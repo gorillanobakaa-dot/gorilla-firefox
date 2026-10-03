@@ -1,6 +1,8 @@
+diff --git a/toolkit/content/aboutTelemetry.css b/toolkit/content/aboutTelemetry.css
+index b80c18307d..073c8f3049 100644
 --- a/toolkit/content/aboutTelemetry.css
 +++ b/toolkit/content/aboutTelemetry.css
-@@ -341,3 +341,9 @@
+@@ -341,3 +341,9 @@ caption {
  .clearfix {
    clear: both;
  }

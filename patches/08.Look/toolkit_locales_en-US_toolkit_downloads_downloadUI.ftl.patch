@@ -1,3 +1,5 @@
+diff --git a/toolkit/locales/en-US/toolkit/downloads/downloadUI.ftl b/toolkit/locales/en-US/toolkit/downloads/downloadUI.ftl
+index 23dbbe5031..1a166054d4 100644
 --- a/toolkit/locales/en-US/toolkit/downloads/downloadUI.ftl
 +++ b/toolkit/locales/en-US/toolkit/downloads/downloadUI.ftl
 @@ -1,51 +1,48 @@

@@ -1,3 +1,5 @@
+diff --git a/toolkit/locales/en-US/toolkit/webauthnDialog.ftl b/toolkit/locales/en-US/toolkit/webauthnDialog.ftl
+index 9de37dd2b3..6d7e28beed 100644
 --- a/toolkit/locales/en-US/toolkit/webauthnDialog.ftl
 +++ b/toolkit/locales/en-US/toolkit/webauthnDialog.ftl
 @@ -1,13 +1,12 @@
@@ -16,7 +18,7 @@
      }
  webauthn-pin-invalid-short-prompt = Incorrect PIN. Try again.
  webauthn-pin-required-prompt = Please enter the PIN for your device.
-@@ -25,13 +24,12 @@
+@@ -25,13 +24,12 @@ webauthn-specific-passkey-label = Passkey for { $domain }
  #  $retriesLeft (Number): number of tries left
  webauthn-uv-invalid-long-prompt =
      { $retriesLeft ->
@@ -32,7 +34,7 @@
  # Variables:
  #  $hostname (String): the origin (website) asking for the security key.
  webauthn-user-presence-prompt = Touch your security key to continue with { $hostname }.
-@@ -45,36 +43,27 @@
+@@ -45,36 +43,27 @@ webauthn-user-presence-prompt = Touch your security key to continue with { $host
  # for different accounts on this website.
  # Variables:
  #  $hostname (String): the origin (website) asking for the extended information.

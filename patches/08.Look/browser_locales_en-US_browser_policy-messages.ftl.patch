@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/browser/policy-messages.ftl b/browser/locales/en-US/browser/policy-messages.ftl
+index a9d40b8223..889b5b1038 100644
 --- a/browser/locales/en-US/browser/policy-messages.ftl
 +++ b/browser/locales/en-US/browser/policy-messages.ftl
 @@ -1,6 +1,5 @@

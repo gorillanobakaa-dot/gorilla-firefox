@@ -1,6 +1,8 @@
+diff --git a/third_party/moz.build b/third_party/moz.build
+index d874904357..6cda6f4b95 100644
 --- a/third_party/moz.build
 +++ b/third_party/moz.build
-@@ -121,8 +121,7 @@
+@@ -127,8 +127,7 @@ with Files("fmt"):
  with Files("zucchini/**"):
      BUG_COMPONENT = ("Toolkit", "Application Update")
  

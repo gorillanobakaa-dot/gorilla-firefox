@@ -1,3 +1,5 @@
+diff --git a/toolkit/locales/en-US/toolkit/global/mozBadge.ftl b/toolkit/locales/en-US/toolkit/global/mozBadge.ftl
+index 03142b1e9f..fafd8a9a71 100644
 --- a/toolkit/locales/en-US/toolkit/global/mozBadge.ftl
 +++ b/toolkit/locales/en-US/toolkit/global/mozBadge.ftl
 @@ -1,9 +1,7 @@

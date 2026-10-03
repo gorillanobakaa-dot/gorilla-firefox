@@ -1,3 +1,5 @@
+diff --git a/toolkit/locales/en-US/chrome/mozapps/profile/profileSelection.properties b/toolkit/locales/en-US/chrome/mozapps/profile/profileSelection.properties
+index ea081ac894..254ef23158 100644
 --- a/toolkit/locales/en-US/chrome/mozapps/profile/profileSelection.properties
 +++ b/toolkit/locales/en-US/chrome/mozapps/profile/profileSelection.properties
 @@ -1,55 +1,53 @@
@@ -34,33 +36,30 @@
  
 -profileNameInvalidTitle=Invalid profile name
 -profileNameInvalid=The profile name “%S” is not allowed.
--
++profileNameInvalidTitle=Invalid Gorilla profile name
++profileNameInvalid=The Gorilla profile name “%S” is not allowed.
+ 
 -chooseFolder=Choose Profile Folder
 -profileNameEmpty=An empty profile name is not allowed.
 -invalidChar=The character “%S” is not allowed in profile names. Please choose a different name.
--
++chooseFolder=Choose Gorilla Profile Folder
++profileNameEmpty=An empty Gorilla profile name is not allowed.
++invalidChar=The character “%S” is not allowed in Gorilla profile names. Please choose a different name.
+ 
 -deleteTitle=Delete Profile
 -deleteProfileConfirm=Deleting a profile will remove the profile from the list of available profiles and cannot be undone.\nYou may also choose to delete the profile data files, including your settings, certificates and other user-related data. This option will delete the folder “%S” and cannot be undone.\nWould you like to delete the profile data files?
 -deleteFiles=Delete Files
 -dontDeleteFiles=Don’t Delete Files
--
++deleteTitle=Delete Gorilla Profile
++deleteProfileConfirm=Deleting a Gorilla profile will remove the Gorilla profile from the list of available Gorilla profiles and cannot be undone.\nYou may also choose to delete the Gorilla profile data Gorilla files, including your Gorilla settings, certificates and other user-related data. This option will delete the folder “%S” and cannot be undone.\nWould you like to delete the Gorilla profile data Gorilla files?
++deleteFiles=Delete Gorilla Files
++dontDeleteFiles=Don’t Delete Gorilla Files
+ 
 -profileCreationFailed=Profile couldn’t be created. Probably the chosen folder isn’t writable.
 -profileCreationFailedTitle=Profile Creation failed
 -profileExists=A profile with this name already exists. Please choose another name.
 -profileFinishText=Click Finish to create this new profile.
 -profileFinishTextMac=Click Done to create this new profile.
-+profileNameInvalidTitle=Invalid Gorilla profile name
-+profileNameInvalid=The Gorilla profile name “%S” is not allowed.
-+
-+chooseFolder=Choose Gorilla Profile Folder
-+profileNameEmpty=An empty Gorilla profile name is not allowed.
-+invalidChar=The character “%S” is not allowed in Gorilla profile names. Please choose a different name.
-+
-+deleteTitle=Delete Gorilla Profile
-+deleteProfileConfirm=Deleting a Gorilla profile will remove the Gorilla profile from the list of available Gorilla profiles and cannot be undone.\nYou may also choose to delete the Gorilla profile data Gorilla files, including your Gorilla settings, certificates and other user-related data. This option will delete the folder “%S” and cannot be undone.\nWould you like to delete the Gorilla profile data Gorilla files?
-+deleteFiles=Delete Gorilla Files
-+dontDeleteFiles=Don’t Delete Gorilla Files
-+
 +profileCreationFailed=Gorilla Profile couldn’t be created. Probably the chosen folder isn’t writable.
 +profileCreationFailedTitle=Gorilla Profile Creation failed
 +profileExists=A Gorilla profile with this name already exists. Please choose another name.

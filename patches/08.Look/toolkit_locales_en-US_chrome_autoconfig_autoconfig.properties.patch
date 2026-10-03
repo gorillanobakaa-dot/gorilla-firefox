@@ -1,3 +1,5 @@
+diff --git a/toolkit/locales/en-US/chrome/autoconfig/autoconfig.properties b/toolkit/locales/en-US/chrome/autoconfig/autoconfig.properties
+index 7c5e15ea18..633ca30e17 100644
 --- a/toolkit/locales/en-US/chrome/autoconfig/autoconfig.properties
 +++ b/toolkit/locales/en-US/chrome/autoconfig/autoconfig.properties
 @@ -1,12 +1,11 @@

@@ -1,6 +1,8 @@
+diff --git a/third_party/rust/glean-core/src/metrics/event.rs b/third_party/rust/glean-core/src/metrics/event.rs
+index 9a1f59091a..b16cfd10d2 100644
 --- a/third_party/rust/glean-core/src/metrics/event.rs
 +++ b/third_party/rust/glean-core/src/metrics/event.rs
-@@ -55,6 +55,7 @@
+@@ -55,6 +55,7 @@ impl EventMetric {
      ///             Keys must be one of the allowed extra keys.
      ///             If any key is not allowed, an error is reported and no event is recorded.
      pub fn record(&self, extra: HashMap<String, String>) {
@@ -8,7 +10,7 @@
          let timestamp = crate::get_timestamp_ms();
          self.record_with_time(timestamp, extra);
      }
-@@ -70,6 +71,7 @@
+@@ -70,6 +71,7 @@ impl EventMetric {
      ///             Keys must be one of the allowed extra keys.
      ///             If any key is not allowed, an error is reported and no event is recorded.
      pub fn record_with_time(&self, timestamp: u64, extra: HashMap<String, String>) {

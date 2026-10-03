@@ -1,6 +1,8 @@
+diff --git a/browser/locales/en-US/browser/speechDispatcher.ftl b/browser/locales/en-US/browser/speechDispatcher.ftl
+index 761c73afe9..646c68851b 100644
 --- a/browser/locales/en-US/browser/speechDispatcher.ftl
 +++ b/browser/locales/en-US/browser/speechDispatcher.ftl
-@@ -1,15 +1,14 @@
+@@ -1,15 +1,13 @@
  # This Source Code Form is subject to the terms of the Mozilla Public
  # License, v. 2.0. If a copy of the MPL was not distributed with this
  # file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -16,6 +18,5 @@
  speech-dispatcher-dismiss-button =
 -  .label = Don’t show again
 -  .accesskey = D
-+    .label =
-+        Don’t show again
-+        .accesskey = D
++    .label = Don’t show again
++    .accesskey = D

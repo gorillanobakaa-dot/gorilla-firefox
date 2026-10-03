@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/browser/siteProtections.ftl b/browser/locales/en-US/browser/siteProtections.ftl
+index d2436b6392..5b052c14fe 100644
 --- a/browser/locales/en-US/browser/siteProtections.ftl
 +++ b/browser/locales/en-US/browser/siteProtections.ftl
 @@ -1,7 +1,6 @@
@@ -8,7 +10,7 @@
  content-blocking-trackers-view-empty = None detected on this site
  
  content-blocking-cookies-blocking-trackers-label = Cross-Site Tracking Cookies
-@@ -33,18 +32,16 @@
+@@ -33,18 +32,16 @@ tracking-protection-icon-active-container =
  tracking-protection-icon-disabled = Enhanced Tracking Protection is OFF for this site.
  tracking-protection-icon-disabled-container =
      .aria-label = { tracking-protection-icon-disabled }
@@ -28,7 +30,7 @@
  protections-blocking-fingerprinters =
      .title = Fingerprinters Blocked
  protections-blocking-cryptominers =
-@@ -80,13 +77,12 @@
+@@ -80,13 +77,12 @@ protections-not-blocking-social-media-trackers =
  ## Variables:
  ##   $trackerCount (Number): number of trackers blocked
  ##   $date (Date): the date on which we started counting
@@ -44,7 +46,7 @@
      }
      .tooltiptext = Since { DATETIME($date, year: "numeric", month: "long", day: "numeric") }
  # This text indicates the total number of trackers blocked on all sites.
-@@ -94,13 +90,13 @@
+@@ -94,13 +90,13 @@ protections-footer-blocked-tracker-counter =
  # this message is used to leave out the tooltip when the date is not available.
  protections-footer-blocked-tracker-counter-no-tooltip =
      { $trackerCount ->

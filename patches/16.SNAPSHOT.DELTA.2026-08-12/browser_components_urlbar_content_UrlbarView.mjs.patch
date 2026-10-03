@@ -1,6 +1,8 @@
+diff --git a/browser/components/urlbar/content/UrlbarView.mjs b/browser/components/urlbar/content/UrlbarView.mjs
+index 99ee8ec422..6d0230edbd 100644
 --- a/browser/components/urlbar/content/UrlbarView.mjs
 +++ b/browser/components/urlbar/content/UrlbarView.mjs
-@@ -311,9 +311,6 @@
+@@ -339,9 +339,6 @@ export class UrlbarView {
          if (result.providerName == "UrlbarProviderTabToSearch") {
            return "tabtosearch";
          }

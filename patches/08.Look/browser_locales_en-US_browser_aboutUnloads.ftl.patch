@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/browser/aboutUnloads.ftl b/browser/locales/en-US/browser/aboutUnloads.ftl
+index 7b93e3f468..5380453b17 100644
 --- a/browser/locales/en-US/browser/aboutUnloads.ftl
 +++ b/browser/locales/en-US/browser/aboutUnloads.ftl
 @@ -1,51 +1,50 @@

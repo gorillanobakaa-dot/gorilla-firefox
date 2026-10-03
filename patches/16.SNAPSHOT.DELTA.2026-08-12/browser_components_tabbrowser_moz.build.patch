@@ -1,10 +1,12 @@
+diff --git a/browser/components/tabbrowser/moz.build b/browser/components/tabbrowser/moz.build
+index ef02c0a95b..b69646ca42 100644
 --- a/browser/components/tabbrowser/moz.build
 +++ b/browser/components/tabbrowser/moz.build
-@@ -22,7 +22,6 @@
+@@ -22,7 +22,6 @@ MOZ_SRC_FILES += [
      "GroupsList.sys.mjs",
      "NewTabPagePreloading.sys.mjs",
      "OpenInTabsUtils.sys.mjs",
 -    "SmartTabGrouping.sys.mjs",
+     "Tabbrowser.sys.mjs",
      "TabMetrics.sys.mjs",
      "TabsList.sys.mjs",
-     "TabUnloader.sys.mjs",

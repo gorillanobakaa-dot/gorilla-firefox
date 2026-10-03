@@ -1,6 +1,8 @@
+diff --git a/browser/components/sidebar/sidebar-main.mjs b/browser/components/sidebar/sidebar-main.mjs
+index c6de23c247..7ff977ddaf 100644
 --- a/browser/components/sidebar/sidebar-main.mjs
 +++ b/browser/components/sidebar/sidebar-main.mjs
-@@ -19,7 +19,6 @@
+@@ -22,7 +22,6 @@ const lazy = {};
  ChromeUtils.defineESModuleGetters(lazy, {
    ASRouter: "resource:///modules/asrouter/ASRouter.sys.mjs",
    ShortcutUtils: "resource://gre/modules/ShortcutUtils.sys.mjs",
@@ -8,7 +10,7 @@
  });
  
  /**
-@@ -52,7 +51,7 @@
+@@ -55,7 +54,7 @@ export default class SidebarMain extends MozLitElement {
    get fluentStrings() {
      if (!this._fluentStrings) {
        this._fluentStrings = new Localization(
@@ -17,7 +19,7 @@
          true
        );
      }
-@@ -355,17 +354,7 @@
+@@ -366,17 +365,7 @@ export default class SidebarMain extends MozLitElement {
        .querySelectorAll("[customized-tool='true']")
        .forEach(node => node.remove());
  
@@ -36,7 +38,7 @@
  
      const builder = menuBuilders[toolId];
      if (typeof builder === "function") {
-@@ -673,14 +662,6 @@
+@@ -700,14 +689,6 @@ export default class SidebarMain extends MozLitElement {
  
    getEntrypointValues(action) {
      let providerInfo;

@@ -1,29 +1,35 @@
-GORILLA UNLEASHED — PATCH SET BASELINE
+GORILLA UNLEASHED - PATCH SET BASELINE
 ======================================
 
-Milestone      : 154.0a1  (Firefox Nightly)
-Snapshot date  : 2026-07-10  (vault vanilla mtime; the tree these patches were cut against)
-Built artifact : BuildID 20260804004431  (gorilla-unleashed_154.0a1-1_amd64.deb)
-Exact changeset: NOT RECORDED  ← known limitation, see below
+Upstream       : Firefox 157.0 release
+Tag            : FIREFOX_157_0_RELEASE
+Commit         : fdd757a2e09c9471cddf383e64e631e4ce178499
+Built artifact : Gorilla Unleashed 157.0 for Windows, BuildID 20261003055251
 
-VERIFIED
-  All 307 patches apply cleanly (`patch -p1`) onto the vault vanilla snapshot
-  (`Firefox.Scripts.Vault.Docs/SafetyVault.Firefox/firefox-main`), checked 2026-08-04
-  via `apply.sh --check`. Applying them reproduces the source behind the shipped .deb.
+APPLY ORDER
+  02.GPU 03.NETWORKING 04.PERFORMANCE 05.PREFS 06.QUOTA 07.TOOLKIT 08.Look 09.REMOTE
+  10.OVERRIDES 11.FONT.SYSTEM 12.MOZAMBIQUE.DRILL 13.TELEMETRY.KILL 14.EGRESS.LOCKDOWN
+  16.SNAPSHOT.DELTA.2026-08-12 20.SNAPSHOT.DELTA.155.0.1 21.PORT.FIXES.157 22.EGRESS.LOCKDOWN.157
+  (01.MEDIA is Linux-only and is not applied to the Windows build; it is still cut against 154.)
 
-THE LIMITATION (stated honestly)
-  Our vanilla baseline is an EXPORTED SNAPSHOT, not a version-control checkout — it carries
-  no mozilla-central changeset hash. 154.0a1 is a NIGHTLY, so there is also no stable release
-  tag to check out. Consequence: we cannot tell a remote user "clone exactly THIS revision".
-  A fresh mozilla-central near 2026-07-10 will be *close* but not identical; locale/theme
-  files drift most.
+  Inside each group, in this order:
+    1. every *.patch, sorted by path, with   patch -p1 --forward --no-backup-if-mismatch --fuzz=0
+    2. NEW_FILES/<path>        copied into the tree (root-level user.js / mozconfig are not source)
+    3. REPLACE_FILES/<path>    written byte-exact over the upstream file (binary files, or files whose line
+                               endings changed, which a text patch cannot express)
+    4. DELETED_FILES.manifest.txt   every listed path removed
 
-WHAT WE DO ABOUT IT
-  - `recreate_success.sh` applies patches with fuzz tolerance (`patch --fuzz=3 --forward`) so
-    small upstream drift is absorbed rather than fatal; it reports any hunk that still fails.
-  - Anyone reproducing bit-for-bit should use OUR vault vanilla snapshot as the baseline.
+VERIFIED (replay proof)
+  In a scratch git index of the 157 build repository: start from the pristine commit above, apply the groups
+  as described (each patch through GNU patch 2.7.6 with --fuzz=0 on the files it names), then write the tree.
 
-STANDING FIX (best-practice gap to close going forward)
-  Record the mozilla-central changeset hash at snapshot time (e.g. `git -C <src> rev-parse HEAD`
-  saved next to the snapshot) so future patch sets pin an exact, cloneable revision. This gap
-  is a single-maintainer reproducibility risk worth closing before the next baseline is cut.
+    replayed tree : e33d7eb7e60f954e8007cc17fbe606b571f104ca
+    built tree    : e33d7eb7e60f954e8007cc17fbe606b571f104ca   (the source that was compiled)
+
+  0 patch failures, identical tree hash: this set plus pristine 157.0 is exactly the built source.
+
+HOW THE SET WAS MADE
+  The 157 port applied the 155.0.1 build's patch set to 157.0 and ported the hunks that no longer matched.
+  Groups 02 to 20 are the resulting 157 tree's own diffs against pristine 157.0, one patch per file, each in
+  the group that file belonged to. Groups 21 and 22 are the steps made by hand on top of that, one patch per
+  step, in the order they were made, each headed by its reason.

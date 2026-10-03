@@ -1,3 +1,5 @@
+diff --git a/browser/locales/en-US/browser/webrtcIndicator.ftl b/browser/locales/en-US/browser/webrtcIndicator.ftl
+index 6d735e2499..35cb420c55 100644
 --- a/browser/locales/en-US/browser/webrtcIndicator.ftl
 +++ b/browser/locales/en-US/browser/webrtcIndicator.ftl
 @@ -1,24 +1,20 @@
@@ -28,22 +30,20 @@
  # This is used for the website origin for the sharing menu if no readable origin could be deduced from the URL.
  webrtc-sharing-menuitem-unknown-host = Unknown origin
  
-@@ -28,10 +24,11 @@
+@@ -28,10 +24,10 @@ webrtc-sharing-menuitem-unknown-host = Unknown origin
  webrtc-sharing-menuitem =
      .label = { $origin } ({ $itemList })
  webrtc-sharing-menu =
 -    .label = Tabs sharing devices
--    .accesskey = d
-+    .label =
-+        Gorilla Tabs sharing devices
-+        .accesskey = d
++    .label = Gorilla Tabs sharing devices
+     .accesskey = d
  
 -webrtc-sharing-window = You are sharing another application window.
 +webrtc-sharing-window = You are sharing another application Gorilla window.
  webrtc-sharing-browser-window = You are sharing { -brand-short-name }.
  webrtc-sharing-screen = You are sharing your entire screen.
  webrtc-stop-sharing-button = Stop Sharing
-@@ -49,20 +46,18 @@
+@@ -49,20 +45,18 @@ webrtc-minimize =
  ## These strings will display as a tooltip on supported systems where we show
  ## device sharing state in the OS notification area. We do not use these strings
  ## on macOS, as global menu bar items do not have native tooltips.
@@ -65,7 +65,7 @@
  webrtc-indicator-menuitem-control-sharing =
      .label = Control Sharing
  webrtc-indicator-menuitem-control-sharing-on =
-@@ -72,62 +67,67 @@
+@@ -72,62 +66,67 @@ webrtc-indicator-menuitem-sharing-camera-with =
      .label = Sharing Camera with “{ $streamTitle }”
  webrtc-indicator-menuitem-sharing-camera-with-n-tabs =
      .label =
@@ -149,7 +149,7 @@
  webrtc-allow-share-camera = Allow { $origin } to use your camera?
  webrtc-allow-share-microphone = Allow { $origin } to use your microphone?
  webrtc-allow-share-screen = Allow { $origin } to see your screen?
-@@ -135,29 +135,27 @@
+@@ -135,29 +134,27 @@ webrtc-allow-share-screen = Allow { $origin } to see your screen?
  # another audio output connection.
  webrtc-allow-share-speaker = Allow { $origin } to use other speakers?
  webrtc-allow-share-camera-and-microphone = Allow { $origin } to use your camera and microphone?
@@ -191,7 +191,7 @@
  webrtc-allow-share-camera-unsafe-delegation = Allow { $origin } to give { $thirdParty } access to your camera?
  webrtc-allow-share-microphone-unsafe-delegation = Allow { $origin } to give { $thirdParty } access to your microphone?
  webrtc-allow-share-screen-unsafe-delegation = Allow { $origin } to give { $thirdParty } permission to see your screen?
-@@ -165,18 +163,17 @@
+@@ -165,18 +162,17 @@ webrtc-allow-share-screen-unsafe-delegation = Allow { $origin } to give { $third
  # another audio output connection.
  webrtc-allow-share-speaker-unsafe-delegation = Allow { $origin } to give { $thirdParty } access to other speakers?
  webrtc-allow-share-camera-and-microphone-unsafe-delegation = Allow { $origin } to give { $thirdParty } access to your camera and microphone?
@@ -214,7 +214,7 @@
  # Variables:
  #   $monitorIndex (String): screen number (digits 1, 2, etc).
  webrtc-share-monitor = Screen { $monitorIndex }
-@@ -185,27 +182,29 @@
+@@ -185,12 +181,11 @@ webrtc-share-monitor = Screen { $monitorIndex }
  #   $appName (String): the name of the application.
  webrtc-share-application =
      { $windowCount ->
@@ -227,36 +227,17 @@
  ## These buttons are the possible answers to the various prompts in the "webrtc-allow-share-*" strings.
 -
  webrtc-action-allow =
--    .label = Allow
--    .accesskey = A
-+    .label =
-+        Allow
-+        .accesskey = A
- webrtc-action-block =
--    .label = Block
--    .accesskey = B
-+    .label =
-+        Block
-+        .accesskey = B
- webrtc-action-always-block =
--    .label = Always block
--    .accesskey = w
-+    .label =
-+        Always block
-+        .accesskey = w
- webrtc-action-not-now =
--    .label = Not now
--    .accesskey = N
-+    .label =
-+        Not now
-+        .accesskey = N
+     .label = Allow
+     .accesskey = A
+@@ -205,7 +200,6 @@ webrtc-action-not-now =
+     .accesskey = N
  
  ##
 -
  webrtc-remember-allow-checkbox = Remember this decision
  webrtc-remember-allow-checkbox-camera = Remember for all cameras
  webrtc-remember-allow-checkbox-microphone = Remember for all microphones
-@@ -213,5 +212,5 @@
+@@ -213,5 +207,5 @@ webrtc-remember-allow-checkbox-camera-and-microphone = Remember for all cameras
  webrtc-mute-notifications-checkbox = Mute website notifications while sharing
  
  webrtc-reason-for-no-permanent-allow-screen = { -brand-short-name } can not allow permanent access to your screen.

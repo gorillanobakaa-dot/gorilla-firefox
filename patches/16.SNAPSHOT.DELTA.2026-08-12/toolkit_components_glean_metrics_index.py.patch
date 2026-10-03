@@ -1,6 +1,8 @@
+diff --git a/toolkit/components/glean/metrics_index.py b/toolkit/components/glean/metrics_index.py
+index 892d5bf3ac..cce1a2a757 100644
 --- a/toolkit/components/glean/metrics_index.py
 +++ b/toolkit/components/glean/metrics_index.py
-@@ -115,7 +115,6 @@
+@@ -113,7 +113,6 @@ gecko_metrics = [
  # Order is lexicographical, enforced by t/c/glean/tests/pytest/test_yaml_indices.py
  firefox_desktop_metrics = [
      "browser/actors/metrics.yaml",
@@ -8,7 +10,7 @@
      "browser/components/asrouter/metrics.yaml",
      "browser/components/attribution/metrics.yaml",
      "browser/components/backup/metrics.yaml",
-@@ -126,7 +125,6 @@
+@@ -123,7 +122,6 @@ firefox_desktop_metrics = [
      "browser/components/downloads/metrics.yaml",
      "browser/components/extensions/metrics.yaml",
      "browser/components/firefoxview/metrics.yaml",

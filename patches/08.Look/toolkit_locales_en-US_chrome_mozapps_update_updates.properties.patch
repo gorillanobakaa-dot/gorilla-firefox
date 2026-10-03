@@ -1,3 +1,5 @@
+diff --git a/toolkit/locales/en-US/chrome/mozapps/update/updates.properties b/toolkit/locales/en-US/chrome/mozapps/update/updates.properties
+index a3eeb836d2..ab48669e4d 100644
 --- a/toolkit/locales/en-US/chrome/mozapps/update/updates.properties
 +++ b/toolkit/locales/en-US/chrome/mozapps/update/updates.properties
 @@ -1,7 +1,6 @@
@@ -8,7 +10,7 @@
  # LOCALIZATION NOTE: The 1st %S is brandShortName and 2nd %S is update version
  # where update version from the update xml
  # example: MyApplication 10.0.5
-@@ -21,9 +20,9 @@
+@@ -21,9 +20,9 @@ installPending=Install Pending
  patchApplyFailure=The Update could not be installed (patch apply failed)
  elevationFailure=You don’t have the permissions necessary to install this update. Please contact your system administrator.
  
