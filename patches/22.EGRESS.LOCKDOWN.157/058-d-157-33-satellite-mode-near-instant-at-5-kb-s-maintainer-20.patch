@@ -1,0 +1,384 @@
+# Gorilla 157 privacy cut
+# D-157-33 satellite mode near-instant at 5 KB/s (maintainer, 2026-10-04): while a level is on, sites get Firefox for Android's identity (mobile pages; tick-box in Settings and the toolbar menu; per-site 'desktop version' from the toolbar button), the cache is kept across restarts, and Very slow link shows cached pages without re-checking (Reload fetches fresh).
+# Files: browser/app/profile/firefox.js, browser/components/preferences/config/privacy.mjs, browser/locales/en-US/browser/gorillaSatellite.ftl, browser/modules/GorillaLinkMode.sys.mjs
+
+diff --git a/browser/app/profile/firefox.js b/browser/app/profile/firefox.js
+index 21f47a2d3c..2bbd88ae44 100644
+--- a/browser/app/profile/firefox.js
++++ b/browser/app/profile/firefox.js
+@@ -4160,6 +4160,8 @@ pref("network.connectivity-service.enabled", false, locked);
+ // browser.ai.control.* are STRING prefs: all.js set them to boolean false, which libpref drops (type mismatch),
+ // so they shipped "available". Correct type here, last file wins.
+ pref("gorilla.linkmode", 0);
++// D-157-33: while a satellite level is on, ask sites for their mobile pages (Firefox for Android identity)
++pref("gorilla.linkmode.mobile_pages", true);
+ pref("gorilla.network.save_data", false);
+ pref("browser.ai.control.default", "blocked", locked);
+ pref("browser.ai.control.sidebarChatbot", "blocked", locked);
+diff --git a/browser/components/preferences/config/privacy.mjs b/browser/components/preferences/config/privacy.mjs
+index f005a5a276..c1d6b501d0 100644
+--- a/browser/components/preferences/config/privacy.mjs
++++ b/browser/components/preferences/config/privacy.mjs
+@@ -1513,6 +1513,12 @@ SettingGroupManager.registerGroups({
+           "search-l10n-ids": "gorilla-satellite-mode,gorilla-satellite-mode-satellite,gorilla-satellite-mode-very-slow",
+         },
+       },
++      {
++        // GORILLA UNLEASHED - SATELLITE MODE (D-157-33): mobile pages while a level is on
++        id: "gorillaMobilePages",
++        l10nId: "gorilla-satellite-mobile-pages",
++        controlAttrs: { "data-l10n-attrs": "title" },
++      },
+       {
+         id: "connectionLinkButton",
+         l10nId: "preferences-connection-link-button",
+@@ -1619,6 +1625,11 @@ SettingGroupManager.registerGroups({
+ // GORILLA UNLEASHED - SATELLITE MODE (D-157-30): Gorilla.Satellite mode in Settings, bound to gorilla.linkmode
+ // (0 off, 1 Satellite, 2 Very slow link). GorillaLinkMode.sys.mjs applies the level at once; nothing is sent.
+ Preferences.add({ id: "gorilla.linkmode", type: "int" });
++Preferences.add({ id: "gorilla.linkmode.mobile_pages", type: "bool" });
++Preferences.addSetting({
++  id: "gorillaMobilePages",
++  pref: "gorilla.linkmode.mobile_pages",
++});
+ Preferences.addSetting({
+   id: "gorillaLinkMode",
+   pref: "gorilla.linkmode",
+diff --git a/browser/locales/en-US/browser/gorillaSatellite.ftl b/browser/locales/en-US/browser/gorillaSatellite.ftl
+index e69817812a..ba12a97eb4 100644
+--- a/browser/locales/en-US/browser/gorillaSatellite.ftl
++++ b/browser/locales/en-US/browser/gorillaSatellite.ftl
+@@ -8,19 +8,23 @@
+ 
+ gorilla-satellite-mode =
+     .label = Gorilla.Satellite mode
+-    .description = For slow, far-away or expensive internet: satellite, Starlink, rural mobile, down to 5 KB per second. Nothing is sent anywhere; the browser fetches less and waits longer.
++    .description = For slow, far-away or expensive internet: satellite, Starlink, rural mobile, down to 5 KB per second. Nothing is sent anywhere; the browser fetches less, asks for lighter pages and keeps what it already has.
+ gorilla-satellite-mode-off =
+     .label = Off: a normal connection
+     .description = The browser behaves as shipped.
+     .title = Use this on broadband, fibre and good mobile connections.
+ gorilla-satellite-mode-satellite =
+     .label = Satellite: fast but far away (Starlink, satellite broadband)
+-    .description = No autoplay, no video preloading, longer waits before giving up, pages kept on disk.
+-    .title = For links that are fast but have a long delay, such as Starlink or geostationary satellite. Videos never start by themselves and are not downloaded in advance; the browser waits longer for slow servers instead of failing; addresses are remembered for 10 minutes; up to 256 MB of pages are kept on disk, so after a restart a page you already visited does not download everything again.
++    .description = Mobile versions of sites, no autoplay, no video preloading, longer waits before giving up, pages kept on disk across restarts.
++    .title = For links that are fast but have a long delay, such as Starlink or geostationary satellite. Sites are asked for their mobile version, which is much smaller (see the tick-box below). Videos never start by themselves and are not downloaded in advance; the browser waits longer for slow servers instead of failing; addresses are remembered for 10 minutes; up to 256 MB of pages are kept on disk and are no longer emptied when the browser closes, so after a restart a page you already visited does not download everything again. Your history is still wiped when you close the browser.
+ gorilla-satellite-mode-very-slow =
+     .label = Very slow link: works down to 5 KB per second
+-    .description = Everything in Satellite, plus no pictures, no web fonts, and sites are asked for lighter pages.
+-    .title = For very slow or very expensive links, down to 5 KB per second. Everything in Satellite, plus: pictures are not downloaded (to see them on one site, press Ctrl+I, open Permissions and allow Load Images); websites keep their text but not their downloadable fonts; every request carries "Save-Data: on", which asks sites that support it for a lighter page; at most 6 connections per site, so they do not compete for the little bandwidth there is.
++    .description = Everything in Satellite, plus no pictures, no web fonts, lighter pages, and pages you already have open at once.
++    .title = For very slow or very expensive links, down to 5 KB per second. Everything in Satellite, plus: pictures are not downloaded (to see them on one site, press Ctrl+I, open Permissions and allow Load Images); websites keep their text but not their downloadable fonts; every request carries "Save-Data: on", which asks sites that support it for a lighter page; a page you already have is shown at once from the disk without asking the site whether it changed (press Reload for a fresh copy); at most 6 connections per site, so they do not compete for the little bandwidth there is.
++gorilla-satellite-mobile-pages =
++    .label = Ask sites for their mobile version (much smaller pages)
++    .description = While Gorilla.Satellite mode is on, sites are told this is Firefox on an Android phone, so they send the light pages they make for phones.
++    .title = Most large sites make a separate, much smaller page for phones. With this ticked, and Gorilla.Satellite mode on, the browser introduces itself as Firefox for Android, so sites send that page; it fills the window as usual. If one site works badly this way, open the Gorilla.Satellite mode button next to the address bar and choose "This site: show the normal (desktop) version". Cost: a phone identity on a large screen is a rare mix that a site could notice.
+ 
+ ## The toolbar button: its words show the level in use; a click opens the three levels above.
+ 
+@@ -32,5 +36,8 @@ gorilla-satellite-button-satellite =
+     .label = Gorilla.Satellite mode: Satellite
+ gorilla-satellite-button-very-slow =
+     .label = Gorilla.Satellite mode: Very slow link
++gorilla-satellite-button-desktop-site =
++    .label = This site: show the normal (desktop) version
++    .tooltiptext = For a site that works badly in its mobile version. Remembered for this site only; the page reloads.
+ gorilla-satellite-button-settings =
+     .label = Open Settings for Gorilla.Satellite mode
+diff --git a/browser/modules/GorillaLinkMode.sys.mjs b/browser/modules/GorillaLinkMode.sys.mjs
+index 20ae68fac5..037fbf82b0 100644
+--- a/browser/modules/GorillaLinkMode.sys.mjs
++++ b/browser/modules/GorillaLinkMode.sys.mjs
+@@ -7,10 +7,16 @@
+ // One pref, gorilla.linkmode: 0 = off (the shipped values), 1 = "Satellite" (fast but far: Starlink, GEO
+ // broadband), 2 = "Very slow link" (1-60 KB/s). The level's values are written to the DEFAULT branch, so a value
+ // the user set by hand always wins, and going back to 0 restores the shipped defaults exactly. Nothing here makes
+-// a connection: every value makes the browser fetch less, wait longer, or ask sites for lighter pages
+-// (D-157-00, D-157-30). Values: docs/NETWORK-AND-SATELLITE-STUDY.md sections 7.2 and 7.3.
++// a connection: every value makes the browser fetch less, wait longer, keep what it has, or ask sites for lighter
++// pages (D-157-00, D-157-30, D-157-33). Values: docs/NETWORK-AND-SATELLITE-STUDY.md sections 7.2 and 7.3.
+ 
+ const LINKMODE_PREF = "gorilla.linkmode";
++// Mobile pages (D-157-33, maintainer 2026-10-04: "combine the best of the worlds", a 13-inch tablet that asks for
++// the mobile site gets it and is extremely fast). While a level is on and this is true, sites are told the browser
++// is Firefox for Android (Mozilla's own Android values, the ones resistFingerprinting reports there), so they send
++// their phone pages. One site can be sent back to its desktop version from the toolbar button (DESKTOP_SITE_PERM).
++const MOBILE_PREF = "gorilla.linkmode.mobile_pages";
++const DESKTOP_SITE_PERM = "gorilla-desktop-site";
+ 
+ const lazy = {};
+ ChromeUtils.defineESModuleGetters(lazy, {
+@@ -35,6 +41,8 @@ function strings() {
+     const ids = [
+       "gorilla-satellite-button",
+       "gorilla-satellite-button-settings",
++      "gorilla-satellite-button-desktop-site",
++      "gorilla-satellite-mobile-pages",
+       ...LEVEL_NAMES.map(n => `gorilla-satellite-mode-${n}`),
+       ...LEVEL_NAMES.map(n => `gorilla-satellite-button-${n}`),
+     ];
+@@ -66,6 +74,11 @@ const SATELLITE = {
+   "browser.cache.disk.enable": true, // F7: keep pages across restarts on slow links
+   "browser.cache.disk.smart_size.enabled": false,
+   "browser.cache.disk.capacity": 262144, // 256 MiB
++  // D-157-33 (bench 2026-10-04: a restart still took 40.9 s at 5 KB/s, as long as a first visit): Gorilla empties
++  // the cache at every shutdown, so F7's disk cache never survived a restart. Kept while a level is on; history,
++  // form data and downloads are still wiped at shutdown.
++  "privacy.clearOnShutdown.cache": false,
++  "privacy.clearOnShutdown_v2.cache": false,
+ };
+ 
+ // Level 2 "Very slow link": level 1 with GEO timeouts, plus S6, S7, S11.
+@@ -76,10 +89,27 @@ const VERY_SLOW = {
+   "gorilla.network.save_data": true, // S7: "Save-Data: on" (nsHttpChannel::SetSaveData)
+   "network.http.max-persistent-connections-per-server": 6, // S11
+   "permissions.default.image": 2, // S5: no pictures (per site: Page Info > Permissions > Load Images)
++  // D-157-33 (bench 2026-10-04: the same page again took 21.5 s, its 103 KB HTML downloaded again every time):
++  // a page in the cache is shown without asking the site whether it changed. Reload still fetches a fresh copy.
++  "browser.cache.check_doc_frequency": 2,
+ };
+ 
+ const LEVELS = [{}, SATELLITE, VERY_SLOW];
+ 
++// Firefox for Android's identity: the same strings toolkit/components/resistfingerprinting/nsRFPService.h
++// reports on Android, so a mobile-mode Gorilla looks like the many real Firefox phones, not like something new.
++function mobileIdentity() {
++  const v = `${parseInt(Services.appinfo.version)}.0`;
++  return {
++    "general.useragent.override": `Mozilla/5.0 (Android 10; Mobile; rv:${v}) Gecko/${v} Firefox/${v}`,
++    "general.appversion.override": "5.0 (Android 10)",
++    "general.oscpu.override": "Linux armv81",
++    "general.platform.override": "Linux armv81",
++  };
++}
++const MOBILE_KEYS = Object.keys(mobileIdentity());
++const ALL_KEYS = [...Object.keys(VERY_SLOW), ...MOBILE_KEYS];
++
+ function getDefault(branch, name) {
+   switch (branch.getPrefType(name)) {
+     case Ci.nsIPrefBranch.PREF_INT:
+@@ -104,7 +134,9 @@ function setDefault(branch, name, value) {
+ 
+ export const GorillaLinkMode = {
+   _shipped: null,
+-  _applied: 0,
++  _applied: "",
++  _desktopUA: "",
++  _watchingRequests: false,
+ 
+   init() {
+     if (this._shipped) {
+@@ -112,10 +144,15 @@ export const GorillaLinkMode = {
+     }
+     const branch = Services.prefs.getDefaultBranch("");
+     this._shipped = {};
+-    for (const name of Object.keys(VERY_SLOW)) {
++    for (const name of ALL_KEYS) {
+       this._shipped[name] = getDefault(branch, name);
+     }
++    // The desktop identity, read before any level can override it: what a site switched back to desktop gets.
++    this._desktopUA = Cc["@mozilla.org/network/protocol;1?name=http"].getService(
++      Ci.nsIHttpProtocolHandler
++    ).userAgent;
+     Services.prefs.addObserver(LINKMODE_PREF, this);
++    Services.prefs.addObserver(MOBILE_PREF, this);
+     Services.obs.addObserver(this, "browser-window-before-show");
+     this.apply();
+   },
+@@ -131,10 +168,68 @@ export const GorillaLinkMode = {
+       }
+       return;
+     }
++    if (topic == "http-on-modify-request") {
++      this._chooseIdentity(subject);
++      return;
++    }
+     this.apply();
+     this._showLevelOnButtons();
+   },
+ 
++  mobilePages() {
++    return this.level() > 0 && Services.prefs.getBoolPref(MOBILE_PREF, true);
++  },
++
++  // A site the user sent back to its desktop version: every top-level page of it, in that tab, is asked for with
++  // the desktop identity (header and navigator alike, through the tab's customUserAgent); any other site gets ""
++  // back, which means the mobile identity of the prefs. Decided before the page is requested, so nothing is
++  // downloaded twice.
++  _chooseIdentity(subject) {
++    try {
++      const channel = subject.QueryInterface(Ci.nsIHttpChannel);
++      const info = channel.loadInfo;
++      if (
++        info.externalContentPolicyType != Ci.nsIContentPolicy.TYPE_DOCUMENT
++      ) {
++        return;
++      }
++      const bc = info.targetBrowsingContext || info.browsingContext;
++      if (!bc || bc.parent) {
++        return;
++      }
++      const principal = Services.scriptSecurityManager.createContentPrincipal(
++        channel.URI,
++        {}
++      );
++      const desktop =
++        Services.perms.testPermissionFromPrincipal(
++          principal,
++          DESKTOP_SITE_PERM
++        ) == Services.perms.ALLOW_ACTION;
++      const ua = desktop ? this._desktopUA : "";
++      if (bc.customUserAgent != ua) {
++        bc.customUserAgent = ua;
++      }
++      if (desktop) {
++        channel.setRequestHeader("User-Agent", this._desktopUA, false);
++      }
++    } catch (e) {
++      console.error("GorillaLinkMode: desktop site", e);
++    }
++  },
++
++  _watchRequests(on) {
++    if (on == this._watchingRequests) {
++      return;
++    }
++    if (on) {
++      Services.obs.addObserver(this, "http-on-modify-request");
++    } else {
++      Services.obs.removeObserver(this, "http-on-modify-request");
++    }
++    this._watchingRequests = on;
++  },
++
+   _createButton() {
+     const { CustomizableUI } = lazy;
+     CustomizableUI.createWidget({
+@@ -159,6 +254,7 @@ export const GorillaLinkMode = {
+ 
+   _buildButton(doc) {
+     const s = strings();
++    const win = doc.ownerGlobal;
+     const button = doc.createXULElement("toolbarbutton");
+     button.id = BUTTON_ID;
+     button.className = "toolbarbutton-1 chromeclass-toolbar-additional";
+@@ -181,10 +277,48 @@ export const GorillaLinkMode = {
+       popup.appendChild(item);
+     });
+     popup.appendChild(doc.createXULElement("menuseparator"));
++    const mobile = doc.createXULElement("menuitem");
++    mobile.setAttribute("type", "checkbox");
++    mobile.setAttribute("gorilla-item", "mobile-pages");
++    mobile.setAttribute("label", s["gorilla-satellite-mobile-pages"].label);
++    mobile.setAttribute("tooltiptext", s["gorilla-satellite-mobile-pages"].title);
++    mobile.addEventListener("command", () =>
++      Services.prefs.setBoolPref(
++        MOBILE_PREF,
++        !Services.prefs.getBoolPref(MOBILE_PREF, true)
++      )
++    );
++    popup.appendChild(mobile);
++    const desktopSite = doc.createXULElement("menuitem");
++    desktopSite.setAttribute("type", "checkbox");
++    desktopSite.setAttribute("gorilla-item", "desktop-site");
++    desktopSite.setAttribute(
++      "label",
++      s["gorilla-satellite-button-desktop-site"].label
++    );
++    desktopSite.setAttribute(
++      "tooltiptext",
++      s["gorilla-satellite-button-desktop-site"].tooltiptext
++    );
++    desktopSite.addEventListener("command", () => {
++      const principal = win.gBrowser.contentPrincipal;
++      if (desktopSite.getAttribute("checked") == "true") {
++        Services.perms.addFromPrincipal(
++          principal,
++          DESKTOP_SITE_PERM,
++          Services.perms.ALLOW_ACTION
++        );
++      } else {
++        Services.perms.removeFromPrincipal(principal, DESKTOP_SITE_PERM);
++      }
++      win.gBrowser.selectedBrowser.reload();
++    });
++    popup.appendChild(desktopSite);
++    popup.appendChild(doc.createXULElement("menuseparator"));
+     const settings = doc.createXULElement("menuitem");
+     settings.setAttribute("label", s["gorilla-satellite-button-settings"].label);
+     settings.addEventListener("command", () =>
+-      doc.ownerGlobal.openPreferences("paneGeneral")
++      win.openPreferences("paneGeneral")
+     );
+     popup.appendChild(settings);
+     popup.addEventListener("popupshowing", () => {
+@@ -196,6 +330,26 @@ export const GorillaLinkMode = {
+           item.removeAttribute("checked");
+         }
+       }
++      if (Services.prefs.getBoolPref(MOBILE_PREF, true)) {
++        mobile.setAttribute("checked", "true");
++      } else {
++        mobile.removeAttribute("checked");
++      }
++      // The desktop-version switch only means something while mobile pages are asked for, on a web page.
++      const principal = win.gBrowser.contentPrincipal;
++      const web = principal.schemeIs("http") || principal.schemeIs("https");
++      desktopSite.hidden = !this.mobilePages() || !web;
++      if (
++        web &&
++        Services.perms.testPermissionFromPrincipal(
++          principal,
++          DESKTOP_SITE_PERM
++        ) == Services.perms.ALLOW_ACTION
++      ) {
++        desktopSite.setAttribute("checked", "true");
++      } else {
++        desktopSite.removeAttribute("checked");
++      }
+     });
+     button.appendChild(popup);
+     this._showLevel(button);
+@@ -232,13 +386,15 @@ export const GorillaLinkMode = {
+   },
+ 
+   apply() {
+-    const want = this.level();
+-    if (want === this._applied) {
++    const level = this.level();
++    const mobile = this.mobilePages();
++    const key = `${level}/${mobile}`;
++    if (key === this._applied) {
+       return;
+     }
+     const branch = Services.prefs.getDefaultBranch("");
+-    const values = LEVELS[want];
+-    for (const name of Object.keys(VERY_SLOW)) {
++    const values = { ...LEVELS[level], ...(mobile ? mobileIdentity() : {}) };
++    for (const name of ALL_KEYS) {
+       let value = name in values ? values[name] : this._shipped[name];
+       if (value === undefined) {
+         // Not defined in the shipped build and not part of this level.
+@@ -246,6 +402,12 @@ export const GorillaLinkMode = {
+           value = false;
+         } else if (name === "permissions.default.image") {
+           value = 1; // pictures on: Off must never leave them blocked
++        } else if (MOBILE_KEYS.includes(name)) {
++          // An override that exists, even empty, replaces the identity: it has to be gone, not "".
++          if (branch.getPrefType(name) != Ci.nsIPrefBranch.PREF_INVALID) {
++            branch.deleteBranch(name);
++          }
++          continue;
+         } else {
+           continue;
+         }
+@@ -257,6 +419,7 @@ export const GorillaLinkMode = {
+         console.error(`GorillaLinkMode: ${name}`, e);
+       }
+     }
+-    this._applied = want;
++    this._watchRequests(mobile);
++    this._applied = key;
+   },
+ };

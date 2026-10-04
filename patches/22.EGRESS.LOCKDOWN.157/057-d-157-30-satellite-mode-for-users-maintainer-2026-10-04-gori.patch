@@ -1,0 +1,375 @@
+# Gorilla 157 privacy cut
+# D-157-30 satellite mode for users (maintainer, 2026-10-04): Gorilla.Satellite mode switch in Settings (General, Network: Off / Satellite / Very slow link, long explanation on hover over the whole row) and a toolbar button next to the address bar showing the level in words, with a menu of the three levels; Very slow link also stops pictures (permissions.default.image 2). Words in browser/gorillaSatellite.ftl, shared by both. Nothing is sent anywhere.
+# Files: browser/components/preferences/config/privacy.mjs, browser/components/preferences/preferences.xhtml, browser/locales/en-US/browser/gorillaSatellite.ftl, browser/modules/GorillaLinkMode.sys.mjs, browser/themes/shared/icons/gorilla-satellite.svg, browser/themes/shared/jar.inc.mn, browser/themes/shared/toolbarbuttons.css, toolkit/content/widgets/lit-utils.mjs
+
+diff --git a/browser/components/preferences/config/privacy.mjs b/browser/components/preferences/config/privacy.mjs
+index f32ccc4f72..f005a5a276 100644
+--- a/browser/components/preferences/config/privacy.mjs
++++ b/browser/components/preferences/config/privacy.mjs
+@@ -1498,6 +1498,21 @@ SettingGroupManager.registerGroups({
+     l10nId: "preferences-connection-link-section",
+     iconSrc: "chrome://devtools/skin/images/globe.svg",
+     items: [
++      {
++        // GORILLA UNLEASHED - SATELLITE MODE: the switch a user sees, on the General page (maintainer,
++        // 2026-10-04); 157 moved the network group itself to the Connection & security sub-page
++        id: "gorillaLinkMode",
++        control: "moz-radio-group",
++        l10nId: "gorilla-satellite-mode",
++        options: [
++          { id: "gorillaLinkModeOff", value: 0, l10nId: "gorilla-satellite-mode-off", controlAttrs: { "data-l10n-attrs": "title" } },
++          { id: "gorillaLinkModeSatellite", value: 1, l10nId: "gorilla-satellite-mode-satellite", controlAttrs: { "data-l10n-attrs": "title" } },
++          { id: "gorillaLinkModeVerySlow", value: 2, l10nId: "gorilla-satellite-mode-very-slow", controlAttrs: { "data-l10n-attrs": "title" } },
++        ],
++        controlAttrs: {
++          "search-l10n-ids": "gorilla-satellite-mode,gorilla-satellite-mode-satellite,gorilla-satellite-mode-very-slow",
++        },
++      },
+       {
+         id: "connectionLinkButton",
+         l10nId: "preferences-connection-link-button",
+@@ -1601,6 +1616,14 @@ SettingGroupManager.registerGroups({
+   },
+ });
+ 
++// GORILLA UNLEASHED - SATELLITE MODE (D-157-30): Gorilla.Satellite mode in Settings, bound to gorilla.linkmode
++// (0 off, 1 Satellite, 2 Very slow link). GorillaLinkMode.sys.mjs applies the level at once; nothing is sent.
++Preferences.add({ id: "gorilla.linkmode", type: "int" });
++Preferences.addSetting({
++  id: "gorillaLinkMode",
++  pref: "gorilla.linkmode",
++});
++
+ Preferences.addSetting({
+   id: "trustPanelFeatureGate",
+   pref: "browser.urlbar.trustPanel.featureGate",
+diff --git a/browser/components/preferences/preferences.xhtml b/browser/components/preferences/preferences.xhtml
+index bb84d15bec..6699af62b0 100644
+--- a/browser/components/preferences/preferences.xhtml
++++ b/browser/components/preferences/preferences.xhtml
+@@ -45,6 +45,8 @@
+   <link rel="localization" href="browser/preferences/fonts.ftl"/>
+   <link rel="localization" href="browser/preferences/moreFromMozilla.ftl"/>
+   <link rel="localization" href="browser/preferences/preferences.ftl"/>
++  <!-- GORILLA UNLEASHED - SATELLITE MODE: the switch's words, shared with the toolbar button -->
++  <link rel="localization" href="browser/gorillaSatellite.ftl"/>
+   <link rel="localization" href="toolkit/branding/brandings.ftl"/>
+   <link rel="localization" href="toolkit/firefoxlabs/features.ftl"/>
+   <link rel="localization" href="toolkit/global/mozPageHeader.ftl"/>
+diff --git a/browser/locales/en-US/browser/gorillaSatellite.ftl b/browser/locales/en-US/browser/gorillaSatellite.ftl
+new file mode 100644
+index 0000000000..e69817812a
+--- /dev/null
++++ b/browser/locales/en-US/browser/gorillaSatellite.ftl
+@@ -0,0 +1,36 @@
++# This Source Code Form is subject to the terms of the Mozilla Public
++# License, v. 2.0. If a copy of the MPL was not distributed with this
++# file, You can obtain one at http://mozilla.org/MPL/2.0/.
++
++## GORILLA UNLEASHED - SATELLITE MODE (maintainer, 2026-10-04). English only (D-157-03).
++## Read by Settings (General, Network) and by the toolbar button next to the address bar
++## (browser/modules/GorillaLinkMode.sys.mjs), so both always say the same thing.
++
++gorilla-satellite-mode =
++    .label = Gorilla.Satellite mode
++    .description = For slow, far-away or expensive internet: satellite, Starlink, rural mobile, down to 5 KB per second. Nothing is sent anywhere; the browser fetches less and waits longer.
++gorilla-satellite-mode-off =
++    .label = Off: a normal connection
++    .description = The browser behaves as shipped.
++    .title = Use this on broadband, fibre and good mobile connections.
++gorilla-satellite-mode-satellite =
++    .label = Satellite: fast but far away (Starlink, satellite broadband)
++    .description = No autoplay, no video preloading, longer waits before giving up, pages kept on disk.
++    .title = For links that are fast but have a long delay, such as Starlink or geostationary satellite. Videos never start by themselves and are not downloaded in advance; the browser waits longer for slow servers instead of failing; addresses are remembered for 10 minutes; up to 256 MB of pages are kept on disk, so after a restart a page you already visited does not download everything again.
++gorilla-satellite-mode-very-slow =
++    .label = Very slow link: works down to 5 KB per second
++    .description = Everything in Satellite, plus no pictures, no web fonts, and sites are asked for lighter pages.
++    .title = For very slow or very expensive links, down to 5 KB per second. Everything in Satellite, plus: pictures are not downloaded (to see them on one site, press Ctrl+I, open Permissions and allow Load Images); websites keep their text but not their downloadable fonts; every request carries "Save-Data: on", which asks sites that support it for a lighter page; at most 6 connections per site, so they do not compete for the little bandwidth there is.
++
++## The toolbar button: its words show the level in use; a click opens the three levels above.
++
++gorilla-satellite-button =
++    .tooltiptext = Gorilla.Satellite mode: for slow, far-away or expensive internet, down to 5 KB per second. Click to choose a level; hover over a level for what it changes. Nothing is sent anywhere.
++gorilla-satellite-button-off =
++    .label = Gorilla.Satellite mode: Off
++gorilla-satellite-button-satellite =
++    .label = Gorilla.Satellite mode: Satellite
++gorilla-satellite-button-very-slow =
++    .label = Gorilla.Satellite mode: Very slow link
++gorilla-satellite-button-settings =
++    .label = Open Settings for Gorilla.Satellite mode
+diff --git a/browser/modules/GorillaLinkMode.sys.mjs b/browser/modules/GorillaLinkMode.sys.mjs
+index b802a52b55..20ae68fac5 100644
+--- a/browser/modules/GorillaLinkMode.sys.mjs
++++ b/browser/modules/GorillaLinkMode.sys.mjs
+@@ -12,6 +12,45 @@
+ 
+ const LINKMODE_PREF = "gorilla.linkmode";
+ 
++const lazy = {};
++ChromeUtils.defineESModuleGetters(lazy, {
++  CustomizableUI:
++    "moz-src:///browser/components/customizableui/CustomizableUI.sys.mjs",
++});
++
++// The toolbar switch (maintainer, 2026-10-04: "easy to find and quite prominent", in the empty space between the
++// address bar and the extension and menu buttons). It shows its name and the level in use in words; a click opens
++// the three levels, each with the same long explanation on hover as in Settings. The words are in
++// browser/gorillaSatellite.ftl, which Settings reads too. It is created when the first window is about to show,
++// not at browser-before-ui-startup: loading CustomizableUI that early would run before BrowserGlue's UI migrations
++// edit the toolbar layout pref. A user who removes it keeps it removed (CustomizableUI remembers seen widgets, and
++// PLACED_PREF stops the one-time move next to the address bar from happening again).
++const BUTTON_ID = "gorilla-satellite-button";
++const PLACED_PREF = "gorilla.linkmode.button.placed";
++const LEVEL_NAMES = ["off", "satellite", "very-slow"];
++
++let gStrings = null;
++function strings() {
++  if (!gStrings) {
++    const ids = [
++      "gorilla-satellite-button",
++      "gorilla-satellite-button-settings",
++      ...LEVEL_NAMES.map(n => `gorilla-satellite-mode-${n}`),
++      ...LEVEL_NAMES.map(n => `gorilla-satellite-button-${n}`),
++    ];
++    const l10n = new Localization(["browser/gorillaSatellite.ftl"], true);
++    const messages = l10n.formatMessagesSync(ids.map(id => ({ id })));
++    gStrings = {};
++    ids.forEach((id, i) => {
++      gStrings[id] = {};
++      for (const { name, value } of messages[i]?.attributes || []) {
++        gStrings[id][name] = value;
++      }
++    });
++  }
++  return gStrings;
++}
++
+ // Level 1 "Satellite": study S2, S3, S10, S12 (prefs part).
+ const SATELLITE = {
+   "media.autoplay.default": 5, // S2: no autoplay, muted video included
+@@ -36,6 +75,7 @@ const VERY_SLOW = {
+   "gfx.downloadable_fonts.enabled": false, // S6: no web fonts
+   "gorilla.network.save_data": true, // S7: "Save-Data: on" (nsHttpChannel::SetSaveData)
+   "network.http.max-persistent-connections-per-server": 6, // S11
++  "permissions.default.image": 2, // S5: no pictures (per site: Page Info > Permissions > Load Images)
+ };
+ 
+ const LEVELS = [{}, SATELLITE, VERY_SLOW];
+@@ -76,11 +116,114 @@ export const GorillaLinkMode = {
+       this._shipped[name] = getDefault(branch, name);
+     }
+     Services.prefs.addObserver(LINKMODE_PREF, this);
++    Services.obs.addObserver(this, "browser-window-before-show");
+     this.apply();
+   },
+ 
+-  observe() {
++  observe(subject, topic) {
++    if (topic == "browser-window-before-show") {
++      Services.obs.removeObserver(this, "browser-window-before-show");
++      try {
++        this._createButton();
++      } catch (e) {
++        // The switch in Settings still works; the levels never depend on the button.
++        console.error("GorillaLinkMode: toolbar button", e);
++      }
++      return;
++    }
+     this.apply();
++    this._showLevelOnButtons();
++  },
++
++  _createButton() {
++    const { CustomizableUI } = lazy;
++    CustomizableUI.createWidget({
++      id: BUTTON_ID,
++      type: "custom",
++      defaultArea: CustomizableUI.AREA_NAVBAR,
++      onBuild: doc => this._buildButton(doc),
++    });
++    if (!Services.prefs.getBoolPref(PLACED_PREF, false)) {
++      const urlbar = CustomizableUI.getPlacementOfWidget("urlbar-container");
++      const placed = CustomizableUI.getPlacementOfWidget(BUTTON_ID);
++      if (urlbar && placed && placed.area == urlbar.area) {
++        CustomizableUI.addWidgetToArea(
++          BUTTON_ID,
++          urlbar.area,
++          urlbar.position + 1
++        );
++      }
++      Services.prefs.setBoolPref(PLACED_PREF, true);
++    }
++  },
++
++  _buildButton(doc) {
++    const s = strings();
++    const button = doc.createXULElement("toolbarbutton");
++    button.id = BUTTON_ID;
++    button.className = "toolbarbutton-1 chromeclass-toolbar-additional";
++    button.setAttribute("type", "menu");
++    button.setAttribute("removable", "true");
++    const popup = doc.createXULElement("menupopup");
++    LEVEL_NAMES.forEach((name, level) => {
++      const item = doc.createXULElement("menuitem");
++      item.setAttribute("type", "radio");
++      item.setAttribute("name", "gorilla-satellite-level");
++      item.setAttribute("value", String(level));
++      item.setAttribute("label", s[`gorilla-satellite-mode-${name}`].label);
++      item.setAttribute(
++        "tooltiptext",
++        s[`gorilla-satellite-mode-${name}`].title
++      );
++      item.addEventListener("command", () =>
++        Services.prefs.setIntPref(LINKMODE_PREF, level)
++      );
++      popup.appendChild(item);
++    });
++    popup.appendChild(doc.createXULElement("menuseparator"));
++    const settings = doc.createXULElement("menuitem");
++    settings.setAttribute("label", s["gorilla-satellite-button-settings"].label);
++    settings.addEventListener("command", () =>
++      doc.ownerGlobal.openPreferences("paneGeneral")
++    );
++    popup.appendChild(settings);
++    popup.addEventListener("popupshowing", () => {
++      const level = String(this.level());
++      for (const item of popup.querySelectorAll("menuitem[type='radio']")) {
++        if (item.getAttribute("value") == level) {
++          item.setAttribute("checked", "true");
++        } else {
++          item.removeAttribute("checked");
++        }
++      }
++    });
++    button.appendChild(popup);
++    this._showLevel(button);
++    return button;
++  },
++
++  _showLevel(button) {
++    const s = strings();
++    const level = this.level();
++    button.setAttribute(
++      "label",
++      s[`gorilla-satellite-button-${LEVEL_NAMES[level]}`].label
++    );
++    button.setAttribute("tooltiptext", s["gorilla-satellite-button"].tooltiptext);
++    button.setAttribute("gorilla-level", String(level));
++  },
++
++  _showLevelOnButtons() {
++    // Only once a button was built (that is when the words are read): a level change before the first window
++    // must not load CustomizableUI early.
++    if (!gStrings) {
++      return;
++    }
++    for (const instance of lazy.CustomizableUI.getWidget(BUTTON_ID)?.instances || []) {
++      if (instance.node) {
++        this._showLevel(instance.node);
++      }
++    }
+   },
+ 
+   level() {
+@@ -101,6 +244,8 @@ export const GorillaLinkMode = {
+         // Not defined in the shipped build and not part of this level.
+         if (name === "gorilla.network.save_data") {
+           value = false;
++        } else if (name === "permissions.default.image") {
++          value = 1; // pictures on: Off must never leave them blocked
+         } else {
+           continue;
+         }
+diff --git a/browser/themes/shared/icons/gorilla-satellite.svg b/browser/themes/shared/icons/gorilla-satellite.svg
+new file mode 100644
+index 0000000000..72e7bd693e
+--- /dev/null
++++ b/browser/themes/shared/icons/gorilla-satellite.svg
+@@ -0,0 +1,15 @@
++<!-- This Source Code Form is subject to the terms of the Mozilla Public
++   - License, v. 2.0. If a copy of the MPL was not distributed with this
++   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
++<!-- GORILLA UNLEASHED - SATELLITE MODE: toolbar icon, a satellite with two solar panels and an antenna -->
++<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="context-fill" fill-opacity="context-fill-opacity">
++  <g transform="rotate(-45 8 8)">
++    <rect x="0.5" y="6" width="4.5" height="4" rx="0.5"/>
++    <rect x="5" y="7.5" width="1.5" height="1"/>
++    <rect x="6.5" y="5.75" width="3" height="4.5" rx="0.75"/>
++    <rect x="9.5" y="7.5" width="1.5" height="1"/>
++    <rect x="11" y="6" width="4.5" height="4" rx="0.5"/>
++    <rect x="7.5" y="3.75" width="1" height="2"/>
++    <circle cx="8" cy="3" r="1.25"/>
++  </g>
++</svg>
+diff --git a/browser/themes/shared/jar.inc.mn b/browser/themes/shared/jar.inc.mn
+index 2de6745d2a..930c7b1e1a 100644
+--- a/browser/themes/shared/jar.inc.mn
++++ b/browser/themes/shared/jar.inc.mn
+@@ -207,6 +207,8 @@
+ 
+   skin/classic/browser/add-circle-fill.svg            (../shared/icons/add-circle-fill.svg)
+   skin/classic/browser/back.svg                       (../shared/icons/back.svg)
++# GORILLA UNLEASHED - SATELLITE MODE: the toolbar button's icon
++  skin/classic/browser/gorilla-satellite.svg          (../shared/icons/gorilla-satellite.svg)
+   skin/classic/browser/bookmark.svg                   (../shared/icons/bookmark.svg)
+   skin/classic/browser/bookmark-12.svg                (../shared/icons/bookmark-12.svg)
+   skin/classic/browser/bookmark-hollow.svg            (../shared/icons/bookmark-hollow.svg)
+diff --git a/browser/themes/shared/toolbarbuttons.css b/browser/themes/shared/toolbarbuttons.css
+index 2de4cfbb51..db610df11f 100644
+--- a/browser/themes/shared/toolbarbuttons.css
++++ b/browser/themes/shared/toolbarbuttons.css
+@@ -789,3 +789,31 @@ toolbar[keyNav]:not([collapsed], [customizing]) toolbartabstop,
+     display: none;
+   }
+ }
++
++/* GORILLA UNLEASHED - SATELLITE MODE: the toolbar switch (maintainer, 2026-10-04: easy to find, in the empty
++ * space next to the address bar). Toolbar buttons hide their words; this one shows them, because the words are
++ * the point: the name and the level in use. Icon and words share one hover shape; pressed look = a level is on. */
++#gorilla-satellite-button {
++  list-style-image: url("chrome://browser/skin/gorilla-satellite.svg");
++
++  > .toolbarbutton-icon {
++    width: calc(var(--toolbarbutton-padding-inner) + 16px + 2px);
++    padding-inline-end: 2px;
++    border-start-end-radius: 0;
++    border-end-end-radius: 0;
++  }
++
++  > .toolbarbutton-text {
++    display: flex;
++    align-items: center;
++    white-space: nowrap;
++    padding-inline-start: 2px;
++    border-start-start-radius: 0;
++    border-end-start-radius: 0;
++  }
++
++  /* a level is on: the button looks pressed, the way a switched-on toolbar button does ([checked]) */
++  &:is([gorilla-level="1"], [gorilla-level="2"]) > :is(.toolbarbutton-icon, .toolbarbutton-text) {
++    background-color: var(--toolbarbutton-background-color-active);
++  }
++}
+diff --git a/toolkit/content/widgets/lit-utils.mjs b/toolkit/content/widgets/lit-utils.mjs
+index 08c2615f2d..e43ea9b902 100644
+--- a/toolkit/content/widgets/lit-utils.mjs
++++ b/toolkit/content/widgets/lit-utils.mjs
+@@ -455,6 +455,8 @@ export class MozBaseInputElement extends MozLitElement {
+   }
+ 
+   render() {
++    // GORILLA UNLEASHED - SATELLITE MODE: the hover text (title) also covers the label and description,
++    // not only the input; upstream puts it on the 16-pixel radio circle alone, where nobody hovers.
+     return html`
+       <link
+         rel="stylesheet"
+@@ -462,7 +464,7 @@ export class MozBaseInputElement extends MozLitElement {
+       />
+       ${this.inputStylesTemplate()}
+       <div class="content-wrapper">
+-        <span class="label-wrapper">
++        <span class="label-wrapper" title=${ifDefined(this.title)}>
+           <label
+             is="moz-label"
+             id="label"

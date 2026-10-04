@@ -1,0 +1,19 @@
+# Gorilla 157 privacy cut
+# D-157-30 satellite levels: disk cache on (bench B1/F7)
+# Files: browser/modules/GorillaLinkMode.sys.mjs
+
+diff --git a/browser/modules/GorillaLinkMode.sys.mjs b/browser/modules/GorillaLinkMode.sys.mjs
+index db8b151e48..b802a52b55 100644
+--- a/browser/modules/GorillaLinkMode.sys.mjs
++++ b/browser/modules/GorillaLinkMode.sys.mjs
+@@ -23,6 +23,10 @@ const SATELLITE = {
+   "network.http.connection-retry-timeout": 1000, // S10: no backup connection before a 600 ms SYN-ACK
+   "network.dnsCacheExpiration": 600, // S12
+   "network.dnsCacheExpirationGracePeriod": 3600, // S12
++  // F7 measured 2026-10-03 (bench B1): with no disk cache a restart re-fetches every page (95.7 s at 5 KB/s).
++  "browser.cache.disk.enable": true, // F7: keep pages across restarts on slow links
++  "browser.cache.disk.smart_size.enabled": false,
++  "browser.cache.disk.capacity": 262144, // 256 MiB
+ };
+ 
+ // Level 2 "Very slow link": level 1 with GEO timeouts, plus S6, S7, S11.

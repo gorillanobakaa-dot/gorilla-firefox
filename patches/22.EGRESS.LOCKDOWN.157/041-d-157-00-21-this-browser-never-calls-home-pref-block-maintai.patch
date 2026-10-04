@@ -1,0 +1,35 @@
+# Gorilla 157 privacy cut
+# D-157-00..21: THIS BROWSER NEVER CALLS HOME pref block (maintainer decisions 2026-10-02, chat); recorded by record_decisions.py
+# Files: browser/app/profile/firefox.js
+
+diff --git a/browser/app/profile/firefox.js b/browser/app/profile/firefox.js
+index 4cb3aa1bb4..2e6e0c6bdb 100644
+--- a/browser/app/profile/firefox.js
++++ b/browser/app/profile/firefox.js
+@@ -4182,3 +4182,26 @@ pref("media.eme.enabled", true, locked);
+ pref("media.gmp-widevinecdm.enabled", true, locked);
+ pref("media.gmp-gmpopenh264.enabled", true, locked);
+ // -- end GORILLA 2026-10-02 ------------------------------------------------------------------------------------------
++
++// -- GORILLA 2026-10-03: BATCH (D-157-00, D-157-03, D-157-30; network study F2/F6; satellite mode off by default) --
++// browser.ai.control.* are STRING prefs: all.js set them to boolean false, which libpref drops (type mismatch),
++// so they shipped "available". Correct type here, last file wins.
++pref("network.http.http2.send-buffer-size",         0);
++pref("network.http.response.timeout",               300);
++pref("gorilla.linkmode", 0);
++pref("gorilla.network.save_data", false);
++pref("browser.ai.control.default", "blocked", locked);
++pref("browser.ai.control.sidebarChatbot", "blocked", locked);
++pref("browser.ai.control.linkPreviewKeyPoints", "blocked", locked);
++pref("browser.ai.control.pdfjsAltText", "blocked", locked);
++pref("browser.ai.control.smartTabGroups", "blocked", locked);
++pref("browser.ai.control.smartWindow", "blocked", locked);
++pref("browser.ai.control.translations", "blocked", locked);
++pref("browser.ai.control.speechRecognition", "blocked", locked);
++pref("identity.fxaccounts.telemetry.clientInfoPing.enabled", false, locked);
++pref("browser.promo.relay.enabled", false, locked);
++pref("browser.ipProtection.enabled", false, locked);
++pref("browser.smartwindow.agent.enabled", false, locked);
++pref("browser.smartwindow.aitab.enabled", false, locked);
++pref("remote.experimental.dynamicstart.enabled", false, locked);
++// -- end GORILLA 2026-10-03: BATCH --

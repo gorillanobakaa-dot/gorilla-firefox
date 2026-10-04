@@ -1,0 +1,70 @@
+# Gorilla 157 privacy cut
+# D-157-29: Glean calls cut from netwerk/base/nsSocketTransport2.cpp
+# Files: netwerk/base/nsSocketTransport2.cpp
+
+diff --git a/netwerk/base/nsSocketTransport2.cpp b/netwerk/base/nsSocketTransport2.cpp
+index d617846df3..dc72c7a737 100644
+--- a/netwerk/base/nsSocketTransport2.cpp
++++ b/netwerk/base/nsSocketTransport2.cpp
+@@ -16,7 +16,6 @@
+ #include "mozilla/SyncRunnable.h"
+ #include "mozilla/Telemetry.h"
+ #include "mozilla/dom/ToJSValue.h"
+-#include "mozilla/glean/NetwerkMetrics.h"
+ #include "mozilla/net/NeckoChild.h"
+ #include "mozilla/net/SSLTokensCache.h"
+ #include "nsCOMPtr.h"
+@@ -70,10 +69,8 @@
+ #endif
+ /* End keepalive config inclusions. */
+ 
+-#define SUCCESSFUL_CONNECTING_TO_IPV4_ADDRESS 0
+-#define UNSUCCESSFUL_CONNECTING_TO_IPV4_ADDRESS 1
+-#define SUCCESSFUL_CONNECTING_TO_IPV6_ADDRESS 2
+-#define UNSUCCESSFUL_CONNECTING_TO_IPV6_ADDRESS 3
++// GORILLA UNLEASHED - PHYSICAL LOCK: no Glean in nsSocketTransport2 (D-157-29): the IPv4/IPv6 connectivity
++// samples and their constants are removed; nothing is recorded here.
+ 
+ //-----------------------------------------------------------------------------
+ 
+@@ -1756,19 +1753,7 @@ bool nsSocketTransport::RecoverFromError() {
+ 
+   bool tryAgain = false;
+ 
+-  if ((mState == STATE_CONNECTING) && mDNSRecord) {
+-    if (mNetAddr.raw.family == AF_INET) {
+-      if (mSocketTransportService->IsTelemetryEnabledAndNotSleepPhase()) {
+-        glean::network::ipv4_and_ipv6_address_connectivity
+-            .AccumulateSingleSample(UNSUCCESSFUL_CONNECTING_TO_IPV4_ADDRESS);
+-      }
+-    } else if (mNetAddr.raw.family == AF_INET6) {
+-      if (mSocketTransportService->IsTelemetryEnabledAndNotSleepPhase()) {
+-        glean::network::ipv4_and_ipv6_address_connectivity
+-            .AccumulateSingleSample(UNSUCCESSFUL_CONNECTING_TO_IPV6_ADDRESS);
+-      }
+-    }
+-  }
++  // GORILLA UNLEASHED - PHYSICAL LOCK: no Glean in nsSocketTransport2 (D-157-29): failed-connect sample removed.
+ 
+   if (mConnectionFlags & RETRY_WITH_DIFFERENT_IP_FAMILY &&
+       mCondition == NS_ERROR_UNKNOWN_HOST && mState == STATE_RESOLVING &&
+@@ -2238,18 +2223,7 @@ void nsSocketTransport::OnSocketReady(PRFileDesc* fd, int16_t outFlags) {
+       // we are connected!
+       //
+       OnSocketConnected();
+-
+-      if (mNetAddr.raw.family == AF_INET) {
+-        if (mSocketTransportService->IsTelemetryEnabledAndNotSleepPhase()) {
+-          glean::network::ipv4_and_ipv6_address_connectivity
+-              .AccumulateSingleSample(SUCCESSFUL_CONNECTING_TO_IPV4_ADDRESS);
+-        }
+-      } else if (mNetAddr.raw.family == AF_INET6) {
+-        if (mSocketTransportService->IsTelemetryEnabledAndNotSleepPhase()) {
+-          glean::network::ipv4_and_ipv6_address_connectivity
+-              .AccumulateSingleSample(SUCCESSFUL_CONNECTING_TO_IPV6_ADDRESS);
+-        }
+-      }
++      // GORILLA UNLEASHED - PHYSICAL LOCK: no Glean in nsSocketTransport2 (D-157-29): connect sample removed.
+     } else {
+       PRErrorCode code = PR_GetError();
+ #if defined(TEST_CONNECT_ERRORS)

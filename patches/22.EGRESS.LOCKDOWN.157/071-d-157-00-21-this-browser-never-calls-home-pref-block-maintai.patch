@@ -1,0 +1,21 @@
+# Gorilla 157 privacy cut
+# D-157-00..21: THIS BROWSER NEVER CALLS HOME pref block (maintainer decisions 2026-10-02, chat); recorded by record_decisions.py
+# Files: browser/app/profile/firefox.js
+
+diff --git a/browser/app/profile/firefox.js b/browser/app/profile/firefox.js
+index 73dcdcaea3..afd6f15446 100644
+--- a/browser/app/profile/firefox.js
++++ b/browser/app/profile/firefox.js
+@@ -3886,7 +3886,11 @@ pref("browser.theme.content-theme", 0, locked);
+ // ====================================================================
+ pref("app.update.background.enabled",               false);
+ pref("app.update.enabled",                          false);
+-pref("browser.cache.disk.capacity",                 0);
++// GORILLA UNLEASHED (D-157-33, 2026-10-04): 256 MiB, not 0. The disk cache stays OFF (browser.cache.disk.enable
++// false below) unless a Gorilla.Satellite level turns it on, so Off is unchanged. With 0, the cache sized itself
++// at start-up BEFORE the level was applied and evicted every stored page, so Satellite lost its cache on restart
++// (bench, 5 KB/s with pictures: all 16 requests again; cache2 log: GetEntryForEviction, RemoveEntry).
++pref("browser.cache.disk.capacity",                 262144);
+ pref("browser.cache.disk.enable",                   false);
+ pref("browser.cache.disk.smart_size.enabled",       false);
+ pref("browser.cache.disk_cache_ssl",                false);

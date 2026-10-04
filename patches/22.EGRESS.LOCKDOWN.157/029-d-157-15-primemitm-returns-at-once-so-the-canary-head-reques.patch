@@ -1,5 +1,5 @@
 # Gorilla 157 privacy cut
-# D-157-15: primeMitm returns at once, so the canary HEAD request to the MITM priming endpoint (mitmdetection.services.mozilla.com) is never sent from the certificate error page (never calls home)
+# D-157-15: primeMitm returns at once, so the canary HEAD request to the MITM priming endpoint (mitmdetection.services.mozilla.com) is never sent from the certificate error page (maintainer 2026-10-02: never calls home)
 # Files: toolkit/actors/NetErrorParent.sys.mjs
 
 diff --git a/toolkit/actors/NetErrorParent.sys.mjs b/toolkit/actors/NetErrorParent.sys.mjs

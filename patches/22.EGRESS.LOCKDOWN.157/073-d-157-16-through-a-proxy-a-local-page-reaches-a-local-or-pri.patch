@@ -1,0 +1,48 @@
+# Gorilla 157 privacy cut
+# D-157-16: through a proxy, a local page reaches a local or private literal only in its OWN address space (build 26 leak gate: a 127.0.0.1 page reached 10.0.0.1 and 192.168.0.1 through the proxy). Badge comment corrected.
+# Files: browser/components/aboutwelcome/content/aboutwelcome.css, browser/components/asrouter/content-src/styles/_multistage.scss, netwerk/protocol/http/nsHttpChannel.cpp
+
+diff --git a/browser/components/aboutwelcome/content/aboutwelcome.css b/browser/components/aboutwelcome/content/aboutwelcome.css
+index 7f08054cf6..e4a02914d4 100644
+--- a/browser/components/aboutwelcome/content/aboutwelcome.css
++++ b/browser/components/aboutwelcome/content/aboutwelcome.css
+@@ -4111,7 +4111,7 @@ html {
+ .onboardingContainer .mobile-downloads .ios button {
+   background-image: url("chrome://app-marketplace-icons/locale/ios.svg");
+ }
+-/* GORILLA UNLEASHED (2026-10-04): no Mozilla app-store badge (raster drawn at natural size, blurry at 2x; only Mozilla test messages use this tile) */
++/* GORILLA UNLEASHED (2026-10-04): no Mozilla app-store badge: Gorilla does not advertise Mozilla apps (only Mozilla test messages use this tile) */
+ .onboardingContainer .mobile-download-buttons {
+   list-style: none;
+   padding: 10px 0;
+diff --git a/browser/components/asrouter/content-src/styles/_multistage.scss b/browser/components/asrouter/content-src/styles/_multistage.scss
+index 63a07887ad..555decc2bb 100644
+--- a/browser/components/asrouter/content-src/styles/_multistage.scss
++++ b/browser/components/asrouter/content-src/styles/_multistage.scss
+@@ -2900,7 +2900,7 @@ html {
+       background-image: url('chrome://app-marketplace-icons/locale/ios.svg');
+     }
+ 
+-    // GORILLA UNLEASHED (2026-10-04): no Mozilla app-store badge (raster drawn at natural size, blurry at 2x; only Mozilla test messages use this tile)
++    // GORILLA UNLEASHED (2026-10-04): no Mozilla app-store badge: Gorilla does not advertise Mozilla apps (only Mozilla test messages use this tile)
+   }
+ 
+   .mobile-download-buttons {
+diff --git a/netwerk/protocol/http/nsHttpChannel.cpp b/netwerk/protocol/http/nsHttpChannel.cpp
+index d5768402ac..18a5de7e26 100644
+--- a/netwerk/protocol/http/nsHttpChannel.cpp
++++ b/netwerk/protocol/http/nsHttpChannel.cpp
+@@ -1453,9 +1453,10 @@ nsresult nsHttpChannel::Connect() {
+         NetAddr trigAddr;
+         if (NS_SUCCEEDED(trig->GetAsciiHost(trigHost)) &&
+             NS_SUCCEEDED(trigAddr.InitFromString(trigHost))) {
+-          auto s = trigAddr.GetIpAddressSpace();
+-          fromLanPage = s == nsILoadInfo::IPAddressSpace::Local ||
+-                        s == nsILoadInfo::IPAddressSpace::Private;
++          // 2026-10-04 (build 26 leak gate): a page on 127.0.0.1 reached 10.0.0.1 and 192.168.0.1 through the
++          // proxy, because any local page counted. Only the SAME address space counts now (a router page loading
++          // its own files; a loopback page talking to loopback), as on a direct connection.
++          fromLanPage = trigAddr.GetIpAddressSpace() == target;
+         }
+       }
+       LNAPermission granted = target == nsILoadInfo::IPAddressSpace::Local

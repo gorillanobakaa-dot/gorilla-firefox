@@ -1,0 +1,126 @@
+# Gorilla 157 privacy cut
+# D-157-30 / build 26 dispositions: every direct Merino fetch in the newtab shim returns at once (hourly forecast, sports matches and live, watch-live, picture of the day); the Rust Remote Settings service never gets a null server (null = fall back to the production server), contentRelevancy prefs locked; Microsoft.WindowsAppRuntime.dll (push-notification and telemetry code, loaded by nothing, absent from 155.0.1) no longer packaged.
+# Files: browser/app/profile/firefox.js, browser/extensions/newtab/lib/TemporaryMerinoClientShim.sys.mjs, browser/installer/package-manifest.in, toolkit/modules/RustSharedRemoteSettingsService.sys.mjs, widget/windows/moz.build
+
+diff --git a/browser/app/profile/firefox.js b/browser/app/profile/firefox.js
+index afd6f15446..392789c5b2 100644
+--- a/browser/app/profile/firefox.js
++++ b/browser/app/profile/firefox.js
+@@ -3731,9 +3731,9 @@ pref("startup.homepage_override_nimbus_minVersion", "");
+ pref("startup.homepage_override_nimbus_disable_wnp", false);
+ 
+ // Pref to enable the content relevancy feature.
+-pref("toolkit.contentRelevancy.enabled", false);
++pref("toolkit.contentRelevancy.enabled", false, locked);
+ // Pref to enable the ingestion through the Rust component.
+-pref("toolkit.contentRelevancy.ingestEnabled", false);
++pref("toolkit.contentRelevancy.ingestEnabled", false, locked);
+ // Pref to enable extra logging for the content relevancy feature
+ pref("toolkit.contentRelevancy.log", false);
+ 
+diff --git a/browser/extensions/newtab/lib/TemporaryMerinoClientShim.sys.mjs b/browser/extensions/newtab/lib/TemporaryMerinoClientShim.sys.mjs
+index 0bc42539b2..357bb03a04 100644
+--- a/browser/extensions/newtab/lib/TemporaryMerinoClientShim.sys.mjs
++++ b/browser/extensions/newtab/lib/TemporaryMerinoClientShim.sys.mjs
+@@ -593,6 +593,10 @@ export class TemporaryMerinoClientShim {
+     country = undefined,
+     endpointUrl = undefined,
+   }) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no Merino hourly forecast lookup, whatever the endpoint says
++    if (true) {
++      return null;
++    }
+     const hourlyEndpointURL = endpointUrl;
+ 
+     if (!hourlyEndpointURL) {
+@@ -729,6 +733,10 @@ export class TemporaryMerinoClientShim {
+    *   (deliberate skip).
+    */
+   async fetchSportsMatches({ source, endpointUrl, date }) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no Merino sports lookup, whatever the endpoint says
++    if (true) {
++      return { data: null, error: null };
++    }
+     if (!endpointUrl) {
+       return { data: null, error: null };
+     }
+@@ -777,6 +785,10 @@ export class TemporaryMerinoClientShim {
+    *   `data: null` means the endpoint is not configured (deliberate skip).
+    */
+   async fetchSportsLive({ source, endpointUrl }) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no Merino sports lookup, whatever the endpoint says
++    if (true) {
++      return { data: null, error: null };
++    }
+     if (!endpointUrl) {
+       return { data: null, error: null };
+     }
+@@ -824,6 +836,10 @@ export class TemporaryMerinoClientShim {
+    *   payload before consuming it.
+    */
+   async fetchWatchLive({ source, endpointUrl, acceptLanguage }) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no Merino watch-live lookup, whatever the endpoint says
++    if (true) {
++      return null;
++    }
+     if (!endpointUrl) {
+       return null;
+     }
+@@ -875,6 +891,10 @@ export class TemporaryMerinoClientShim {
+    *   (deliberate skip).
+    */
+   async fetchPictureOfTheDay({ source, endpointUrl, acceptLanguage }) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no Merino picture-of-the-day lookup, whatever the endpoint says
++    if (true) {
++      return { data: null, error: null };
++    }
+     if (!endpointUrl) {
+       return { data: null, error: null };
+     }
+diff --git a/browser/installer/package-manifest.in b/browser/installer/package-manifest.in
+index c496eb220e..0dd080b709 100644
+--- a/browser/installer/package-manifest.in
++++ b/browser/installer/package-manifest.in
+@@ -113,7 +113,6 @@
+ @BINPATH@/@DLL_PREFIX@Microsoft.UI.Input@DLL_SUFFIX@
+ @BINPATH@/@DLL_PREFIX@Microsoft.UI.Windowing.Core@DLL_SUFFIX@
+ @BINPATH@/@DLL_PREFIX@Microsoft.UI.Windowing@DLL_SUFFIX@
+-@BINPATH@/@DLL_PREFIX@Microsoft.WindowsAppRuntime@DLL_SUFFIX@
+ @BINPATH@/@DLL_PREFIX@Microsoft.WindowsAppRuntime.Insights.Resource@DLL_SUFFIX@
+ #endif
+ #ifdef MOZ_GTK
+diff --git a/toolkit/modules/RustSharedRemoteSettingsService.sys.mjs b/toolkit/modules/RustSharedRemoteSettingsService.sys.mjs
+index cfcd3b0803..228eabd047 100644
+--- a/toolkit/modules/RustSharedRemoteSettingsService.sys.mjs
++++ b/toolkit/modules/RustSharedRemoteSettingsService.sys.mjs
+@@ -160,9 +160,15 @@ class _SharedRemoteSettingsService {
+     //
+     // * In contrast, `RemoteSettingsService::update_config` returns the error
+     //   when it parses a cannot-be-a-base `config.server.url`.
+-    return !Utils.shouldSkipRemoteActivity || url != Utils.SERVER_URL
+-      ? new RemoteSettingsServer.Custom({ url })
+-      : null;
++    // GORILLA UNLEASHED - PHYSICAL LOCK (egress): never null. A null server makes the Rust component fall
++    // back to the PRODUCTION server (firefox.settings.services.mozilla.com). The dummy data: URI cannot be
++    // parsed by update_config, so the locked case gets an address that routes nowhere.
++    return new RemoteSettingsServer.Custom({
++      url:
++        Utils.shouldSkipRemoteActivity && url == Utils.SERVER_URL
++          ? "http://0.0.0.0/v1"
++          : url,
++    });
+   }
+ }
+ 
+diff --git a/widget/windows/moz.build b/widget/windows/moz.build
+index 035e7732dd..c538a0d20d 100644
+--- a/widget/windows/moz.build
++++ b/widget/windows/moz.build
+@@ -241,7 +241,6 @@ if CONFIG["MOZ_WINDOWSAPPSDK_DIR"]:
+             "Microsoft.UI.Input.dll",
+             "Microsoft.UI.Windowing.Core.dll",
+             "Microsoft.UI.Windowing.dll",
+-            "Microsoft.WindowsAppRuntime.dll",
+             "Microsoft.WindowsAppRuntime.Insights.Resource.dll",
+         )
+     ]

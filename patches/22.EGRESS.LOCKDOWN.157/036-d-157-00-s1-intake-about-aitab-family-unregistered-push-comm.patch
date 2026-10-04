@@ -1,0 +1,107 @@
+# Gorilla 157 privacy cut
+# D-157-00 S1 intake: about:aitab family unregistered, push command-line wake cut (dispositions in intents/INTAKE-157-DISPOSITIONS.md)
+# Files: browser/components/about/AboutRedirector.cpp, browser/components/about/components.conf, toolkit/components/push/PushCommandLineHandler.sys.mjs
+
+diff --git a/browser/components/about/AboutRedirector.cpp b/browser/components/about/AboutRedirector.cpp
+index ef00297de7..7330327a61 100644
+--- a/browser/components/about/AboutRedirector.cpp
++++ b/browser/components/about/AboutRedirector.cpp
+@@ -17,7 +17,6 @@
+ #include "mozilla/dom/ContentChild.h"
+ #include "mozilla/browser/NimbusFeatures.h"
+ 
+-#define AITAB_ENABLED_PREF "browser.smartwindow.aitab.enabled"
+ #define REFERRALS_ENABLED_PREF "browser.referrals.enabled"
+ #define PROFILES_ENABLED_PREF "browser.profiles.enabled"
+ #define ABOUT_WELCOME_CHROME_URL \
+@@ -47,16 +46,8 @@ struct RedirEntry {
+     browser/components/about/components.conf
+ */
+ static const RedirEntry kRedirMap[] = {
+-    {"aichatcontent", "chrome://browser/content/aiwindow/aiChatContent.html",
+-     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+-         nsIAboutModule::URI_CAN_LOAD_IN_PRIVILEGEDABOUT_PROCESS |
+-         nsIAboutModule::URI_MUST_LOAD_IN_CHILD | nsIAboutModule::ALLOW_SCRIPT |
+-         nsIAboutModule::HIDE_FROM_ABOUTABOUT},
+-    {"aitab", "chrome://browser/content/aiwindow/aitab.html",
+-     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+-         nsIAboutModule::URI_CAN_LOAD_IN_PRIVILEGEDABOUT_PROCESS |
+-         nsIAboutModule::URI_MUST_LOAD_IN_CHILD | nsIAboutModule::ALLOW_SCRIPT |
+-         nsIAboutModule::HIDE_FROM_ABOUTABOUT},
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no AI window (D-157-00): about:aichatcontent removed (aiwindow is excised).
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no AI window (D-157-00): about:aitab removed (aiwindow is excised).
+     {"asrouter", "chrome://browser/content/asrouter/asrouter-admin.html",
+      nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+          nsIAboutModule::URI_CAN_LOAD_IN_PRIVILEGEDABOUT_PROCESS |
+@@ -142,17 +133,8 @@ static const RedirEntry kRedirMap[] = {
+     {"settings", "chrome://browser/content/preferences/preferences.xhtml",
+      nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::IS_SECURE_CHROME_UI |
+          nsIAboutModule::HIDE_FROM_ABOUTABOUT},
+-    {"smartformfillreview",
+-     "chrome://browser/content/aiwindow/smartformfill-form-review-content.html",
+-     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+-         nsIAboutModule::URI_CAN_LOAD_IN_PRIVILEGEDABOUT_PROCESS |
+-         nsIAboutModule::URI_MUST_LOAD_IN_CHILD | nsIAboutModule::ALLOW_SCRIPT |
+-         nsIAboutModule::HIDE_FROM_ABOUTABOUT},
+-    {"smartwindowtasks", "chrome://browser/content/aiwindow/tasks.html",
+-     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+-         nsIAboutModule::URI_CAN_LOAD_IN_PRIVILEGEDABOUT_PROCESS |
+-         nsIAboutModule::URI_MUST_LOAD_IN_CHILD | nsIAboutModule::ALLOW_SCRIPT |
+-         nsIAboutModule::HIDE_FROM_ABOUTABOUT},
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no AI window (D-157-00): about:smartformfillreview removed (aiwindow is excised).
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no AI window (D-157-00): about:smartwindowtasks removed (aiwindow is excised).
+     {"tabcrashed", "chrome://browser/content/aboutTabCrashed.xhtml",
+      nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+          nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::HIDE_FROM_ABOUTABOUT},
+@@ -222,11 +204,6 @@ AboutRedirector::NewChannel(nsIURI* aURI, nsILoadInfo* aLoadInfo,
+ 
+   nsAutoCString path = GetAboutModuleName(aURI);
+ 
+-  if (path.EqualsASCII("aitab") &&
+-      !mozilla::Preferences::GetBool(AITAB_ENABLED_PREF, false)) {
+-    return NS_ERROR_NOT_AVAILABLE;
+-  }
+-
+   if (path.EqualsASCII("referrals") &&
+       !mozilla::Preferences::GetBool(REFERRALS_ENABLED_PREF, false)) {
+     return NS_ERROR_NOT_AVAILABLE;
+diff --git a/browser/components/about/components.conf b/browser/components/about/components.conf
+index ff11c2d485..5edfa2b025 100644
+--- a/browser/components/about/components.conf
++++ b/browser/components/about/components.conf
+@@ -2,9 +2,9 @@
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ 
++# GORILLA UNLEASHED - PHYSICAL LOCK: no AI window (D-157-00): aichatcontent, aitab, smartformfillreview and
++# smartwindowtasks are not registered (aiwindow is excised).
+ pages = [
+-    'aichatcontent',
+-    'aitab',
+     'asrouter',
+     'blocked',
+     'certerror',
+@@ -28,8 +28,6 @@ pages = [
+     'robots',
+     'sessionrestore',
+     'settings',
+-    'smartformfillreview',
+-    'smartwindowtasks',
+     'tabcrashed',
+     'unloads',
+     'welcome',
+diff --git a/toolkit/components/push/PushCommandLineHandler.sys.mjs b/toolkit/components/push/PushCommandLineHandler.sys.mjs
+index b34344802e..9523e31f9d 100644
+--- a/toolkit/components/push/PushCommandLineHandler.sys.mjs
++++ b/toolkit/components/push/PushCommandLineHandler.sys.mjs
+@@ -96,6 +96,10 @@ export class CommandLineHandler {
+    * @returns {Promise<void>} Resolves when receiving stops.
+    */
+   async receivePushMessages() {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no background push (D-157-00): --receive-push-messages never wakes the
++    // push service; Firefox started for it exits at once.
++    return;
++    // eslint-disable-next-line no-unreachable
+     if (!(await this.ensurePushServiceReady())) {
+       return;
+     }

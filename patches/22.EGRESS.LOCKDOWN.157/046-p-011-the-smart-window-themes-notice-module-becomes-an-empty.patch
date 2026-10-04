@@ -1,0 +1,15 @@
+# Gorilla 157 privacy cut
+# P-011: the Smart Window themes notice module becomes an empty stub instead of a deletion (verify refuses an upstream file gone without a patch); nothing loads it
+# Files: toolkit/mozapps/extensions/content/components/smartwindow-themes-notice.mjs
+
+diff --git a/toolkit/mozapps/extensions/content/components/smartwindow-themes-notice.mjs b/toolkit/mozapps/extensions/content/components/smartwindow-themes-notice.mjs
+new file mode 100644
+index 0000000000..394e5d64ad
+--- /dev/null
++++ b/toolkit/mozapps/extensions/content/components/smartwindow-themes-notice.mjs
+@@ -0,0 +1,5 @@
++// This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0 (http://mozilla.org/MPL/2.0/).
++
++// GORILLA UNLEASHED - PHYSICAL LOCK: the Smart Window themes notice is removed (the AI window is excised).
++// about:addons no longer loads this module or creates the element. The file stays as this empty module only because
++// the extensions jar.mn packages content/components/*.mjs and an upstream file may not vanish without a patch.

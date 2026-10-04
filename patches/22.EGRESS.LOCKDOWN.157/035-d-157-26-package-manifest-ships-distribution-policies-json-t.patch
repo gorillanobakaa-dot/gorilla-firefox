@@ -1,0 +1,14 @@
+# Gorilla 157 privacy cut
+# D-157-26: package-manifest ships distribution/policies.json (the distribution entry was only for Mozilla's own builds)
+# Files: browser/installer/package-manifest.in
+
+diff --git a/browser/installer/package-manifest.in b/browser/installer/package-manifest.in
+index b744b4a66e..c496eb220e 100644
+--- a/browser/installer/package-manifest.in
++++ b/browser/installer/package-manifest.in
+@@ -460,3 +460,5 @@ bin/libfreebl_64int_3.so
+ #if defined(BUILT_BY_MOZILLA)
+ @RESPATH@/distribution/*
+ #endif
++; GORILLA UNLEASHED - PHYSICAL LOCK: policies.json ships in every install (D-157-26)
++@RESPATH@/distribution/policies.json

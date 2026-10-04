@@ -4,7 +4,7 @@
 
 **Firefox with the telemetry stripped out and hardware video decoding forced on, for laptops the web has given up on.**
 
-Tracks current Firefox. Latest build: **155.0.1**, for **Linux and Windows**.
+Tracks current Firefox. Latest build: **157.0 for Windows** ([release notes, plain-language guide and developer guide](releases/157.0/)); **155.0.1** for Linux.
 
 Built for the people every other tool prices out: kids with no credit
 card, 15-year-old laptops, data sold by the megabyte. Free forever, by
@@ -215,8 +215,8 @@ The groups are applied in this order. Counts are what the folder holds now
 | `patches/14.EGRESS.LOCKDOWN` | Documents only (the forensic audit and hardening plan); no source changes | 0 · 0 · 0 · 0 |
 | `patches/16.SNAPSHOT.DELTA.2026-08-12` | Every file the August 2026 build changed that groups 01–14 do not name: browser chrome JS/CSS, urlbar, tabs, sidebar, settings, ASRouter, theme tokens | 84 · 0 · 0 · 0 |
 | `patches/20.SNAPSHOT.DELTA.155.0.1` | Everything else the 155.0.1 build changed: bundled uBlock Origin (656 files), the AI Window stub, built-in extension registration, the AI excision (432 deleted files: vendored `llama.cpp`/ggml, `aiwindow`, `genai`, urlbar ML, Firefox View chats), the Windows installer's 7-Zip stub (`7zSD.Win32.sfx`) replaced | 8 · 659 · 1 · 432 |
-| `patches/21.PORT.FIXES.157` | Repairs needed to carry the set onto Firefox 157: IPDL preprocessing, a misplaced hunk, a broken override, the Windows sandbox level, the About-window branding | 5 · 0 · 2 · 0 |
-| `patches/22.EGRESS.LOCKDOWN.157` | Every network caller, identifier and helper executable cut at the source for 157 (telemetry, Remote Settings, Normandy, Merino, GMP on demand, Safe Browsing lists, captive portal, push, geolocation, AMO, new-tab feeds, MITM priming, search partner codes, translations, extra themes, offline OneCRL, the never-calls-home pref block) | 28 · 0 · 0 · 0 |
+| `patches/21.PORT.FIXES.157` | Repairs needed to carry the set onto Firefox 157: IPDL preprocessing, a misplaced hunk, a broken override, the Windows sandbox level, the About-window branding | 10 · 0 · 2 · 0 |
+| `patches/22.EGRESS.LOCKDOWN.157` | Every network caller, identifier and helper executable cut at the source for 157 (telemetry, Remote Settings, Normandy, Merino, GMP on demand, Safe Browsing lists, captive portal, push, geolocation, AMO, new-tab feeds, MITM priming, search partner codes, translations, extra themes, offline OneCRL, the never-calls-home pref block) | 64 · 0 · 0 · 0 |
 
 Each patch in 21 and 22 starts with a comment giving its reason, and each of
 those folders has a `README.md` listing them. For the older groups, open the

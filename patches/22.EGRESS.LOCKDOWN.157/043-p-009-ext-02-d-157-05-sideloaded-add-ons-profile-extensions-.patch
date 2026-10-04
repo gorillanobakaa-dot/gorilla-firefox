@@ -1,0 +1,52 @@
+# Gorilla 157 privacy cut
+# P-009 EXT-02 D-157-05: sideloaded add-ons (profile extensions folder, global dirs, registry) are never registered at startup and are app-disabled; only built-in and system locations
+# Files: toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs, toolkit/mozapps/extensions/internal/XPIProvider.sys.mjs
+
+diff --git a/toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs b/toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs
+index 401506e0aa..353f3bab46 100644
+--- a/toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs
++++ b/toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs
+@@ -2690,6 +2690,18 @@ export const XPIDatabase = {
+       logger.warn(`[GORILLA] Theme ${aAddon.id} refused: one theme only`);
+       return false;
+     }
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no sideloaded add-ons
++    // Decision D-157-05 (uBlock Origin only). An add-on that is not in a built-in or system location (the profile's
++    // extensions folder, a global directory, the registry, a temporary install) is app-disabled: it cannot be enabled.
++    if (
++      aAddon.location &&
++      !aAddon.location.isBuiltin &&
++      !aAddon.location.isSystem &&
++      !Cu.isInAutomation
++    ) {
++      logger.warn(`[GORILLA] Add-on ${aAddon.id} refused: add-ons are built in only`);
++      return false;
++    }
+     if (this.mustSign(aAddon.type) && !aAddon.isCorrectlySigned) {
+       logger.warn(`Add-on ${aAddon.id} is not correctly signed.`);
+       if (Services.prefs.getBoolPref(PREF_XPI_SIGNATURES_DEV_ROOT, false)) {
+diff --git a/toolkit/mozapps/extensions/internal/XPIProvider.sys.mjs b/toolkit/mozapps/extensions/internal/XPIProvider.sys.mjs
+index bb2d7d0511..84e877d0fe 100644
+--- a/toolkit/mozapps/extensions/internal/XPIProvider.sys.mjs
++++ b/toolkit/mozapps/extensions/internal/XPIProvider.sys.mjs
+@@ -1636,6 +1636,20 @@ var XPIStates = {
+       }
+       changed = changed || loc.changed;
+ 
++      // GORILLA UNLEASHED - PHYSICAL LOCK: no sideloaded add-ons
++      // Decision D-157-05 (uBlock Origin only). Only the add-ons that ship inside the package (built-in and system
++      // locations) are registered. An add-on dropped into the profile's extensions folder, a global extensions
++      // directory or a Windows registry key is never registered, and one registered under an earlier build is
++      // forgotten here, so the database drops it at this startup. XPIDatabase.isUsableAddon refuses it as well.
++      if (!loc.isBuiltin && !loc.isSystem && !Cu.isInAutomation) {
++        for (let id of Array.from(loc.keys())) {
++          logger.warn(`[GORILLA] Add-on ${id} in ${loc.name} refused: add-ons are built in only`);
++          loc.delete(id);
++          changed = true;
++        }
++        continue;
++      }
++
+       // Don't bother checking scopes where we don't accept side-loads.
+       if (ignoreSideloads && !(loc.scope & startupScanScopes)) {
+         continue;

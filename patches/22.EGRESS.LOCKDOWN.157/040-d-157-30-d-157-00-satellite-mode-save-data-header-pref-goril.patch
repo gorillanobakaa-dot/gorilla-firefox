@@ -1,0 +1,194 @@
+# Gorilla 157 privacy cut
+# D-157-30/D-157-00 satellite mode: Save-Data header pref, GorillaLinkMode levels (off by default)
+# Files: browser/components/BrowserComponents.manifest, browser/modules/GorillaLinkMode.sys.mjs, browser/modules/moz.build, netwerk/protocol/http/nsHttpChannel.cpp, netwerk/protocol/http/nsHttpChannel.h
+
+diff --git a/browser/components/BrowserComponents.manifest b/browser/components/BrowserComponents.manifest
+index e06db88750..74edf60fd1 100644
+--- a/browser/components/BrowserComponents.manifest
++++ b/browser/components/BrowserComponents.manifest
+@@ -14,6 +14,8 @@ category first-startup-new-profile resource:///modules/AboutNewTabResourceMappin
+ # Browser global components initializing before UI startup
+ category browser-before-ui-startup moz-src:///browser/components/sessionstore/SessionStore.sys.mjs SessionStore.init
+ category browser-before-ui-startup resource:///modules/BuiltInThemes.sys.mjs BuiltInThemes.maybeInstallActiveBuiltInTheme
++# GORILLA UNLEASHED - SATELLITE MODE: applies gorilla.linkmode (0 = off, the default)
++category browser-before-ui-startup resource:///modules/GorillaLinkMode.sys.mjs GorillaLinkMode.init
+ #ifdef MOZ_NORMANDY
+ category browser-before-ui-startup resource://normandy/Normandy.sys.mjs Normandy.init
+ #endif
+diff --git a/browser/modules/GorillaLinkMode.sys.mjs b/browser/modules/GorillaLinkMode.sys.mjs
+new file mode 100644
+index 0000000000..db8b151e48
+--- /dev/null
++++ b/browser/modules/GorillaLinkMode.sys.mjs
+@@ -0,0 +1,113 @@
++/* This Source Code Form is subject to the terms of the Mozilla Public
++ * License, v. 2.0. If a copy of the MPL was not distributed with this
++ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
++
++// GORILLA UNLEASHED - SATELLITE MODE: slow or satellite link levels.
++//
++// One pref, gorilla.linkmode: 0 = off (the shipped values), 1 = "Satellite" (fast but far: Starlink, GEO
++// broadband), 2 = "Very slow link" (1-60 KB/s). The level's values are written to the DEFAULT branch, so a value
++// the user set by hand always wins, and going back to 0 restores the shipped defaults exactly. Nothing here makes
++// a connection: every value makes the browser fetch less, wait longer, or ask sites for lighter pages
++// (D-157-00, D-157-30). Values: docs/NETWORK-AND-SATELLITE-STUDY.md sections 7.2 and 7.3.
++
++const LINKMODE_PREF = "gorilla.linkmode";
++
++// Level 1 "Satellite": study S2, S3, S10, S12 (prefs part).
++const SATELLITE = {
++  "media.autoplay.default": 5, // S2: no autoplay, muted video included
++  "media.preload.default": 1, // S3: no media preload (Firefox's own cellular value)
++  "media.preload.auto": 2, // S3: metadata only
++  "network.http.connection-timeout": 30, // S10
++  "network.http.tls-handshake-timeout": 60, // S10
++  "network.http.response.timeout": 300, // S10 / F6
++  "network.http.connection-retry-timeout": 1000, // S10: no backup connection before a 600 ms SYN-ACK
++  "network.dnsCacheExpiration": 600, // S12
++  "network.dnsCacheExpirationGracePeriod": 3600, // S12
++};
++
++// Level 2 "Very slow link": level 1 with GEO timeouts, plus S6, S7, S11.
++const VERY_SLOW = {
++  ...SATELLITE,
++  "network.http.connection-timeout": 60, // S10, GEO
++  "gfx.downloadable_fonts.enabled": false, // S6: no web fonts
++  "gorilla.network.save_data": true, // S7: "Save-Data: on" (nsHttpChannel::SetSaveData)
++  "network.http.max-persistent-connections-per-server": 6, // S11
++};
++
++const LEVELS = [{}, SATELLITE, VERY_SLOW];
++
++function getDefault(branch, name) {
++  switch (branch.getPrefType(name)) {
++    case Ci.nsIPrefBranch.PREF_INT:
++      return branch.getIntPref(name);
++    case Ci.nsIPrefBranch.PREF_BOOL:
++      return branch.getBoolPref(name);
++    case Ci.nsIPrefBranch.PREF_STRING:
++      return branch.getStringPref(name);
++  }
++  return undefined;
++}
++
++function setDefault(branch, name, value) {
++  if (typeof value === "boolean") {
++    branch.setBoolPref(name, value);
++  } else if (typeof value === "number") {
++    branch.setIntPref(name, value);
++  } else {
++    branch.setStringPref(name, String(value));
++  }
++}
++
++export const GorillaLinkMode = {
++  _shipped: null,
++  _applied: 0,
++
++  init() {
++    if (this._shipped) {
++      return;
++    }
++    const branch = Services.prefs.getDefaultBranch("");
++    this._shipped = {};
++    for (const name of Object.keys(VERY_SLOW)) {
++      this._shipped[name] = getDefault(branch, name);
++    }
++    Services.prefs.addObserver(LINKMODE_PREF, this);
++    this.apply();
++  },
++
++  observe() {
++    this.apply();
++  },
++
++  level() {
++    const n = Services.prefs.getIntPref(LINKMODE_PREF, 0);
++    return n >= 0 && n < LEVELS.length ? n : 0;
++  },
++
++  apply() {
++    const want = this.level();
++    if (want === this._applied) {
++      return;
++    }
++    const branch = Services.prefs.getDefaultBranch("");
++    const values = LEVELS[want];
++    for (const name of Object.keys(VERY_SLOW)) {
++      let value = name in values ? values[name] : this._shipped[name];
++      if (value === undefined) {
++        // Not defined in the shipped build and not part of this level.
++        if (name === "gorilla.network.save_data") {
++          value = false;
++        } else {
++          continue;
++        }
++      }
++      try {
++        setDefault(branch, name, value);
++      } catch (e) {
++        // A locked pref keeps its locked value.
++        console.error(`GorillaLinkMode: ${name}`, e);
++      }
++    }
++    this._applied = want;
++  },
++};
+diff --git a/browser/modules/moz.build b/browser/modules/moz.build
+index 0860dd3376..0154825301 100644
+--- a/browser/modules/moz.build
++++ b/browser/modules/moz.build
+@@ -121,6 +121,8 @@ if CONFIG["MOZ_WIDGET_TOOLKIT"] == "cocoa" and CONFIG["NIGHTLY_BUILD"]:
+ 
+ EXTRA_JS_MODULES += [
+     "AboutNewTab.sys.mjs",
++    # GORILLA UNLEASHED - SATELLITE MODE: gorilla.linkmode levels (off by default).
++    "GorillaLinkMode.sys.mjs",
+     # GORILLA: inert stand-in for the excised AI Window. Upstream
+     # browser-places.js and SessionStore.sys.mjs still call AIWindow.
+     "AIWindowStub.sys.mjs",
+diff --git a/netwerk/protocol/http/nsHttpChannel.cpp b/netwerk/protocol/http/nsHttpChannel.cpp
+index 0dc74fdcc6..33c20e2c70 100644
+--- a/netwerk/protocol/http/nsHttpChannel.cpp
++++ b/netwerk/protocol/http/nsHttpChannel.cpp
+@@ -8128,6 +8128,7 @@ nsresult nsHttpChannel::BeginConnect() {
+   SetOriginHeader();
+   SetDoNotTrack();
+   SetGlobalPrivacyControl();
++  SetSaveData();  // GORILLA UNLEASHED - SATELLITE MODE
+ 
+   OriginAttributes originAttributes;
+   // Regular principal in case we have a proxy.
+@@ -12054,6 +12055,19 @@ void nsHttpChannel::SetGlobalPrivacyControl() {
+   }
+ }
+ 
++// GORILLA UNLEASHED - SATELLITE MODE: "Save-Data: on" asks the site for a
++// lighter page (only sites that honour it change anything). Off by default:
++// while on it is one more bit a site can see. No connection is made by it.
++void nsHttpChannel::SetSaveData() {
++  MOZ_ASSERT(NS_IsMainThread(), "Must be called on the main thread");
++
++  if (Preferences::GetBool("gorilla.network.save_data", false)) {
++    DebugOnly<nsresult> rv =
++        mRequestHead.SetHeader("Save-Data"_ns, "on"_ns, false);
++    MOZ_ASSERT(NS_SUCCEEDED(rv));
++  }
++}
++
+ void nsHttpChannel::ReportSystemChannelTelemetry(nsresult status) {
+   // Use status and httpStatus to determine
+   // if it was successful, and if we had connectivity / offline in this time
+diff --git a/netwerk/protocol/http/nsHttpChannel.h b/netwerk/protocol/http/nsHttpChannel.h
+index cb5da1a630..44256c3447 100644
+--- a/netwerk/protocol/http/nsHttpChannel.h
++++ b/netwerk/protocol/http/nsHttpChannel.h
+@@ -559,6 +559,8 @@ class nsHttpChannel final : public HttpBaseChannel,
+   void SetOriginHeader();
+   void SetDoNotTrack();
+   void SetGlobalPrivacyControl();
++  // GORILLA UNLEASHED - SATELLITE MODE: Save-Data header (gorilla.network.save_data, default off).
++  void SetSaveData();
+ 
+   already_AddRefed<nsChannelClassifier> GetOrCreateChannelClassifier();
+ 

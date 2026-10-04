@@ -1,0 +1,26 @@
+# Gorilla 157 privacy cut
+# Repair: mozbuild list(s) sorted: ['EXTRA_JS_MODULES'] (mozbuild refuses an unsorted list)
+# Files: browser/modules/moz.build
+
+diff --git a/browser/modules/moz.build b/browser/modules/moz.build
+index 0154825301..1b715b20cb 100644
+--- a/browser/modules/moz.build
++++ b/browser/modules/moz.build
+@@ -121,8 +121,6 @@ if CONFIG["MOZ_WIDGET_TOOLKIT"] == "cocoa" and CONFIG["NIGHTLY_BUILD"]:
+ 
+ EXTRA_JS_MODULES += [
+     "AboutNewTab.sys.mjs",
+-    # GORILLA UNLEASHED - SATELLITE MODE: gorilla.linkmode levels (off by default).
+-    "GorillaLinkMode.sys.mjs",
+     # GORILLA: inert stand-in for the excised AI Window. Upstream
+     # browser-places.js and SessionStore.sys.mjs still call AIWindow.
+     "AIWindowStub.sys.mjs",
+@@ -138,6 +136,8 @@ EXTRA_JS_MODULES += [
+     "FilterAdult.sys.mjs",
+     "FirefoxBridgeExtensionUtils.sys.mjs",
+     "GorillaBuiltinExtensions.sys.mjs",
++    # GORILLA UNLEASHED - SATELLITE MODE: gorilla.linkmode levels (off by default).
++    "GorillaLinkMode.sys.mjs",
+     "HomePage.sys.mjs",
+     "LaterRun.sys.mjs",
+     "LinksCache.sys.mjs",

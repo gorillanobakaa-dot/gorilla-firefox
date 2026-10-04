@@ -1,0 +1,187 @@
+# Gorilla 157 privacy cut
+# D-157-31 techniques T-157-31-A/B/C annotated at every place they apply (GORILLA TECHNIQUE comments: the problem, why the fix removes the wait instead of starting Nimbus, how to re-apply in a later Firefox); nothing else starts Nimbus: about:welcome, launch-on-login and background tasks return before ExperimentAPI.init, Normandy finishInit locked on its own; search URLs never take parameters from Nimbus (searchConfiguration receiver removed)
+# Files: browser/components/aboutwelcome/actors/AboutWelcomeParent.sys.mjs, browser/components/defaultlaunchonlogin/DefaultLaunchOnLogin.sys.mjs, browser/components/newtab/AboutNewTabResourceMapping.sys.mjs, browser/extensions/newtab/lib/PrefsFeed.sys.mjs, browser/modules/AboutNewTab.sys.mjs, services/settings/Utils.sys.mjs, toolkit/components/backgroundtasks/BackgroundTasksUtils.sys.mjs, toolkit/components/normandy/Normandy.sys.mjs, toolkit/components/search/ConfigSearchEngine.sys.mjs
+
+diff --git a/browser/components/aboutwelcome/actors/AboutWelcomeParent.sys.mjs b/browser/components/aboutwelcome/actors/AboutWelcomeParent.sys.mjs
+index 062b25ff64..d861812bdf 100644
+--- a/browser/components/aboutwelcome/actors/AboutWelcomeParent.sys.mjs
++++ b/browser/components/aboutwelcome/actors/AboutWelcomeParent.sys.mjs
+@@ -94,6 +94,13 @@ function shouldGateNimbusForAboutWelcome() {
+  * @returns {Promise<"ready"|"timeout"|"error"|"skipped">}
+  */
+ async function waitForNimbusForAboutWelcome() {
++  // GORILLA UNLEASHED - PHYSICAL LOCK (D-157-31): about:welcome never starts or waits for Nimbus.
++  // GORILLA TECHNIQUE T-157-31-A: nothing starts Nimbus (the experiment system). Starting it here would load
++  //   experiment recipes and wait for a Remote Settings update that never comes in Gorilla. The caller goes on
++  //   with its built-in defaults. Registry: Fieldkit fieldkit/buildh/techniques.py.
++  if (true) {
++    return "skipped";
++  }
+   if (!shouldGateNimbusForAboutWelcome()) {
+     lazy.log.debug("AboutWelcomeParent: skipping Nimbus wait (gate disabled)");
+     return "skipped";
+diff --git a/browser/components/defaultlaunchonlogin/DefaultLaunchOnLogin.sys.mjs b/browser/components/defaultlaunchonlogin/DefaultLaunchOnLogin.sys.mjs
+index ac2c1e9adb..ba6116c123 100644
+--- a/browser/components/defaultlaunchonlogin/DefaultLaunchOnLogin.sys.mjs
++++ b/browser/components/defaultlaunchonlogin/DefaultLaunchOnLogin.sys.mjs
+@@ -116,6 +116,13 @@ export var DefaultLaunchOnLogin = {
+    * feature is knowable.
+    */
+   async waitForNimbusReady() {
++    // GORILLA UNLEASHED - PHYSICAL LOCK (D-157-31): never start or wait for Nimbus.
++    // GORILLA TECHNIQUE T-157-31-A: nothing starts Nimbus (the experiment system). Starting it here would load
++    //   experiment recipes and wait for a Remote Settings update that never comes in Gorilla. The caller goes on
++    //   with its built-in defaults. Registry: Fieldkit fieldkit/buildh/techniques.py.
++    if (true) {
++      return;
++    }
+     await lazy.ExperimentAPI.init();
+     await lazy.ExperimentAPI._rsLoader.finishedUpdating();
+   },
+diff --git a/browser/components/newtab/AboutNewTabResourceMapping.sys.mjs b/browser/components/newtab/AboutNewTabResourceMapping.sys.mjs
+index 119fa960ed..de68c4a145 100644
+--- a/browser/components/newtab/AboutNewTabResourceMapping.sys.mjs
++++ b/browser/components/newtab/AboutNewTabResourceMapping.sys.mjs
+@@ -778,6 +778,13 @@ export var AboutNewTabResourceMapping = {
+   async updateTrainhopAddonState(forceRestartlessInstall = false) {
+     // GORILLA UNLEASHED - PHYSICAL LOCK (D-157-31): no train-hop. Mozilla's newtab XPI is never
+     // downloaded or installed: the page is the one built into this binary.
++    // GORILLA TECHNIQUE T-157-31-B "no remotely delivered code or configuration": train-hop lets a Nimbus
++    //   enrollment name an XPI (xpi_download_path) that is fetched from browser.newtabpage.trainhopAddon.xpiBaseURL
++    //   (upstream: https://archive.mozilla.org/pub/system-addons/newtab/) and installed over the built-in new tab.
++    //   All three entry points return at once: updateTrainhopAddonState, _installTrainhopAddon and
++    //   firstStartupNewProfile; the base URL pref is "" and locked. In a later Firefox, cut every path that
++    //   downloads or installs a newtab add-on, whatever it is called (search: trainhop, xpiDownloadURL,
++    //   installTemporaryAddon / AddonManager.getInstallForURL near newtab). Registry: Fieldkit fieldkit/buildh/techniques.py, `fieldkit build-harness techniques <task>`
+     if (true) {
+       return;
+     }
+diff --git a/browser/extensions/newtab/lib/PrefsFeed.sys.mjs b/browser/extensions/newtab/lib/PrefsFeed.sys.mjs
+index f6de3be7f0..8b2fd0967e 100644
+--- a/browser/extensions/newtab/lib/PrefsFeed.sys.mjs
++++ b/browser/extensions/newtab/lib/PrefsFeed.sys.mjs
+@@ -304,6 +304,11 @@ export class PrefsFeed {
+    */
+   _getTrainhopConfig() {
+     // GORILLA UNLEASHED - PHYSICAL LOCK (D-157-31): nothing sent by Mozilla reconfigures the new tab.
++    // GORILLA TECHNIQUE T-157-31-B: trainhopConfig is the payload of newtabTrainhop Nimbus enrollments. Feeds
++    //   read it to change section order, ad placement (adsClient, spocsOnDemand), page layout variants and
++    //   widgets, and this function writes some of it to the DEFAULT pref branch (weather.display, widget size):
++    //   a remote pref flip. It is always empty here. Keep it empty in any later Firefox, under whatever name
++    //   the remote new-tab configuration has then. Registry: Fieldkit fieldkit/buildh/techniques.py, `fieldkit build-harness techniques <task>`
+     if (true) {
+       this._trainhopConfig = {};
+       return {};
+diff --git a/browser/modules/AboutNewTab.sys.mjs b/browser/modules/AboutNewTab.sys.mjs
+index b60d95c9ad..1ecdfbeb98 100644
+--- a/browser/modules/AboutNewTab.sys.mjs
++++ b/browser/modules/AboutNewTab.sys.mjs
+@@ -198,9 +198,23 @@ export const AboutNewTab = {
+     // the addon has finished registering its resources, and that the
+     // trainhopConfig value computed in PrefsFeed is ready to be read.
+ 
+-    // GORILLA UNLEASHED - PHYSICAL LOCK (D-157-31): the new tab never waits for Nimbus. Nimbus is never
+-    // started in Gorilla (Normandy is cut), so its ready() never resolved and the
+-    // page stayed blank; and train-hop (its only use here) is cut below.
++    // GORILLA UNLEASHED - PHYSICAL LOCK (D-157-31): the new tab never waits for Nimbus.
++    // GORILLA TECHNIQUE T-157-31-A "no page waits on the experiment system" (registry: Fieldkit fieldkit/buildh/techniques.py, `fieldkit build-harness techniques <task>`)
++    //   What upstream does: Promise.all([profile age, NimbusFeatures.newtabTrainhop.ready(), built-in addon])
++    //     and only then `new ActivityStream()`, the code that draws the new tab and the start page.
++    //   Why that breaks Gorilla: Normandy is cut (its init returns at once, see Normandy.sys.mjs), and in
++    //     Firefox 157 Normandy's init is the only caller of ExperimentAPI.init(). The Nimbus store is never
++    //     opened, ready() never resolves, the page is never built: a black new tab and start page (build 19,
++    //     2026-10-03; it measured 34 elements and no picture).
++    //   Why we remove the wait instead of answering it: the maintainer's rule D-157-31 is that nothing may
++    //     reconfigure the browser after it ships. The only thing this wait was for is train-hop (Mozilla
++    //     replacing or reconfiguring this page remotely), which is cut in AboutNewTabResourceMapping and
++    //     PrefsFeed. Opening the Nimbus store just to say "nothing new" was tested and works, but keeps the
++    //     experiment system alive; removing the question keeps it dead.
++    //   If a later Firefox moves this: find EVERY await on NimbusFeatures.<x>.ready(), ExperimentAPI.ready()
++    //     or ExperimentAPI.init() on a path that draws a page or starts a feature, and remove the wait (not the
++    //     feature). `fieldkit build-harness techniques` lists them. The visual check's RT-CONTENT rule fails
++    //     a build whose new tab does not show the Gorilla logo and the search box.
+ 
+     let redirector = Cc[
+       "@mozilla.org/network/protocol/about;1?what=newtab"
+diff --git a/services/settings/Utils.sys.mjs b/services/settings/Utils.sys.mjs
+index a9720780e5..e49c88c4b8 100644
+--- a/services/settings/Utils.sys.mjs
++++ b/services/settings/Utils.sys.mjs
+@@ -148,6 +148,10 @@ export var Utils = {
+     // dumps only for the production server, and SERVER_URL above is the dummy URL, so since the egress lock every
+     // dump was ignored: no search-engine icons, no URL-decoration list, no password rules (found 2026-10-03).
+     // Dumps are local files in omni.ja; nothing is fetched (shouldSkipRemoteActivity stays true).
++    // GORILLA TECHNIQUE T-157-31-C "a lock must not switch off the built-in copy": upstream ties the use of
++    //   packaged data to the server being Mozilla's production one, so locking the server silently disabled
++    //   every dump (nothing leaked; features quietly did less). In a later Firefox, after locking any remote
++    //   source, check what else read its URL or state. Registry: Fieldkit fieldkit/buildh/techniques.py, `fieldkit build-harness techniques <task>`
+     return true;
+   },
+ 
+diff --git a/toolkit/components/backgroundtasks/BackgroundTasksUtils.sys.mjs b/toolkit/components/backgroundtasks/BackgroundTasksUtils.sys.mjs
+index 56317dc9c0..d375f61327 100644
+--- a/toolkit/components/backgroundtasks/BackgroundTasksUtils.sys.mjs
++++ b/toolkit/components/backgroundtasks/BackgroundTasksUtils.sys.mjs
+@@ -297,6 +297,13 @@ export var BackgroundTasksUtils = {
+    *                                     targeting from default browsing profile.
+    */
+   async enableNimbus(commandLine, defaultProfile = {}) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK (D-157-31): background tasks never start Nimbus (upstream: init with forceSync, a recipe fetch).
++    // GORILLA TECHNIQUE T-157-31-A: nothing starts Nimbus (the experiment system). Starting it here would load
++    //   experiment recipes and wait for a Remote Settings update that never comes in Gorilla. The caller goes on
++    //   with its built-in defaults. Registry: Fieldkit fieldkit/buildh/techniques.py.
++    if (true) {
++      return;
++    }
+     await lazy.ExperimentAPI.init({
+       forceSync: true,
+       extraContext: { defaultProfile },
+diff --git a/toolkit/components/normandy/Normandy.sys.mjs b/toolkit/components/normandy/Normandy.sys.mjs
+index 36ddc2aa4d..a0d619aaa5 100644
+--- a/toolkit/components/normandy/Normandy.sys.mjs
++++ b/toolkit/components/normandy/Normandy.sys.mjs
+@@ -42,6 +42,11 @@ export var Normandy = {
+   /** Initialization that needs to happen before the first paint on startup. */
+   async init({ runAsync = true } = {}) {
+     // GORILLA UNLEASHED - PHYSICAL LOCK: Normandy never initialises: no recipe runner, no preference experiments, no shield-preference-experiments.json
++    // GORILLA TECHNIQUE T-157-31-A: in Firefox 157 this init is also the only caller of ExperimentAPI.init(), so
++    //   Nimbus never starts either (wanted: D-157-31). Anything that AWAITS Nimbus readiness therefore waits
++    //   forever. Do not "fix" that by starting Nimbus here: remove the wait at the waiter (see AboutNewTab.sys.mjs
++    //   onBrowserReady). The older Mozambique Drill (group 12: prefs off and locked, 60-year timers) stays as a
++    //   second layer; it let Normandy start and sleep, which is why 155 never had this problem.
+     if (true) {
+       return;
+     }
+@@ -90,6 +95,12 @@ export var Normandy = {
+   },
+ 
+   async finishInit() {
++    // GORILLA UNLEASHED - PHYSICAL LOCK (D-157-31): unreachable while init() returns first, and locked on its own
++    // GORILLA TECHNIQUE T-157-31-A: this is where Firefox 157 starts Nimbus (ExperimentAPI.init below); a later
++    //   caller of finishInit must not be able to start the experiment system.
++    if (true) {
++      return;
++    }
+     await lazy.PreferenceRollouts.recordOriginalValues(
+       this.rolloutPrefsChanged
+     );
+diff --git a/toolkit/components/search/ConfigSearchEngine.sys.mjs b/toolkit/components/search/ConfigSearchEngine.sys.mjs
+index 558441364b..3bedd71089 100644
+--- a/toolkit/components/search/ConfigSearchEngine.sys.mjs
++++ b/toolkit/components/search/ConfigSearchEngine.sys.mjs
+@@ -317,10 +317,11 @@ const ParamPreferenceCache = {
+     }
+     this.branch.addObserver("", this, true);
+ 
+-    this.onNimbusUpdate = this.onNimbusUpdate.bind(this);
+-    this.onNimbusUpdate();
+-    lazy.NimbusFeatures.searchConfiguration.onUpdate(this.onNimbusUpdate);
+-    lazy.NimbusFeatures.searchConfiguration.ready().then(this.onNimbusUpdate);
++    // GORILLA UNLEASHED - PHYSICAL LOCK (D-157-31, D-157-23): search URLs never take parameters from Nimbus.
++    // GORILLA TECHNIQUE T-157-31-B: upstream reads extra search parameters from the searchConfiguration
++    //   experiment feature and listens for updates, so a remote enrollment could add codes to every search URL.
++    //   Nimbus never starts in Gorilla, so this was inert; the receiver is removed so it stays impossible.
++    //   nimbusCache stays empty: only browser.search.param.* prefs (built in) can add a parameter.
+   },
+ 
+   observe(subject, topic, data) {

@@ -1,0 +1,39 @@
+# Gorilla 157 port fix
+# P-014 08.Look I-d10de1e603: 157 renamed the address-bar search-mode and result-menu messages; the Gorilla wording is carried to the ids 157 uses (D-157-24 branding)
+# Files: browser/locales/en-US/browser/browser.ftl
+
+diff --git a/browser/locales/en-US/browser/browser.ftl b/browser/locales/en-US/browser/browser.ftl
+index a8e8294667..8e32c49c84 100644
+--- a/browser/locales/en-US/browser/browser.ftl
++++ b/browser/locales/en-US/browser/browser.ftl
+@@ -1728,7 +1728,7 @@ urlbar-result-menu-manage-firefox-suggest2 = Manage { -firefox-suggest-brand-nam
+ # user tell Firefox that the location is not accurate. Typically the location
+ # will be a city name, or a city name combined with the name of its parent
+ # administrative division (e.g., a province, prefecture, or state).
+-urlbar-result-menu-remove-from-history2 = Remove from history
++urlbar-result-menu-remove-from-history2 = Remove from Gorilla history
+     .accesskey = R
+ urlbar-result-menu-report-inaccurate-location2 = Report inaccurate location
+ urlbar-result-menu-show-less-frequently2 = Show less frequently
+@@ -1744,16 +1744,16 @@ urlbar-result-realtime-opt-in-dismiss-all2 = Don’t show these suggestions
+ # This string is shown in the result menu.
+ urlbar-searchmode-actions3 = Actions
+     .accesskey = A
+-urlbar-searchmode-bookmarks3 = Bookmarks
++urlbar-searchmode-bookmarks3 = Gorilla Bookmarks
+     .accesskey = B
+-urlbar-searchmode-history3 = History
++urlbar-searchmode-history3 = Gorilla History
+     .accesskey = H
+-urlbar-searchmode-popup-search-settings = Search Settings
++urlbar-searchmode-popup-search-settings = Search Gorilla Settings
+     .accesskey = S
+-urlbar-searchmode-popup-settings = Settings
++urlbar-searchmode-popup-settings = Gorilla Settings
+     .accesskey = S
+ 
+ # Label prompting user to search with a particular search engine.
+ #  $engine (String): the name of a search engine that searches a specific site
+-urlbar-searchmode-tabs3 = Tabs
++urlbar-searchmode-tabs3 = Gorilla Tabs
+     .accesskey = T

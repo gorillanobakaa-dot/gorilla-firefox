@@ -1,0 +1,47 @@
+# Gorilla 157 privacy cut
+# D-157-16 local network protection decides before the connection: the 2026-10-04 leak gate saw a public page knock on 192.168.0.1 and 10.0.0.1 (the SYN left before upstream's after-connect check); DnsAndConnectSocket::SetupStreams now refuses, before any packet, when every resolved address is local or private and the transaction may not reach that address space, with the same error as the late check so the permission prompt and replay still work (technique T-157-16-A)
+# Files: netwerk/protocol/http/DnsAndConnectSocket.cpp
+
+diff --git a/netwerk/protocol/http/DnsAndConnectSocket.cpp b/netwerk/protocol/http/DnsAndConnectSocket.cpp
+index a49e9e63ee..2066946d43 100644
+--- a/netwerk/protocol/http/DnsAndConnectSocket.cpp
++++ b/netwerk/protocol/http/DnsAndConnectSocket.cpp
+@@ -1195,6 +1195,38 @@ nsresult DnsAndConnectSocket::TransportSetup::SetupStreams(
+     }
+   }
+ 
++  // GORILLA UNLEASHED - PHYSICAL LOCK (D-157-16): the local-network check runs BEFORE the connection.
++  // GORILLA TECHNIQUE T-157-16-A "decide before the packet leaves": upstream checks local network access
++  // (AllowedToConnectToIpAddressSpace) only after TCP has connected (OnOutputStreamReady, nsHttpConnection).
++  //   For a LAN address where nothing answers, the SYN has already left by then: the 2026-10-04 leak gate saw a
++  //   public page knock on 192.168.0.1 and 10.0.0.1 (8 s timeouts), which is how a site maps a home network by
++  //   timing. Here the resolved addresses are known and nothing has been sent: when every address is local or
++  //   private and the transaction may not reach that address space, refuse with the same error the late check
++  //   uses, so the channel's permission prompt and replay work as before. Mixed public/private answers and proxied
++  //   connections keep upstream's late check. Registry: Fieldkit fieldkit/buildh/techniques.py.
++  if (mDNSRecord && !dnsAndSock->mConnInfo->UsingProxy() && dnsAndSock->mTransaction &&
++      StaticPrefs::network_lna_blocking()) {
++    nsTArray<NetAddr> addrs;
++    if (NS_SUCCEEDED(mDNSRecord->GetAddresses(addrs)) && !addrs.IsEmpty()) {
++      bool allLocal = true;
++      for (const auto& addr : addrs) {
++        auto space = addr.GetIpAddressSpace();
++        if (space != nsILoadInfo::IPAddressSpace::Local &&
++            space != nsILoadInfo::IPAddressSpace::Private) {
++          allLocal = false;
++          break;
++        }
++      }
++      if (allLocal && !dnsAndSock->mTransaction->AllowedToConnectToIpAddressSpace(
++                          addrs[0].GetIpAddressSpace())) {
++        LOG(("DnsAndConnectSocket::SetupStreams [this=%p] local network access "
++             "refused before connecting (D-157-16)\n",
++             this));
++        return NS_ERROR_LOCAL_NETWORK_ACCESS_DENIED;
++      }
++    }
++  }
++
+   nsCOMPtr<nsISocketTransport> socketTransport;
+   nsCOMPtr<nsISocketTransportService> sts;
+ 

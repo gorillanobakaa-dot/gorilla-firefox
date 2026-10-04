@@ -1,0 +1,35 @@
+# Gorilla 157 privacy cut
+# D-157-30 satellite levels: disk cache on (bench B1/F7)
+# Files: browser/modules/GorillaLinkMode.sys.mjs
+
+diff --git a/browser/modules/GorillaLinkMode.sys.mjs b/browser/modules/GorillaLinkMode.sys.mjs
+index 135c5425e5..b492fe1a57 100644
+--- a/browser/modules/GorillaLinkMode.sys.mjs
++++ b/browser/modules/GorillaLinkMode.sys.mjs
+@@ -250,6 +250,17 @@ export const GorillaLinkMode = {
+       if (bc.allowJavascript != js) {
+         bc.allowJavascript = js;
+       }
++      // Very slow link: a page already in the cache opens from it, without asking the site (D-157-33 B). Pages
++      // that say "private, max-age=0, must-revalidate" (most news front pages, and the bench page) were downloaded
++      // in full on every visit (21.5 s for 103 KB at 5 KB/s); browser.cache.check_doc_frequency cannot override
++      // must-revalidate, VALIDATE_NEVER can (nsHttp::ValidationRequired; only no-store still forces a fetch).
++      // Reload sets VALIDATE_ALWAYS or LOAD_BYPASS_CACHE and is left alone, so Reload still fetches a fresh copy.
++      const reload =
++        channel.loadFlags &
++        (Ci.nsIRequest.VALIDATE_ALWAYS | Ci.nsIRequest.LOAD_BYPASS_CACHE);
++      if (this.level() == 2 && !reload) {
++        channel.loadFlags |= Ci.nsIRequest.VALIDATE_NEVER;
++      }
+     } catch (e) {
+       console.error("GorillaLinkMode: per-site choice", e);
+     }
+@@ -514,7 +525,7 @@ export const GorillaLinkMode = {
+         console.error(`GorillaLinkMode: ${name}`, e);
+       }
+     }
+-    this._watchRequests(mobile || noJs);
++    this._watchRequests(mobile || noJs || level == 2);
+     this._resetTabs(mobile, noJs);
+     this._applied = key;
+   },

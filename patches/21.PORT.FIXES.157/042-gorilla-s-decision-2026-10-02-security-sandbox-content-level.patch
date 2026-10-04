@@ -1,0 +1,31 @@
+# Gorilla 157 port fix
+# Gorilla's decision 2026-10-02: security.sandbox.content.level 4 is the Linux value; on Windows Mozilla's 9 (its strictest) applies. The all.js line is now under #ifdef XP_LINUX.
+# Files: modules/libpref/init/all.js
+
+diff --git a/modules/libpref/init/all.js b/modules/libpref/init/all.js
+index 604409922b..44b8eab9eb 100644
+--- a/modules/libpref/init/all.js
++++ b/modules/libpref/init/all.js
+@@ -4344,12 +4344,16 @@ pref("browser.ml.chat.enabled", false);
+ pref("browser.ml.checkForMemory", false);
+ pref("extensions.ml.enabled", false);
+ pref("browser.sidebar.ai.enabled", false);
+-pref("browser.ai.control.default", false);
+-pref("browser.ai.control.sidebarChatbot", false);
+-pref("browser.ai.control.linkPreviewKeyPoints", false);
+-pref("browser.ai.control.pdfjsAltText", false);
+-pref("browser.ai.control.smartTabGroups", false);
+-pref("browser.ai.control.smartWindow", false);
++// GORILLA (D-157-00/D-157-30, ticket P-008): browser.ai.control.* are STRING prefs ("available"/"default"/"blocked").
++// The earlier boolean false was a type mismatch that libpref dropped, so they shipped enabled. "blocked", locked.
++pref("browser.ai.control.default", "blocked", locked);
++pref("browser.ai.control.sidebarChatbot", "blocked", locked);
++pref("browser.ai.control.linkPreviewKeyPoints", "blocked", locked);
++pref("browser.ai.control.pdfjsAltText", "blocked", locked);
++pref("browser.ai.control.smartTabGroups", "blocked", locked);
++pref("browser.ai.control.smartWindow", "blocked", locked);
++pref("browser.ai.control.translations", "blocked", locked);
++pref("browser.ai.control.speechRecognition", "blocked", locked);
+ 
+ // Disable Topsites & Sponsored Noise
+ pref("browser.urlbar.suggest.topsites", false);

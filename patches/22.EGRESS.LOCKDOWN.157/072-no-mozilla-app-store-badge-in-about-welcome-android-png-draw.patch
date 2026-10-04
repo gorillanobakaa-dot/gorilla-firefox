@@ -1,0 +1,34 @@
+# Gorilla 157 privacy cut
+# No Mozilla app-store badge in about:welcome (android.png drawn at natural size, blurry at 2x; only Mozilla's test message provider uses the mobile_downloads tile). Last static visual item, 2026-10-04.
+# Files: browser/components/aboutwelcome/content/aboutwelcome.css, browser/components/asrouter/content-src/styles/_multistage.scss
+
+diff --git a/browser/components/aboutwelcome/content/aboutwelcome.css b/browser/components/aboutwelcome/content/aboutwelcome.css
+index 87fc324646..7f08054cf6 100644
+--- a/browser/components/aboutwelcome/content/aboutwelcome.css
++++ b/browser/components/aboutwelcome/content/aboutwelcome.css
+@@ -4111,9 +4111,7 @@ html {
+ .onboardingContainer .mobile-downloads .ios button {
+   background-image: url("chrome://app-marketplace-icons/locale/ios.svg");
+ }
+-.onboardingContainer .mobile-downloads .android button {
+-  background-image: url("chrome://app-marketplace-icons/locale/android.png");
+-}
++/* GORILLA UNLEASHED (2026-10-04): no Mozilla app-store badge (raster drawn at natural size, blurry at 2x; only Mozilla test messages use this tile) */
+ .onboardingContainer .mobile-download-buttons {
+   list-style: none;
+   padding: 10px 0;
+diff --git a/browser/components/asrouter/content-src/styles/_multistage.scss b/browser/components/asrouter/content-src/styles/_multistage.scss
+index 3ee778225f..63a07887ad 100644
+--- a/browser/components/asrouter/content-src/styles/_multistage.scss
++++ b/browser/components/asrouter/content-src/styles/_multistage.scss
+@@ -2900,9 +2900,7 @@ html {
+       background-image: url('chrome://app-marketplace-icons/locale/ios.svg');
+     }
+ 
+-    .android button {
+-      background-image: url('chrome://app-marketplace-icons/locale/android.png');
+-    }
++    // GORILLA UNLEASHED (2026-10-04): no Mozilla app-store badge (raster drawn at natural size, blurry at 2x; only Mozilla test messages use this tile)
+   }
+ 
+   .mobile-download-buttons {

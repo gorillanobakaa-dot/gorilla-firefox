@@ -1,0 +1,144 @@
+# Gorilla 157 privacy cut
+# D-157-31 no remote control plane: the new tab no longer waits for Nimbus (Normandy is cut, so Nimbus never answered and the new tab and start page were blank); train-hop cut at the source (no newtab XPI download or install, no first-start install, empty trainhopConfig, no download address); the data built into the binary (Remote Settings dumps) is always loaded, which the dummy server URL had silently switched off (no search-engine icons, no URL-decoration list); D-157-26 policies.json now carries DisableFirefoxStudies and DisableTelemetry, which Firefox accepts (it refused the app.normandy.* Preferences entries)
+# Files: browser/app/profile/firefox.js, browser/components/newtab/AboutNewTabResourceMapping.sys.mjs, browser/extensions/newtab/lib/PrefsFeed.sys.mjs, browser/modules/AboutNewTab.sys.mjs, distribution/policies.json, services/settings/Utils.sys.mjs
+
+diff --git a/browser/app/profile/firefox.js b/browser/app/profile/firefox.js
+index 94bfe7fbcf..21f47a2d3c 100644
+--- a/browser/app/profile/firefox.js
++++ b/browser/app/profile/firefox.js
+@@ -2209,7 +2209,7 @@ pref("browser.newtabpage.activity-stream.nova.enabled", true);
+ pref("browser.newtabpage.resource-mapping.log", false);
+ 
+ // Base URL for the newtab trainhop add-on version xpi downloads.
+-pref("browser.newtabpage.trainhopAddon.xpiBaseURL", "https://archive.mozilla.org/pub/system-addons/newtab/");
++pref("browser.newtabpage.trainhopAddon.xpiBaseURL", "", locked); // D-157-31: no train-hop download address
+ 
+ pref("browser.newtabpage.sponsor-protection.enabled", true);
+ 
+diff --git a/browser/components/newtab/AboutNewTabResourceMapping.sys.mjs b/browser/components/newtab/AboutNewTabResourceMapping.sys.mjs
+index 4bc85c6b55..119fa960ed 100644
+--- a/browser/components/newtab/AboutNewTabResourceMapping.sys.mjs
++++ b/browser/components/newtab/AboutNewTabResourceMapping.sys.mjs
+@@ -776,6 +776,11 @@ export var AboutNewTabResourceMapping = {
+    *   a rollout be rolled back by ending it (see Bug 1995391).
+    */
+   async updateTrainhopAddonState(forceRestartlessInstall = false) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK (D-157-31): no train-hop. Mozilla's newtab XPI is never
++    // downloaded or installed: the page is the one built into this binary.
++    if (true) {
++      return;
++    }
+     if (this.inSafeMode) {
+       this.logger.debug(
+         "train-hop add-on update state disabled while running in SafeMode"
+@@ -976,6 +981,10 @@ export var AboutNewTabResourceMapping = {
+     xpiDownloadURL,
+     forceRestartlessInstall,
+   }) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK (D-157-31): never download or install a newtab XPI.
++    if (true) {
++      return;
++    }
+     if (
+       this._builtinVersion &&
+       Services.vc.compare(this._builtinVersion, trainhopAddonVersion) >= 0
+@@ -1174,6 +1183,10 @@ export var AboutNewTabResourceMapping = {
+    * @returns {Promise<void>}
+    */
+   async firstStartupNewProfile() {
++    // GORILLA UNLEASHED - PHYSICAL LOCK (D-157-31): no first-start train-hop install (it waited on Nimbus too).
++    if (true) {
++      return;
++    }
+     if (this.initialized) {
+       this.logger.error(
+         "firstStartupNewProfile is being run after AboutNewTabResourceMapping initializes, so we're too late."
+diff --git a/browser/extensions/newtab/lib/PrefsFeed.sys.mjs b/browser/extensions/newtab/lib/PrefsFeed.sys.mjs
+index 4a9e2a4b00..f6de3be7f0 100644
+--- a/browser/extensions/newtab/lib/PrefsFeed.sys.mjs
++++ b/browser/extensions/newtab/lib/PrefsFeed.sys.mjs
+@@ -303,6 +303,11 @@ export class PrefsFeed {
+    * Both formats output the same structure: { "feature": { "enabled": true, ... }}
+    */
+   _getTrainhopConfig() {
++    // GORILLA UNLEASHED - PHYSICAL LOCK (D-157-31): nothing sent by Mozilla reconfigures the new tab.
++    if (true) {
++      this._trainhopConfig = {};
++      return {};
++    }
+     const allEnrollments =
+       lazy.NimbusFeatures.newtabTrainhop.getAllEnrollments() || [];
+ 
+diff --git a/browser/modules/AboutNewTab.sys.mjs b/browser/modules/AboutNewTab.sys.mjs
+index fde4f9eb76..b60d95c9ad 100644
+--- a/browser/modules/AboutNewTab.sys.mjs
++++ b/browser/modules/AboutNewTab.sys.mjs
+@@ -198,8 +198,9 @@ export const AboutNewTab = {
+     // the addon has finished registering its resources, and that the
+     // trainhopConfig value computed in PrefsFeed is ready to be read.
+ 
+-    const nimbusFeature = lazy.NimbusFeatures[TRAINHOP_NIMBUS_FEATURE];
+-    const trainhopFeatureReady = nimbusFeature.ready();
++    // GORILLA UNLEASHED - PHYSICAL LOCK (D-157-31): the new tab never waits for Nimbus. Nimbus is never
++    // started in Gorilla (Normandy is cut), so its ready() never resolved and the
++    // page stayed blank; and train-hop (its only use here) is cut below.
+ 
+     let redirector = Cc[
+       "@mozilla.org/network/protocol/about;1?what=newtab"
+@@ -217,7 +218,6 @@ export const AboutNewTab = {
+ 
+     const [createdTimestamp] = await Promise.all([
+       profileCreatedAccessorReady,
+-      trainhopFeatureReady,
+       addonInitted,
+     ]);
+     const createdInstant = createdTimestamp
+diff --git a/distribution/policies.json b/distribution/policies.json
+index 83a64e955e..f4d0f82076 100644
+--- a/distribution/policies.json
++++ b/distribution/policies.json
+@@ -1,21 +1,6 @@
+ {
+   "policies": {
+-    "Preferences": {
+-      "app.normandy.enabled": {
+-        "Value": false,
+-        "Status": "locked",
+-        "Type": "boolean"
+-      },
+-      "app.normandy.api_url": {
+-        "Value": "",
+-        "Status": "locked",
+-        "Type": "string"
+-      },
+-      "app.normandy.run_interval_seconds": {
+-        "Value": 1893456000,
+-        "Status": "locked",
+-        "Type": "number"
+-      }
+-    }
++    "DisableFirefoxStudies": true,
++    "DisableTelemetry": true
+   }
+ }
+diff --git a/services/settings/Utils.sys.mjs b/services/settings/Utils.sys.mjs
+index 8a58a885d7..a9720780e5 100644
+--- a/services/settings/Utils.sys.mjs
++++ b/services/settings/Utils.sys.mjs
+@@ -144,11 +144,11 @@ export var Utils = {
+   },
+ 
+   get LOAD_DUMPS() {
+-    // Load dumps only if pulling data from the production server, or in tests.
+-    return (
+-      AppConstants.REMOTE_SETTINGS_SERVER_URLS.includes(this.SERVER_URL) ||
+-      lazy.isRunningTests
+-    );
++    // GORILLA UNLEASHED (D-157-31): the data built into this binary is always used. Upstream loads the packaged
++    // dumps only for the production server, and SERVER_URL above is the dummy URL, so since the egress lock every
++    // dump was ignored: no search-engine icons, no URL-decoration list, no password rules (found 2026-10-03).
++    // Dumps are local files in omni.ja; nothing is fetched (shouldSkipRemoteActivity stays true).
++    return true;
+   },
+ 
+   get PREVIEW_MODE() {

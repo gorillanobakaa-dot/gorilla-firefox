@@ -1,5 +1,5 @@
 # Gorilla 157 port fix
-# Gorilla's decision: security.sandbox.content.level 4 is the Linux value; on Windows Mozilla's 9 (its strictest) applies. The all.js line is now under #ifdef XP_LINUX.
+# Gorilla's decision 2026-10-02: security.sandbox.content.level 4 is the Linux value; on Windows Mozilla's 9 (its strictest) applies. The all.js line is now under #ifdef XP_LINUX.
 # Files: modules/libpref/init/all.js
 
 diff --git a/modules/libpref/init/all.js b/modules/libpref/init/all.js

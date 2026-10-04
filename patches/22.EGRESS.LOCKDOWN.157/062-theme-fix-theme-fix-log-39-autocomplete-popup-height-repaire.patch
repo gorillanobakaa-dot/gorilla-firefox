@@ -1,0 +1,19 @@
+# Gorilla 157 privacy cut
+# Theme fix THEME_FIX_LOG 39 (autocomplete popup height) repaired for Firefox 157: this.ownerGlobal is undefined in 157, so the ResizeObserver line threw on every resize; now ownerDocument.defaultView. Found by fieldkit ui-check rule UI-API, 2026-10-04.
+# Files: toolkit/content/widgets/autocomplete-popup.js
+
+diff --git a/toolkit/content/widgets/autocomplete-popup.js b/toolkit/content/widgets/autocomplete-popup.js
+index 8d24754004..63cfa3615a 100644
+--- a/toolkit/content/widgets/autocomplete-popup.js
++++ b/toolkit/content/widgets/autocomplete-popup.js
+@@ -422,7 +422,9 @@
+       // feedback loop: this method only writes the richlistbox max-height,
+       // never row sizes. Traced 2026-08-10, THEME_FIX_LOG §39.
+       if (!this._rowResizeObserver) {
+-        this._rowResizeObserver = new this.ownerGlobal.ResizeObserver(() => {
++        // ownerDocument.defaultView: Firefox 157 has no Node.ownerGlobal, so `new this.ownerGlobal.ResizeObserver`
++        // threw on every resize and this fix never ran (found 2026-10-04 by fieldkit ui-check, rule UI-API)
++        this._rowResizeObserver = new this.ownerDocument.defaultView.ResizeObserver(() => {
+           if (this.state == "open") {
+             this.adjustHeight();
+           } else {

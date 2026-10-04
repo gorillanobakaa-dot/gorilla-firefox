@@ -1,0 +1,38 @@
+# Gorilla 157 privacy cut
+# D-157-00: Settings no longer imports the unpackaged aiFeatures.mjs (three pane entries kept their module line after the AI pane was cut, so every Settings open logged 'Failed to load aiFeatures.mjs'); found by the new fieldkit ui-check 2026-10-04.
+# Files: browser/components/preferences/preferences.js
+
+diff --git a/browser/components/preferences/preferences.js b/browser/components/preferences/preferences.js
+index 623b6f91d0..2b5edc76ed 100644
+--- a/browser/components/preferences/preferences.js
++++ b/browser/components/preferences/preferences.js
+@@ -279,7 +279,8 @@ const CONFIG_PANES = Object.freeze({
+     l10nId: "preferences-ai-controls-header3",
+     iconSrc: "chrome://global/skin/icons/highlights.svg",
+     groupIds: ["aiControlsDescription", "aiFeatures", "aiStatesDescription"],
+-    module: "chrome://browser/content/preferences/config/aiFeatures.mjs",
++    // GORILLA UNLEASHED - PHYSICAL LOCK (D-157-00): aiFeatures.mjs is not packaged; no module to import (every
++    // Settings open logged "Failed to load ... aiFeatures.mjs" until 2026-10-04, found by fieldkit ui-check)
+     // GORILLA UNLEASHED - PHYSICAL LOCK: no AI controls pane (D-157-00): every AI feature is blocked and locked
+     // (browser.ai.control.*), so there is nothing to choose. The pane and its nav button are removed.
+     visible: () => false,
+@@ -375,7 +376,8 @@ const CONFIG_PANES = Object.freeze({
+     parent: "personalizeSmartWindow",
+     l10nId: "ai-window-manage-memories-header",
+     groupIds: ["manageMemories"],
+-    module: "chrome://browser/content/preferences/config/aiFeatures.mjs",
++    // GORILLA UNLEASHED - PHYSICAL LOCK (D-157-00): aiFeatures.mjs is not packaged; no module to import (every
++    // Settings open logged "Failed to load ... aiFeatures.mjs" until 2026-10-04, found by fieldkit ui-check)
+     supportPage: "smart-window-memories",
+   },
+   managePayments: {
+@@ -404,7 +406,8 @@ const CONFIG_PANES = Object.freeze({
+     iconSrc: "chrome://browser/skin/smart-window-mono-32.svg",
+     badge: "beta",
+     groupIds: ["assistantDefaultGroup", "assistantModelGroup", "memoriesGroup"],
+-    module: "chrome://browser/content/preferences/config/aiFeatures.mjs",
++    // GORILLA UNLEASHED - PHYSICAL LOCK (D-157-00): aiFeatures.mjs is not packaged; no module to import (every
++    // Settings open logged "Failed to load ... aiFeatures.mjs" until 2026-10-04, found by fieldkit ui-check)
+   },
+   passwordsAutofill: {
+     l10nId: "preferences-passwords-autofill-header",

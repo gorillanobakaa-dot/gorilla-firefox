@@ -1,0 +1,491 @@
+# Gorilla 157 privacy cut
+# P-011 AI-02 D-157-00: AI leftovers removed where every importer is handled: GenAI actor, SpecialMessageActions AI actions, AIWindowStub.handleAIWindowOptions, SessionStore AI start page, Smart Form Fill imports, Smart Window newtab promo (unpackaged), about:addons Smart Window themes notice (deleted, ftl unpackaged), #smartwindow-ask-button, Settings AI pane
+# Files: browser/base/content/navigator-toolbox.inc.xhtml, browser/base/content/navigator-toolbox.js, browser/components/DesktopActorRegistry.sys.mjs, browser/components/asrouter/modules/ASRouter.sys.mjs, browser/components/asrouter/moz.build, browser/components/preferences/preferences.js, browser/components/sessionstore/SessionStore.sys.mjs, browser/modules/AIWindowStub.sys.mjs, toolkit/components/formautofill/FormAutofillParent.sys.mjs, toolkit/components/messaging-system/lib/SpecialMessageActions.sys.mjs, toolkit/components/passwordmgr/LoginManagerParent.sys.mjs, toolkit/components/satchel/FormHistoryParent.sys.mjs, toolkit/locales/jar.mn, toolkit/mozapps/extensions/content/aboutaddons.html, toolkit/mozapps/extensions/content/aboutaddons.mjs, toolkit/mozapps/extensions/content/components/smartwindow-themes-notice.mjs
+
+diff --git a/browser/base/content/navigator-toolbox.inc.xhtml b/browser/base/content/navigator-toolbox.inc.xhtml
+index 9c15dfc9aa..3bc6ca2b95 100644
+--- a/browser/base/content/navigator-toolbox.inc.xhtml
++++ b/browser/base/content/navigator-toolbox.inc.xhtml
+@@ -496,17 +496,7 @@
+     <toolbarbutton id="taskbar-tabs-audio" class="toolbarbutton-1 chromeclass-toolbar-additional"
+                     removable="false" overflows="false"/>
+ 
+-    <toolbaritem id="smartwindow-ask-button"
+-                 class="chromeclass-toolbar-additional"
+-                 hidden="true"
+-                 overflows="false"
+-                 removable="false">
+-      <toolbarbutton id="smartwindow-ask-button-inner"
+-                      class="toolbarbutton-1"
+-                      aria-expanded="false"
+-                      data-l10n-id="smartwindow-ask-button">
+-      </toolbarbutton>
+-    </toolbaritem>
++    <!-- GORILLA UNLEASHED - PHYSICAL LOCK: no Smart Window "Ask" button (aiwindow excised). -->
+ 
+     <toolbarbutton id="nav-bar-overflow-button"
+                    class="toolbarbutton-1 chromeclass-toolbar-additional"
+diff --git a/browser/base/content/navigator-toolbox.js b/browser/base/content/navigator-toolbox.js
+index 485b719672..bea2d14579 100644
+--- a/browser/base/content/navigator-toolbox.js
++++ b/browser/base/content/navigator-toolbox.js
+@@ -216,9 +216,9 @@ document.addEventListener(
+         #tracking-protection-icon-container,
+         #identity-icon-box,
+         #identity-permission-box,
+-        #split-view-button,
+-        #smartwindow-ask-button
++        #split-view-button
+         `);
++      // GORILLA UNLEASHED - PHYSICAL LOCK: no Smart Window (aiwindow excised): #smartwindow-ask-button removed.
+       // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): #translations-button removed from the selector.
+       if (!element) {
+         return;
+@@ -342,9 +342,9 @@ document.addEventListener(
+         #unified-extensions-button,
+         #library-button,
+         #ipprotection-button,
+-        #split-view-button,
+-        #smartwindow-ask-button
++        #split-view-button
+       `);
++      // GORILLA UNLEASHED - PHYSICAL LOCK: no Smart Window (aiwindow excised): #smartwindow-ask-button removed.
+       // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): #translations-button removed from the selector.
+       if (!element) {
+         return;
+diff --git a/browser/components/DesktopActorRegistry.sys.mjs b/browser/components/DesktopActorRegistry.sys.mjs
+index ec436f81bb..3d6af6232e 100644
+--- a/browser/components/DesktopActorRegistry.sys.mjs
++++ b/browser/components/DesktopActorRegistry.sys.mjs
+@@ -495,50 +495,8 @@ let JSWINDOWACTORS = {
+     safeForUntrustedWebProcess: true,
+   },
+ 
+-  GenAI: {
+-    parent: {
+-      esModuleURI: "resource:///actors/GenAIParent.sys.mjs",
+-    },
+-    child: {
+-      esModuleURI: "resource:///actors/GenAIChild.sys.mjs",
+-      events: {
+-        mousedown: {},
+-        mouseup: {},
+-      },
+-    },
+-    allFrames: true,
+-    onAddActor(register, unregister) {
+-      let isRegistered = false;
+-
+-      // Register the actor if an external chat provider is set, page summarization is enabled, or shortcuts are enabled
+-      const maybeRegister = () => {
+-        if (
+-          Services.prefs.getCharPref("browser.ml.chat.provider", "") ||
+-          Services.prefs.getBoolPref("browser.ml.chat.page") ||
+-          Services.prefs.getBoolPref("browser.ml.chat.shortcuts") ||
+-          Services.prefs.getBoolPref("browser.ml.chat.shortcuts.smartwindow")
+-        ) {
+-          if (!isRegistered) {
+-            register();
+-            isRegistered = true;
+-          }
+-        } else if (isRegistered) {
+-          unregister();
+-          isRegistered = false;
+-        }
+-      };
+-
+-      Services.prefs.addObserver("browser.ml.chat.page", maybeRegister);
+-      Services.prefs.addObserver("browser.ml.chat.provider", maybeRegister);
+-      Services.prefs.addObserver("browser.ml.chat.shortcuts", maybeRegister);
+-      Services.prefs.addObserver(
+-        "browser.ml.chat.shortcuts.smartwindow",
+-        maybeRegister
+-      );
+-      maybeRegister();
+-    },
+-    safeForUntrustedWebProcess: true,
+-  },
++  // GORILLA UNLEASHED - PHYSICAL LOCK: GenAI actor excised (genai removed, D-157-00). Its modules are not
++  // packaged, so the actor only failed to load on every mousedown/mouseup when a chat shortcut pref was on.
+ 
+   LightweightTheme: {
+     child: {
+diff --git a/browser/components/asrouter/modules/ASRouter.sys.mjs b/browser/components/asrouter/modules/ASRouter.sys.mjs
+index f693e58ee7..50cb594499 100644
+--- a/browser/components/asrouter/modules/ASRouter.sys.mjs
++++ b/browser/components/asrouter/modules/ASRouter.sys.mjs
+@@ -48,8 +48,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
+   RemoteSettings: "resource://services-settings/remote-settings.sys.mjs",
+   SidebarChatBotPromo:
+     "resource:///modules/asrouter/SidebarChatBotPromo.sys.mjs",
+-  SmartWindowNewTabPromo:
+-    "resource:///modules/asrouter/SmartWindowNewTabPromo.sys.mjs",
++  // GORILLA UNLEASHED - PHYSICAL LOCK: SmartWindowNewTabPromo excised (no Smart Window promotion).
+   SpecialMessageActions:
+     "resource://messaging-system/lib/SpecialMessageActions.sys.mjs",
+   TargetingContext: "resource://messaging-system/targeting/Targeting.sys.mjs",
+@@ -1818,7 +1817,7 @@ export class _ASRouter {
+         lazy.SidebarChatBotPromo.showPromo(browser, message, force);
+         break;
+       case "smart_window_newtab_promo":
+-        lazy.SmartWindowNewTabPromo.showPromo(browser, message, trigger, force);
++        // GORILLA UNLEASHED - PHYSICAL LOCK: no Smart Window promotion (module excised).
+         break;
+       case "newtab_message": {
+         let targetBrowser = force ? null : browser;
+diff --git a/browser/components/asrouter/moz.build b/browser/components/asrouter/moz.build
+index 93cc9c2a8b..45bbac488b 100644
+--- a/browser/components/asrouter/moz.build
++++ b/browser/components/asrouter/moz.build
+@@ -41,7 +41,7 @@ EXTRA_JS_MODULES.asrouter += [
+     "modules/PreonboardingSplash.sys.mjs",
+     "modules/RemoteL10n.sys.mjs",
+     "modules/SidebarChatBotPromo.sys.mjs",
+-    "modules/SmartWindowNewTabPromo.sys.mjs",
++    # GORILLA excised: modules/SmartWindowNewTabPromo.sys.mjs (Smart Window promotion; ASRouter no longer imports it)
+     "modules/Spotlight.sys.mjs",
+     "modules/ToastNotification.sys.mjs",
+     "modules/ToolbarBadgeHub.sys.mjs",
+diff --git a/browser/components/preferences/preferences.js b/browser/components/preferences/preferences.js
+index 33f145c145..623b6f91d0 100644
+--- a/browser/components/preferences/preferences.js
++++ b/browser/components/preferences/preferences.js
+@@ -280,8 +280,9 @@ const CONFIG_PANES = Object.freeze({
+     iconSrc: "chrome://global/skin/icons/highlights.svg",
+     groupIds: ["aiControlsDescription", "aiFeatures", "aiStatesDescription"],
+     module: "chrome://browser/content/preferences/config/aiFeatures.mjs",
+-    visible: () =>
+-      Services.prefs.getBoolPref("browser.preferences.aiControls", false),
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no AI controls pane (D-157-00): every AI feature is blocked and locked
++    // (browser.ai.control.*), so there is nothing to choose. The pane and its nav button are removed.
++    visible: () => false,
+   },
+   downloads: {
+     l10nId: "pane-downloads3",
+diff --git a/browser/components/sessionstore/SessionStore.sys.mjs b/browser/components/sessionstore/SessionStore.sys.mjs
+index 3df662b542..dd263adcf6 100644
+--- a/browser/components/sessionstore/SessionStore.sys.mjs
++++ b/browser/components/sessionstore/SessionStore.sys.mjs
+@@ -5335,9 +5335,7 @@ class _SessionStore {
+     if (startupPref == 1) {
+       homePages = homePages.concat(lazy.HomePage.get(aWindow).split("|"));
+     }
+-    if (lazy.AIWindow.isAIWindowActiveAndEnabled(aWindow)) {
+-      homePages.push(lazy.AIWindow.initialStartupURL);
+-    }
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no AI Window start page (aiwindow excised).
+ 
+     for (let i = tabbrowser.pinnedTabCount; i < tabbrowser.tabs.length; i++) {
+       let tab = tabbrowser.tabs[i];
+diff --git a/browser/modules/AIWindowStub.sys.mjs b/browser/modules/AIWindowStub.sys.mjs
+index d06bb32bf4..a36f954f8b 100644
+--- a/browser/modules/AIWindowStub.sys.mjs
++++ b/browser/modules/AIWindowStub.sys.mjs
+@@ -69,4 +69,12 @@ export const AIWindow = {
+   getChatTabConversationId() {
+     return null;
+   },
++
++  /**
++   * SessionStore asks this when it restores a window that a session file (written by a Firefox with the AI
++   * Window) marks as an AI window. Here it is restored as an ordinary window: the arguments pass through.
++   */
++  handleAIWindowOptions(options) {
++    return options?.args ?? null;
++  },
+ };
+diff --git a/toolkit/components/formautofill/FormAutofillParent.sys.mjs b/toolkit/components/formautofill/FormAutofillParent.sys.mjs
+index 95b5fce608..abe96b9270 100644
+--- a/toolkit/components/formautofill/FormAutofillParent.sys.mjs
++++ b/toolkit/components/formautofill/FormAutofillParent.sys.mjs
+@@ -52,21 +52,9 @@ ChromeUtils.defineESModuleGetters(lazy, {
+ });
+ 
+ // TODO Bug 2064859 - refactor this out as external provider
+-ChromeUtils.defineLazyGetter(lazy, "SmartFormFillAutocomplete", () => {
+-  if (AppConstants.MOZ_BUILD_APP != "browser") {
+-    return undefined;
+-  }
+-
+-  try {
+-    return ChromeUtils.importESModule(
+-      // eslint-disable-next-line mozilla/no-browser-refs-in-toolkit
+-      "moz-src:///browser/components/aiwindow/ui/modules/SmartFormFillAutocomplete.sys.mjs"
+-    ).SmartFormFillAutocomplete;
+-  } catch (error) {
+-    console.error(`Unable to load SmartFormFillAutocomplete.sys.mjs: ${error}`);
+-  }
+-  return undefined;
+-});
++// GORILLA UNLEASHED - PHYSICAL LOCK: Smart Form Fill (AI Window) is excised; nothing is imported, so the
++// autocomplete offers only the user's own saved entries.
++ChromeUtils.defineLazyGetter(lazy, "SmartFormFillAutocomplete", () => undefined);
+ 
+ ChromeUtils.defineLazyGetter(lazy, "log", () =>
+   FormAutofill.defineLogGetter(lazy, "FormAutofillParent")
+diff --git a/toolkit/components/messaging-system/lib/SpecialMessageActions.sys.mjs b/toolkit/components/messaging-system/lib/SpecialMessageActions.sys.mjs
+index c531778d8a..19f2a22cff 100644
+--- a/toolkit/components/messaging-system/lib/SpecialMessageActions.sys.mjs
++++ b/toolkit/components/messaging-system/lib/SpecialMessageActions.sys.mjs
+@@ -30,12 +30,7 @@ const lazy = {};
+ 
+ ChromeUtils.defineESModuleGetters(lazy, {
+   AddonManager: "resource://gre/modules/AddonManager.sys.mjs",
+-  AIWindow:
+-    // eslint-disable-next-line mozilla/no-browser-refs-in-toolkit
+-    "moz-src:///browser/components/aiwindow/ui/modules/AIWindow.sys.mjs",
+-  AIWindowUI:
+-    // eslint-disable-next-line mozilla/no-browser-refs-in-toolkit
+-    "moz-src:///browser/components/aiwindow/ui/modules/AIWindowUI.sys.mjs",
++  // GORILLA UNLEASHED - PHYSICAL LOCK: AIWindow and AIWindowUI excised (browser/components/aiwindow is not built).
+   CustomIconManager:
+     // eslint-disable-next-line mozilla/no-browser-refs-in-toolkit
+     "moz-src:///browser/components/shell/CustomIconManager.sys.mjs",
+@@ -44,7 +39,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
+     "moz-src:///browser/components/customizableui/CustomizableUI.sys.mjs",
+   ExperimentAPI: "resource://nimbus/ExperimentAPI.sys.mjs",
+   FxAccounts: "resource://gre/modules/FxAccounts.sys.mjs",
+-  GenAI: "resource:///modules/GenAI.sys.mjs",
++  // GORILLA UNLEASHED - PHYSICAL LOCK: GenAI excised (browser/components/genai is not built).
+   ICON_CATALOG:
+     // eslint-disable-next-line mozilla/no-browser-refs-in-toolkit
+     "moz-src:///browser/components/shell/CustomIconManager.sys.mjs",
+@@ -1057,12 +1052,9 @@ export const SpecialMessageActions = {
+         /** @returns {Promise<boolean>} */
+         return this.fxaSignInFlow(action.data, browser);
+       case "FXA_AIWINDOW_SIGNIN_FLOW":
++        // GORILLA UNLEASHED - PHYSICAL LOCK: no AI Window and no account sign-in (D-157-00).
+         /** @returns {Promise<boolean>} */
+-        return lazy.AIWindow.launchWindow(
+-          browser,
+-          false,
+-          action.data?.source ?? "asrouter"
+-        );
++        return false;
+       case "OPEN_PROTECTION_PANEL": {
+         let { gProtectionsHandler } = window;
+         gProtectionsHandler.showProtectionsPopup({});
+@@ -1147,15 +1139,9 @@ export const SpecialMessageActions = {
+         window.gURLBar.searchMode = action.data;
+         window.gURLBar.focus();
+         break;
+-      case "SUMMARIZE_PAGE": {
+-        const entry = action.data ?? "message";
+-        await lazy.GenAI.summarizeCurrentPage(window, entry);
+-        break;
+-      }
++      case "SUMMARIZE_PAGE":
+       case "OPEN_ORGANIZE_TABS_PANEL":
+-        lazy.AIWindowUI.toggleGroupTabsPanel(window, {
+-          source: action.data?.source ?? "message",
+-        });
++        // GORILLA UNLEASHED - PHYSICAL LOCK: AI page summaries and AI tab grouping are excised (D-157-00).
+         break;
+       case "OPEN_PANEL": {
+         let { anchor_id, widget_id, panel_id, fallback_to_app_menu } =
+diff --git a/toolkit/components/passwordmgr/LoginManagerParent.sys.mjs b/toolkit/components/passwordmgr/LoginManagerParent.sys.mjs
+index 4f501f3ae5..519e1fab5d 100644
+--- a/toolkit/components/passwordmgr/LoginManagerParent.sys.mjs
++++ b/toolkit/components/passwordmgr/LoginManagerParent.sys.mjs
+@@ -40,21 +40,9 @@ ChromeUtils.defineESModuleGetters(lazy, {
+   PrivateBrowsingUtils: "resource://gre/modules/PrivateBrowsingUtils.sys.mjs",
+ });
+ 
+-ChromeUtils.defineLazyGetter(lazy, "SmartFormFillAutocomplete", () => {
+-  if (AppConstants.MOZ_BUILD_APP != "browser") {
+-    return undefined;
+-  }
+-
+-  try {
+-    return ChromeUtils.importESModule(
+-      // eslint-disable-next-line mozilla/no-browser-refs-in-toolkit
+-      "moz-src:///browser/components/aiwindow/ui/modules/SmartFormFillAutocomplete.sys.mjs"
+-    ).SmartFormFillAutocomplete;
+-  } catch (error) {
+-    console.error(`Unable to load SmartFormFillAutocomplete.sys.mjs: ${error}`);
+-  }
+-  return undefined;
+-});
++// GORILLA UNLEASHED - PHYSICAL LOCK: Smart Form Fill (AI Window) is excised; nothing is imported, so the
++// autocomplete offers only the user's own saved entries.
++ChromeUtils.defineLazyGetter(lazy, "SmartFormFillAutocomplete", () => undefined);
+ 
+ XPCOMUtils.defineLazyServiceGetter(
+   lazy,
+diff --git a/toolkit/components/satchel/FormHistoryParent.sys.mjs b/toolkit/components/satchel/FormHistoryParent.sys.mjs
+index 63d3755b4f..1cf1704d54 100644
+--- a/toolkit/components/satchel/FormHistoryParent.sys.mjs
++++ b/toolkit/components/satchel/FormHistoryParent.sys.mjs
+@@ -13,21 +13,9 @@ ChromeUtils.defineESModuleGetters(lazy, {
+   LoginHelper: "resource://gre/modules/LoginHelper.sys.mjs",
+ });
+ 
+-ChromeUtils.defineLazyGetter(lazy, "SmartFormFillAutocomplete", () => {
+-  if (AppConstants.MOZ_BUILD_APP != "browser") {
+-    return undefined;
+-  }
+-
+-  try {
+-    return ChromeUtils.importESModule(
+-      // eslint-disable-next-line mozilla/no-browser-refs-in-toolkit
+-      "moz-src:///browser/components/aiwindow/ui/modules/SmartFormFillAutocomplete.sys.mjs"
+-    ).SmartFormFillAutocomplete;
+-  } catch (error) {
+-    console.error(`Unable to load SmartFormFillAutocomplete.sys.mjs: ${error}`);
+-  }
+-  return undefined;
+-});
++// GORILLA UNLEASHED - PHYSICAL LOCK: Smart Form Fill (AI Window) is excised; nothing is imported, so the
++// autocomplete offers only the user's own saved entries.
++ChromeUtils.defineLazyGetter(lazy, "SmartFormFillAutocomplete", () => undefined);
+ 
+ XPCOMUtils.defineLazyPreferenceGetter(
+   lazy,
+diff --git a/toolkit/locales/jar.mn b/toolkit/locales/jar.mn
+index c7563ee064..6c679de734 100644
+--- a/toolkit/locales/jar.mn
++++ b/toolkit/locales/jar.mn
+@@ -8,7 +8,7 @@
+   services                                         (%services/**/*.ftl)
+   toolkit                                          (%toolkit/**/*.ftl)
+   locales-preview/aboutRestricted.ftl              (../locales-preview/aboutRestricted.ftl)
+-  locales-preview/smartWindow-aboutAddons.ftl      (../locales-preview/smartWindow-aboutAddons.ftl)
++# GORILLA excised: locales-preview/smartWindow-aboutAddons.ftl (the Smart Window themes notice is removed)
+ #ifdef MOZ_LAYOUT_DEBUGGER
+   layoutdebug/layoutdebug.ftl                      (../../layout/tools/layout-debug/ui/content/layoutdebug.ftl)
+ #endif
+diff --git a/toolkit/mozapps/extensions/content/aboutaddons.html b/toolkit/mozapps/extensions/content/aboutaddons.html
+index b66b1555ac..bb376c73e0 100644
+--- a/toolkit/mozapps/extensions/content/aboutaddons.html
++++ b/toolkit/mozapps/extensions/content/aboutaddons.html
+@@ -35,10 +35,6 @@
+     <link rel="localization" href="branding/brand.ftl" />
+     <link rel="localization" href="toolkit/about/aboutAddons.ftl" />
+     <link rel="localization" href="toolkit/global/extensionPermissions.ftl" />
+-    <link
+-      rel="localization"
+-      href="locales-preview/smartWindow-aboutAddons.ftl"
+-    />
+ 
+     <!-- Shared Reusable Components -->
+     <script
+@@ -210,10 +206,6 @@
+       type="module"
+       src="chrome://mozapps/content/extensions/components/search-addons.mjs"
+     ></script>
+-    <script
+-      type="module"
+-      src="chrome://mozapps/content/extensions/components/smartwindow-themes-notice.mjs"
+-    ></script>
+     <script
+       type="module"
+       src="chrome://mozapps/content/extensions/components/taar-notice.mjs"
+diff --git a/toolkit/mozapps/extensions/content/aboutaddons.mjs b/toolkit/mozapps/extensions/content/aboutaddons.mjs
+index 90355a5cf2..392bfd9cec 100644
+--- a/toolkit/mozapps/extensions/content/aboutaddons.mjs
++++ b/toolkit/mozapps/extensions/content/aboutaddons.mjs
+@@ -79,10 +79,7 @@ gViewController.defineView("list", async type => {
+     const forcedColorsNotice = document.createElement("forced-colors-notice");
+     frag.appendChild(forcedColorsNotice);
+ 
+-    const smartWindowNotice = document.createElement(
+-      "smartwindow-themes-notice"
+-    );
+-    frag.appendChild(smartWindowNotice);
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no Smart Window themes notice (aiwindow excised).
+   }
+ 
+   list.setSections(sections);
+diff --git a/toolkit/mozapps/extensions/content/components/smartwindow-themes-notice.mjs b/toolkit/mozapps/extensions/content/components/smartwindow-themes-notice.mjs
+deleted file mode 100644
+index 7fc8dfd86e..0000000000
+--- a/toolkit/mozapps/extensions/content/components/smartwindow-themes-notice.mjs
++++ /dev/null
+@@ -1,87 +0,0 @@
+-/* This Source Code Form is subject to the terms of the Mozilla Public
+- * License, v. 2.0. If a copy of the MPL was not distributed with this
+- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+-
+-import { AboutAddonsHTMLElement } from "../aboutaddons-utils.mjs";
+-
+-const PREF_SMARTWINDOW_TOS_CONSENT_TIME = "browser.smartwindow.tos.consentTime";
+-const PREF_SMARTWINDOW_THEME_NOTICE = "browser.smartwindow.showThemesNotice";
+-
+-class SmartWindowThemesNotice extends AboutAddonsHTMLElement {
+-  #prefObserver;
+-
+-  static get markup() {
+-    return `
+-      <template>
+-        <moz-message-bar
+-          data-l10n-id="smartwindow-themes-notice"
+-          data-l10n-attrs="message"
+-          dismissable
+-        >
+-        </moz-message-bar>
+-      </template>
+-    `;
+-  }
+-
+-  connectedCallback() {
+-    this.addEventListener("message-bar:user-dismissed", this);
+-    this.#prefObserver = this.observe.bind(this);
+-    Services.prefs.addObserver(
+-      PREF_SMARTWINDOW_TOS_CONSENT_TIME,
+-      this.#prefObserver
+-    );
+-    Services.prefs.addObserver(
+-      PREF_SMARTWINDOW_THEME_NOTICE,
+-      this.#prefObserver
+-    );
+-    this.render();
+-  }
+-
+-  disconnectedCallback() {
+-    this.removeEventListener("message-bar:user-dismissed", this);
+-    Services.prefs.removeObserver(
+-      PREF_SMARTWINDOW_TOS_CONSENT_TIME,
+-      this.#prefObserver
+-    );
+-    Services.prefs.removeObserver(
+-      PREF_SMARTWINDOW_THEME_NOTICE,
+-      this.#prefObserver
+-    );
+-    this.#prefObserver = null;
+-  }
+-
+-  render() {
+-    let hasConsent =
+-      Services.prefs.getIntPref(PREF_SMARTWINDOW_TOS_CONSENT_TIME, 0) > 0;
+-    let shouldShowNotice = Services.prefs.getBoolPref(
+-      PREF_SMARTWINDOW_THEME_NOTICE,
+-      false
+-    );
+-    this.hidden = !(hasConsent && shouldShowNotice);
+-    if (!this.hidden && this.childElementCount == 0) {
+-      this.appendChild(SmartWindowThemesNotice.fragment);
+-    }
+-  }
+-
+-  handleEvent(e) {
+-    if (e.type === "message-bar:user-dismissed") {
+-      Services.prefs.setBoolPref(PREF_SMARTWINDOW_THEME_NOTICE, false);
+-    }
+-  }
+-
+-  observe(_subject, topic, data) {
+-    if (topic !== "nsPref:changed") {
+-      return;
+-    }
+-    if (
+-      ![
+-        PREF_SMARTWINDOW_TOS_CONSENT_TIME,
+-        PREF_SMARTWINDOW_THEME_NOTICE,
+-      ].includes(data)
+-    ) {
+-      return;
+-    }
+-    this.render();
+-  }
+-}
+-customElements.define("smartwindow-themes-notice", SmartWindowThemesNotice);

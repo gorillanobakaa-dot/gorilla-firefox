@@ -1,0 +1,83 @@
+# Gorilla 157 privacy cut
+# Maintainer 2026-10-04 (1 repari, 2 tai): D-157-16 local network access through a proxy (upstream never checks it; the leak gate saw a public page reach 192.168.0.1 and 10.0.0.1 through one): a literal local or private address is refused unless top-level, from a LAN page, or granted; D-157-01 nothing about updates is written outside the profile (Settings wrote ProgramData/Mozilla-*/updates/*/update-config.json): per-installation update prefs off
+# Files: netwerk/protocol/http/nsHttpChannel.cpp, toolkit/modules/UpdateUtils.sys.mjs
+
+diff --git a/netwerk/protocol/http/nsHttpChannel.cpp b/netwerk/protocol/http/nsHttpChannel.cpp
+index 33c20e2c70..d5768402ac 100644
+--- a/netwerk/protocol/http/nsHttpChannel.cpp
++++ b/netwerk/protocol/http/nsHttpChannel.cpp
+@@ -1423,6 +1423,53 @@ nsresult nsHttpChannel::Connect() {
+     return HandleOverrideResponse();
+   }
+ 
++  // GORILLA UNLEASHED - PHYSICAL LOCK (D-157-16): local network access through a proxy.
++  // GORILLA TECHNIQUE T-157-16-A, proxy path: with a proxy, upstream never checks local network access (the
++  //   connection is to the proxy, the proxy reaches the target). The 2026-10-04 leak gate saw a public page reach
++  //   192.168.0.1 and 10.0.0.1 through one. Upstream's own address-space test cannot be used here: through a
++  //   proxy, the page's "parent" space is the PROXY's address (a local proxy makes every page look local).
++  //   Rule: when the URL names a literal local or private address, the request is refused unless it is a
++  //   top-level navigation (the user typed or followed it), the triggering page is itself on a literal local
++  //   or private address (a router page linking to itself), or local network access was granted. Host NAMES
++  //   that a proxy resolves to private addresses cannot be seen from here (documented limit).
++  if (StaticPrefs::network_lna_blocking() && mProxyInfo) {
++    nsAutoCString proxyType;
++    mProxyInfo->GetType(proxyType);
++    nsAutoCString host;
++    NetAddr literal;
++    if (!proxyType.EqualsLiteral("direct") && NS_SUCCEEDED(mURI->GetAsciiHost(host)) &&
++        NS_SUCCEEDED(literal.InitFromString(host))) {
++      nsILoadInfo::IPAddressSpace target = literal.GetIpAddressSpace();
++      bool lanTarget = target == nsILoadInfo::IPAddressSpace::Local ||
++                       target == nsILoadInfo::IPAddressSpace::Private;
++      bool topLevel = mLoadInfo->GetExternalContentPolicyType() ==
++                      ExtContentPolicy::TYPE_DOCUMENT;
++      bool fromLanPage = false;
++      nsCOMPtr<nsIPrincipal> trig = mLoadInfo->TriggeringPrincipal();
++      if (trig && trig->IsSystemPrincipal()) {
++        fromLanPage = true;  // the browser itself, not a page
++      } else if (trig) {
++        nsAutoCString trigHost;
++        NetAddr trigAddr;
++        if (NS_SUCCEEDED(trig->GetAsciiHost(trigHost)) &&
++            NS_SUCCEEDED(trigAddr.InitFromString(trigHost))) {
++          auto s = trigAddr.GetIpAddressSpace();
++          fromLanPage = s == nsILoadInfo::IPAddressSpace::Local ||
++                        s == nsILoadInfo::IPAddressSpace::Private;
++        }
++      }
++      LNAPermission granted = target == nsILoadInfo::IPAddressSpace::Local
++                                  ? mLNAPermission.mLocalHostPermission
++                                  : mLNAPermission.mLocalNetworkPermission;
++      if (lanTarget && !topLevel && !fromLanPage && granted != LNAPermission::Granted) {
++        LOG(("nsHttpChannel::Connect [this=%p] local network literal through a "
++             "proxy refused (D-157-16)\n",
++             this));
++        return NS_ERROR_LOCAL_NETWORK_ACCESS_DENIED;
++      }
++    }
++  }
++
+   // Don't allow resuming when cache must be used
+   if (LoadResuming() && (mLoadFlags & LOAD_ONLY_FROM_CACHE)) {
+     LOG(("Resuming from cache is not supported yet"));
+diff --git a/toolkit/modules/UpdateUtils.sys.mjs b/toolkit/modules/UpdateUtils.sys.mjs
+index cfc07abf67..965a30b8bc 100644
+--- a/toolkit/modules/UpdateUtils.sys.mjs
++++ b/toolkit/modules/UpdateUtils.sys.mjs
+@@ -220,9 +220,13 @@ export var UpdateUtils = {
+    * Indicates whether or not per-installation prefs are supported on this
+    * platform.
+    */
+-  PER_INSTALLATION_PREFS_SUPPORTED: PER_INSTALLATION_PREFS_PLATFORMS.includes(
+-    AppConstants.platform
+-  ),
++  // GORILLA UNLEASHED - PHYSICAL LOCK (D-157-01): nothing about updates is written outside the profile.
++  // GORILLA TECHNIQUE T-157-01-A: per-installation update settings live in a machine-wide file,
++  //   ProgramData/Mozilla-<id>/updates/<hash>/update-config.json, written when Settings opens (leak gate,
++  //   2026-10-04). Gorilla has no updater (--disable-updater), so the setting is an ordinary profile pref.
++  //   (PER_INSTALLATION_PREFS_PLATFORMS is kept so upstream code that reads it still resolves.)
++  PER_INSTALLATION_PREFS_SUPPORTED:
++    false && PER_INSTALLATION_PREFS_PLATFORMS.includes(AppConstants.platform),
+ 
+   /**
+    * Possible per-installation pref types.

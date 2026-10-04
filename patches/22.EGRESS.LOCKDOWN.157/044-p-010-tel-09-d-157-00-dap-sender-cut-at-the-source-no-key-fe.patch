@@ -1,0 +1,85 @@
+# Gorilla 157 privacy cut
+# P-010 TEL-09 D-157-00: DAP sender cut at the source (no key fetch, no report built or uploaded, sender and visit counter never start)
+# Files: toolkit/components/dap/DAPSender.sys.mjs, toolkit/components/dap/DAPTelemetrySender.sys.mjs, toolkit/components/dap/DAPVisitCounter.sys.mjs
+
+diff --git a/toolkit/components/dap/DAPSender.sys.mjs b/toolkit/components/dap/DAPSender.sys.mjs
+index 3e89a4c943..0362bd3501 100644
+--- a/toolkit/components/dap/DAPSender.sys.mjs
++++ b/toolkit/components/dap/DAPSender.sys.mjs
+@@ -70,6 +70,10 @@ export const DAPSender = new (class {
+    * values advertised by servers.
+    */
+   async checkHpkeKeys() {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no DAP key fetch (D-157-00: this browser never calls home).
++    if (true) {
++      return;
++    }
+     async function check_key(url, expected) {
+       let response = await fetch(url + "/hpke_config");
+       let body = await response.arrayBuffer();
+@@ -159,6 +163,11 @@ export const DAPSender = new (class {
+    *   If an OHTTP relay is specified, the reports are uploaded over OHTTP.
+    */
+   async sendDAPMeasurement(task, measurement, options = {}) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no DAP report is ever built or sent (D-157-00). This also covers callers
++    // that use DAPSender directly (newtab attribution), not only DAPTelemetrySender.
++    if (true) {
++      return;
++    }
+     try {
+       const controller = new AbortController();
+       lazy.setTimeout(() => controller.abort(), options.timeout ?? 30_000);
+@@ -278,6 +287,10 @@ export const DAPSender = new (class {
+    * @returns {Promise<undefined>} Once the attempt to send the report completes, whether or not it was successful.
+    */
+   async sendReport(leader_endpoint, task_id, report, abortSignal, options) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no upload to a DAP leader or OHTTP relay (D-157-00).
++    if (true) {
++      return;
++    }
+     const upload_path = leader_endpoint + "/tasks/" + task_id + "/reports";
+     try {
+       let requestOptions = {
+diff --git a/toolkit/components/dap/DAPTelemetrySender.sys.mjs b/toolkit/components/dap/DAPTelemetrySender.sys.mjs
+index 4077d32f44..2db91fb279 100644
+--- a/toolkit/components/dap/DAPTelemetrySender.sys.mjs
++++ b/toolkit/components/dap/DAPTelemetrySender.sys.mjs
+@@ -52,6 +52,11 @@ export const DAPTelemetrySender = new (class {
+    */
+ 
+   async startup() {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: the DAP telemetry sender never starts (no timer, no shutdown upload,
++    // no wait on Nimbus). D-157-00.
++    if (true) {
++      return;
++    }
+     if (
+       Services.startup.isInOrBeyondShutdownPhase(
+         Ci.nsIAppStartup.SHUTDOWN_PHASE_APPSHUTDOWNCONFIRMED
+@@ -133,6 +138,10 @@ export const DAPTelemetrySender = new (class {
+    *   If an OHTTP relay is specified, the reports are uploaded over OHTTP.
+    */
+   async sendDAPMeasurement(task, measurement, options = {}) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no DAP measurement leaves this browser (D-157-00).
++    if (true) {
++      return;
++    }
+     if (!lazy.gTelemetryEnabled) {
+       return;
+     }
+diff --git a/toolkit/components/dap/DAPVisitCounter.sys.mjs b/toolkit/components/dap/DAPVisitCounter.sys.mjs
+index b5bfb57112..d2c1c3761f 100644
+--- a/toolkit/components/dap/DAPVisitCounter.sys.mjs
++++ b/toolkit/components/dap/DAPVisitCounter.sys.mjs
+@@ -22,6 +22,11 @@ export const DAPVisitCounter = new (class {
+   dapReportController = null;
+ 
+   async startup() {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no DAP visit counting (no Places listener, no report database, no timed
++    // submission). D-157-00, and lighter (D-157-30).
++    if (true) {
++      return;
++    }
+     if (
+       Services.startup.isInOrBeyondShutdownPhase(
+         Ci.nsIAppStartup.SHUTDOWN_PHASE_APPSHUTDOWNCONFIRMED

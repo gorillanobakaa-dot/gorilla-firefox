@@ -1,0 +1,25 @@
+# Gorilla 157 port fix
+# D-157-30 network stage 0: upstream DNS resolver thread pool restored
+# Files: netwerk/dns/nsHostResolver.cpp
+
+diff --git a/netwerk/dns/nsHostResolver.cpp b/netwerk/dns/nsHostResolver.cpp
+index f82a829560..3b40e21a12 100644
+--- a/netwerk/dns/nsHostResolver.cpp
++++ b/netwerk/dns/nsHostResolver.cpp
+@@ -186,11 +186,11 @@ nsresult nsHostResolver::Init() MOZ_NO_THREAD_SAFETY_ANALYSIS {
+   LOG(("Native HTTPS records supported=%d", bool(sNativeHTTPSSupported)));
+ 
+   nsCOMPtr<nsIThreadPool> threadPool = new nsThreadPool();
+-  // GORILLA v2: Raise thread pool limits for high-concurrency workloads.
+-  // Hardcoding 16 threads / 12 idle handles peak burst from simultaneous
+-  // WebRTC sessions + many tabs without thrashing thread create/destroy.
+-  MOZ_ALWAYS_SUCCEEDS(threadPool->SetThreadLimit(16));
+-  MOZ_ALWAYS_SUCCEEDS(threadPool->SetIdleThreadLimit(12));
++  // GORILLA 157 (D-157-30, network study F1): upstream's own limits restored.
++  // The 154-era "raise to 16 / 12 idle" hunk now LOWERS the pool: 157 allows
++  // MaxResolverThreads() = 24 + 40 = 64 (network.dns.max_*_priority_threads).
++  MOZ_ALWAYS_SUCCEEDS(threadPool->SetThreadLimit(MaxResolverThreads()));
++  MOZ_ALWAYS_SUCCEEDS(threadPool->SetIdleThreadLimit(8));
+   MOZ_ALWAYS_SUCCEEDS(threadPool->SetIdleThreadMaximumTimeout(poolTimeoutMs));
+   MOZ_ALWAYS_SUCCEEDS(threadPool->SetIdleThreadGraceTimeout(100));
+   MOZ_ALWAYS_SUCCEEDS(

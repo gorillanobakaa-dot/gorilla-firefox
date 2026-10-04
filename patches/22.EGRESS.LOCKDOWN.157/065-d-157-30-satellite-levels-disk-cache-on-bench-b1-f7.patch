@@ -1,0 +1,17 @@
+# Gorilla 157 privacy cut
+# D-157-30 satellite levels: disk cache on (bench B1/F7)
+# Files: browser/modules/GorillaLinkMode.sys.mjs
+
+diff --git a/browser/modules/GorillaLinkMode.sys.mjs b/browser/modules/GorillaLinkMode.sys.mjs
+index c6b49dd6a9..b1dc16f1d5 100644
+--- a/browser/modules/GorillaLinkMode.sys.mjs
++++ b/browser/modules/GorillaLinkMode.sys.mjs
+@@ -313,6 +313,8 @@ export const GorillaLinkMode = {
+     button.className = "toolbarbutton-1 chromeclass-toolbar-additional";
+     button.setAttribute("type", "menu");
+     button.setAttribute("removable", "true");
++    // GORILLA TECHNIQUE T-157-32-A: the theme forces every menu to the system colours; this one is drawn black
++    // and cyan by its own scoped !important rule (toolbarbuttons.css, #gorilla-satellite-button > menupopup)
+     const popup = doc.createXULElement("menupopup");
+     LEVEL_NAMES.forEach((name, level) => {
+       const item = doc.createXULElement("menuitem");

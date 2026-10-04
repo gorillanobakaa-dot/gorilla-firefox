@@ -1,0 +1,111 @@
+# Gorilla 157 privacy cut
+# P-013 EXT-03 D-157-05: a refused add-on or theme install now shows a doorhanger (Gorilla does not install add-ons or themes; uBlock Origin is built in) instead of failing silently
+# Files: browser/base/content/browser-addons.js, browser/base/content/browser-init.js, browser/locales/en-US/browser/addonNotifications.ftl, toolkit/mozapps/extensions/AddonManager.sys.mjs
+
+diff --git a/browser/base/content/browser-addons.js b/browser/base/content/browser-addons.js
+index d380089ca5..d04118a9dd 100644
+--- a/browser/base/content/browser-addons.js
++++ b/browser/base/content/browser-addons.js
+@@ -1219,6 +1219,7 @@ var gXPInstallObserver = {
+     "addon-install-origin-blocked",
+     "addon-install-webapi-blocked",
+     "addon-install-policy-blocked",
++    "addon-install-gorilla-refused",
+     "addon-progress",
+     "addon-webext-permissions",
+     "xpinstall-disabled",
+@@ -1326,6 +1327,22 @@ var gXPInstallObserver = {
+         );
+         break;
+       }
++      case "addon-install-gorilla-refused": {
++        // GORILLA UNLEASHED: AddonManager refused the install (D-157-05: add-ons are built in only). Say so, so
++        // the user does not retry or think the browser is broken (claim EXT-03).
++        options.removeOnDismissal = true;
++        options.persistent = false;
++        PopupNotifications.show(
++          browser,
++          aTopic,
++          await lazy.l10n.formatValue("gorilla-addon-install-refused"),
++          gUnifiedExtensions.getPopupAnchorID(browser, window),
++          null,
++          null,
++          options
++        );
++        break;
++      }
+       case "addon-install-fullscreen-blocked": {
+         // AddonManager denied installation because we are in DOM fullscreen
+         this.logWarningFullScreenInstallBlocked();
+diff --git a/browser/base/content/browser-init.js b/browser/base/content/browser-init.js
+index 56f8ca2bbf..dd1f8481ec 100644
+--- a/browser/base/content/browser-init.js
++++ b/browser/base/content/browser-init.js
+@@ -441,6 +441,11 @@ var gBrowserInit = {
+       gXPInstallObserver,
+       "addon-install-policy-blocked"
+     );
++    // GORILLA UNLEASHED: refused installs are shown (EXT-03, D-157-05).
++    Services.obs.addObserver(
++      gXPInstallObserver,
++      "addon-install-gorilla-refused"
++    );
+     Services.obs.addObserver(
+       gXPInstallObserver,
+       "addon-install-webapi-blocked"
+@@ -1137,6 +1142,10 @@ var gBrowserInit = {
+         gXPInstallObserver,
+         "addon-install-policy-blocked"
+       );
++      Services.obs.removeObserver(
++        gXPInstallObserver,
++        "addon-install-gorilla-refused"
++      );
+       Services.obs.removeObserver(
+         gXPInstallObserver,
+         "addon-install-webapi-blocked"
+diff --git a/browser/locales/en-US/browser/addonNotifications.ftl b/browser/locales/en-US/browser/addonNotifications.ftl
+index 0c51706f67..e992fe0030 100644
+--- a/browser/locales/en-US/browser/addonNotifications.ftl
++++ b/browser/locales/en-US/browser/addonNotifications.ftl
+@@ -52,6 +52,8 @@ addon-installation-blocked-by-policy = { $addonName } ({ $addonId }) is blocked
+ # This message is shown when the installation of add-ons from a domain is blocked by enterprise policy.
+ addon-install-domain-blocked-by-policy = Your organization prevented this site from asking you to install software on your computer.
+ addon-install-full-screen-blocked = Add-on installation is not allowed while in or before entering fullscreen mode.
++# GORILLA: shown when an add-on or theme install is refused (decision D-157-05: add-ons are built in only).
++gorilla-addon-install-refused = { -brand-short-name } does not install add-ons or themes. uBlock Origin is built in.
+ 
+ # Variables:
+ #   $addonName (String): the localized name of the sideloaded add-on.
+diff --git a/toolkit/mozapps/extensions/AddonManager.sys.mjs b/toolkit/mozapps/extensions/AddonManager.sys.mjs
+index e70bb1f595..3496eaed74 100644
+--- a/toolkit/mozapps/extensions/AddonManager.sys.mjs
++++ b/toolkit/mozapps/extensions/AddonManager.sys.mjs
+@@ -2452,6 +2452,13 @@ var AddonManagerInternal = {
+     // 🛡️ API LOBOTOMY - GORILLA UNLEASHED
+     // Rationale: Block web-initiated add-on/theme installation flow.
+     logger.error(`[GORILLA] AddonManager: Web installation rejected.`);
++    // GORILLA UNLEASHED: the refusal is shown to the user (EXT-03), not only logged (D-157-05).
++    this.installNotifyObservers(
++      "addon-install-gorilla-refused",
++      aBrowser,
++      aInstallingPrincipal?.URI,
++      aInstall
++    );
+     aInstall.cancel();
+   },
+ 
+@@ -2476,6 +2483,13 @@ var AddonManagerInternal = {
+     // Rationale: Block AMO-based theme/extension installation flow.
+     // Technique: Hard-coded rejection in master dispatcher.
+     logger.error(`[GORILLA] AddonManager: Installation rejected (AMO Pathway).`);
++    // GORILLA UNLEASHED: the refusal is shown to the user (EXT-03), not only logged (D-157-05).
++    this.installNotifyObservers(
++      "addon-install-gorilla-refused",
++      browser,
++      uri,
++      install
++    );
+     install.cancel();
+   },
+ 

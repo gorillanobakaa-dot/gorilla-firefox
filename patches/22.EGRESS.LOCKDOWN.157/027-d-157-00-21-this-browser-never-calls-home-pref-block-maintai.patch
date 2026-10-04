@@ -1,5 +1,5 @@
 # Gorilla 157 privacy cut
-# D-157-00..21: THIS BROWSER NEVER CALLS HOME pref block
+# D-157-00..21: THIS BROWSER NEVER CALLS HOME pref block (maintainer decisions 2026-10-02, chat); recorded by record_decisions.py
 # Files: browser/app/profile/firefox.js
 
 diff --git a/browser/app/profile/firefox.js b/browser/app/profile/firefox.js
