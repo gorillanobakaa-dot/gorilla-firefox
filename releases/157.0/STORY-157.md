@@ -393,7 +393,7 @@ Most of the saving comes from leaving JavaScript out. Asking for the mobile vers
 
 **Build 27 fixed all of it in source**, the test's faults were corrected in the harness, and the maintainer approved the reviewed list at their own terminal with a new command that refuses to run from an agent's shell. The build stopped twice on the way: once because the verifier mistook an older Gorilla line for a renamed copy of a removed one, once because two newly locked settings were not yet in the decision record.
 
-Build 27 is the release. The maintainer chose, on the fifth day, to publish it without waiting another four hours for the leak test to run again; that is stated at the top of the release page, and the result will be added there.
+Build 27 is the release. The maintainer chose, on the fifth day, to publish it without waiting another four hours; the leak test started on this build on 5 October 2026, 08:33 UK time, and its result will be added to the release page.
 
 ---
 
@@ -401,7 +401,7 @@ Build 27 is the release. The maintainer chose, on the fifth day, to publish it w
 
 These are open when this is written, from the backlog, the decision register and the journal:
 
-- **The release leak test has not been run on build 27**, and no first baseline exists yet. It ran on build 26 and failed, as told above.
+- **The release leak test on build 27** started 5 October 2026, 08:33 UK time; then the first baseline and a second run that must pass. It ran on build 26 and failed, as told above.
 - **Normandy, Nimbus, Sync, Firefox Accounts and the telemetry code** are compiled in, switched off, with their network callers cut. Removing them is the next phase.
 - **The claims audit**: 0 contradicted claims and 0 failing patches remain, and the 58 reworded entries were retired (kept on record), but most sentences in the 154-era project logs have no automated check (unproven, not false).
 - **Six address-bar messages** carry Gorilla wording where an older repair intended Mozilla's. The maintainer chooses.
