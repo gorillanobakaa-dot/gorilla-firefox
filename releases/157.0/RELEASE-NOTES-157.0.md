@@ -58,7 +58,7 @@ The decision register holds 34 entries: 31 enforced and 3 recorded trade-offs, n
 
 | Decision | What it means for you | What it costs you |
 |---|---|---|
-| D-157-01 No automatic updates | The browser never downloads or installs anything by itself. | You update by downloading the next release. |
+| D-157-01 No automatic updates | Nothing is ever pushed to your computer: no update checks, no remote code delivery, no version reports. You pull and verify each release yourself. | Between a Mozilla security fix and the next Gorilla build, the fixed hole stays open in your copy. |
 | D-157-03 English only | No translation engine, no language packs. | The interface is English only; pages are not translated. |
 | D-157-04 One theme | The Gorilla dark frame, nothing else. | No choice of look. Web pages keep their own dark mode. |
 | D-157-05 No add-ons except uBlock Origin | uBlock Origin 1.74.0 is built in; every other install route is closed, including the temporary-add-on and sideloading routes. | No password-manager or other add-ons. uBlock Origin itself updates only with a new Gorilla build (its filter lists update themselves). |
@@ -188,7 +188,7 @@ A restart keeps the pages on disk at every speed: the cache used to size itself 
 
 Each of these is either a recorded cost of a decision or an open item, stated so you do not discover it by accident:
 
-- **No automatic updates.** You update by hand. Old builds stay old.
+- **No automatic updates, on purpose.** An update channel is a door someone else can open (see "Why there are no automatic updates" at the top of this page). You pull new releases yourself; until you do, holes Mozilla has since fixed stay open in your copy.
 - **English only. One theme. No add-ons other than uBlock Origin.**
 - **No sync, no search suggestions, no translations, no location, no built-in profile backup.**
 - **No Safe Browsing warnings.** uBlock Origin blocks known bad hosts, but the browser does not warn about phishing or malware pages on its own.
