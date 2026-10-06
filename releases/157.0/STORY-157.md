@@ -393,7 +393,7 @@ Most of the saving comes from leaving JavaScript out. Asking for the mobile vers
 
 **Build 27 fixed all of it in source**, the test's faults were corrected in the harness, and the maintainer approved the reviewed list at their own terminal with a new command that refuses to run from an agent's shell. The build stopped twice on the way: once because the verifier mistook an older Gorilla line for a renamed copy of a removed one, once because two newly locked settings were not yet in the decision record.
 
-Build 27 is the release. The maintainer chose, on the fifth day, to publish it without waiting another four hours; the leak test started on this build on 5 October 2026, 08:33 UK time, and its result will be added to the release page.
+Build 27 is the release. The maintainer chose, on the fifth day, to publish it without waiting another four hours; the leak test then ran on it four times. Run 1 (5 October, 08:33) failed on the test itself: it lost track of the browser window it had to close. Run 2 (20:05) failed on traffic from WhatsApp and this Claude desktop app, which the packet capture could not tell apart from the browser's. Run 3 (6 October, 04:13), with WhatsApp closed, failed only because the laptop's new hotspot address and the first baseline were waiting for the maintainer's approval; both were given at the maintainer's terminal. **Run 4 (6 October, 10:08 to 14:08) passed: 19 of 19 checks.** The test now names the program behind every packet it captures, because, as the maintainer put it, every business laptop has messaging apps that wake up whenever a message arrives.
 
 ---
 
@@ -401,7 +401,6 @@ Build 27 is the release. The maintainer chose, on the fifth day, to publish it w
 
 These are open when this is written, from the backlog, the decision register and the journal:
 
-- **The release leak test on build 27** started 5 October 2026, 08:33 UK time; then the first baseline and a second run that must pass. It ran on build 26 and failed, as told above.
 - **Normandy, Nimbus, Sync, Firefox Accounts and the telemetry code** are compiled in, switched off, with their network callers cut. Removing them is the next phase.
 - **The claims audit**: 0 contradicted claims and 0 failing patches remain, and the 58 reworded entries were retired (kept on record), but most sentences in the 154-era project logs have no automated check (unproven, not false).
 - **Six address-bar messages** carry Gorilla wording where an older repair intended Mozilla's. The maintainer chooses.
