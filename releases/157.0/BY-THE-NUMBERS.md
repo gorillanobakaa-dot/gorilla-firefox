@@ -11,7 +11,7 @@ Every number below is counted from the build records, not estimated. The countin
 | 🌐 | **Leak test: browser launches with every sensor watching** (12 runs started, 10 finished; the last one passed 19 of 19 rules) | **1,122** |
 | ⚖️ | **Leak test: rule verdicts** (19 rules per finished run) | **182** |
 | 📂 | **Source files checked against the published patches** (10 full passes over the tree) | **16,307** |
-| 🧩 | **Patches re-applied to Mozilla's untouched source to prove it rebuilds the same browser** (4 replay proofs) | **1,780** |
+| 🧩 | **Patch applications in replay proofs**: the published patch set, applied to Mozilla's untouched Firefox 157.0 source, must give exactly the source that was compiled. Done 4 times as the set grew (434 + 436 + 454 + 456 patches); every time identical. The patches are in [`patches/`](https://github.com/gorillanobakaa-dot/gorilla-firefox/tree/master/patches) (456 used on Windows 157; the 20 in `01.MEDIA` are Linux-only) | **1,780** |
 | 🔧 | **Changes to Firefox code checked one by one before they were accepted** | **293** |
 | 📋 | **Proof scripts run on the installed browser** (32 rounds after installs) | **305** |
 | 📶 | **Network speed benchmarks** (satellite, 5 KB/s and other emulated links; 26 rounds) | **42** |
