@@ -28,6 +28,6 @@ Not counted, because nothing records them: test-suite runs started by hand betwe
 | 2 October, first trial runs | 3 of 15, then 4 of 15 | early versions of the test and of the browser |
 | 3 to 4 October, builds 20 to 26 | 5 → 6 → 7 → 9 of 19 | real leaks (fixed in builds 21 to 27) and faults of the test |
 | 5 October, 08:33 | 17 of 19 | the test lost track of the browser window it had to close; the first reference not yet recorded |
-| 5 October, 20:05 | 15 of 19 | traffic from WhatsApp and the Claude desktop app, blamed on the browser |
-| 6 October, 04:13 | 17 of 19, then 18 | the laptop's new network address and the first reference were waiting for the maintainer; after the address was approved the same evidence was judged again (18 of 19), and the maintainer then recorded the reference |
+| 5 October, 20:05 | 15 of 19 | traffic from other programs on the test machine, blamed on the browser |
+| 6 October, 04:13 | 17 of 19, then 18 | the test machine's new network address and the first reference were waiting for the maintainer; after the address was approved the same evidence was judged again (18 of 19), and the maintainer then recorded the reference |
 | **6 October, 10:08** | **19 of 19 ✅** | **nothing: PASS** |
