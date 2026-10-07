@@ -1,0 +1,24 @@
+# Gorilla 157 port fix
+# Theme fix step 2 of 2 (2026-10-07): the Gorilla dark look as one additive, layered block at the end of tokens-shared.css (gray-80 and gray-90 pure black, in tokens-foundation-brand-nova so it beats Nova; contrast and forced-colours layers still win). Proven with the design-tokens probe on a copy of the installed build: 84 token reads that were unset are set, every changed value is upstream 157's own, the only dropped tokens (purple-desaturated-30/50/60, font-size-xsmall) have no user.
+# Files: toolkit/themes/shared/design-system/dist/tokens-shared.css
+
+diff --git a/toolkit/themes/shared/design-system/dist/tokens-shared.css b/toolkit/themes/shared/design-system/dist/tokens-shared.css
+index 5564b097da..065849c85e 100644
+--- a/toolkit/themes/shared/design-system/dist/tokens-shared.css
++++ b/toolkit/themes/shared/design-system/dist/tokens-shared.css
+@@ -1162,3 +1162,15 @@
+     }
+   }
+ }
++
++/* GORILLA (2026-10-07): the Gorilla dark look on top of upstream's tokens. Appended and layered, so the rest of
++ * this file stays upstream's own and a later Firefox needs no merge. Pure black for the darkest surfaces (the
++ * frame, Settings and Add-ons backgrounds), in the last foundation layer so it beats the Nova values too; the
++ * prefers-contrast and forced-colours layers still come after it and win. */
++:root,
++:host(.anonymous-content-host) {
++  @layer tokens-foundation-brand-nova {
++    --color-gray-80: #000000;
++    --color-gray-90: #000000;
++  }
++}
