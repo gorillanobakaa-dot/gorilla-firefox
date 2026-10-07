@@ -1,0 +1,107 @@
+# Gorilla 157 privacy cut
+# Build 28 privacy batch, Gorilla agreed 2026-10-07. D-157-14: Early Hints preconnect and page preconnect locked off (a 103 reply had its own 10-connection allowance past speculative-parallel-limit 0). D-157-21: extensions.ml.enabled and new-tab personalised sections locked off. Dead AI menu entries removed (app menu: New AI Window with BETA badge, New Classic Window, Chats; File menu: New AI / Classic Window) with the badge CSS rule; the AI .ftl files stay because 54 of their strings are still used by shipping code.
+# Files: browser/app/profile/firefox.js, browser/base/content/appmenu-viewcache.inc.xhtml, browser/base/content/browser-menubar.inc.xhtml, browser/themes/shared/browser-shared.css
+
+diff --git a/browser/app/profile/firefox.js b/browser/app/profile/firefox.js
+index 392789c5b2..f57c955b0e 100644
+--- a/browser/app/profile/firefox.js
++++ b/browser/app/profile/firefox.js
+@@ -2141,6 +2141,8 @@ pref("browser.newtabpage.activity-stream.discoverystream.sections.personalizatio
+ pref("browser.newtabpage.activity-stream.discoverystream.sections.personalization.inferred.locale-config", "en-US,en-GB,en-CA");
+ 
+ pref("browser.newtabpage.activity-stream.discoverystream.sections.personalization.inferred.user.enabled", true);
++// GORILLA: personalised new-tab sections off and locked (stock default true; the feeds are cut, D-157-21)
++pref("browser.newtabpage.activity-stream.discoverystream.sections.personalization.enabled", false, locked);
+ 
+ // Override inferred personalization model JSON string that typically comes from rec API. Or "TEST" for a test model.
+ pref("browser.newtabpage.activity-stream.discoverystream.sections.personalization.inferred.model.override", "");
+@@ -3900,6 +3902,8 @@ pref("browser.contentanalysis.enabled", false, locked);
+ pref("browser.contentanalysis.interception_point.clipboard.enabled", false, locked);
+ pref("browser.ml.checkForMemory", false, locked);
+ pref("browser.ml.enable", false, locked);
++// the extension ML API (it downloads models) stays off and cannot be switched back on (D-157-21)
++pref("extensions.ml.enabled", false, locked);
+ pref("browser.ml.modelCacheMaxSize", 0, locked);
+ pref("browser.ml.modelHubRootUrl", "", locked);
+ pref("browser.newtabpage.activity-stream.telemetry", false, locked);
+@@ -4130,6 +4134,10 @@ pref("geo.provider.network.url", "", locked);
+ 
+ // D-157-14 no speculative connections, prefetch, pings or beacons
+ pref("beacon.enabled", false, locked);
++// 103 Early Hints preconnect carries its own 10-connection allowance, which beats speculative-parallel-limit 0
++// (audit 2026-10-06); page <link rel=preconnect> is closed at the source too.
++pref("network.early-hints.preconnect.enabled", false, locked);
++pref("network.preconnect", false, locked);
+ 
+ // D-157-15 no MITM-detection ping to Mozilla
+ 
+diff --git a/browser/base/content/appmenu-viewcache.inc.xhtml b/browser/base/content/appmenu-viewcache.inc.xhtml
+index edd03d660f..e60c0f7a96 100644
+--- a/browser/base/content/appmenu-viewcache.inc.xhtml
++++ b/browser/base/content/appmenu-viewcache.inc.xhtml
+@@ -92,19 +92,7 @@
+                      data-l10n-id="appmenuitem-new-window"
+                      key="key_newNavigator"
+                      command="cmd_newNavigator"/>
+-      <toolbarbutton id="appMenu-new-ai-window-button"
+-                     class="subviewbutton"
+-                     command="Tools:AIWindow"
+-                     aria-describedby="appMenu-new-ai-window-badge">
+-        <label class="toolbarbutton-text" crop="end"
+-               data-l10n-id="appmenuitem-new-ai-window"/>
+-        <html:moz-badge id="appMenu-new-ai-window-badge"
+-                        type="beta"/>
+-      </toolbarbutton>
+-      <toolbarbutton id="appMenu-new-classic-window-button"
+-                     class="subviewbutton"
+-                     data-l10n-id="appmenuitem-new-classic-window"
+-                     command="Tools:ClassicWindow"/>
++      <!-- GORILLA: New AI Window / New Classic Window removed (aiwindow excised; the buttons did nothing) -->
+       <toolbarbutton id="appMenu-new-private-window-button2"
+                      class="subviewbutton"
+                      data-l10n-id="appmenuitem-new-private-window"
+@@ -127,10 +115,7 @@
+                      closemenu="none"
+                      hidden="true"
+                      />
+-      <toolbarbutton id="appMenu-chats-history-button"
+-                     class="subviewbutton"
+-                     data-l10n-id="menu-history-chats"
+-                     command="Tools:ChatsHistory"/>
++      <!-- GORILLA: Chats removed (aiwindow excised) -->
+       <toolbarbutton id="appMenu-downloads-button"
+                      class="subviewbutton"
+                      data-l10n-id="appmenuitem-downloads"
+diff --git a/browser/base/content/browser-menubar.inc.xhtml b/browser/base/content/browser-menubar.inc.xhtml
+index aff758c4fe..542991f3ab 100644
+--- a/browser/base/content/browser-menubar.inc.xhtml
++++ b/browser/base/content/browser-menubar.inc.xhtml
+@@ -16,12 +16,7 @@
+       <menuitem id="menu_newNavigator"
+                 key="key_newNavigator"
+                 command="cmd_newNavigator" data-l10n-id="menu-file-new-window"/>
+-      <menuitem id="menu_newAIWindow"
+-                command="Tools:AIWindow"
+-                data-l10n-id="menu-file-new-ai-window"/>
+-      <menuitem id="menu_newClassicWindow"
+-                command="Tools:ClassicWindow"
+-                data-l10n-id="menu-file-new-classic-window"/>
++      <!-- GORILLA: New AI Window / New Classic Window removed (aiwindow excised) -->
+       <menuitem id="menu_newPrivateWindow"
+                 command="Tools:PrivateBrowsing"
+                 key="key_privatebrowsing" data-l10n-id="menu-file-new-private-window"/>
+diff --git a/browser/themes/shared/browser-shared.css b/browser/themes/shared/browser-shared.css
+index c3f9c4a6f8..207d5d6a3c 100644
+--- a/browser/themes/shared/browser-shared.css
++++ b/browser/themes/shared/browser-shared.css
+@@ -1808,10 +1808,6 @@ popupnotificationcontent {
+   }
+ }
+ 
+-#appMenu-new-ai-window-button > moz-badge {
+-  margin-inline-start: auto;
+-}
+-
+ /* Smart Window Toolbar styling. */
+ :root[ai-window] #nav-bar {
+   padding-inline-end: var(--toolbar-padding-inline);

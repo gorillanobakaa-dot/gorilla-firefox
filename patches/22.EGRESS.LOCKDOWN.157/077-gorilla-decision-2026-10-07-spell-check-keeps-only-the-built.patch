@@ -1,0 +1,68 @@
+# Gorilla 157 privacy cut
+# Gorilla decision 2026-10-07: spell check keeps only the built-in US English Hunspell dictionary (local, no AI). The 'Download dictionaries' row (it opened addons.mozilla.org; dictionaries are add-ons Gorilla never installs, D-157-05) is removed and its URL pref blanked and locked. Not packaged: the dictionary add-on list dump and the 1.5 MB ai-window-prompts dump read only by the excised AI window.
+# Files: browser/app/profile/firefox.js, browser/components/preferences/config/languages.mjs, services/settings/dumps/main/moz.build
+
+diff --git a/browser/app/profile/firefox.js b/browser/app/profile/firefox.js
+index 833514d0e0..b59183fa67 100644
+--- a/browser/app/profile/firefox.js
++++ b/browser/app/profile/firefox.js
+@@ -76,8 +76,9 @@ pref("xpinstall.signatures.required", true, locked);
+ // Enable data collection permissions.
+ pref("extensions.dataCollectionPermissions.enabled", true);
+ 
+-// Dictionary download preference
+-pref("browser.dictionaries.download.url", "https://addons.mozilla.org/%LOCALE%/firefox/language-tools/");
++// Dictionary download preference. GORILLA: blank and locked - dictionaries are add-ons, which Gorilla never installs
++// (D-157-05); only the built-in US English dictionary is used (owner, 2026-10-07)
++pref("browser.dictionaries.download.url", "", locked);
+ 
+ // Whether the Nova Themes picker should be enabled in the about:addons page.
+ // (needs also browser.nova.enabled for the Nova Themes picker to be shown
+diff --git a/browser/components/preferences/config/languages.mjs b/browser/components/preferences/config/languages.mjs
+index 7dd8ff65d5..7a026e5f68 100644
+--- a/browser/components/preferences/config/languages.mjs
++++ b/browser/components/preferences/config/languages.mjs
+@@ -825,10 +825,6 @@ Preferences.addSetting({
+   set: val => (val ? 1 : 0),
+ });
+ 
+-Preferences.addSetting({
+-  id: "downloadDictionaries",
+-});
+-
+ Preferences.addSetting({
+   id: "spellCheckPromo",
+ });
+@@ -961,16 +957,7 @@ SettingGroupManager.registerGroups({
+         l10nId: "check-user-spelling",
+         supportPage: "how-do-i-use-firefox-spell-checker",
+       },
+-      {
+-        id: "downloadDictionaries",
+-        l10nId: "spellcheck-download-dictionaries",
+-        control: "moz-box-link",
+-        controlAttrs: {
+-          href: Services.urlFormatter.formatURLPref(
+-            "browser.dictionaries.download.url"
+-          ),
+-        },
+-      },
++      // GORILLA: "Download dictionaries" removed - it opened Mozilla's add-ons site, and Gorilla installs no add-ons
+       {
+         id: "spellCheckPromo",
+         l10nId: "spellcheck-promo",
+diff --git a/services/settings/dumps/main/moz.build b/services/settings/dumps/main/moz.build
+index 3ddf420224..3a8b504490 100644
+--- a/services/settings/dumps/main/moz.build
++++ b/services/settings/dumps/main/moz.build
+@@ -5,8 +5,8 @@
+ if CONFIG["MOZ_BUILD_APP"] == "browser":
+     # These collections are only referenced from browser/
+     FINAL_TARGET_FILES.defaults.settings.main += [
+-        "ai-window-prompts.json",
+-        "language-dictionaries.json",
++        # GORILLA: not packaged - ai-window-prompts.json (1.5 MB) is read only by the excised AI window;
++        # language-dictionaries.json lists dictionary add-ons Gorilla never installs (owner, 2026-10-07)
+         "newtab-section-layouts.json",
+         "newtab-sections-ordering.json",
+         "newtab-wallpapers-v2.json",
