@@ -1,0 +1,700 @@
+# Gorilla 157 port fix
+# Theme fix step 1 of 2 (2026-10-07): the design-token files go back to pristine 157. They were 155-era copies (16.SNAPSHOT.DELTA ports): layer tokens-foundation-brand renamed, two Nova @media/@layer openers dropped (8 { for 10 }, the Nova block applied unconditionally and above the contrast layers), --color-gray-0 renamed gray-05 (16 files use gray-0) and about 40 tokens 157 uses deleted (button padding, muted buttons, badge, page spacing). For a later Firefox: drop the three 16.SNAPSHOT tokens-*.css patches and this one; keep step 2.
+# Files: toolkit/themes/shared/design-system/dist/tokens-brand.css, toolkit/themes/shared/design-system/dist/tokens-platform.css, toolkit/themes/shared/design-system/dist/tokens-shared.css
+
+diff --git a/toolkit/themes/shared/design-system/dist/tokens-brand.css b/toolkit/themes/shared/design-system/dist/tokens-brand.css
+index 54e0b7dc72..97ee586f5c 100644
+--- a/toolkit/themes/shared/design-system/dist/tokens-brand.css
++++ b/toolkit/themes/shared/design-system/dist/tokens-brand.css
+@@ -9,7 +9,7 @@
+ 
+ :root,
+ :host(.anonymous-content-host) {
+-@layer tokens-foundation {
++  @layer tokens-foundation-brand {
+     /** background-color **/
+     --background-color-box-info: light-dark(var(--color-gray-20), var(--color-gray-80));
+     --background-color-canvas: light-dark(var(--color-white), var(--color-gray-90));
+@@ -25,43 +25,20 @@
+     --button-background-color: color-mix(in srgb, currentColor 7%, transparent);
+     --button-background-color-hover: color-mix(in srgb, currentColor 14%, transparent);
+     --button-background-color-active: color-mix(in srgb, currentColor 21%, transparent);
+-    --button-text-color: light-dark(var(--color-gray-100), var(--color-gray-05));
++    --button-text-color: light-dark(var(--color-gray-100), var(--color-gray-0));
+     --button-text-color-primary: light-dark(var(--color-white), var(--color-gray-100));
+-    /** color **/
+-    --color-accent-attention: light-dark(#2ac3a2, #54ffbd);
+-    --color-accent-primary: light-dark(var(--color-blue-60), var(--color-cyan-30));
+-    --color-accent-primary-hover: light-dark(var(--color-blue-70), var(--color-cyan-20));
+-    --color-accent-primary-active: light-dark(var(--color-blue-80), var(--color-cyan-10));
+-    --color-accent-primary-selected: light-dark(var(--color-blue-60), var(--color-cyan-30));
+-
+ 
+     /** font-size **/
+     --font-size-root: 15px;
+-    /* 11px / Note this token is to be used in rare cases because its hard to read. Please consult with the Design Systems and A11y teams for case-by-case feedback. */
+-    --font-size-xsmall: 0.733rem;
+-    /* 13px */
+     /* 13px in-content, unset in platform (we want to avoid going too small when the root font size is already quite small) */
+     --font-size-small: 0.867rem;
+-    /* 17px */
+-    --font-size-large: 1.133rem;
+-    /* 22px */
+-    --font-size-xlarge: 1.467rem;
+-    /* 24px */
+-    --font-size-xxlarge: 1.6rem;
+-    /* 33px */
+-    --font-size-xxxlarge: 2.2rem;
+-
+-    /** link **/
+-    --link-color: var(--color-accent-primary);
+-    --link-color-hover: var(--color-accent-primary-hover);
+-    --link-color-active: var(--color-accent-primary-active);
+-    --link-color-visited: var(--link-color);
+ 
+     /** input **/
+     --input-text-color: var(--text-color);
+ 
+     /** page **/
+     --page-main-content-width: 664px;
++    --page-space-block-start: 64px;
+ 
+     /** table **/
+     --table-header-text-color: light-dark(var(--color-white), var(--color-gray-100));
+@@ -69,7 +46,7 @@
+     --table-row-background-color-alternate: light-dark(#f0f0f4, var(--color-gray-80));
+ 
+     /** text-color **/
+-    --text-color: light-dark(var(--color-gray-100), var(--color-gray-05));
++    --text-color: light-dark(var(--color-gray-100), var(--color-gray-0));
+     --text-color-accent-primary-selected: light-dark(var(--color-white), var(--color-gray-100));
+   }
+ 
+@@ -83,12 +60,14 @@
+   @layer tokens-forced-colors {
+     @media (forced-colors) {
+       /** button **/
+-      --button-background-color-ghost: var(--button-background-color);
++      --button-background-color-ghost: ButtonFace;
+       --button-background-color-ghost-disabled: var(--button-background-color-disabled);
+       --button-text-color-ghost-disabled: var(--button-text-color-disabled);
+     }
+   }
+ 
++  @media -moz-pref("browser.nova.enabled") {
++    @layer tokens-foundation-brand-nova {
+       /** background-color **/
+       --background-color-box: light-dark(var(--color-white), var(--color-gray-70));
+       --background-color-box-info: light-dark(var(--color-gray-15), var(--color-gray-65));
+diff --git a/toolkit/themes/shared/design-system/dist/tokens-platform.css b/toolkit/themes/shared/design-system/dist/tokens-platform.css
+index 002d260e7b..5a325c8760 100644
+--- a/toolkit/themes/shared/design-system/dist/tokens-platform.css
++++ b/toolkit/themes/shared/design-system/dist/tokens-platform.css
+@@ -13,6 +13,8 @@
+     /** background-color **/
+     --background-color-box-info: color-mix(in srgb, currentColor 6%, transparent);
+     --background-color-canvas: Canvas;
++    --background-color-dimmed: color-mix(in srgb, currentColor 17%, transparent);
++    --background-color-dimmed-further: color-mix(in srgb, currentColor 30%, transparent);
+     --background-color-list-item-hover: color-mix(in srgb, currentColor 20%, transparent);
+ 
+     /** border **/
+@@ -305,22 +307,3 @@
+     }
+   }
+ }
+-
+-
+-/* ==========================================================
+- * GORILLA OVERRIDES
+- * Appended rather than patched in place: these are additive
+- * overrides, and the cascade already gives later rules
+- * priority. Upstream can restructure this file freely.
+- * ========================================================== */
+-
+-@layer tokens-foundation {
+-  :host(.anonymous-content-host) {
+-    --font-size-xsmall: unset;
+-    --font-size-large: unset;
+-    --font-size-xlarge: unset;
+-    --font-size-xxlarge: unset;
+-    --font-size-xxxlarge: unset;
+-    --link-color-visited: var(--link-color);
+-  }
+-}
+diff --git a/toolkit/themes/shared/design-system/dist/tokens-shared.css b/toolkit/themes/shared/design-system/dist/tokens-shared.css
+index 874e64fa36..5564b097da 100644
+--- a/toolkit/themes/shared/design-system/dist/tokens-shared.css
++++ b/toolkit/themes/shared/design-system/dist/tokens-shared.css
+@@ -5,7 +5,7 @@
+ /* DO NOT EDIT this file directly, instead modify the relevant *.tokens.json file
+  * and run `mach buildtokens` to see your changes. */
+ 
+-@layer tokens-foundation, tokens-foundation-nova, tokens-prefers-contrast, tokens-prefers-contrast-nova, tokens-forced-colors, tokens-forced-colors-nova, tokens-browser-theme, tokens-browser-theme-nova;
++@layer tokens-foundation, tokens-browser-theme, tokens-foundation-brand, tokens-foundation-nova, tokens-browser-theme-nova, tokens-foundation-brand-nova, tokens-prefers-contrast, tokens-prefers-contrast-nova, tokens-forced-colors, tokens-forced-colors-nova;
+ 
+ :root,
+ :host(.anonymous-content-host) {
+@@ -13,8 +13,8 @@
+     /** background-color **/
+     --background-color-box: light-dark(var(--color-white), var(--color-gray-80));
+     --background-color-critical: light-dark(var(--color-red-0), var(--color-red-90));
+-    --background-color-dimmed: color-mix(in srgb, currentColor 17%, transparent);
+-    --background-color-dimmed-further: color-mix(in srgb, currentColor 30%, transparent);
++    --background-color-dimmed: light-dark(color-mix(in srgb, currentColor 12%, transparent), color-mix(in srgb, currentColor 17%, transparent));
++    --background-color-dimmed-further: light-dark(color-mix(in srgb, currentColor 20%, transparent), color-mix(in srgb, currentColor 14%, transparent));
+     --background-color-information: light-dark(var(--color-blue-0), var(--color-blue-90));
+     --background-color-overlay: var(--color-black-alpha-50);
+     --background-color-success: light-dark(var(--color-green-0), var(--color-green-90));
+@@ -61,6 +61,12 @@
+     --button-background-color-menu-hover: var(--button-background-color-ghost-hover);
+     --button-background-color-menu-active: var(--button-background-color-ghost-active);
+     --button-background-color-menu-disabled: var(--button-background-color-ghost-disabled);
++    --button-background-color-menu-selected: var(--button-background-color-ghost-selected);
++    --button-background-color-muted: var(--button-background-color);
++    --button-background-color-muted-hover: var(--button-background-color-hover);
++    --button-background-color-muted-active: var(--button-background-color-active);
++    --button-background-color-muted-disabled: var(--button-background-color-disabled);
++    --button-background-color-muted-selected: var(--button-background-color-muted-active);
+     --button-background-color-primary: var(--color-accent-primary);
+     --button-background-color-primary-hover: var(--color-accent-primary-hover);
+     --button-background-color-primary-active: var(--color-accent-primary-active);
+@@ -72,6 +78,8 @@
+     --button-background-color-toolbar-active: var(--toolbarbutton-background-color-active);
+     --button-background-color-toolbar-disabled: var(--toolbarbutton-background-color);
+     --button-background-color-toolbar-selected: var(--button-background-color-ghost-active);
++    --button-badge-background-color: var(--color-accent-attention);
++    --button-badge-size: 6px;
+     --button-border: var(--border-width) solid var(--button-border-color);
+     --button-border-color: transparent;
+     --button-border-color-hover: var(--button-border-color);
+@@ -87,6 +95,16 @@
+     --button-border-color-ghost-active: var(--button-border-color-active);
+     --button-border-color-ghost-disabled: var(--button-border-color-disabled);
+     --button-border-color-ghost-selected: var(--button-border-color-ghost-active);
++    --button-border-color-menu: var(--button-border-color-ghost);
++    --button-border-color-menu-hover: var(--button-border-color-ghost-hover);
++    --button-border-color-menu-active: var(--button-border-color-ghost-active);
++    --button-border-color-menu-disabled: var(--button-border-color-ghost-disabled);
++    --button-border-color-menu-selected: var(--button-border-color-menu-active);
++    --button-border-color-muted: var(--button-border-color);
++    --button-border-color-muted-hover: var(--button-border-color-hover);
++    --button-border-color-muted-active: var(--button-border-color-active);
++    --button-border-color-muted-disabled: var(--button-border-color-disabled);
++    --button-border-color-muted-selected: var(--button-border-color-muted-active);
+     --button-border-color-primary: transparent;
+     --button-border-color-primary-hover: var(--button-border-color-primary);
+     --button-border-color-primary-active: var(--button-border-color-primary);
+@@ -100,6 +118,7 @@
+     --button-border-color-toolbar-selected: var(--button-border-color-ghost-active);
+     --button-border-radius: var(--border-radius-medium);
+     --button-border-width-split: var(--border-width);
++    --button-content-alignment: center;
+     --button-font-size: var(--font-size-root);
+     --button-font-size-small: var(--font-size-small);
+     --button-font-weight: var(--font-weight-semibold);
+@@ -108,11 +127,19 @@
+     --button-icon-stroke: var(--button-icon-fill);
+     --button-min-height: var(--size-item-large);
+     --button-min-height-small: var(--size-item-medium);
++    --button-min-height-large: 40px;
+     --button-opacity-disabled: 0.5;
+-    --button-padding: var(--space-xsmall) var(--space-large);
++    --button-padding: var(--button-padding-block) var(--button-padding-inline);
++    --button-padding-block: var(--space-xsmall);
++    --button-padding-block-small: var(--space-xxsmall);
++    --button-padding-block-large: var(--space-small);
+     --button-padding-icon: 0;
++    --button-padding-inline: var(--space-large);
++    --button-padding-inline-small: var(--button-padding-inline);
++    --button-padding-inline-large: var(--space-xlarge);
+     --button-size-icon: var(--button-min-height);
+     --button-size-icon-small: var(--button-min-height-small);
++    --button-size-icon-large: var(--button-min-height-large);
+     --button-split-separator-background-color: transparent;
+     --button-text-color-hover: var(--button-text-color);
+     --button-text-color-active: var(--button-text-color);
+@@ -131,6 +158,12 @@
+     --button-text-color-menu-hover: var(--button-text-color-ghost-hover);
+     --button-text-color-menu-active: var(--button-text-color-ghost-active);
+     --button-text-color-menu-disabled: var(--button-text-color-ghost-disabled);
++    --button-text-color-menu-selected: var(--button-text-color-ghost-selected);
++    --button-text-color-muted: var(--button-text-color);
++    --button-text-color-muted-hover: var(--button-text-color-hover);
++    --button-text-color-muted-active: var(--button-text-color-active);
++    --button-text-color-muted-disabled: var(--button-text-color-disabled);
++    --button-text-color-muted-selected: var(--button-text-color-muted-active);
+     --button-text-color-primary-hover: var(--button-text-color-primary);
+     --button-text-color-primary-active: var(--button-text-color-primary-hover);
+     --button-text-color-primary-disabled: var(--button-text-color-primary);
+@@ -221,14 +254,14 @@
+     --color-cyan-90: oklch(34% 0.14 205);
+     --color-cyan-100: oklch(27% 0.1 205);
+     --color-cyan-110: oklch(20% 0.05 205);
+-    --color-gray-05: #fbfbfe;
++    --color-gray-0: #fbfbfe;
+     --color-gray-20: #f0f0f4;
+     --color-gray-30: #bac2ca;
+     --color-gray-50: #bfbfc9;
+     --color-gray-60: #8f8f9d;
+     --color-gray-70: #5b5b66;
+-    --color-gray-80: #000000;
+-    --color-gray-90: #000000;
++    --color-gray-80: #23222b;
++    --color-gray-90: #1c1b22;
+     --color-gray-100: #15141a;
+     --color-green-0: oklch(97% 0.05 145);
+     --color-green-10: oklch(90% 0.1 145);
+@@ -333,6 +366,14 @@
+     --focus-outline-width: 2px;
+ 
+     /** font-size **/
++    /* 17px (in-content) */
++    --font-size-large: 1.133rem;
++    /* 22px (in-content) */
++    --font-size-xlarge: 1.467rem;
++    /* 24px (in-content) */
++    --font-size-xxlarge: 1.6rem;
++    /* 33px (in-content) */
++    --font-size-xxxlarge: 2.2rem;
+     --font-size-heading-medium: var(--font-size-large);
+     --font-size-heading-large: var(--font-size-xlarge);
+     --font-size-heading-xlarge: var(--font-size-xxlarge);
+@@ -344,7 +385,7 @@
+     --font-weight-semibold: 600;
+ 
+     /** icon **/
+-    --icon-color: light-dark(var(--color-gray-70), var(--color-gray-05));
++    --icon-color: light-dark(var(--color-gray-70), var(--color-gray-0));
+     --icon-color-critical: light-dark(var(--color-red-60), var(--color-red-20));
+     --icon-color-information: light-dark(var(--color-blue-60), var(--color-blue-20));
+     --icon-color-success: light-dark(var(--color-green-60), var(--color-green-20));
+@@ -381,6 +422,10 @@
+     --input-width: var(--size-item-small);
+ 
+     /** link **/
++    --link-color: var(--color-accent-primary);
++    --link-color-hover: var(--color-accent-primary-hover);
++    --link-color-active: var(--color-accent-primary-active);
++    --link-color-visited: var(--link-color);
+     /* Not using --force-outline-offset for links because that's intended for elements with a background, and we only want a slight offset here while not overlapping adjacent text */
+     --link-focus-outline-offset: 1px;
+ 
+@@ -465,15 +510,15 @@
+     --text-color-list-item-hover: var(--text-color);
+ 
+     /** toolbar **/
+-    --toolbar-background-color: color-mix(in srgb, -moz-dialog 85%, var(--color-white));
++    --toolbar-background-color: light-dark(#f9f9fb, rgb(43, 42, 51));
+     --toolbar-field-background-color: light-dark(rgba(0, 0, 0, 0.05), var(--color-black-alpha-30));
+-    --toolbar-field-background-color-focus: Field;
++    --toolbar-field-background-color-focus: light-dark(var(--color-white), rgb(66, 65, 77));
+     --toolbar-field-border-color: var(--border-color-transparent);
+     --toolbar-field-border-color-focus: color-mix(in srgb, var(--focus-outline-color) 50%, transparent);
+-    --toolbar-field-text-color: inherit;
+-    --toolbar-field-text-color-focus: FieldText;
++    --toolbar-field-text-color: light-dark(var(--color-gray-100), var(--color-gray-0));
++    --toolbar-field-text-color-focus: light-dark(var(--color-black), var(--color-gray-0));
+     --toolbar-padding-inline: 8px;
+-    --toolbar-text-color: -moz-dialogtext;
++    --toolbar-text-color: light-dark(var(--color-gray-100), var(--color-gray-0));
+ 
+     /** toolbarbutton **/
+     --toolbarbutton-background-color: transparent;
+@@ -486,9 +531,9 @@
+     --toolbarbutton-badge-padding-block-end: 1px;
+     --toolbarbutton-badge-padding-inline: 2px;
+     --toolbarbutton-border-radius: var(--button-border-radius);
+-    --toolbarbutton-icon-fill: currentColor;
+-    --toolbarbutton-icon-fill-attention: AccentColor;
+-    --toolbarbutton-icon-fill-attention-text: AccentColorText;
++    --toolbarbutton-icon-fill: light-dark(var(--color-gray-70), var(--color-gray-0));
++    --toolbarbutton-icon-fill-attention: light-dark(var(--color-blue-60), var(--color-cyan-30));
++    --toolbarbutton-icon-fill-attention-text: light-dark(var(--color-gray-20), var(--color-gray-90));
+     --toolbarbutton-opacity-disabled: var(--button-opacity-disabled);
+     --toolbarbutton-outline: var(--border-width) solid var(--toolbarbutton-outline-color);
+     --toolbarbutton-outline-color: transparent;
+@@ -508,12 +553,12 @@
+     --toolbarseparator-color: var(--text-color-deemphasized);
+ 
+     /** toolbox **/
+-    --toolbox-background-color: -moz-headerbar;
+-    --toolbox-background-color-inactive: -moz-headerbarinactive;
+-    --toolbox-text-color: -moz-headerbartext;
++    --toolbox-background-color: light-dark(rgb(234, 234, 237), var(--color-gray-90));
++    --toolbox-background-color-inactive: var(--toolbox-background-color);
++    --toolbox-text-color: light-dark(var(--color-gray-100), var(--color-gray-0));
+     /* Figma aliases this to toolbox/text/color so designers see a real color, but CSS must use currentColor: the tab inherits --lwt-text-color under an lwtheme and --toolbox-text-color-inactive in a background window, neither of which --toolbox-text-color tracks. Listed in figma-import.mjs's FIGMA_IGNORES so the alias doesn't overwrite this. */
+     --toolbox-text-color-current: currentColor;
+-    --toolbox-text-color-inactive: -moz-headerbarinactivetext;
++    --toolbox-text-color-inactive: var(--toolbox-text-color);
+   }
+ 
+   @layer tokens-prefers-contrast {
+@@ -537,12 +582,14 @@
+ 
+       /** button **/
+       --button-border-color: var(--button-text-color);
++      --button-border-color-ghost: var(--button-border-color);
+       --button-text-color-ghost: var(--button-text-color);
+       --button-text-color-ghost-hover: var(--button-text-color-hover);
+       --button-text-color-ghost-active: var(--button-text-color-active);
+ 
+       /** card **/
+       --card-border-color: color-mix(in srgb, currentColor 41%, transparent);
++      --card-header-border-color: var(--button-border-color);
+ 
+       /** color **/
+       --color-accent-attention: AccentColor;
+@@ -556,14 +603,14 @@
+ 
+       /** opacity **/
+       --opacity-deemphasized: 1;
+-        /** link **/
+-        --link-color: LinkText;
+-        --link-color-hover: LinkText;
+-        --link-color-active: ActiveText;
+-        --link-color-visited: VisitedText;
+-
+       --opacity-deemphasized-strong: 1;
+ 
++      /** panel **/
++      --panel-separator-color: currentColor;
++
++      /** sidebar **/
++      --sidebar-border-color: var(--card-border-color);
++
+       /** text-color **/
+       --text-color: CanvasText;
+       --text-color-deemphasized: inherit;
+@@ -603,10 +650,12 @@
+       --button-background-color-destructive-hover: var(--button-background-color-primary-hover);
+       --button-background-color-destructive-active: var(--button-background-color-primary-active);
+       --button-background-color-destructive-disabled: var(--button-background-color-primary-disabled);
++      --button-background-color-ghost: ButtonFace;
+       --button-background-color-ghost-hover: var(--button-background-color-hover);
+       --button-background-color-ghost-active: var(--button-background-color-active);
+       --button-background-color-menu-hover: var(--button-background-color-primary);
+       --button-background-color-menu-active: var(--button-background-color-primary);
++      --button-background-color-menu-selected: var(--button-background-color-primary-selected);
+       --button-background-color-primary: ButtonText;
+       --button-background-color-primary-hover: SelectedItem;
+       --button-background-color-primary-active: var(--button-background-color-primary-hover);
+@@ -637,6 +686,7 @@
+       --button-text-color-ghost-active: var(--button-text-color-active);
+       --button-text-color-menu-hover: var(--button-text-color-primary);
+       --button-text-color-menu-active: var(--button-text-color-primary);
++      --button-text-color-menu-selected: var(--button-text-color-primary-selected);
+       --button-text-color-primary: ButtonFace;
+       --button-text-color-primary-hover: SelectedItemText;
+       --button-text-color-toolbar: var(--button-text-color);
+@@ -645,6 +695,10 @@
+ 
+       /** card **/
+       --card-border-color: CanvasText;
++      --card-header-background-color: var(--button-background-color);
++      --card-header-border-color: var(--button-border-color);
++      --card-header-border-color-hover: var(--button-border-color-hover);
++      --card-header-border-color-active: var(--button-border-color-active);
+ 
+       /** color **/
+       --color-accent-primary: ButtonText;
+@@ -664,6 +718,11 @@
+       --link-color-active: ActiveText;
+       --link-color-visited: VisitedText;
+ 
++      /** panel **/
++      --panel-background-color: Menu;
++      --panel-separator-color: var(--border-color);
++      --panel-text-color: MenuText;
++
+       /** table **/
+       --table-background-color: Canvas;
+       --table-border-color: CanvasText;
+@@ -716,16 +775,21 @@
+       --button-background-color-disabled: var(--button-background-color);
+       /* TODO Bug 1821203 - Gray use needs to be consolidated */
+       --button-background-color: transparent;
+-      --button-background-color-hover: light-dark(var(--color-violet-desaturated-10), var(--color-violet-desaturated-50));
+-      --button-background-color-active: light-dark(var(--color-violet-desaturated-20), var(--color-violet-desaturated-60));
+-      --button-background-color-destructive: light-dark(var(--color-red-50), var(--color-red-20));
+-      --button-background-color-destructive-hover: light-dark(var(--color-red-60), var(--color-red-30));
+-      --button-background-color-destructive-active: light-dark(var(--color-red-70), var(--color-red-40));
++      --button-background-color-hover: light-dark(var(--color-violet-desaturated-20), var(--color-violet-desaturated-50));
++      --button-background-color-active: light-dark(var(--color-violet-desaturated-30), var(--color-violet-desaturated-40));
++      --button-background-color-destructive: light-dark(var(--color-red-50), var(--color-red-30));
++      --button-background-color-destructive-hover: light-dark(var(--color-red-60), var(--color-red-20));
++      --button-background-color-destructive-active: light-dark(var(--color-red-70), var(--color-red-10));
+       --button-background-color-ghost: var(--button-background-color);
+       --button-background-color-ghost-hover: var(--button-background-color-hover);
+       --button-background-color-ghost-active: var(--button-background-color-active);
+       --button-background-color-ghost-selected: var(--button-background-color-selected);
+       --button-background-color-menu: var(--button-background-color-ghost);
++      --button-background-color-muted: light-dark(var(--color-gray-20), var(--color-gray-55));
++      --button-background-color-muted-hover: light-dark(var(--color-gray-30), var(--color-gray-45));
++      --button-background-color-muted-active: light-dark(var(--color-gray-40), var(--color-gray-35));
++      --button-background-color-muted-disabled: var(--button-background-color-muted);
++      --button-background-color-muted-selected: var(--button-background-color-muted-active);
+       --button-background-color-primary: var(--color-accent-primary);
+       --button-background-color-primary-hover: var(--color-accent-primary-hover);
+       --button-background-color-primary-active: var(--color-accent-primary-active);
+@@ -818,9 +882,9 @@
+       --color-gray-65: #312f33;
+       --color-gray-70: #252428;
+       --color-gray-75: #1d1b1f;
+-      --color-gray-80: #000000;
++      --color-gray-80: #171519;
+       --color-gray-85: #131215;
+-      --color-gray-90: #000000;
++      --color-gray-90: #121114;
+       --color-green-0: #ecf4f1;
+       --color-green-10: #c4f1e0;
+       --color-green-20: #90e3c6;
+@@ -861,9 +925,6 @@
+       --color-purple-70: #4f216b;
+       --color-purple-80: #311842;
+       --color-purple-90: #1a1220;
+-      --color-purple-desaturated-30: #c0a7d4;
+-      --color-purple-desaturated-50: #816297;
+-      --color-purple-desaturated-60: #624677;
+       --color-red-0: #fcf2f3;
+       --color-red-10: #ffd9df;
+       --color-red-20: #ffb6bf;
+@@ -907,6 +968,7 @@
+ 
+       /** icon **/
+       --icon-color: var(--text-color);
++      --icon-color-accent-primary-desaturated: light-dark(var(--color-violet-desaturated-60), var(--color-violet-desaturated-40));
+       --icon-color-critical: light-dark(var(--color-red-50), var(--color-red-20));
+       --icon-color-information: light-dark(var(--color-violet-50), var(--color-violet-20));
+       --icon-color-success: light-dark(var(--color-green-50), var(--color-green-20));
+@@ -916,12 +978,9 @@
+       --icon-size-large: var(--size-item-medium);
+       --icon-size-xlarge: var(--size-item-large);
+ 
+-      /** link **/
+-      --link-color: var(--color-accent-primary);
+-      --link-color-hover: var(--color-accent-primary-hover);
+-      --link-color-active: var(--color-accent-primary-active);
+-      --link-color-visited: var(--link-color);
++      /** info-bar **/
+       --info-bar-border-color: light-dark(var(--color-violet-desaturated-20), var(--color-gray-60));
++      --info-bar-margin-block-end: 0;
+ 
+       /** input **/
+       --input-search-border-radius: var(--border-radius-circle);
+@@ -948,9 +1007,6 @@
+ 
+       /** text-color **/
+       --text-color: light-dark(var(--color-violet-desaturated-90), var(--color-violet-desaturated-0));
+-      --text-color-disabled: light-dark(rgba(21, 20, 26, 0.4), rgba(251, 251, 254, 0.4));
+-      --text-color-accent-primary-selected: light-dark(var(--color-white), var(--color-gray-55));
+-      --text-color-deemphasized: light-dark(rgba(20, 9, 43, 0.7), rgba(242, 240, 248, 0.7));
+       --text-color-error: light-dark(var(--color-red-50), var(--color-red-20));
+ 
+       /** toolbar **/
+@@ -973,12 +1029,17 @@
+       --toolbarbutton-outline-color-selected: var(--toolbarbutton-outline-color-active);
+       --toolbarbutton-outline-offset: -1px;
+ 
+-      /** toolbarseparator **/
+-      --toolbarseparator-color: color-mix(in srgb, currentColor 60%, transparent);
+-
+       /** toolbox **/
+       --toolbox-background-color: light-dark(var(--color-white), var(--color-gray-70));
++      --toolbox-background-color-gradient-leading: light-dark(var(--color-violet-10), var(--color-violet-desaturated-70));
++      --toolbox-background-color-gradient-trailing: light-dark(var(--color-orange-10), var(--color-orange-70));
+       --toolbox-background-color-inactive: transparent;
++      /* This gradient is only used for Nova */
++      --toolbox-background-gradient: linear-gradient(
++        96deg,
++        color-mix(var(--toolbox-background-color-gradient-leading) 50%, transparent) 39.84%,
++        color-mix(var(--toolbox-background-color-gradient-trailing) 50%, transparent) 101.72%
++      );
+       --toolbox-text-color: var(--text-color);
+       /* Figma aliases this to toolbox/text/color so designers see a real color, but CSS must use currentColor: the tab inherits --lwt-text-color under an lwtheme and --toolbox-text-color-inactive in a background window, neither of which --toolbox-text-color tracks. Listed in figma-import.mjs's FIGMA_IGNORES so the alias doesn't overwrite this. */
+       --toolbox-text-color-current: var(--toolbox-text-color);
+@@ -986,6 +1047,9 @@
+ 
+     @layer tokens-prefers-contrast-nova {
+       @media (prefers-contrast) {
++        /** info-bar **/
++        --info-bar-border-color: CanvasText;
++
+         /** text-color **/
+         --text-color: CanvasText;
+         --text-color-error: inherit;
+@@ -1020,6 +1084,11 @@
+         --button-background-color-menu: var(--button-background-color);
+         --button-background-color-menu-hover: ButtonText;
+         --button-background-color-menu-active: ButtonText;
++        --button-background-color-muted: var(--button-background-color);
++        --button-background-color-muted-hover: var(--button-background-color-hover);
++        --button-background-color-muted-active: var(--button-background-color-active);
++        --button-background-color-muted-disabled: var(--button-background-color);
++        --button-background-color-muted-selected: var(--button-background-color-ghost-active);
+         --button-background-color-primary-disabled: GrayText;
+         --button-background-color-selected: SelectedItem;
+         --button-border-color-destructive: var(--button-border-color-primary);
+@@ -1029,6 +1098,11 @@
+         --button-border-color-ghost-active: var(--button-border-color-active);
+         --button-border-color-ghost-disabled: var(--button-border-color-disabled);
+         --button-border-color-ghost-selected: var(--button-border-color-ghost-active);
++        --button-border-color-muted: var(--button-border-color);
++        --button-border-color-muted-hover: var(--button-border-color-hover);
++        --button-border-color-muted-active: var(--button-border-color-active);
++        --button-border-color-muted-disabled: var(--button-border-color-disabled);
++        --button-border-color-muted-selected: var(--button-border-color-ghost-active);
+         --button-border-color-primary: ButtonFace;
+         --button-border-color-primary-selected: var(--button-border-color-primary-active);
+         --button-border-color-selected: var(--button-border-color-active);
+@@ -1040,11 +1114,18 @@
+         --button-text-color-menu-hover: ButtonFace;
+         --button-text-color-menu-active: ButtonFace;
+         --button-text-color-menu-disabled: var(--button-text-color-disabled);
++        --button-text-color-menu-selected: var(--button-text-color-primary-selected);
++        --button-text-color-muted: ButtonText;
++        --button-text-color-muted-hover: var(--button-text-color-ghost-active);
++        --button-text-color-muted-active: var(--button-text-color-active);
++        --button-text-color-muted-disabled: GrayText;
++        --button-text-color-muted-selected: var(--button-text-color-ghost-active);
+         --button-text-color-primary: ButtonFace;
+         --button-text-color-primary-active: var(--button-text-color-primary-hover);
+         --button-text-color-selected: SelectedItemText;
+ 
+         /** card **/
++        --card-header-border-color: var(--button-border-color);
+ 
+         /** color **/
+         --color-accent-attention: AccentColor;
+@@ -1054,13 +1135,10 @@
+         --color-accent-primary-selected: SelectedItem;
+ 
+         /** icon **/
++        --icon-color-accent-primary-desaturated: CanvasText;
+ 
+         /** text-color **/
+-        --text-color: CanvasText;
+-        --text-color-disabled: GrayText;
+         --text-color-accent-primary-selected: SelectedItemText;
+-        --text-color-deemphasized: CanvasText;
+-        --text-color-error: CanvasText;
+ 
+         /** toolbar **/
+         --toolbar-background-color: Canvas;
+@@ -1074,109 +1152,13 @@
+         --toolbarbutton-outline-color: var(--button-border-color);
+         --toolbarbutton-outline-color-hover: var(--button-border-color-hover);
+         --toolbarbutton-outline-color-active: var(--button-border-color-active);
+-      }
+-    }
+-  }
+-}
+-
+-
+-/* ==========================================================
+- * GORILLA OVERRIDES
+- * Appended rather than patched in place: these are additive
+- * overrides, and the cascade already gives later rules
+- * priority. Upstream can restructure this file freely.
+- * ========================================================== */
+-
+-@layer tokens-foundation {
+-  :host(.anonymous-content-host) {
+-    --input-swatch-size: var(--size-item-medium);
+-    --input-text-background-color: Field;
+-    --input-text-color: FieldText;
+-  }
+-}
+-
+-@layer tokens-foundation {
+-  :host(.anonymous-content-host) {
+-    --panel-background-color: Field;
+-    --panel-border-color: ThreeDShadow;
+-    --panel-menuitem-margin-block: 0px;
+-    --panel-text-color: FieldText;
+-  }
+-}
+ 
+-@layer tokens-foundation {
+-  :host(.anonymous-content-host) {
+-    --border-color: light-dark(var(--color-gray-30), var(--color-gray-50));
+-    --border-color-deemphasized: light-dark(var(--color-gray-20), var(--color-gray-60));
+-    --border-color-interactive: var(--color-gray-40);
+-    --border-color-interactive-disabled: light-dark(var(--color-gray-25), var(--color-gray-50));
+-    --border-radius-large: 12px;
+-    --border-radius-xlarge: 16px;
+-    --border-radius-xxlarge: 24px;
+-  }
+-}
+-
+-/* Bug 1879900: Can't nest media queries inside of :host, :root selector
+-   until Bug 1879349 lands */
+-@layer tokens-browser-theme {
+-  @media not ((forced-colors) or (-moz-native-theme)) {
+-    :root:not([lwtheme]),
+-    :host(.anonymous-content-host) {
+-      /** background-color **/
+-      --background-color-dimmed: light-dark(color-mix(in srgb, currentColor 12%, transparent), color-mix(in srgb, currentColor 17%, transparent));
+-      --background-color-dimmed-further: light-dark(color-mix(in srgb, currentColor 20%, transparent), color-mix(in srgb, currentColor 14%, transparent));
+-
+-      /** panel **/
+-      --panel-background-color: light-dark(var(--color-white), rgb(66, 65, 77));
+-      --panel-border-color: light-dark(rgb(240, 240, 244), rgb(82, 82, 94));
+-      --panel-text-color: light-dark(var(--color-black), rgb(251, 251, 254));
+-
+-      /** toolbar **/
+-      --toolbar-background-color: light-dark(#f9f9fb, rgb(43, 42, 51));
+-      --toolbar-field-background-color-focus: light-dark(var(--color-white), rgb(66, 65, 77));
+-      --toolbar-field-text-color: light-dark(var(--color-gray-100), var(--color-gray-05));
+-      --toolbar-field-text-color-focus: light-dark(var(--color-black), var(--color-gray-05));
+-      --toolbar-text-color: light-dark(var(--color-gray-100), var(--color-gray-05));
+-
+-      /** toolbarbutton **/
+-      --toolbarbutton-icon-fill: light-dark(var(--color-gray-70), var(--color-gray-05));
+-      --toolbarbutton-icon-fill-attention: light-dark(var(--color-blue-60), var(--color-cyan-30));
+-      --toolbarbutton-icon-fill-attention-text: light-dark(var(--color-gray-20), var(--color-gray-90));
+-
+-      /** toolbox **/
+-      --toolbox-background-color: light-dark(rgb(234, 234, 237), var(--color-gray-90));
+-      --toolbox-background-color-inactive: var(--toolbox-background-color);
+-      --toolbox-text-color: light-dark(var(--color-gray-100), var(--color-gray-05));
+-      --toolbox-text-color-inactive: var(--toolbox-text-color);
+-    }
+-  }
+-}
+-
+-/* stylelint-disable-next-line media-query-no-invalid */
+-@media -moz-pref("browser.nova.enabled") {
+-  @layer tokens-foundation-nova {
+-    :host(.anonymous-content-host) {
+-      --button-border-radius: var(--border-radius-xxlarge);
+-    }
+-  }
+-}
+-
+-@media -moz-pref("browser.nova.enabled") {
+-  @layer tokens-foundation-nova {
+-    :host(.anonymous-content-host) {
+-      --card-border-color: light-dark(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.06));
+-      --card-border-radius: var(--border-radius-xlarge);
+-      --color-accent-primary: light-dark(var(--color-violet-50), var(--color-violet-20));
+-      --color-accent-primary-hover: light-dark(var(--color-violet-60), var(--color-violet-30));
+-      --color-accent-primary-active: light-dark(var(--color-violet-70), var(--color-violet-40));
+-    }
+-  }
+-}
+-
+-@media -moz-pref("browser.nova.enabled") {
+-  @layer tokens-foundation-nova {
+-    :host(.anonymous-content-host) {
+-      --panel-border-radius: 16px;
++        /** toolbox **/
++        --toolbox-background-color-gradient-leading: Canvas;
++        --toolbox-background-color-gradient-trailing: Canvas;
++        /* This gradient is only used for Nova */
++        --toolbox-background-gradient: image(transparent);
++      }
+     }
+   }
+ }
