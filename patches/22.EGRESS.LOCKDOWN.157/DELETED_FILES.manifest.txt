@@ -1,0 +1,13 @@
+browser/branding/gorilla/Assets.car
+browser/branding/gorilla/background.png
+browser/branding/gorilla/content/about-logo-private.png
+browser/branding/gorilla/content/about-logo-private@2x.png
+browser/branding/gorilla/content/about-logo.svg
+browser/branding/gorilla/content/about-logo.svg.prev
+browser/branding/gorilla/content/about-logo@2x.png
+browser/branding/gorilla/content/about.png
+browser/branding/gorilla/content/about.svg
+browser/branding/gorilla/disk.icns
+browser/branding/gorilla/document.icns
+browser/branding/gorilla/dsstore
+browser/branding/gorilla/firefox.icns
