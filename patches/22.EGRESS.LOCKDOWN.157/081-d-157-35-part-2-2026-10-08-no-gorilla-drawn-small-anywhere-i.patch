@@ -1,0 +1,568 @@
+# Gorilla 157 privacy cut
+# D-157-35 part 2 (2026-10-08): no Gorilla drawn small anywhere in the browser. No Gorilla tab icon (gPageIcons, FAVICON_DEFAULTS, every page's link rel=icon), no 16 px Gorilla in the address-bar chip of browser pages (the label stays), none in about:processes or about:pdf; rows and dialogs that need a symbol use Firefox's neutral ones (info, reload, pdf, page, folder); document_pdf.svg (a wrapped 216 px Gorilla) leaves the branding jar. Baseline on build 28 (probe small-gorilla): 12 small Gorillas in the frame. Made by working scripts/no_small_gorilla_d157_35b.py.
+# Files: browser/base/content/browser.js, browser/branding/gorilla/content/document_pdf.svg, browser/branding/gorilla/content/jar.mn, browser/components/aboutlogins/content/aboutLogins.html, browser/components/aboutlogins/content/aboutLoginsImportReport.html, browser/components/aboutwelcome/content/aboutwelcome.html, browser/components/aiwindow/ui/content/firstrun.html, browser/components/asrouter/content/asrouter-admin.html, browser/components/migration/FileMigrators.sys.mjs, browser/components/migration/FirefoxProfileMigrator.sys.mjs, browser/components/migration/content/migration-dialog-window.html, browser/components/preferences/config/downloads.mjs, browser/components/prompts/PromptCollection.sys.mjs, browser/components/tabbrowser/Tabbrowser.sys.mjs, browser/components/tabbrowser/content/opentabs.html, browser/components/urlbar/QuickActionsLoaderDefault.sys.mjs, browser/components/urlbar/content/UrlbarView.mjs, browser/extensions/newtab/bin/render-activity-stream-html.js, browser/extensions/newtab/data/content/abouthomecache/page.html.template, browser/extensions/newtab/data/content/remote-renderer-host.html, browser/extensions/newtab/prerendered/activity-stream-debug.html, browser/extensions/newtab/prerendered/activity-stream-noscripts.html, browser/extensions/newtab/prerendered/activity-stream.html, browser/themes/shared/browser-shared.css, browser/themes/shared/controlcenter/panel.css, browser/themes/shared/identity-block/identity-block.css, browser/themes/shared/preferences/applications.css, browser/themes/shared/urlbar/view-nova.css, browser/themes/shared/urlbar/view-proton.css, toolkit/components/aboutpdf/content/aboutPDF.html, toolkit/components/aboutprocesses/content/aboutProcesses.js, toolkit/components/normandy/content/about-studies/about-studies.html, toolkit/components/prompts/src/CommonDialog.sys.mjs, toolkit/content/aboutAbout.html, toolkit/content/aboutProfiles.xhtml, toolkit/content/aboutSupport.xhtml, toolkit/content/neterror/supportpages/connection-not-secure.html, toolkit/content/neterror/supportpages/time-errors.html
+
+diff --git a/browser/base/content/browser.js b/browser/base/content/browser.js
+index 496fece99e..3996035fce 100644
+--- a/browser/base/content/browser.js
++++ b/browser/base/content/browser.js
+@@ -739,10 +739,7 @@ async function gLazyFindCommand(cmd, ...args) {
+ }
+ 
+ var gPageIcons = {
+-  "about:home": "chrome://branding/content/icon32.png",
+-  "about:newtab": "chrome://branding/content/icon32.png",
+-  "about:opentabs": "chrome://branding/content/icon32.png",
+-  "about:welcome": "chrome://branding/content/icon32.png",
++  // GORILLA D-157-35: no 16 px Gorilla as the tab icon of New Tab, Home, Open Tabs or Welcome
+   "about:privatebrowsing": "chrome://browser/skin/privatebrowsing/favicon.svg",
+ };
+ 
+diff --git a/browser/branding/gorilla/content/jar.mn b/browser/branding/gorilla/content/jar.mn
+index 7f962b7680..f4f6edd069 100644
+--- a/browser/branding/gorilla/content/jar.mn
++++ b/browser/branding/gorilla/content/jar.mn
+@@ -7,7 +7,6 @@ browser.jar:
+   content/branding/about-logo.png
+   content/branding/about-wordmark.svg
+   content/branding/document.ico                  (../document.ico)
+-  content/branding/document_pdf.svg
+   content/branding/firefox-wordmark.svg
+   content/branding/icon16.png                    (../default16.png)
+   content/branding/icon32.png                    (../default32.png)
+diff --git a/browser/components/aboutlogins/content/aboutLogins.html b/browser/components/aboutlogins/content/aboutLogins.html
+index 9bbf5e69b1..8efc34c8f0 100644
+--- a/browser/components/aboutlogins/content/aboutLogins.html
++++ b/browser/components/aboutlogins/content/aboutLogins.html
+@@ -30,7 +30,6 @@
+     <link rel="stylesheet" href="chrome://global/skin/in-content/common.css">
+     <link rel="stylesheet" href="chrome://browser/content/aboutlogins/aboutLogins.css">
+     <link rel="stylesheet" href="chrome://browser/content/aboutlogins/common.css">
+-    <link rel="icon" href="chrome://branding/content/icon32.png">
+   </head>
+   <body>
+     <header>
+diff --git a/browser/components/aboutlogins/content/aboutLoginsImportReport.html b/browser/components/aboutlogins/content/aboutLoginsImportReport.html
+index 6a6932502d..fe34d2a5a1 100644
+--- a/browser/components/aboutlogins/content/aboutLoginsImportReport.html
++++ b/browser/components/aboutlogins/content/aboutLoginsImportReport.html
+@@ -32,7 +32,6 @@
+       rel="stylesheet"
+       href="chrome://browser/content/aboutlogins/common.css"
+     />
+-    <link rel="icon" href="chrome://branding/content/icon32.png" />
+   </head>
+   <body class="importreport">
+     <section id="report-body">
+diff --git a/browser/components/aboutwelcome/content/aboutwelcome.html b/browser/components/aboutwelcome/content/aboutwelcome.html
+index 8319ebc471..536906d5c4 100644
+--- a/browser/components/aboutwelcome/content/aboutwelcome.html
++++ b/browser/components/aboutwelcome/content/aboutwelcome.html
+@@ -12,11 +12,6 @@
+       content="default-src 'none'; object-src 'none'; script-src resource: chrome:; media-src resource: chrome: https://assets.mozilla.net  https://www.mozilla.org; connect-src https:; img-src https: data: blob: chrome:; style-src resource: chrome:;"
+     />
+     <title data-l10n-id="onboarding-welcome-header"></title>
+-    <link
+-      rel="icon"
+-      type="image/png"
+-      href="chrome://branding/content/icon32.png"
+-    />
+     <link rel="stylesheet" href="chrome://global/skin/in-content/common.css" />
+     <link
+       rel="stylesheet"
+diff --git a/browser/components/aiwindow/ui/content/firstrun.html b/browser/components/aiwindow/ui/content/firstrun.html
+index 071fe5c7f9..b2ca2fb100 100644
+--- a/browser/components/aiwindow/ui/content/firstrun.html
++++ b/browser/components/aiwindow/ui/content/firstrun.html
+@@ -12,11 +12,6 @@
+       content="default-src 'none'; object-src 'none'; script-src resource: chrome:; img-src chrome:; style-src resource: chrome:;"
+     />
+     <title data-l10n-id="aiwindow-firstrun-title"></title>
+-    <link
+-      rel="icon"
+-      type="image/png"
+-      href="chrome://branding/content/icon32.png"
+-    />
+     <link rel="stylesheet" href="chrome://global/skin/in-content/common.css" />
+     <link
+       rel="stylesheet"
+diff --git a/browser/components/asrouter/content/asrouter-admin.html b/browser/components/asrouter/content/asrouter-admin.html
+index 032159c5e2..1e3f597bc9 100644
+--- a/browser/components/asrouter/content/asrouter-admin.html
++++ b/browser/components/asrouter/content/asrouter-admin.html
+@@ -12,11 +12,6 @@
+     />
+     <meta name="color-scheme" content="light dark" />
+     <title>ASRouter Admin</title>
+-    <link
+-      rel="icon"
+-      type="image/png"
+-      href="chrome://branding/content/icon32.png"
+-    />
+     <link rel="localization" href="branding/brand.ftl" />
+     <link rel="localization" href="toolkit/branding/brandings.ftl" />
+     <link
+diff --git a/browser/components/migration/FileMigrators.sys.mjs b/browser/components/migration/FileMigrators.sys.mjs
+index dd346e8aed..1026259e20 100644
+--- a/browser/components/migration/FileMigrators.sys.mjs
++++ b/browser/components/migration/FileMigrators.sys.mjs
+@@ -161,7 +161,7 @@ export class PasswordFileMigrator extends FileMigratorBase {
+   }
+ 
+   static get brandImage() {
+-    return "chrome://branding/content/document.ico";
++    return "chrome://global/skin/icons/page-portrait.svg"; // GORILLA D-157-35: neutral, not a small Gorilla
+   }
+ 
+   get enabled() {
+@@ -269,7 +269,7 @@ export class BookmarksFileMigrator extends FileMigratorBase {
+   }
+ 
+   static get brandImage() {
+-    return "chrome://branding/content/document.ico";
++    return "chrome://global/skin/icons/page-portrait.svg"; // GORILLA D-157-35: neutral, not a small Gorilla
+   }
+ 
+   get enabled() {
+diff --git a/browser/components/migration/FirefoxProfileMigrator.sys.mjs b/browser/components/migration/FirefoxProfileMigrator.sys.mjs
+index f932e4a011..ee09a95ffd 100644
+--- a/browser/components/migration/FirefoxProfileMigrator.sys.mjs
++++ b/browser/components/migration/FirefoxProfileMigrator.sys.mjs
+@@ -41,7 +41,7 @@ export class FirefoxProfileMigrator extends MigratorBase {
+   }
+ 
+   static get brandImage() {
+-    return "chrome://branding/content/icon128.png";
++    return "chrome://global/skin/icons/folder.svg"; // GORILLA D-157-35: neutral, not a small Gorilla
+   }
+ 
+   /**
+diff --git a/browser/components/migration/content/migration-dialog-window.html b/browser/components/migration/content/migration-dialog-window.html
+index 21341df83a..c8ea093627 100644
+--- a/browser/components/migration/content/migration-dialog-window.html
++++ b/browser/components/migration/content/migration-dialog-window.html
+@@ -10,11 +10,6 @@
+       http-equiv="Content-Security-Policy"
+       content="default-src 'none'; object-src 'none'; script-src chrome:; media-src chrome:; img-src chrome:; style-src chrome:;"
+     />
+-    <link
+-      rel="icon"
+-      type="image/png"
+-      href="chrome://branding/content/icon32.png"
+-    />
+     <link rel="stylesheet" href="chrome://global/skin/in-content/common.css" />
+     <link
+       rel="stylesheet"
+diff --git a/browser/components/preferences/config/downloads.mjs b/browser/components/preferences/config/downloads.mjs
+index 3082cc3111..028c6bfb1c 100644
+--- a/browser/components/preferences/config/downloads.mjs
++++ b/browser/components/preferences/config/downloads.mjs
+@@ -1109,7 +1109,6 @@ export class ApplicationListItem {
+     if (this._isInternalMenuItem(handlerInfo)) {
+       internalMenuItem = this._buildActionsMenuOption({
+         l10nId: "applications-open-inapp",
+-        iconSrc: "chrome://branding/content/icon32.png",
+         handlerActionId: Ci.nsIHandlerInfo.handleInternally,
+       });
+ 
+diff --git a/browser/components/prompts/PromptCollection.sys.mjs b/browser/components/prompts/PromptCollection.sys.mjs
+index 78b3024e78..7d40db2346 100644
+--- a/browser/components/prompts/PromptCollection.sys.mjs
++++ b/browser/components/prompts/PromptCollection.sys.mjs
+@@ -108,7 +108,7 @@ export class PromptCollection {
+           (Ci.nsIPrompt.BUTTON_TITLE_DONT_SAVE * Ci.nsIPrompt.BUTTON_POS_2);
+         args.useTitle = true;
+         args.headerIconCSSValue =
+-          "url('chrome://branding/content/document_pdf.svg')";
++          "url('chrome://global/skin/icons/pdf.svg')"; // GORILLA D-157-35: not the wrapped 216 px Gorilla
+       } else if (isProfilePage) {
+         title = this.stringBundles.dom.GetStringFromName(
+           "OnBeforeUnloadAboutNewProfileTitle"
+diff --git a/browser/components/tabbrowser/Tabbrowser.sys.mjs b/browser/components/tabbrowser/Tabbrowser.sys.mjs
+index 09a840d7c3..0f5b462934 100644
+--- a/browser/components/tabbrowser/Tabbrowser.sys.mjs
++++ b/browser/components/tabbrowser/Tabbrowser.sys.mjs
+@@ -86,9 +86,7 @@ const lazy = XPCOMUtils.declareLazy({
+  * start loading them faster than FaviconLoader would normally find them.
+  */
+ const FAVICON_DEFAULTS = {
+-  "about:newtab": "chrome://branding/content/icon32.png",
+-  "about:home": "chrome://branding/content/icon32.png",
+-  "about:welcome": "chrome://branding/content/icon32.png",
++  // GORILLA D-157-35: no 16 px Gorilla as the tab icon of New Tab, Home or Welcome
+   "about:privatebrowsing": "chrome://browser/skin/privatebrowsing/favicon.svg",
+ };
+ 
+diff --git a/browser/components/tabbrowser/content/opentabs.html b/browser/components/tabbrowser/content/opentabs.html
+index 0f89e49733..2972a763a5 100644
+--- a/browser/components/tabbrowser/content/opentabs.html
++++ b/browser/components/tabbrowser/content/opentabs.html
+@@ -11,12 +11,6 @@
+       content="default-src resource: chrome:; object-src 'none'; img-src data: chrome:;"
+     />
+     <meta name="color-scheme" content="light dark" />
+-    <link
+-      rel="icon"
+-      type="image/png"
+-      id="favicon"
+-      href="chrome://branding/content/icon32.png"
+-    />
+     <link rel="localization" href="browser/firefoxView.ftl" />
+     <link rel="localization" href="browser/openTabs.ftl" />
+     <title data-l10n-id="opentabs-page-title"></title>
+diff --git a/browser/components/urlbar/QuickActionsLoaderDefault.sys.mjs b/browser/components/urlbar/QuickActionsLoaderDefault.sys.mjs
+index 0a6f86d4e6..037193cfd3 100644
+--- a/browser/components/urlbar/QuickActionsLoaderDefault.sys.mjs
++++ b/browser/components/urlbar/QuickActionsLoaderDefault.sys.mjs
+@@ -227,7 +227,7 @@ const DEFAULT_ACTIONS = {
+   },
+   refresh: {
+     l10nCommands: ["quickactions-cmd-refresh"],
+-    icon: "chrome://branding/content/icon32.png",
++    icon: "chrome://global/skin/icons/reload.svg", // GORILLA D-157-35: neutral, not a 16 px Gorilla
+     label: "quickactions-refresh",
+     isUnsupported: () => !lazy.ResetProfile.resetSupported(),
+     onPick: (_queryContext, controller) => {
+diff --git a/browser/components/urlbar/content/UrlbarView.mjs b/browser/components/urlbar/content/UrlbarView.mjs
+index 6d0230edbd..bf9773f907 100644
+--- a/browser/components/urlbar/content/UrlbarView.mjs
++++ b/browser/components/urlbar/content/UrlbarView.mjs
+@@ -624,7 +624,7 @@ export class UrlbarView {
+         type: "dismissalAcknowledgment",
+         titleL10n,
+         buttons: [{ l10n: { id: "urlbar-search-tips-confirm-short" } }],
+-        icon: "chrome://branding/content/icon32.png",
++        icon: "chrome://global/skin/icons/info.svg", // GORILLA D-157-35: neutral, not a 16 px Gorilla
+       },
+       rowLabel: !result.hideRowLabel && this.#rowLabel(row),
+       hideRowLabel: result.hideRowLabel,
+diff --git a/browser/extensions/newtab/bin/render-activity-stream-html.js b/browser/extensions/newtab/bin/render-activity-stream-html.js
+index 7c7aae462e..3000f0cc52 100644
+--- a/browser/extensions/newtab/bin/render-activity-stream-html.js
++++ b/browser/extensions/newtab/bin/render-activity-stream-html.js
+@@ -65,11 +65,6 @@ function templateHTML(options) {
+     <meta name="color-scheme" content="light dark" />
+     <meta name="viewport" content="width=device-width, initial-scale=1" />
+     <title data-l10n-id="newtab-page-title"></title>
+-    <link
+-      rel="icon"
+-      type="image/png"
+-      href="chrome://branding/content/icon32.png"
+-    />
+     <link rel="localization" href="branding/brand.ftl" />
+     <link rel="localization" href="toolkit/branding/brandings.ftl" />
+     <link rel="localization" href="browser/newtab/newtab.ftl" />
+diff --git a/browser/extensions/newtab/data/content/abouthomecache/page.html.template b/browser/extensions/newtab/data/content/abouthomecache/page.html.template
+index fed8baf649..d90c4018f0 100644
+--- a/browser/extensions/newtab/data/content/abouthomecache/page.html.template
++++ b/browser/extensions/newtab/data/content/abouthomecache/page.html.template
+@@ -26,7 +26,6 @@
+     <meta name="color-scheme" content="light dark">
+     <meta name="viewport" content="width=device-width, initial-scale=1" />
+     <title data-l10n-id="newtab-page-title"></title>
+-    <link rel="icon" type="image/png" href="chrome://branding/content/icon32.png"/>
+     <link rel="localization" href="branding/brand.ftl" />
+     <link rel="localization" href="toolkit/branding/brandings.ftl" />
+     <link rel="localization" href="browser/newtab/newtab.ftl" />
+diff --git a/browser/extensions/newtab/data/content/remote-renderer-host.html b/browser/extensions/newtab/data/content/remote-renderer-host.html
+index 3c2fbafd77..c33c43c3ed 100644
+--- a/browser/extensions/newtab/data/content/remote-renderer-host.html
++++ b/browser/extensions/newtab/data/content/remote-renderer-host.html
+@@ -12,11 +12,6 @@
+     <meta name="color-scheme" content="light dark" />
+     <meta name="viewport" content="width=device-width, initial-scale=1" />
+     <title data-l10n-id="newtab-page-title"></title>
+-    <link
+-      rel="icon"
+-      type="image/png"
+-      href="chrome://branding/content/icon32.png"
+-    />
+     <link rel="localization" href="branding/brand.ftl" />
+     <link rel="localization" href="toolkit/branding/brandings.ftl" />
+     <link rel="localization" href="browser/newtab/newtab.ftl" />
+diff --git a/browser/extensions/newtab/prerendered/activity-stream-debug.html b/browser/extensions/newtab/prerendered/activity-stream-debug.html
+index 0cb5b12502..7ee7783b33 100644
+--- a/browser/extensions/newtab/prerendered/activity-stream-debug.html
++++ b/browser/extensions/newtab/prerendered/activity-stream-debug.html
+@@ -15,11 +15,6 @@
+     <meta name="color-scheme" content="light dark" />
+     <meta name="viewport" content="width=device-width, initial-scale=1" />
+     <title data-l10n-id="newtab-page-title"></title>
+-    <link
+-      rel="icon"
+-      type="image/png"
+-      href="chrome://branding/content/icon32.png"
+-    />
+     <link rel="localization" href="branding/brand.ftl" />
+     <link rel="localization" href="toolkit/branding/brandings.ftl" />
+     <link rel="localization" href="browser/newtab/newtab.ftl" />
+diff --git a/browser/extensions/newtab/prerendered/activity-stream-noscripts.html b/browser/extensions/newtab/prerendered/activity-stream-noscripts.html
+index 141f5fc9b7..0f248bd2f0 100644
+--- a/browser/extensions/newtab/prerendered/activity-stream-noscripts.html
++++ b/browser/extensions/newtab/prerendered/activity-stream-noscripts.html
+@@ -15,11 +15,6 @@
+     <meta name="color-scheme" content="light dark" />
+     <meta name="viewport" content="width=device-width, initial-scale=1" />
+     <title data-l10n-id="newtab-page-title"></title>
+-    <link
+-      rel="icon"
+-      type="image/png"
+-      href="chrome://branding/content/icon32.png"
+-    />
+     <link rel="localization" href="branding/brand.ftl" />
+     <link rel="localization" href="toolkit/branding/brandings.ftl" />
+     <link rel="localization" href="browser/newtab/newtab.ftl" />
+diff --git a/browser/extensions/newtab/prerendered/activity-stream.html b/browser/extensions/newtab/prerendered/activity-stream.html
+index 0cb5b12502..7ee7783b33 100644
+--- a/browser/extensions/newtab/prerendered/activity-stream.html
++++ b/browser/extensions/newtab/prerendered/activity-stream.html
+@@ -15,11 +15,6 @@
+     <meta name="color-scheme" content="light dark" />
+     <meta name="viewport" content="width=device-width, initial-scale=1" />
+     <title data-l10n-id="newtab-page-title"></title>
+-    <link
+-      rel="icon"
+-      type="image/png"
+-      href="chrome://branding/content/icon32.png"
+-    />
+     <link rel="localization" href="branding/brand.ftl" />
+     <link rel="localization" href="toolkit/branding/brandings.ftl" />
+     <link rel="localization" href="browser/newtab/newtab.ftl" />
+diff --git a/browser/themes/shared/browser-shared.css b/browser/themes/shared/browser-shared.css
+index bcddfd423f..4c05c96bed 100644
+--- a/browser/themes/shared/browser-shared.css
++++ b/browser/themes/shared/browser-shared.css
+@@ -1644,7 +1644,7 @@ popupnotificationcontent {
+ 
+ /* AI Window Toggle Button */
+ #ai-window-toggle {
+-  list-style-image: url("chrome://branding/content/icon32.png");
++  /* GORILLA D-157-35: no 16 px Gorilla (the AI window is cut, D-157-21) */
+   padding-inline-end: var(--space-small);
+   border-radius: var(--border-radius-medium);
+ 
+diff --git a/browser/themes/shared/controlcenter/panel.css b/browser/themes/shared/controlcenter/panel.css
+index 7a5d6a777c..f16034e4e2 100644
+--- a/browser/themes/shared/controlcenter/panel.css
++++ b/browser/themes/shared/controlcenter/panel.css
+@@ -250,9 +250,7 @@
+   stroke: var(--icon-color-critical);
+ }
+ 
+-.site-information-popup[connection="chrome"] .identity-popup-security-connection {
+-  list-style-image: url(chrome://branding/content/icon48.png);
+-}
++/* GORILLA D-157-35: browser pages use the panel's own connection symbol, not a small Gorilla */
+ 
+ .site-information-popup[connection="file"] .identity-popup-security-connection {
+   list-style-image: url(chrome://global/skin/icons/page-portrait.svg);
+diff --git a/browser/themes/shared/identity-block/identity-block.css b/browser/themes/shared/identity-block/identity-block.css
+index 7e4b6fd1c6..d4f2fb7d5a 100644
+--- a/browser/themes/shared/identity-block/identity-block.css
++++ b/browser/themes/shared/identity-block/identity-block.css
+@@ -174,13 +174,10 @@
+   list-style-image: url(chrome://global/skin/icons/info.svg);
+ }
+ 
++/* GORILLA D-157-35: no 16 px Gorilla in the address bar on browser pages; the "Gorilla" label stays, and the
++   identity popup anchors to #identity-icon-box, not to this icon */
+ #identity-box[pageproxystate="valid"].chromeUI #identity-icon {
+-  list-style-image: url(chrome://branding/content/icon16.png);
+-}
+-@media (min-resolution: 1.1dppx) {
+-  #identity-box[pageproxystate="valid"].chromeUI #identity-icon {
+-    list-style-image: url(chrome://branding/content/icon32.png);
+-  }
++  display: none;
+ }
+ 
+ #identity-box[pageproxystate="valid"].localResource #identity-icon {
+diff --git a/browser/themes/shared/preferences/applications.css b/browser/themes/shared/preferences/applications.css
+index fa9a609d8f..21634a2fdf 100644
+--- a/browser/themes/shared/preferences/applications.css
++++ b/browser/themes/shared/preferences/applications.css
+@@ -11,9 +11,7 @@ menuitem[appHandlerIcon] {
+   --menuitem-icon: var(--app-handler-icon);
+ }
+ 
+-:is(richlistitem, menuitem)[appHandlerIcon="handleInternally"] {
+-  --app-handler-icon: url("chrome://branding/content/icon32.png");
+-}
++/* GORILLA D-157-35: "Open in Gorilla" rows carry no 16 px Gorilla */
+ 
+ :is(richlistitem, menuitem)[appHandlerIcon="ask"] {
+   --app-handler-icon: url("chrome://browser/skin/preferences/alwaysAsk.png");
+diff --git a/browser/themes/shared/urlbar/view-nova.css b/browser/themes/shared/urlbar/view-nova.css
+index c51c97efad..2ffe40edd0 100644
+--- a/browser/themes/shared/urlbar/view-nova.css
++++ b/browser/themes/shared/urlbar/view-nova.css
+@@ -663,7 +663,7 @@
+     font-size: var(--urlbarView-small-font-size);
+     margin-inline-start: calc(var(--urlbarView-row-padding-inline) + var(--urlbarView-favicon-margin-start));
+     padding-inline-start: calc(var(--urlbarview-favicon-size) + var(--urlbarView-favicon-margin-end));
+-    background-image: url("chrome://branding/content/icon32.png");
++    /* GORILLA D-157-35: no 16 px Gorilla beside this label */
+     background-repeat: no-repeat;
+     background-position: 0 center;
+     background-size: var(--urlbarview-favicon-size);
+diff --git a/browser/themes/shared/urlbar/view-proton.css b/browser/themes/shared/urlbar/view-proton.css
+index a49dfd00bc..ba80d674bb 100644
+--- a/browser/themes/shared/urlbar/view-proton.css
++++ b/browser/themes/shared/urlbar/view-proton.css
+@@ -634,7 +634,7 @@
+     font-size: var(--urlbarView-small-font-size);
+     margin-inline-start: calc(var(--urlbarView-row-padding-inline) + var(--urlbarView-favicon-margin-start));
+     padding-inline-start: calc(var(--urlbarview-favicon-size) + var(--urlbarView-favicon-margin-end));
+-    background-image: url("chrome://branding/content/icon32.png");
++    /* GORILLA D-157-35: no 16 px Gorilla beside this label */
+     background-repeat: no-repeat;
+     background-position: 0 center;
+     background-size: var(--urlbarview-favicon-size);
+diff --git a/toolkit/components/aboutpdf/content/aboutPDF.html b/toolkit/components/aboutpdf/content/aboutPDF.html
+index 0e8375e2e8..496dcbcad2 100644
+--- a/toolkit/components/aboutpdf/content/aboutPDF.html
++++ b/toolkit/components/aboutpdf/content/aboutPDF.html
+@@ -30,14 +30,6 @@
+       <div id="col-mid">
+         <div id="logo-lockup">
+           <div id="logo-row">
+-            <img
+-              id="firefox-logo"
+-              src="chrome://branding/content/icon64.png"
+-              alt=""
+-              role="presentation"
+-              width="24"
+-              height="24"
+-            />
+             <h1 data-l10n-id="about-pdf-header"></h1>
+           </div>
+           <p id="tagline" data-l10n-id="about-pdf-tagline"></p>
+diff --git a/toolkit/components/aboutprocesses/content/aboutProcesses.js b/toolkit/components/aboutprocesses/content/aboutProcesses.js
+index 8307825e53..1df342307e 100644
+--- a/toolkit/components/aboutprocesses/content/aboutProcesses.js
++++ b/toolkit/components/aboutprocesses/content/aboutProcesses.js
+@@ -609,10 +609,7 @@ var View = {
+ 
+     let image;
+     switch (data.type) {
+-      case "browser":
+-      case "privilegedabout":
+-        image = "chrome://branding/content/icon32.png";
+-        break;
++      // GORILLA D-157-35: browser and privileged-about rows no longer draw a 16 px Gorilla; they take the default
+       case "extension":
+         image = "chrome://mozapps/skin/extensions/extension.svg";
+         break;
+diff --git a/toolkit/components/normandy/content/about-studies/about-studies.html b/toolkit/components/normandy/content/about-studies/about-studies.html
+index 6f0ffa9217..0ee6360ab6 100644
+--- a/toolkit/components/normandy/content/about-studies/about-studies.html
++++ b/toolkit/components/normandy/content/about-studies/about-studies.html
+@@ -12,12 +12,6 @@
+     />
+     <!-- The title is replaced in about-studies.js -->
+     <title>about:studies</title>
+-    <link
+-      rel="icon"
+-      type="image/png"
+-      id="favicon"
+-      href="chrome://branding/content/icon32.png"
+-    />
+     <link rel="stylesheet" href="chrome://global/skin/global.css" />
+     <link rel="stylesheet" href="chrome://global/skin/in-content/common.css" />
+     <link
+diff --git a/toolkit/components/prompts/src/CommonDialog.sys.mjs b/toolkit/components/prompts/src/CommonDialog.sys.mjs
+index 23980a60a6..b34ffa2f47 100644
+--- a/toolkit/components/prompts/src/CommonDialog.sys.mjs
++++ b/toolkit/components/prompts/src/CommonDialog.sys.mjs
+@@ -18,9 +18,8 @@ export class CommonDialog {
+     });
+   }
+ 
+-  static DEFAULT_APP_ICON_CSS = `image-set(url("chrome://branding/content/icon16.png") 1x,
+-    url("chrome://branding/content/icon32.png") 2x,
+-    url("chrome://branding/content/icon64.png") 4x)`;
++  // GORILLA D-157-35: system dialogs show the neutral info symbol, not a 16-32 px Gorilla
++  static DEFAULT_APP_ICON_CSS = `url("chrome://global/skin/icons/info.svg")`;
+ 
+   args = null;
+   ui = null;
+diff --git a/toolkit/content/aboutAbout.html b/toolkit/content/aboutAbout.html
+index 74702381dd..571595d9dd 100644
+--- a/toolkit/content/aboutAbout.html
++++ b/toolkit/content/aboutAbout.html
+@@ -18,11 +18,6 @@
+       href="chrome://global/skin/in-content/info-pages.css"
+     />
+     <link rel="localization" href="toolkit/about/aboutAbout.ftl" />
+-    <link
+-      rel="icon"
+-      type="image/png"
+-      href="chrome://branding/content/icon32.png"
+-    />
+     <script src="chrome://global/content/aboutAbout.js"></script>
+   </head>
+ 
+diff --git a/toolkit/content/aboutProfiles.xhtml b/toolkit/content/aboutProfiles.xhtml
+index 0bf202fc11..e2c3d70fe5 100644
+--- a/toolkit/content/aboutProfiles.xhtml
++++ b/toolkit/content/aboutProfiles.xhtml
+@@ -13,12 +13,6 @@
+     />
+     <meta name="color-scheme" content="light dark" />
+     <title data-l10n-id="profiles-title"></title>
+-    <link
+-      rel="icon"
+-      type="image/png"
+-      id="favicon"
+-      href="chrome://branding/content/icon32.png"
+-    />
+     <link
+       rel="stylesheet"
+       href="chrome://mozapps/skin/aboutProfiles.css"
+diff --git a/toolkit/content/aboutSupport.xhtml b/toolkit/content/aboutSupport.xhtml
+index b950f88e2b..daed993ec2 100644
+--- a/toolkit/content/aboutSupport.xhtml
++++ b/toolkit/content/aboutSupport.xhtml
+@@ -14,8 +14,6 @@
+     <meta name="color-scheme" content="light dark" />
+     <title data-l10n-id="page-title"/>
+ 
+-    <link rel="icon" type="image/png" id="favicon"
+-          href="chrome://branding/content/icon32.png"/>
+     <link rel="stylesheet" href="chrome://global/skin/aboutSupport.css"
+           type="text/css"/>
+ 
+diff --git a/toolkit/content/neterror/supportpages/connection-not-secure.html b/toolkit/content/neterror/supportpages/connection-not-secure.html
+index 4fbce332ed..e853a46f4d 100644
+--- a/toolkit/content/neterror/supportpages/connection-not-secure.html
++++ b/toolkit/content/neterror/supportpages/connection-not-secure.html
+@@ -15,12 +15,6 @@
+       type="text/css"
+       href="chrome://global/skin/offlineSupportPages.css"
+     />
+-    <link
+-      rel="icon"
+-      type="image/png"
+-      id="favicon"
+-      href="chrome://branding/content/icon32.png"
+-    />
+     <title>Secure connection failed and Firefox did not connect</title>
+   </head>
+   <body>
+diff --git a/toolkit/content/neterror/supportpages/time-errors.html b/toolkit/content/neterror/supportpages/time-errors.html
+index 8b9f2c68c5..03e87fa130 100644
+--- a/toolkit/content/neterror/supportpages/time-errors.html
++++ b/toolkit/content/neterror/supportpages/time-errors.html
+@@ -15,12 +15,6 @@
+       type="text/css"
+       href="chrome://global/skin/offlineSupportPages.css"
+     />
+-    <link
+-      rel="icon"
+-      type="image/png"
+-      id="favicon"
+-      href="chrome://branding/content/icon32.png"
+-    />
+     <title>How to troubleshoot time related errors on secure websites</title>
+   </head>
+   <body>
