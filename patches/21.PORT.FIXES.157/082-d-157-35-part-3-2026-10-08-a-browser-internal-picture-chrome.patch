@@ -1,0 +1,73 @@
+# Gorilla 157 port fix
+# D-157-35 part 3 (2026-10-08): a browser-internal picture (chrome://, resource://) keeps no unlocked full-size decode once a smaller copy is decoded (ImageSurfaceCache::PruneUnusedNativeSize, called from Prune). Firefox decodes a CSS picture once at full size when first shown (nsImageRenderer::PrepareImage -> StartDecodingWithResult) and the unlocked copy stayed past the 60 s expiry, until memory pressure: 7.8 MB per process for the 1400 px master logo (probe image-surfaces on build 28 with the build-28 changes). Web content keeps Firefox's behaviour. Made by working scripts/prune_full_decode_d157_35c.py.
+# Files: image/SurfaceCache.cpp
+
+diff --git a/image/SurfaceCache.cpp b/image/SurfaceCache.cpp
+index d9e329eaac..a27234ce26 100644
+--- a/image/SurfaceCache.cpp
++++ b/image/SurfaceCache.cpp
+@@ -31,6 +31,7 @@
+ #include "mozilla/StaticPtr.h"
+ #include "nsExpirationTracker.h"
+ #include "nsHashKeys.h"
++#include "nsIURI.h"
+ #include "nsIMemoryReporter.h"
+ #include "nsRefPtrHashtable.h"
+ #include "nsSize.h"
+@@ -483,8 +484,56 @@ class ImageSurfaceCache {
+     mFactor2Mode = true;
+   }
+ 
++  // GORILLA D-157-35: a browser-internal picture (chrome://, resource://) is decoded once at its full size when a page
++  // first shows it (nsImageRenderer::PrepareImage -> StartDecodingWithResult), then at the size it is drawn. The
++  // full-size copy is left unlocked and stays until memory pressure: 7.8 MB per process for the 1400 px master logo
++  // beside the 1-2 MB copy actually drawn. Once a smaller copy has finished decoding, drop unlocked copies at the
++  // native size; a later full-size draw decodes again (a cache miss). Web content keeps Firefox's behaviour.
++  template <typename Function>
++  void PruneUnusedNativeSize(Function&& aRemoveCallback) {
++    if (mIsVectorImage || mSurfaces.Count() < 2) {
++      return;
++    }
++    NotNull<CachedSurface*> firstSurface =
++        WrapNotNull(mSurfaces.ConstIter().UserData());
++    Image* image = static_cast<Image*>(firstSurface->GetImageKey());
++    nsIURI* uri = image->GetURI();
++    if (!uri || !(uri->SchemeIs("chrome") || uri->SchemeIs("resource"))) {
++      return;
++    }
++    IntSize nativeSize;
++    if (NS_FAILED(image->GetWidth(&nativeSize.width)) ||
++        NS_FAILED(image->GetHeight(&nativeSize.height)) ||
++        nativeSize.IsEmpty()) {
++      return;
++    }
++    bool smallerDecoded = false;
++    for (const auto& value : mSurfaces.Values()) {
++      const IntSize& size = value->GetSurfaceKey().Size();
++      if (value->IsDecoded() && size.width < nativeSize.width &&
++          size.height < nativeSize.height) {
++        smallerDecoded = true;
++        break;
++      }
++    }
++    if (!smallerDecoded) {
++      return;
++    }
++    for (auto iter = mSurfaces.Iter(); !iter.Done(); iter.Next()) {
++      NotNull<CachedSurface*> current = WrapNotNull(iter.UserData());
++      if (current->GetSurfaceKey().Size() == nativeSize &&
++          !current->IsLocked() && !current->CannotSubstitute() &&
++          current->IsDecoded()) {
++        aRemoveCallback(current);
++        iter.Remove();
++      }
++    }
++    AfterMaybeRemove();
++  }
++
+   template <typename Function>
+   void Prune(Function&& aRemoveCallback) {
++    PruneUnusedNativeSize(aRemoveCallback);
+     if (!mFactor2Mode || mFactor2Pruned) {
+       return;
+     }
