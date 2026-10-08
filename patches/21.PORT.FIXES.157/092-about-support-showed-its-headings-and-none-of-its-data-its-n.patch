@@ -1,0 +1,29 @@
+# Gorilla 157 port fix
+# About:support showed its headings and none of its data: its Normandy section waited on Nimbus (never starts, D-157-31); it answers at once now (T-157-31-A)
+# Files: toolkit/modules/Troubleshoot.sys.mjs
+
+diff --git a/toolkit/modules/Troubleshoot.sys.mjs b/toolkit/modules/Troubleshoot.sys.mjs
+index d59b249a41..567c130781 100644
+--- a/toolkit/modules/Troubleshoot.sys.mjs
++++ b/toolkit/modules/Troubleshoot.sys.mjs
+@@ -1025,6 +1025,20 @@ var dataProviders = {
+       done();
+       return;
+     }
++    // GORILLA TECHNIQUE T-157-31-A (2026-10-08): Normandy and Nimbus never start in Gorilla (D-157-31): no studies,
++    //   no experiments, no rollouts. Answer at once. This section waited for ExperimentAPI.manager.store.ready(),
++    //   which never resolves, and the snapshot answers only when every section has: about:support showed its
++    //   headings and none of its data (Name, Version, Build ID ... all empty).
++    if (true) {
++      done({
++        addonStudies: [],
++        prefRollouts: [],
++        prefStudies: [],
++        nimbusExperiments: [],
++        nimbusRollouts: [],
++      });
++      return;
++    }
+ 
+     const { PreferenceExperiments: NormandyPreferenceStudies } =
+       ChromeUtils.importESModule(
