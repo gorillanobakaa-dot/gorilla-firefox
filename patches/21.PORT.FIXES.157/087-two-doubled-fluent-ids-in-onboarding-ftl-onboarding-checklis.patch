@@ -1,0 +1,19 @@
+# Gorilla 157 port fix
+# Two doubled Fluent ids in onboarding.ftl (onboarding-checklist-minimize, -remove): second copies removed; found by verify row 7c
+# Files: browser/locales/en-US/browser/newtab/onboarding.ftl
+
+diff --git a/browser/locales/en-US/browser/newtab/onboarding.ftl b/browser/locales/en-US/browser/newtab/onboarding.ftl
+index 0a083e07d5..1a90729b35 100644
+--- a/browser/locales/en-US/browser/newtab/onboarding.ftl
++++ b/browser/locales/en-US/browser/newtab/onboarding.ftl
+@@ -580,10 +580,6 @@ onboarding-refresh-sync-title = Go anywhere. Sync everything.
+ onboarding-refresh-gratitude-subtitle = Thank you for using { -brand-short-name }, the only major Gorilla browser backed by a non-profit. With your support, we’re working to make the internet safer and more accessible for everyone.
+ # "has your back" is an idiom suggesting support and protection
+ onboarding-refresh-gratitude-title = { -brand-short-name } has your back
+-onboarding-checklist-minimize =
+-    .label = Minimize
+-onboarding-checklist-remove =
+-    .label = Remove checklist
+ 
+ ## First Run Onboarding refresh strings
+ 
