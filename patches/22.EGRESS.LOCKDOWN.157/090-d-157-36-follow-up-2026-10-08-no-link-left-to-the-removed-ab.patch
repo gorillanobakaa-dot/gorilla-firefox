@@ -1,0 +1,63 @@
+# Gorilla 157 privacy cut
+# D-157-36 follow-up (2026-10-08): no link left to the removed about:logging (about:networking Logging entry, about:webrtc Enable logging); no DevTools Performance panel (its recording ends in the refused hand-off)
+# Files: browser/app/profile/firefox.js, toolkit/content/aboutNetworking.html, toolkit/content/aboutwebrtc/aboutWebrtc.mjs
+
+diff --git a/browser/app/profile/firefox.js b/browser/app/profile/firefox.js
+index b59183fa67..bb44cf0262 100644
+--- a/browser/app/profile/firefox.js
++++ b/browser/app/profile/firefox.js
+@@ -3292,8 +3292,9 @@ pref("devtools.memory.custom-tree-map-displays", "{}");
+ pref("devtools.memory.max-individuals", 1000);
+ pref("devtools.memory.max-retaining-paths", 10);
+ 
+-// Enable the Performance tools
+-pref("devtools.performance.enabled", true);
++// GORILLA D-157-36 (2026-10-08): no Performance panel in DevTools. Its recording ended by opening the hosted
++// profiler, which Gorilla refuses at source (performance-new shared/browser.js); the panel would end in that error.
++pref("devtools.performance.enabled", false);
+ 
+ // The default cache UI setting
+ pref("devtools.cache.disabled", false);
+diff --git a/toolkit/content/aboutNetworking.html b/toolkit/content/aboutNetworking.html
+index 990e75c321..0b9c80962f 100644
+--- a/toolkit/content/aboutNetworking.html
++++ b/toolkit/content/aboutNetworking.html
+@@ -57,12 +57,7 @@
+           data-l10n-id="about-networking-dns-lookup"
+         ></span>
+       </div>
+-      <div class="category category-no-icon" id="category-logging">
+-        <span
+-          class="category-name"
+-          data-l10n-id="about-networking-logging"
+-        ></span>
+-      </div>
++      <!-- GORILLA D-157-36 (2026-10-08): no "Logging" entry: it only pointed to about:logging, which is gone -->
+       <div class="category category-no-icon" id="category-networkid">
+         <span
+           class="category-name"
+@@ -252,11 +247,6 @@
+         </table>
+       </div>
+ 
+-      <div id="logging" class="tab" hidden="true">
+-        <span data-l10n-id="about-networking-moved-about-logging">
+-          <a data-l10n-name="about-logging-url" href="about:logging"></a>
+-        </span>
+-      </div>
+ 
+       <div id="networkid" class="tab" hidden="true">
+         <table>
+diff --git a/toolkit/content/aboutwebrtc/aboutWebrtc.mjs b/toolkit/content/aboutwebrtc/aboutWebrtc.mjs
+index b3ae1ee59c..2293b259ec 100644
+--- a/toolkit/content/aboutwebrtc/aboutWebrtc.mjs
++++ b/toolkit/content/aboutwebrtc/aboutWebrtc.mjs
+@@ -351,7 +351,7 @@ class ShowTab extends Control {
+       msg.appendChild(message);
+     };
+     add(new SavePage().render());
+-    add(new EnableLogging().render());
++    // GORILLA D-157-36 (2026-10-08): no "Enable logging" button: it opened about:logging, which is gone
+     add(new AecLogging().render());
+ 
+     const ctrls = document.querySelector("#controls");
