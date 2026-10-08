@@ -1,0 +1,215 @@
+# Gorilla 157 privacy cut
+# D-157-40 round 2: the profile switcher is never forced on (store ID); the messaging console's commands are refused from every page; the removed pages' files are not packaged (asrouter-admin, messagepreview + actors, usercharacteristics, aboutRestricted, blockedSite), so no chrome:// address opens them; error-page comment names both guessed lookups
+# Files: browser/base/jar.mn, browser/components/DesktopActorRegistry.sys.mjs, browser/components/asrouter/jar.mn, browser/components/asrouter/modules/ASRouterParentProcessMessageHandler.sys.mjs, browser/components/moz.build, browser/components/profiles/SelectableProfileService.sys.mjs, browser/themes/shared/jar.inc.mn, toolkit/actors/NetErrorChild.sys.mjs, toolkit/components/resistfingerprinting/jar.mn, toolkit/content/jar.mn, toolkit/locales/jar.mn
+
+diff --git a/browser/base/jar.mn b/browser/base/jar.mn
+index 783c67d397..3b1f7743ba 100644
+--- a/browser/base/jar.mn
++++ b/browser/base/jar.mn
+@@ -96,8 +96,7 @@ browser.jar:
+ # the following files are browser-specific overrides
+ *       content/browser/license.html                  (/toolkit/content/license.html)
+ % override chrome://global/content/license.html chrome://browser/content/license.html
+-        content/browser/blockedSite.xhtml               (content/blockedSite.xhtml)
+-        content/browser/blockedSite.js                  (content/blockedSite.js)
++#       GORILLA D-157-40: about:blocked (Safe Browsing's warning) is not packaged: blockedSite.xhtml, blockedSite.js
+         content/browser/spotlight.html                (content/spotlight.html)
+         content/browser/spotlight.js                  (content/spotlight.js)
+ *       content/browser/default-bookmarks.html        (content/default-bookmarks.html)
+diff --git a/browser/components/DesktopActorRegistry.sys.mjs b/browser/components/DesktopActorRegistry.sys.mjs
+index 3d6af6232e..00cadbce13 100644
+--- a/browser/components/DesktopActorRegistry.sys.mjs
++++ b/browser/components/DesktopActorRegistry.sys.mjs
+@@ -130,21 +130,7 @@ let JSWINDOWACTORS = {
+     remoteTypes: ["privilegedabout"],
+   },
+ 
+-  AboutMessagePreview: {
+-    parent: {
+-      esModuleURI: "resource:///actors/AboutMessagePreviewParent.sys.mjs",
+-    },
+-    child: {
+-      esModuleURI: "resource:///actors/AboutMessagePreviewChild.sys.mjs",
+-      events: {
+-        DOMDocElementInserted: { capture: true },
+-      },
+-    },
+-    matches: ["about:messagepreview", "about:messagepreview?*"],
+-    remoteTypes: ["privilegedabout"],
+-    enablePreference:
+-      "browser.newtabpage.activity-stream.asrouter.devtoolsEnabled",
+-  },
++  // GORILLA D-157-40: no AboutMessagePreview actor (about:messagepreview is not built).
+ 
+   AboutPrivateBrowsing: {
+     parent: {
+diff --git a/browser/components/asrouter/jar.mn b/browser/components/asrouter/jar.mn
+index 14d76a2c0f..320946cd56 100644
+--- a/browser/components/asrouter/jar.mn
++++ b/browser/components/asrouter/jar.mn
+@@ -6,9 +6,7 @@ browser.jar:
+ % resource activity-stream %res/activity-stream/ contentaccessible=yes
+ % content activity-stream %content/activity-stream/ contentaccessible=yes
+   content/activity-stream/data/content/assets/glyph-webextension-16.svg  (content/assets/glyph-webextension-16.svg)
+-  content/browser/asrouter/asrouter-admin.html                           (content/asrouter-admin.html)
+-  content/browser/asrouter/asrouter-admin.bundle.js                      (content/asrouter-admin.bundle.js)
+-  content/browser/asrouter/components/ASRouterAdmin/ASRouterAdmin.css    (content/components/ASRouterAdmin/ASRouterAdmin.css)
++# GORILLA D-157-40: the messaging console (about:asrouter) is not packaged: asrouter-admin.html, its bundle and CSS
+   content/browser/asrouter/components/menu-message.mjs                   (content/components/menu-message/menu-message.mjs)
+   content/browser/asrouter/components/menu-message.css                   (content/components/menu-message/menu-message.css)
+   content/browser/asrouter/components/remote-text.js                     (content/components/remote-text.js)
+diff --git a/browser/components/asrouter/modules/ASRouterParentProcessMessageHandler.sys.mjs b/browser/components/asrouter/modules/ASRouterParentProcessMessageHandler.sys.mjs
+index d076821411..81a883b5ab 100644
+--- a/browser/components/asrouter/modules/ASRouterParentProcessMessageHandler.sys.mjs
++++ b/browser/components/asrouter/modules/ASRouterParentProcessMessageHandler.sys.mjs
+@@ -6,6 +6,32 @@ import { ASRouterPreferences } from "resource:///modules/asrouter/ASRouterPrefer
+ import { ASRouterScreenUtils } from "resource:///modules/asrouter/ASRouterScreenUtils.sys.mjs";
+ import { MESSAGE_TYPE_HASH as msg } from "resource:///modules/asrouter/ActorConstants.mjs";
+ 
++// GORILLA D-157-40 (2026-10-09): the messaging console (about:asrouter) is gone and its switch
++// (browser.newtabpage.activity-stream.asrouter.devtoolsEnabled) is locked off. Its commands are refused whoever sends
++// them: the parent never checked the sender, so about:welcome, about:newtab, about:home and about:privatebrowsing
++// could send them too (force or edit a message, unblock everything, switch message sources, force attribution).
++const CONSOLE_COMMANDS = new Set([
++  msg.ADMIN_CONNECT_STATE,
++  msg.UNBLOCK_MESSAGE_BY_ID,
++  msg.UNBLOCK_ALL,
++  msg.BLOCK_BUNDLE,
++  msg.UNBLOCK_BUNDLE,
++  msg.DISABLE_PROVIDER,
++  msg.ENABLE_PROVIDER,
++  msg.EVALUATE_JEXL_EXPRESSION,
++  msg.EXPIRE_QUERY_CACHE,
++  msg.FORCE_ATTRIBUTION,
++  msg.FORCE_PRIVATE_BROWSING_WINDOW,
++  msg.OVERRIDE_MESSAGE,
++  msg.MODIFY_MESSAGE_JSON,
++  msg.RESET_PROVIDER_PREF,
++  msg.SET_PROVIDER_USER_PREF,
++  msg.RESET_GROUPS_STATE,
++  msg.RESET_MESSAGE_STATE,
++  msg.RESET_SCREEN_IMPRESSIONS,
++  msg.EDIT_STATE,
++]);
++
+ export class ASRouterParentProcessMessageHandler {
+   constructor({
+     router,
+@@ -45,6 +71,11 @@ export class ASRouterParentProcessMessageHandler {
+   }
+ 
+   handleMessage(name, data, { browser } = { browser: null }) {
++    if (CONSOLE_COMMANDS.has(name) && !ASRouterPreferences.devtoolsEnabled) {
++      return Promise.reject(
++        new Error(`Gorilla: ${name} is a messaging-console command; the console is gone (D-157-40)`)
++      );
++    }
+     switch (name) {
+       case msg.AS_ROUTER_TELEMETRY_USER_EVENT:
+         return this.handleTelemetry({
+diff --git a/browser/components/moz.build b/browser/components/moz.build
+index b3e1bf8754..4339b2f40b 100644
+--- a/browser/components/moz.build
++++ b/browser/components/moz.build
+@@ -45,7 +45,7 @@ DIRS += [
+     "firefoxview",
+     # GORILLA excised: "genai",
+     "ipprotection",
+-    "messagepreview",
++    # GORILLA D-157-40: "messagepreview" (about:messagepreview and its actors are not built)
+     "migration",
+     "mozcachedohttp",
+     "multilineeditor",
+diff --git a/browser/components/profiles/SelectableProfileService.sys.mjs b/browser/components/profiles/SelectableProfileService.sys.mjs
+index 494742046a..15456f0cda 100644
+--- a/browser/components/profiles/SelectableProfileService.sys.mjs
++++ b/browser/components/profiles/SelectableProfileService.sys.mjs
+@@ -436,12 +436,9 @@ class SelectableProfileServiceClass extends EventEmitter {
+ 
+     this.migrateToProfilesCreatedPref();
+ 
+-    // If a storeID has been assigned then profiles may have been created so force us on. Also
+-    // covers the case when the selector is shown at startup and we don't have preferences
+-    // available.
+-    if (this.groupToolkitProfile?.storeID) {
+-      return true;
+-    }
++    // GORILLA D-157-40 (2026-10-09): no forcing on. Upstream switched the profile switcher on whenever the profile
++    // group had a store ID (a profiles.ini from upstream Firefox), whatever the locked browser.profiles.enabled said;
++    // its pages (about:profilemanager and the rest) are not registered in Gorilla, so its menus led nowhere.
+ 
+     return lazy.PROFILES_ENABLED && !!this.groupToolkitProfile;
+   }
+diff --git a/browser/themes/shared/jar.inc.mn b/browser/themes/shared/jar.inc.mn
+index 930c7b1e1a..cb5d27f652 100644
+--- a/browser/themes/shared/jar.inc.mn
++++ b/browser/themes/shared/jar.inc.mn
+@@ -17,7 +17,7 @@
+   skin/classic/browser/addon-notification.css                  (../shared/addon-notification.css)
+   skin/classic/browser/autocomplete.css                        (../shared/autocomplete.css)
+   skin/classic/browser/aiWindowSidebar.css                     (../shared/aiWindowSidebar.css)
+-  skin/classic/browser/blockedSite.css                         (../shared/blockedSite.css)
++# GORILLA D-157-40: skin/classic/browser/blockedSite.css (about:blocked is not packaged)
+   skin/classic/browser/browser-colors.css                      (../shared/browser-colors.css)
+   skin/classic/browser/browser-shared.css                      (../shared/browser-shared.css)
+   skin/classic/browser/master-redirect.css                     (../shared/master-redirect.css)
+diff --git a/toolkit/actors/NetErrorChild.sys.mjs b/toolkit/actors/NetErrorChild.sys.mjs
+index 48bde7d9d1..f09f49f2cc 100644
+--- a/toolkit/actors/NetErrorChild.sys.mjs
++++ b/toolkit/actors/NetErrorChild.sys.mjs
+@@ -125,9 +125,9 @@ export class NetErrorChild extends RemotePageChild {
+   }
+ 
+   RPMCheckAlternateHostAvailable() {
+-    // GORILLA D-157-40 (2026-10-08): no guessed lookups. On "server not found" for a one-word address the page
+-    // asked the DNS resolver for a guessed name (www.<word>.com) on its own, telling the resolver a name the user
+-    // never typed. The user can still type the full address.
++    // GORILLA D-157-40 (2026-10-08): no guessed lookups. On "server not found" the page asked the DNS resolver for a
++    // guessed name on its own (www.<word>.com for a single word, www.<name> for a name with one dot), telling the
++    // resolver a name the user never typed. The user can still type the full address.
+     if (true) {
+       return;
+     }
+diff --git a/toolkit/components/resistfingerprinting/jar.mn b/toolkit/components/resistfingerprinting/jar.mn
+index 3d71f08c19..9467c6dc3d 100644
+--- a/toolkit/components/resistfingerprinting/jar.mn
++++ b/toolkit/components/resistfingerprinting/jar.mn
+@@ -4,9 +4,4 @@
+ 
+ toolkit.jar:
+   content/global/resistfingerprinting/letterboxing.css (content/letterboxing.css)
+-  content/global/usercharacteristics/gl-matrix.js (content/gl-matrix.js)
+-  content/global/usercharacteristics/ssdeep.js (content/ssdeep.js)
+-  content/global/usercharacteristics/usercharacteristics.css (content/usercharacteristics.css)
+-  content/global/usercharacteristics/usercharacteristics.html (content/usercharacteristics.html)
+-  content/global/usercharacteristics/usercharacteristics.js (content/usercharacteristics.js)
+-  content/global/usercharacteristics/usercharacteristics.woff (content/usercharacteristics.woff)
++# GORILLA D-157-40: the user-characteristics measuring page (about:fingerprintingprotection) is not packaged
+diff --git a/toolkit/content/jar.mn b/toolkit/content/jar.mn
+index a54a852c3e..f0a851e359 100644
+--- a/toolkit/content/jar.mn
++++ b/toolkit/content/jar.mn
+@@ -35,9 +35,7 @@ toolkit.jar:
+    content/global/aboutwebrtc/disclosure.mjs (aboutwebrtc/disclosure.mjs)
+    content/global/aboutwebrtc/copyButton.mjs (aboutwebrtc/copyButton.mjs)
+    content/global/aboutwebrtc/aboutWebrtc.html (aboutwebrtc/aboutWebrtc.html)
+-   content/global/aboutRestricted/aboutRestricted.mjs (aboutRestricted/aboutRestricted.mjs)
+-   content/global/aboutRestricted/aboutRestricted.html (aboutRestricted/aboutRestricted.html)
+-   content/global/aboutRestricted/aboutRestricted.css (aboutRestricted/aboutRestricted.css)
++#  GORILLA D-157-40: about:restricted (parental controls) is not packaged
+    content/global/aboutSupport.js
+ *  content/global/aboutSupport.xhtml
+ #ifndef MOZ_GLEAN_ANDROID
+diff --git a/toolkit/locales/jar.mn b/toolkit/locales/jar.mn
+index 6c679de734..d3df00a548 100644
+--- a/toolkit/locales/jar.mn
++++ b/toolkit/locales/jar.mn
+@@ -7,7 +7,7 @@
+   crashreporter                                    (%crashreporter/**/*.ftl)
+   services                                         (%services/**/*.ftl)
+   toolkit                                          (%toolkit/**/*.ftl)
+-  locales-preview/aboutRestricted.ftl              (../locales-preview/aboutRestricted.ftl)
++# GORILLA D-157-40: locales-preview/aboutRestricted.ftl (about:restricted is not packaged)
+ # GORILLA excised: locales-preview/smartWindow-aboutAddons.ftl (the Smart Window themes notice is removed)
+ #ifdef MOZ_LAYOUT_DEBUGGER
+   layoutdebug/layoutdebug.ftl                      (../../layout/tools/layout-debug/ui/content/layoutdebug.ftl)
