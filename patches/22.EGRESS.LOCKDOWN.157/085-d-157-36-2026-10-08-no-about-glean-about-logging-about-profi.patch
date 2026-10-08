@@ -1,0 +1,153 @@
+# Gorilla 157 privacy cut
+# D-157-36 (2026-10-08): no about:glean, about:logging, about:profiling, about:windows-messages; a captured profile goes only to a viewer on this machine; no profiler buttons in about:processes; nothing recorded for windows-messages
+# Files: browser/components/about/AboutRedirector.cpp, browser/components/about/components.conf, devtools/client/performance-new/shared/browser.js, docshell/base/nsAboutRedirector.cpp, docshell/build/components.conf, modules/libpref/init/all.js, widget/windows/nsWindowDbg.cpp
+
+diff --git a/browser/components/about/AboutRedirector.cpp b/browser/components/about/AboutRedirector.cpp
+index dc1e5d9ae7..be2f078edf 100644
+--- a/browser/components/about/AboutRedirector.cpp
++++ b/browser/components/about/AboutRedirector.cpp
+@@ -103,9 +103,9 @@ static const RedirEntry kRedirMap[] = {
+      nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+          nsIAboutModule::URI_MUST_LOAD_IN_CHILD | nsIAboutModule::ALLOW_SCRIPT |
+          nsIAboutModule::URI_CAN_LOAD_IN_PRIVILEGEDABOUT_PROCESS},
+-    {"profiling",
+-     "chrome://devtools/content/performance-new/aboutprofiling/index.html",
+-     nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::IS_SECURE_CHROME_UI},
++    // GORILLA D-157-36 (2026-10-08): no about:profiling. Its recording ended by opening profiler.firefox.com, Mozilla's
++    // hosted profile viewer, with the captured profile (open tabs, addresses, timings); the viewer offers an upload.
++    // The hand-off itself is refused at source (devtools performance-new shared/browser.js).
+     {"protections", "chrome://browser/content/protections.html",
+      nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+          nsIAboutModule::URI_MUST_LOAD_IN_CHILD | nsIAboutModule::ALLOW_SCRIPT |
+diff --git a/browser/components/about/components.conf b/browser/components/about/components.conf
+index 5edfa2b025..3ad92cd9ea 100644
+--- a/browser/components/about/components.conf
++++ b/browser/components/about/components.conf
+@@ -20,7 +20,7 @@ pages = [
+     'preferences',
+     'privatebrowsing',
+     'protections',
+-    'profiling',
++    # GORILLA D-157-36: no about:profiling
+     'reader',
+     'referrals',
+     'restartrequired',
+diff --git a/devtools/client/performance-new/shared/browser.js b/devtools/client/performance-new/shared/browser.js
+index cf92795248..40188b0796 100644
+--- a/devtools/client/performance-new/shared/browser.js
++++ b/devtools/client/performance-new/shared/browser.js
+@@ -93,6 +93,21 @@ async function openProfilerTab({ profilerViewMode, defaultPanel }) {
+ 
+   const urlToLoad = `${baseUrl}${baseUrlPath}${additionalPath}${viewModeQueryString}`;
+ 
++  // GORILLA D-157-36 (2026-10-08): a captured profile is never handed to a site on the network. Upstream opens
++  // profiler.firefox.com (Mozilla's hosted viewer, which then offers an upload to its storage) with the profile:
++  // open tabs, addresses, timings. Only a viewer running on this machine is accepted (set
++  // devtools.performance.recording.ui-base-url to it, e.g. http://localhost:4242); anything else is refused.
++  let host = "";
++  try {
++    host = new URL(baseUrl).hostname;
++  } catch (e) {}
++  if (!["localhost", "127.0.0.1", "[::1]"].includes(host)) {
++    throw new Error(
++      "Gorilla: profiles are never sent to " + (host || baseUrl) +
++        "; point devtools.performance.recording.ui-base-url at a profiler running on this machine"
++    );
++  }
++
+   // Find the most recently used window, as the DevTools client could be in a variety
+   // of hosts.
+   // Note that when running from the browser toolbox, there won't be the browser window,
+diff --git a/docshell/base/nsAboutRedirector.cpp b/docshell/base/nsAboutRedirector.cpp
+index 8d95f1501e..4d6fa1b214 100644
+--- a/docshell/base/nsAboutRedirector.cpp
++++ b/docshell/base/nsAboutRedirector.cpp
+@@ -141,8 +141,9 @@ static const RedirEntry kRedirMap[] = {
+     {"license", "chrome://global/content/license.html",
+      nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+          nsIAboutModule::IS_SECURE_CHROME_UI},
+-    {"logging", "chrome://global/content/aboutLogging/aboutLogging.html",
+-     nsIAboutModule::ALLOW_SCRIPT},
++    // GORILLA D-157-36 (2026-10-08): no about:logging. It set log modules at run time and handed what it caught to
++    // the profiler: profiler.firefox.com opened with it, or (pref) an upload to api.profiler.firefox.com.
++    // MOZ_LOG in the environment still logs to a file (the leak gate's nsHttp log uses it).
+     // GORILLA D-157-35: no about:logo (it only showed the master logo, upscaled at 200 % scaling)
+     {"memory", "chrome://global/content/aboutMemory.xhtml",
+      nsIAboutModule::ALLOW_SCRIPT},
+@@ -208,16 +209,11 @@ static const RedirEntry kRedirMap[] = {
+ #ifdef XP_WIN
+     {"third-party", "chrome://global/content/aboutThirdParty.html",
+      nsIAboutModule::ALLOW_SCRIPT},
+-    {"windows-messages", "chrome://global/content/aboutWindowsMessages.html",
+-     nsIAboutModule::ALLOW_SCRIPT},
+-#endif
+-#ifndef MOZ_GLEAN_ANDROID
+-    {"glean", "chrome://global/content/aboutGlean.html",
+-#  if !defined(NIGHTLY_BUILD) && defined(MOZILLA_OFFICIAL)
+-     nsIAboutModule::HIDE_FROM_ABOUTABOUT |
+-#  endif
+-         nsIAboutModule::ALLOW_SCRIPT},
++    // GORILLA D-157-36 (2026-10-08): no about:windows-messages (nothing is recorded for it: nsWindowDbg.cpp)
+ #endif
++    // GORILLA D-157-36 (2026-10-08): no about:glean. It is the test bench of Glean, Mozilla's telemetry library, which
++    // never starts in Gorilla (FOG.cpp): debug-tagged pings for Mozilla's Glean Debug Ping Viewer, metric values, links
++    // to Mozilla's data dictionary. Its menus showed text; its submit button did nothing (0 requests, 2026-10-08).
+     {"sync-log", "chrome://global/content/aboutSyncLog.html",
+      nsIAboutModule::ALLOW_SCRIPT},
+     {"telemetry", "chrome://global/content/aboutTelemetry.xhtml",
+diff --git a/docshell/build/components.conf b/docshell/build/components.conf
+index d7eda346ba..ed68c2c351 100644
+--- a/docshell/build/components.conf
++++ b/docshell/build/components.conf
+@@ -16,7 +16,7 @@ about_pages = [
+     'fingerprintingprotection',
+     'httpsonlyerror',
+     'license',
+-    'logging',
++    # GORILLA D-157-36: no about:logging
+     'memory',
+     'mozilla',
+     'neterror',
+@@ -47,9 +47,8 @@ if buildconfig.substs['MOZ_WIDGET_TOOLKIT'] == 'android':
+     about_pages.append('home')
+ if buildconfig.substs['MOZ_WIDGET_TOOLKIT'] == 'windows':
+     about_pages.append('third-party')
+-    about_pages.append('windows-messages')
+-if not defined('MOZ_GLEAN_ANDROID'):
+-    about_pages.append('glean')
++    # GORILLA D-157-36: no about:windows-messages
++# GORILLA D-157-36: no about:glean
+ if buildconfig.substs['MOZ_WIDGET_TOOLKIT'] != 'android' and buildconfig.substs['MOZ_WIDGET_TOOLKIT'] != 'windows':
+     about_pages.append('webauthn')
+ if defined('NIGHTLY_BUILD'):
+diff --git a/modules/libpref/init/all.js b/modules/libpref/init/all.js
+index 44b8eab9eb..4d744684af 100644
+--- a/modules/libpref/init/all.js
++++ b/modules/libpref/init/all.js
+@@ -3747,7 +3747,8 @@ pref("toolkit.aboutProcesses.showAllSubframes", false);
+   pref("toolkit.aboutProcesses.showThreads", false);
+ #endif
+ // If `true`, about:processes will offer to profile processes.
+-pref("toolkit.aboutProcesses.showProfilerIcons", true);
++// GORILLA D-157-36: no profiler buttons in about:processes (each captured 5 s and opened profiler.firefox.com)
++pref("toolkit.aboutProcesses.showProfilerIcons", false);
+ // Time in seconds between when the profiler is started and when the
+ // profile is captured.
+ pref("toolkit.aboutProcesses.profileDuration", 5);
+diff --git a/widget/windows/nsWindowDbg.cpp b/widget/windows/nsWindowDbg.cpp
+index bcf0efaa81..7817c37cac 100644
+--- a/widget/windows/nsWindowDbg.cpp
++++ b/widget/windows/nsWindowDbg.cpp
+@@ -326,8 +326,10 @@ bool NativeEventLogger::NativeEventLoggerInternal() {
+ 
+   bool isPreCall = mResult.isNothing();
+   if (isPreCall || mShouldLogPostCall) {
+-    bool recordInAboutPage = gEventsToRecordInAboutPage.find(mMsg) !=
+-                             gEventsToRecordInAboutPage.end();
++    // GORILLA D-157-36 (2026-10-08): no about:windows-messages, so nothing is recorded for it. Upstream formats
++    // every listed window message (sizing, moving, activation) into a string and keeps the last 6 of each per
++    // window, for a diagnostics page. MOZ_LOG=WindowsEvent still logs them when asked for.
++    bool recordInAboutPage = false;
+     bool writeToWindowsLog;
+     if (isPreCall) {
+       writeToWindowsLog = MOZ_LOG_TEST(gWindowsEventLog, targetLogLevel);
