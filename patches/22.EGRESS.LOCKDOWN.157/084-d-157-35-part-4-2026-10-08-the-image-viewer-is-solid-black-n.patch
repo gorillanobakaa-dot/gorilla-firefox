@@ -1,0 +1,52 @@
+# Gorilla 157 privacy cut
+# D-157-35 part 4 (2026-10-08): the image viewer is solid black (no 128 px 1x-only noise textures, drawn upscaled at 200 % scaling) and about:logo is gone (it only showed the master logo, fitted to the window and upscaled 1.16x at 200 %). Found by visual RT-UPSCALE on build 28. Made by working scripts/image_viewer_black_no_about_logo_d157_35d.py.
+# Files: docshell/base/nsAboutRedirector.cpp, docshell/build/components.conf, layout/style/TopLevelImageDocument.css
+
+diff --git a/docshell/base/nsAboutRedirector.cpp b/docshell/base/nsAboutRedirector.cpp
+index 0320b1ee3d..8d95f1501e 100644
+--- a/docshell/base/nsAboutRedirector.cpp
++++ b/docshell/base/nsAboutRedirector.cpp
+@@ -143,8 +143,7 @@ static const RedirEntry kRedirMap[] = {
+          nsIAboutModule::IS_SECURE_CHROME_UI},
+     {"logging", "chrome://global/content/aboutLogging/aboutLogging.html",
+      nsIAboutModule::ALLOW_SCRIPT},
+-    {"logo", "chrome://branding/content/about-logo.png",
+-     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT},
++    // GORILLA D-157-35: no about:logo (it only showed the master logo, upscaled at 200 % scaling)
+     {"memory", "chrome://global/content/aboutMemory.xhtml",
+      nsIAboutModule::ALLOW_SCRIPT},
+     {"certificate", "chrome://global/content/certviewer/certviewer.html",
+diff --git a/docshell/build/components.conf b/docshell/build/components.conf
+index 5f8cd788b1..d7eda346ba 100644
+--- a/docshell/build/components.conf
++++ b/docshell/build/components.conf
+@@ -17,7 +17,6 @@ about_pages = [
+     'httpsonlyerror',
+     'license',
+     'logging',
+-    'logo',
+     'memory',
+     'mozilla',
+     'neterror',
+diff --git a/layout/style/TopLevelImageDocument.css b/layout/style/TopLevelImageDocument.css
+index c34683a061..6c1fa6c30f 100644
+--- a/layout/style/TopLevelImageDocument.css
++++ b/layout/style/TopLevelImageDocument.css
+@@ -16,12 +16,15 @@
+     color: #eee;
+     /* The background-attachment is fixed to stop an ugly white gutter
+        from appearing when the document is overscrolled. */
+-    background: url("chrome://global/skin/media/imagedoc-darknoise.png") fixed;
++    /* GORILLA D-157-35: solid black, the Gorilla look; the 128 px noise texture had no 2x version and was drawn
++       upscaled at 200 % scaling */
++    background: #000000;
+   }
+ 
+   img.transparent {
+     color: #222;
+-    background: hsl(0, 0%, 90%) url("chrome://global/skin/media/imagedoc-lightnoise.png");
++    /* GORILLA D-157-35: transparent pictures on the same black, no 1x-only texture */
++    background: #000000;
+   }
+ 
+   img {
