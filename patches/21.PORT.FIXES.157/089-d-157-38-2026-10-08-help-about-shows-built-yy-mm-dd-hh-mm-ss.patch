@@ -1,0 +1,64 @@
+# Gorilla 157 port fix
+# D-157-38 (2026-10-08): Help > About shows 'built YY:MM:DD:HH:MM:SS' from the build's own BuildID
+# Files: browser/base/content/aboutDialog.js, browser/locales/en-US/browser/aboutDialog.ftl
+
+diff --git a/browser/base/content/aboutDialog.js b/browser/base/content/aboutDialog.js
+index 86f8f0584f..a5fc845c92 100644
+--- a/browser/base/content/aboutDialog.js
++++ b/browser/base/content/aboutDialog.js
+@@ -51,6 +51,11 @@ function init() {
+     ["base-nightly", "aboutDialog-version-nightly"],
+     ["base-arch", "aboutdialog-version-arch"],
+     ["base-arch-nightly", "aboutdialog-version-arch-nightly"],
++    // GORILLA D-157-38: the same lines with the build stamp
++    ["base-gorilla", "aboutDialog-version-gorilla"],
++    ["base-nightly-gorilla", "aboutDialog-version-nightly-gorilla"],
++    ["base-arch-gorilla", "aboutdialog-version-arch-gorilla"],
++    ["base-arch-nightly-gorilla", "aboutdialog-version-arch-nightly-gorilla"],
+   ]);
+   let versionIdKey = "base";
+   let versionAttributes = {
+@@ -78,6 +83,21 @@ function init() {
+     document.getElementById("communityDesc").hidden = true;
+   }
+ 
++  // GORILLA D-157-38 (2026-10-08): every version line also says when this build was made, from the build's own
++  // BuildID (application.ini; the harness records and checks the same number): "built YY:MM:DD:HH:MM:SS".
++  let buildStamp = Services.appinfo.appBuildID;
++  if (/^\d{14}$/.test(buildStamp)) {
++    versionAttributes.built = [
++      buildStamp.slice(2, 4),
++      buildStamp.slice(4, 6),
++      buildStamp.slice(6, 8),
++      buildStamp.slice(8, 10),
++      buildStamp.slice(10, 12),
++      buildStamp.slice(12, 14),
++    ].join(":");
++    versionIdKey += "-gorilla";
++  }
++
+   // Use Fluent arguments for append version and the architecture of the build
+   let versionField = document.getElementById("version");
+ 
+diff --git a/browser/locales/en-US/browser/aboutDialog.ftl b/browser/locales/en-US/browser/aboutDialog.ftl
+index 8204d652fc..cddecd5dd7 100644
+--- a/browser/locales/en-US/browser/aboutDialog.ftl
++++ b/browser/locales/en-US/browser/aboutDialog.ftl
+@@ -89,6 +89,17 @@ bottom-links-privacy = Privacy Notice
+ #   $bits (Number): bits of the architecture (32 or 64)
+ aboutDialog-version = { $version } ({ $bits }-bit)
+ 
++## GORILLA D-157-38 (2026-10-08): the version line with the build stamp, taken from the build's own BuildID.
++## Variables:
++##   $built (String): when this build was made, YY:MM:DD:HH:MM:SS, e.g. 26:10:08:10:37:25
++
++aboutDialog-version-gorilla = { $version } ({ $bits }-bit) built { $built }
++aboutDialog-version-nightly-gorilla = { $version } ({ $isodate }) ({ $bits }-bit) built { $built }
++aboutdialog-version-arch-gorilla = { $version } ({ $arch }) built { $built }
++aboutdialog-version-arch-nightly-gorilla = { $version } ({ $isodate }) ({ $arch }) built { $built }
++
++##
++
+ # Example of resulting string: 66.0a1 (2019-01-16) (64-bit)
+ # Variables:
+ #   $version (String): version of Firefox for Nightly builds, e.g. 66.0a1
