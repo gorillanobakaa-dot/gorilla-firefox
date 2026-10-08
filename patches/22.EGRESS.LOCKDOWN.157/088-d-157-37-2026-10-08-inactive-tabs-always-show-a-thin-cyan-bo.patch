@@ -1,0 +1,30 @@
+# Gorilla 157 privacy cut
+# D-157-37 (2026-10-08): inactive tabs always show a thin cyan border; the hover-only outline (80 % opacity, repaint on every pointer pass) is gone
+# Files: browser/themes/shared/master-redirect.css
+
+diff --git a/browser/themes/shared/master-redirect.css b/browser/themes/shared/master-redirect.css
+index 44cde08e3b..5d2350d12c 100644
+--- a/browser/themes/shared/master-redirect.css
++++ b/browser/themes/shared/master-redirect.css
+@@ -190,13 +190,16 @@
+     color: #00FFFF !important;
+ }
+ 
+-/* --- INACTIVE TAB HOVER: GPU ONLY --- */
+-/* No borders, no padding changes. Just pure outline and GPU opacity */
+-.tabbrowser-tab:not([selected]):hover .tab-background {
++/* --- INACTIVE TAB: THIN CYAN BORDER, ALWAYS (owner 2026-10-08) --- */
++/* Drawn as part of the tab strip's normal paint and never changed by the pointer: the old hover-only outline showed
++   the border only under the mouse and made each tab restyle and repaint whenever the pointer crossed it. The
++   !important values also hold the upstream hover look (background tint, transparent outline) still. */
++.tabbrowser-tab:not([selected]) .tab-background {
+     background-color: transparent !important;
+-    outline: 1px solid #00FFFF !important; /* Pure Cyan outline, 0 CPU reflow */
++    outline: 1px solid #00FFFF !important;
+     outline-offset: -1px !important;
+-    opacity: 0.8 !important;               /* Handled natively by HD4000 ROP */
++    box-shadow: none !important;
++    opacity: 1 !important;
+ }
+ 
+ /* --- URL BAR OVERRIDES --- */
