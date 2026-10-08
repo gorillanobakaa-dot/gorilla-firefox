@@ -1,0 +1,529 @@
+# Gorilla 157 privacy cut
+# D-157-40: hidden about: pages - 16 removed (fingerprintingprotection, asrouter, messagepreview, referrals, blocked, restricted, crash x4 + crashcontentjava, settings, performance, profile switcher x4); user-characteristics collection cut; parental controls never enforced (null-deref fix); no profile selector at start-up; no guessed DNS lookup on the error page; Nightly inference line gone
+# Files: browser/app/profile/firefox.js, browser/components/about/AboutRedirector.cpp, browser/components/about/components.conf, docshell/base/CanonicalBrowsingContext.cpp, docshell/base/nsAboutRedirector.cpp, docshell/build/components.conf, modules/libpref/init/all.js, toolkit/actors/NetErrorChild.sys.mjs, toolkit/components/resistfingerprinting/nsRFPService.cpp, toolkit/profile/nsToolkitProfileService.cpp
+
+diff --git a/browser/app/profile/firefox.js b/browser/app/profile/firefox.js
+index c216ad70b0..69caae8b09 100644
+--- a/browser/app/profile/firefox.js
++++ b/browser/app/profile/firefox.js
+@@ -3832,7 +3832,8 @@ pref("widget.support-xdg-config", true, locked);
+ pref("browser.contentsharing.enabled", false);
+ 
+ // Preferences for the Firefox Referral program #2051647).
+-pref("browser.referrals.enabled", false);
++// GORILLA D-157-40 (2026-10-08): locked: no referral menus, no about:referrals, no referral code to firefox.com.
++pref("browser.referrals.enabled", false, locked);
+ // Set on first run after the referral code has been submitted via the
+ // referrals ping.
+ pref("browser.referrals.pingSubmitted", false);
+@@ -4198,3 +4199,9 @@ pref("remote.experimental.dynamicstart.enabled", false, locked);
+ pref("toolkit.telemetry.dap.leader.url", "", locked);
+ pref("toolkit.telemetry.dap.helper.url", "", locked);
+ // -- end GORILLA 2026-10-03: BATCH --
++
++// -- GORILLA 2026-10-08: hidden about: pages (D-157-40) --
++// The console of Mozilla's in-browser messaging (about:asrouter) is gone; its switch also gated the message
++// preview page's helper and a set of test messages.
++pref("browser.newtabpage.activity-stream.asrouter.devtoolsEnabled", false, locked);
++// -- end GORILLA 2026-10-08 --
+diff --git a/browser/components/about/AboutRedirector.cpp b/browser/components/about/AboutRedirector.cpp
+index be2f078edf..2d0bc300a0 100644
+--- a/browser/components/about/AboutRedirector.cpp
++++ b/browser/components/about/AboutRedirector.cpp
+@@ -17,8 +17,6 @@
+ #include "mozilla/dom/ContentChild.h"
+ #include "mozilla/browser/NimbusFeatures.h"
+ 
+-#define REFERRALS_ENABLED_PREF "browser.referrals.enabled"
+-#define PROFILES_ENABLED_PREF "browser.profiles.enabled"
+ #define ABOUT_WELCOME_CHROME_URL \
+   "chrome://browser/content/aboutwelcome/aboutwelcome.html"
+ #define ABOUT_HOME_URL "about:home"
+@@ -48,15 +46,11 @@ struct RedirEntry {
+ static const RedirEntry kRedirMap[] = {
+     // GORILLA UNLEASHED - PHYSICAL LOCK: no AI window (D-157-00): about:aichatcontent removed (aiwindow is excised).
+     // GORILLA UNLEASHED - PHYSICAL LOCK: no AI window (D-157-00): about:aitab removed (aiwindow is excised).
+-    {"asrouter", "chrome://browser/content/asrouter/asrouter-admin.html",
+-     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+-         nsIAboutModule::URI_CAN_LOAD_IN_PRIVILEGEDABOUT_PROCESS |
+-         nsIAboutModule::URI_MUST_LOAD_IN_CHILD | nsIAboutModule::ALLOW_SCRIPT |
+-         nsIAboutModule::HIDE_FROM_ABOUTABOUT},
+-    {"blocked", "chrome://browser/content/blockedSite.xhtml",
+-     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+-         nsIAboutModule::URI_CAN_LOAD_IN_CHILD | nsIAboutModule::ALLOW_SCRIPT |
+-         nsIAboutModule::HIDE_FROM_ABOUTABOUT},
++    // GORILLA D-157-40 (2026-10-08): no about:asrouter. It was the console of Mozilla's in-browser messaging
++    // (recommendation pop-ups, spotlights, onboarding): list, force-show and edit messages, switch message sources.
++    // Its switch is locked off (firefox.js: ...asrouter.devtoolsEnabled).
++    // GORILLA D-157-40 (2026-10-08): no about:blocked. It was the Safe Browsing warning ("deceptive site"), shown
++    // when Google's block lists flag a page; Safe Browsing is locked off in Gorilla and its lists are never fetched.
+     {"certerror", "chrome://global/content/aboutNetError.html",
+      nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+          nsIAboutModule::URI_CAN_LOAD_IN_CHILD | nsIAboutModule::ALLOW_SCRIPT |
+@@ -86,12 +80,8 @@ static const RedirEntry kRedirMap[] = {
+          nsIAboutModule::URI_CAN_LOAD_IN_PRIVILEGEDABOUT_PROCESS |
+          nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+          nsIAboutModule::IS_SECURE_CHROME_UI},
+-    {"messagepreview",
+-     "chrome://browser/content/messagepreview/messagepreview.html",
+-     nsIAboutModule::URI_MUST_LOAD_IN_CHILD |
+-         nsIAboutModule::URI_CAN_LOAD_IN_PRIVILEGEDABOUT_PROCESS |
+-         nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+-         nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::HIDE_FROM_ABOUTABOUT},
++    // GORILLA D-157-40 (2026-10-08): no about:messagepreview. A link carrying a whole message (?json=) staged it
++    // on the real surface, buttons and privileged actions included; it was Mozilla's marketing preview tool.
+     {"opentabs", "chrome://browser/content/tabbrowser/opentabs.html",
+      nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::IS_SECURE_CHROME_UI |
+          nsIAboutModule::HIDE_FROM_ABOUTABOUT},
+@@ -115,10 +105,8 @@ static const RedirEntry kRedirMap[] = {
+      nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+          nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::URI_MUST_LOAD_IN_CHILD |
+          nsIAboutModule::HIDE_FROM_ABOUTABOUT},
+-    {"referrals", "https://www.firefox.com/invite/",
+-     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+-         nsIAboutModule::URI_MUST_LOAD_IN_CHILD |
+-         nsIAboutModule::HIDE_FROM_ABOUTABOUT},
++    // GORILLA D-157-40 (2026-10-08): no about:referrals. It redirected to https://www.firefox.com/invite/ with a
++    // per-profile referral code (a lasting identifier) in the address; browser.referrals.enabled is locked off.
+     {"restartrequired", "chrome://browser/content/aboutRestartRequired.xhtml",
+      nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::HIDE_FROM_ABOUTABOUT},
+     // GORILLA UNLEASHED - PHYSICAL LOCK (D-157-00), 2026-10-04: about:rights
+@@ -133,9 +121,7 @@ static const RedirEntry kRedirMap[] = {
+     {"sessionrestore", "chrome://browser/content/aboutSessionRestore.xhtml",
+      nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::HIDE_FROM_ABOUTABOUT |
+          nsIAboutModule::IS_SECURE_CHROME_UI},
+-    {"settings", "chrome://browser/content/preferences/preferences.xhtml",
+-     nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::IS_SECURE_CHROME_UI |
+-         nsIAboutModule::HIDE_FROM_ABOUTABOUT},
++    // GORILLA D-157-40 (2026-10-08): no about:settings, a second name for about:preferences. One page, one name.
+     // GORILLA UNLEASHED - PHYSICAL LOCK: no AI window (D-157-00): about:smartformfillreview removed (aiwindow is excised).
+     // GORILLA UNLEASHED - PHYSICAL LOCK: no AI window (D-157-00): about:smartwindowtasks removed (aiwindow is excised).
+     {"tabcrashed", "chrome://browser/content/aboutTabCrashed.xhtml",
+@@ -158,29 +144,10 @@ static const RedirEntry kRedirMap[] = {
+          nsIAboutModule::URI_MUST_LOAD_IN_CHILD |
+          nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT},
+ #endif
+-#ifdef MOZ_SELECTABLE_PROFILES
+-    {"deleteprofile", "chrome://browser/content/profiles/delete-profile.html",
+-     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+-         nsIAboutModule::IS_SECURE_CHROME_UI |
+-         nsIAboutModule::URI_MUST_LOAD_IN_CHILD | nsIAboutModule::ALLOW_SCRIPT |
+-         nsIAboutModule::URI_CAN_LOAD_IN_PRIVILEGEDABOUT_PROCESS |
+-         nsIAboutModule::HIDE_FROM_ABOUTABOUT},
+-    {"editprofile", "chrome://browser/content/profiles/edit-profile.html",
+-     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+-         nsIAboutModule::IS_SECURE_CHROME_UI | nsIAboutModule::ALLOW_SCRIPT |
+-         nsIAboutModule::URI_MUST_LOAD_IN_CHILD |
+-         nsIAboutModule::URI_CAN_LOAD_IN_PRIVILEGEDABOUT_PROCESS |
+-         nsIAboutModule::HIDE_FROM_ABOUTABOUT},
+-    {"newprofile", "chrome://browser/content/profiles/new-profile.html",
+-     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+-         nsIAboutModule::IS_SECURE_CHROME_UI | nsIAboutModule::ALLOW_SCRIPT |
+-         nsIAboutModule::URI_MUST_LOAD_IN_CHILD |
+-         nsIAboutModule::URI_CAN_LOAD_IN_PRIVILEGEDABOUT_PROCESS |
+-         nsIAboutModule::HIDE_FROM_ABOUTABOUT},
+-    {"profilemanager", "chrome://browser/content/profiles/profiles.html",
+-     nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::IS_SECURE_CHROME_UI |
+-         nsIAboutModule::HIDE_FROM_ABOUTABOUT},
+-#endif
++    // GORILLA D-157-40 (2026-10-08): no about:newprofile, editprofile, deleteprofile, profilemanager. They are
++    // the new profile switcher, off in Gorilla (browser.profiles.enabled locked false): they opened blank. In
++    // Firefox their theme picker fetched from addons.mozilla.org and a tour loaded Mozilla CDN images. The
++    // switcher never opens at start-up either (nsToolkitProfile::GetShowProfileSelector). about:profiles stays.
+ };
+ 
+ static nsAutoCString GetAboutModuleName(nsIURI* aURI) {
+@@ -207,27 +174,6 @@ AboutRedirector::NewChannel(nsIURI* aURI, nsILoadInfo* aLoadInfo,
+ 
+   nsAutoCString path = GetAboutModuleName(aURI);
+ 
+-  if (path.EqualsASCII("referrals") &&
+-      !mozilla::Preferences::GetBool(REFERRALS_ENABLED_PREF, false)) {
+-    return NS_ERROR_NOT_AVAILABLE;
+-  }
+-
+-  if ((path.EqualsASCII("editprofile") || path.EqualsASCII("deleteprofile") ||
+-       path.EqualsASCII("newprofile")) &&
+-      !mozilla::Preferences::GetBool(PROFILES_ENABLED_PREF, false)) {
+-    return NS_ERROR_NOT_AVAILABLE;
+-  }
+-
+-  if (path.EqualsASCII("profilemanager") &&
+-      !mozilla::Preferences::GetBool(PROFILES_ENABLED_PREF, false)) {
+-    bool startingUp;
+-    nsCOMPtr<nsIAppStartup> appStartup(
+-        mozilla::components::AppStartup::Service());
+-    if (NS_FAILED(appStartup->GetStartingUp(&startingUp)) || !startingUp) {
+-      return NS_ERROR_NOT_AVAILABLE;
+-    }
+-  }
+-
+   for (auto& redir : kRedirMap) {
+     if (!strcmp(path.get(), redir.id)) {
+       nsAutoCString url;
+@@ -241,15 +187,6 @@ AboutRedirector::NewChannel(nsIURI* aURI, nsILoadInfo* aLoadInfo,
+         }
+       }
+ 
+-      if (path.EqualsLiteral("referrals")) {
+-        nsAutoCString query;
+-        if (nsresult rv = aURI->GetQuery(query); NS_SUCCEEDED(rv)) {
+-          url.AssignASCII(nsPrintfCString("%s?%s", redir.url, query.get()));
+-        } else {
+-          url.AssignASCII(redir.url);
+-        }
+-      }
+-
+       // fall back to the specified url in the map
+       if (url.IsEmpty()) {
+         url.AssignASCII(redir.url);
+diff --git a/browser/components/about/components.conf b/browser/components/about/components.conf
+index 3ad92cd9ea..a9c8fa87b1 100644
+--- a/browser/components/about/components.conf
++++ b/browser/components/about/components.conf
+@@ -5,8 +5,7 @@
+ # GORILLA UNLEASHED - PHYSICAL LOCK: no AI window (D-157-00): aichatcontent, aitab, smartformfillreview and
+ # smartwindowtasks are not registered (aiwindow is excised).
+ pages = [
+-    'asrouter',
+-    'blocked',
++    # GORILLA D-157-40: no about:asrouter, about:blocked
+     'certerror',
+     'downloads',
+     'framecrashed',
+@@ -14,7 +13,7 @@ pages = [
+     'logins',
+     'loginsimportreport',
+     'firefoxview',
+-    'messagepreview',
++    # GORILLA D-157-40: no about:messagepreview
+     'opentabs',
+     'policies',
+     'preferences',
+@@ -22,12 +21,12 @@ pages = [
+     'protections',
+     # GORILLA D-157-36: no about:profiling
+     'reader',
+-    'referrals',
++    # GORILLA D-157-40: no about:referrals
+     'restartrequired',
+     'rights',
+     'robots',
+     'sessionrestore',
+-    'settings',
++    # GORILLA D-157-40: no about:settings (alias of about:preferences)
+     'tabcrashed',
+     'unloads',
+     'welcome',
+@@ -37,13 +36,7 @@ pages = [
+ if buildconfig.substs.get('MOZ_NORMANDY'):
+     pages += ['studies']
+ 
+-if buildconfig.substs.get('MOZ_SELECTABLE_PROFILES'):
+-    pages += [
+-        'deleteprofile',
+-        'editprofile',
+-        'profilemanager',
+-        'newprofile',
+-    ]
++# GORILLA D-157-40: no about:deleteprofile, editprofile, profilemanager, newprofile (the profile switcher is off)
+ 
+ Classes = [
+     {
+diff --git a/docshell/base/CanonicalBrowsingContext.cpp b/docshell/base/CanonicalBrowsingContext.cpp
+index 7d9ac5fbcc..bc1cc01202 100644
+--- a/docshell/base/CanonicalBrowsingContext.cpp
++++ b/docshell/base/CanonicalBrowsingContext.cpp
+@@ -3835,19 +3835,9 @@ bool CanonicalBrowsingContext::CanOpenModalPicker() {
+ }
+ 
+ bool CanonicalBrowsingContext::ShouldEnforceParentalControls() {
+-  if (StaticPrefs::security_restrict_to_adults_always()) {
+-    return true;
+-  }
+-  if (StaticPrefs::security_restrict_to_adults_respect_platform()) {
+-    bool enabled;
+-    nsCOMPtr<nsIParentalControlsService> pcs =
+-        do_CreateInstance("@mozilla.org/parental-controls-service;1");
+-    nsresult rv = pcs->GetParentalControlsEnabled(&enabled);
+-    if (NS_FAILED(rv)) {
+-      return false;
+-    }
+-    return enabled;
+-  }
++  // GORILLA D-157-40 (2026-10-08): Gorilla is built --disable-parental-controls and has no about:restricted, so
++  // nothing is enforced. Upstream also crashed the browser here when security.restrict_to_adults.respect_platform
++  // was set: in a build without parental controls the service is null and was used unchecked.
+   return false;
+ }
+ 
+diff --git a/docshell/base/nsAboutRedirector.cpp b/docshell/base/nsAboutRedirector.cpp
+index 4d6fa1b214..4e62c48b99 100644
+--- a/docshell/base/nsAboutRedirector.cpp
++++ b/docshell/base/nsAboutRedirector.cpp
+@@ -27,55 +27,10 @@ struct RedirEntry {
+   uint32_t flags;
+ };
+ 
+-class CrashChannel final : public nsBaseChannel {
+- public:
+-  explicit CrashChannel(nsIURI* aURI) { SetURI(aURI); }
+-
+-  nsresult OpenContentStream(bool async, nsIInputStream** stream,
+-                             nsIChannel** channel) override {
+-    nsAutoCString spec;
+-    mURI->GetSpec(spec);
+-
+-    if (spec.EqualsASCII("about:crashparent") && XRE_IsParentProcess()) {
+-      MOZ_CRASH("Crash via about:crashparent");
+-    }
+-
+-    if (spec.EqualsASCII("about:crashgpu") && XRE_IsParentProcess()) {
+-      if (auto* gpu = mozilla::gfx::GPUProcessManager::Get()) {
+-        gpu->CrashProcess();
+-      }
+-    }
+-
+-    if (spec.EqualsASCII("about:crashcontent") && XRE_IsContentProcess()) {
+-      MOZ_CRASH("Crash via about:crashcontent");
+-    }
+-
+-#ifdef MOZ_WIDGET_ANDROID
+-    if (spec.EqualsASCII("about:crashcontentjava") && XRE_IsContentProcess()) {
+-      mozilla::java::GeckoAppShell::CrashByUncaughtException();
+-    }
+-#endif
+-
+-    if (spec.EqualsASCII("about:crashextensions") && XRE_IsParentProcess()) {
+-      using ContentParent = mozilla::dom::ContentParent;
+-      nsTArray<RefPtr<ContentParent>> toKill;
+-      for (auto* cp : ContentParent::AllProcesses(ContentParent::eLive)) {
+-        if (cp->GetRemoteType().IsExtension()) {
+-          toKill.AppendElement(cp);
+-        }
+-      }
+-      for (auto& cp : toKill) {
+-        cp->KillHard("Killed via about:crashextensions");
+-      }
+-    }
+-
+-    NS_WARNING("Unhandled about:crash* URI or wrong process");
+-    return NS_ERROR_NOT_IMPLEMENTED;
+-  }
+-
+- protected:
+-  virtual ~CrashChannel() = default;
+-};
++// GORILLA D-157-40 (2026-10-08): no about:crashparent, crashcontent, crashgpu, crashextensions (or Android's
++// crashcontentjava). One typed address killed the whole browser, a tab's process, the GPU process or every add-on
++// (uBlock Origin included); they exist for Mozilla's test suites, and Gorilla is built --disable-tests and
++// --disable-crashreporter. The channel that did the killing is gone with them.
+ 
+ /*
+   Entries which do not have URI_SAFE_FOR_UNTRUSTED_CONTENT will run with chrome
+@@ -121,12 +76,10 @@ static const RedirEntry kRedirMap[] = {
+     {"credits", "chrome://global/content/license.html",
+      nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+          nsIAboutModule::IS_SECURE_CHROME_UI},
+-    {"fingerprintingprotection",
+-     "chrome://global/content/usercharacteristics/usercharacteristics.html",
+-     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+-         nsIAboutModule::HIDE_FROM_ABOUTABOUT | nsIAboutModule::ALLOW_SCRIPT |
+-         nsIAboutModule::URI_MUST_LOAD_IN_CHILD |
+-         nsIAboutModule::URI_CAN_LOAD_IN_PRIVILEGEDABOUT_PROCESS},
++    // GORILLA D-157-40 (2026-10-08): no about:fingerprintingprotection. It was the hidden measuring page of
++    // Mozilla's "user-characteristics" study: loaded in an invisible browser once per study wave, it fingerprinted this
++    // installation (graphics, fonts, audio, codecs, screen, CPU, keyboard, WebRTC addresses) for a ping to Mozilla.
++    // The collection is cut at source (nsRFPService.cpp) and its prefs are locked off (all.js).
+ #ifdef MOZ_WIDGET_ANDROID
+     {"home", "about:blank",
+      nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+@@ -173,16 +126,12 @@ static const RedirEntry kRedirMap[] = {
+          nsIAboutModule::URI_CAN_LOAD_IN_PRIVILEGEDABOUT_PROCESS |
+          nsIAboutModule::IS_SECURE_CHROME_UI},
+ #endif
+-    {"performance", "about:processes",
+-     nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::IS_SECURE_CHROME_UI |
+-         nsIAboutModule::HIDE_FROM_ABOUTABOUT},
++    // GORILLA D-157-40 (2026-10-08): no about:performance, a leftover second name for about:processes.
+     {"processes", "chrome://global/content/aboutProcesses.html",
+      nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::IS_SECURE_CHROME_UI},
+-    {"restricted",
+-     "chrome://global/content/aboutRestricted/aboutRestricted.html",
+-     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+-         nsIAboutModule::URI_CAN_LOAD_IN_CHILD | nsIAboutModule::ALLOW_SCRIPT |
+-         nsIAboutModule::HIDE_FROM_ABOUTABOUT},
++    // GORILLA D-157-40 (2026-10-08): no about:restricted. It was the "Restricted Content" page of parental
++    // controls, which Gorilla is built without (--disable-parental-controls); nothing enforces them now
++    // (CanonicalBrowsingContext::ShouldEnforceParentalControls).
+     // about:serviceworkers always wants to load in the parent process because
+     // the only place nsIServiceWorkerManager has any data is in the parent
+     // process.
+@@ -223,21 +172,8 @@ static const RedirEntry kRedirMap[] = {
+      nsIAboutModule::ALLOW_SCRIPT},
+     {"webrtc", "chrome://global/content/aboutwebrtc/aboutWebrtc.html",
+      nsIAboutModule::ALLOW_SCRIPT},
+-    {"crashparent", "about:blank", nsIAboutModule::HIDE_FROM_ABOUTABOUT},
+-    {"crashcontent", "about:blank",
+-     nsIAboutModule::HIDE_FROM_ABOUTABOUT |
+-         nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+-         nsIAboutModule::URI_CAN_LOAD_IN_CHILD |
+-         nsIAboutModule::URI_MUST_LOAD_IN_CHILD},
+-#ifdef MOZ_WIDGET_ANDROID
+-    {"crashcontentjava", "about:blank",
+-     nsIAboutModule::HIDE_FROM_ABOUTABOUT |
+-         nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+-         nsIAboutModule::URI_CAN_LOAD_IN_CHILD |
+-         nsIAboutModule::URI_MUST_LOAD_IN_CHILD},
+-#endif
+-    {"crashgpu", "about:blank", nsIAboutModule::HIDE_FROM_ABOUTABOUT},
+-    {"crashextensions", "about:blank", nsIAboutModule::HIDE_FROM_ABOUTABOUT}};
++    // GORILLA D-157-40 (2026-10-08): the crash pages are gone (see the note above the table).
++};
+ 
+ NS_IMETHODIMP
+ nsAboutRedirector::NewChannel(nsIURI* aURI, nsILoadInfo* aLoadInfo,
+@@ -253,25 +189,6 @@ nsAboutRedirector::NewChannel(nsIURI* aURI, nsILoadInfo* aLoadInfo,
+   nsCOMPtr<nsIIOService> ioService = do_GetIOService(&rv);
+   NS_ENSURE_SUCCESS(rv, rv);
+ 
+-  if (path.EqualsASCII("crashparent") || path.EqualsASCII("crashcontent") ||
+-      path.EqualsASCII("crashgpu") || path.EqualsASCII("crashextensions")
+-#ifdef MOZ_WIDGET_ANDROID
+-      || path.EqualsASCII("crashcontentjava")
+-#endif
+-  ) {
+-    bool isExternal;
+-    aLoadInfo->GetLoadTriggeredFromExternal(&isExternal);
+-    if (isExternal || !aLoadInfo->TriggeringPrincipal() ||
+-        !aLoadInfo->TriggeringPrincipal()->IsSystemPrincipal()) {
+-      return NS_ERROR_NOT_AVAILABLE;
+-    }
+-
+-    nsCOMPtr<nsIChannel> channel = new CrashChannel(aURI);
+-    channel->SetLoadInfo(aLoadInfo);
+-    channel.forget(aResult);
+-    return NS_OK;
+-  }
+-
+   if (path.EqualsASCII("config") &&
+       !mozilla::Preferences::GetBool(ABOUT_CONFIG_ENABLED_PREF, true)) {
+     return NS_ERROR_NOT_AVAILABLE;
+diff --git a/docshell/build/components.conf b/docshell/build/components.conf
+index ed68c2c351..0862b24569 100644
+--- a/docshell/build/components.conf
++++ b/docshell/build/components.conf
+@@ -8,12 +8,9 @@ about_pages = [
+     'certificate',
+     'checkerboard',
+     'config',
+-    'crashcontent',
+-    'crashparent',
+-    'crashgpu',
+-    'crashextensions',
++    # GORILLA D-157-40: no about:crashcontent, crashparent, crashgpu, crashextensions
+     'credits',
+-    'fingerprintingprotection',
++    # GORILLA D-157-40: no about:fingerprintingprotection
+     'httpsonlyerror',
+     'license',
+     # GORILLA D-157-36: no about:logging
+@@ -21,9 +18,9 @@ about_pages = [
+     'mozilla',
+     'neterror',
+     'networking',
+-    'performance',
++    # GORILLA D-157-40: no about:performance (alias of about:processes)
+     'processes',
+-    'restricted',
++    # GORILLA D-157-40: no about:restricted
+     'serviceworkers',
+     'srcdoc',
+     'support',
+@@ -43,7 +40,7 @@ if buildconfig.substs['MOZ_WIDGET_TOOLKIT'] != 'android':
+     about_pages.append('pdf')
+     # GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): about:translations removed
+ if buildconfig.substs['MOZ_WIDGET_TOOLKIT'] == 'android':
+-    about_pages.append('crashcontentjava')
++    # GORILLA D-157-40: no about:crashcontentjava
+     about_pages.append('home')
+ if buildconfig.substs['MOZ_WIDGET_TOOLKIT'] == 'windows':
+     about_pages.append('third-party')
+@@ -51,8 +48,8 @@ if buildconfig.substs['MOZ_WIDGET_TOOLKIT'] == 'windows':
+ # GORILLA D-157-36: no about:glean
+ if buildconfig.substs['MOZ_WIDGET_TOOLKIT'] != 'android' and buildconfig.substs['MOZ_WIDGET_TOOLKIT'] != 'windows':
+     about_pages.append('webauthn')
+-if defined('NIGHTLY_BUILD'):
+-    about_pages.append('inference')
++# GORILLA D-157-40: about:inference is excised (nsAboutRedirector.cpp); the Nightly-only append that still named it
++# is gone too.
+ 
+ Headers = ['/docshell/build/nsDocShellModule.h']
+ 
+diff --git a/modules/libpref/init/all.js b/modules/libpref/init/all.js
+index 4d744684af..484c22939b 100644
+--- a/modules/libpref/init/all.js
++++ b/modules/libpref/init/all.js
+@@ -591,10 +591,11 @@ pref("toolkit.telemetry.user_characteristics_ping.current_version", 0);
+ pref("toolkit.telemetry.user_characteristics_ping.last_version_sent", 0);
+ // if a user wants to disable this type of ping explicitly, set this to true
+ // firefox/mozilla will not modify this value.
+-pref("toolkit.telemetry.user_characteristics_ping.opt-out", false);
++// GORILLA D-157-40 (2026-10-08): opted out for good; the collection is also cut at source (nsRFPService.cpp).
++pref("toolkit.telemetry.user_characteristics_ping.opt-out", true, locked);
+ // if a user wants to send a single ping of this type, they can set it
+ // to true. It will be set to false again after a successfull ping.
+-pref("toolkit.telemetry.user_characteristics_ping.send-once", false);
++pref("toolkit.telemetry.user_characteristics_ping.send-once", false, locked);
+ // A unique identifier for the user characteristics ping. This is not the same as
+ // the telemetry client id (which is not sent in this ping), it is cleared when a
+ // user opts-out of telemetry, it is set upon first telemetry submission
+diff --git a/toolkit/actors/NetErrorChild.sys.mjs b/toolkit/actors/NetErrorChild.sys.mjs
+index 75bcbabcf3..48bde7d9d1 100644
+--- a/toolkit/actors/NetErrorChild.sys.mjs
++++ b/toolkit/actors/NetErrorChild.sys.mjs
+@@ -125,6 +125,12 @@ export class NetErrorChild extends RemotePageChild {
+   }
+ 
+   RPMCheckAlternateHostAvailable() {
++    // GORILLA D-157-40 (2026-10-08): no guessed lookups. On "server not found" for a one-word address the page
++    // asked the DNS resolver for a guessed name (www.<word>.com) on its own, telling the resolver a name the user
++    // never typed. The user can still type the full address.
++    if (true) {
++      return;
++    }
+     const host = this.contentWindow.location.host.trim();
+ 
+     // Adapted from UrlbarUtils::looksLikeSingleWordHost
+diff --git a/toolkit/components/resistfingerprinting/nsRFPService.cpp b/toolkit/components/resistfingerprinting/nsRFPService.cpp
+index 6ce393b112..17739a2ea5 100644
+--- a/toolkit/components/resistfingerprinting/nsRFPService.cpp
++++ b/toolkit/components/resistfingerprinting/nsRFPService.cpp
+@@ -472,7 +472,8 @@ nsRFPService::Observe(nsISupports* aObject, const char* aTopic,
+   }
+ 
+   if (bitsetForUserCharacteristics == 0b111) {
+-    nsUserCharacteristics::MaybeSubmitPing();
++    // GORILLA D-157-40 (2026-10-08): no user-characteristics collection. Here it started, once per wave of Mozilla's
++    // study: an invisible browser loaded about:fingerprintingprotection and measured this machine for a ping.
+     // Set 4th bit to 1 to make sure bitset is never 0b111 again.
+     // This is to ensure that we only submit the ping once.
+     bitsetForUserCharacteristics |= 1 << 3;
+diff --git a/toolkit/profile/nsToolkitProfileService.cpp b/toolkit/profile/nsToolkitProfileService.cpp
+index bf884a1ce6..fdfc047a36 100644
+--- a/toolkit/profile/nsToolkitProfileService.cpp
++++ b/toolkit/profile/nsToolkitProfileService.cpp
+@@ -468,11 +468,9 @@ nsToolkitProfile::SetName(const nsACString& aName) {
+ 
+ NS_IMETHODIMP
+ nsToolkitProfile::GetShowProfileSelector(bool* aShowProfileSelector) {
+-#ifdef MOZ_SELECTABLE_PROFILES
+-  *aShowProfileSelector = mShowProfileSelector;
+-#else
++  // GORILLA D-157-40 (2026-10-08): the new profile switcher (about:profilemanager) is not registered in Gorilla, so
++  // a ShowSelector=1 in profiles.ini (an upstream Firefox profile) must not open it at start-up as a blank window.
+   *aShowProfileSelector = false;
+-#endif
+   return NS_OK;
+ }
+ 
