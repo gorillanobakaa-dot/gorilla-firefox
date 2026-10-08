@@ -1,0 +1,247 @@
+# Gorilla 157 privacy cut
+# About: pages sweep 2026-10-08: about:studies answers at the waiter (T-157-31-A); error card names the master Gorilla and no caption icon in native title bars (D-157-35 part 5); four Settings messages lost by 08.Look restored; seven doubled Fluent ids and the doubled -smart-window-brand-name term removed
+# Files: browser/base/content/sanitize_v2.xhtml, browser/locales/en-US/browser/aiWindow.ftl, browser/locales/en-US/browser/aiWindowContent.ftl, browser/locales/en-US/browser/browser.ftl, browser/locales/en-US/browser/ipProtection.ftl, browser/locales/en-US/browser/newtab/newtab.ftl, browser/locales/en-US/browser/preferences/preferences.ftl, browser/locales/en-US/browser/sidebar.ftl, toolkit/components/normandy/content/AboutPages.sys.mjs, toolkit/content/errors/net-error-illustrations.mjs, toolkit/locales/en-US/toolkit/branding/brandings.ftl, widget/windows/nsWindow.cpp
+
+diff --git a/browser/base/content/sanitize_v2.xhtml b/browser/base/content/sanitize_v2.xhtml
+index 9eb9554ba3..f381c15c40 100644
+--- a/browser/base/content/sanitize_v2.xhtml
++++ b/browser/base/content/sanitize_v2.xhtml
+@@ -34,6 +34,7 @@
+ 
+       <html:link rel="localization" href="branding/brand.ftl" />
+       <html:link rel="localization" href="browser/sanitize.ftl" />
++      <html:link rel="localization" href="toolkit/branding/brandings.ftl" />
+       <html:link rel="localization" href="browser/aiWindow.ftl" />
+     </linkset>
+ 
+diff --git a/browser/locales/en-US/browser/aiWindow.ftl b/browser/locales/en-US/browser/aiWindow.ftl
+index 02a59371e3..d63d66fabc 100644
+--- a/browser/locales/en-US/browser/aiWindow.ftl
++++ b/browser/locales/en-US/browser/aiWindow.ftl
+@@ -2,8 +2,6 @@
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ 
+--smart-window-brand-name = Gorilla AI
+-
+ ## Chrome
+ 
+ main-context-menu-open-link-new-smart-window =
+diff --git a/browser/locales/en-US/browser/aiWindowContent.ftl b/browser/locales/en-US/browser/aiWindowContent.ftl
+index 9605b3d38a..7d0ca5ad36 100644
+--- a/browser/locales/en-US/browser/aiWindowContent.ftl
++++ b/browser/locales/en-US/browser/aiWindowContent.ftl
+@@ -2,8 +2,6 @@
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ 
+--smart-window-brand-name = Gorilla AI
+-
+ smartwindow-messages-document-title = { -smart-window-brand-name } chat messages
+ 
+ ## Context chips in the chat content
+diff --git a/browser/locales/en-US/browser/browser.ftl b/browser/locales/en-US/browser/browser.ftl
+index 50a6b7a392..e21669a7c6 100644
+--- a/browser/locales/en-US/browser/browser.ftl
++++ b/browser/locales/en-US/browser/browser.ftl
+@@ -1669,10 +1669,6 @@ reduced-protection-infobar-reload-button = Reload
+ reduced-protection-infobar-never-show-button = Don’t show again
+     .accesskey = D
+ 
+-# GORILLA REPAIR 2026-07-31: messages required by FF154 code, grafted
+-# verbatim from the vanilla vault file (branding flows via -brand terms).
+-urlbar-result-explanation-last-visited-absolute-2 = Last visited { $date }
+-
+ # This explanation is used when the result is bookmarked. The date will be
+ # formatted as an absolute date like: "11 May", "11 May 2026"
+ # Variables:
+@@ -1693,12 +1689,6 @@ urlbar-result-explanation-last-visited-months-2 =
+         *[other] Last visited { $monthsAgo } months ago
+     }
+ 
+-# This explanation is used when the last-visited date is further in the past.
+-# The date will be formatted as an absolute date like: "11 May", "11 May 2026"
+-# Variables:
+-#   $date (string) - A localized absolute date string
+-urlbar-result-explanation-last-visited-relative-2 = Last visited { $date }
+-
+ # This explanation is used when the last-visited date is a small number of days
+ # in the past.
+ # Variables:
+diff --git a/browser/locales/en-US/browser/ipProtection.ftl b/browser/locales/en-US/browser/ipProtection.ftl
+index 4f8d82752b..1d163c8e3a 100644
+--- a/browser/locales/en-US/browser/ipProtection.ftl
++++ b/browser/locales/en-US/browser/ipProtection.ftl
+@@ -390,8 +390,3 @@ vpn-error-alert-body = Try again later.
+ 
+ ##
+ 
+-# GORILLA REPAIR: messages required by this Firefox version,
+-# grafted verbatim from the vanilla vault (branding flows via -brand terms).
+-ipprotection-locations-unavailable-label-1 = Unavailable
+-  .aria-label = Unavailable, disabled
+-
+diff --git a/browser/locales/en-US/browser/newtab/newtab.ftl b/browser/locales/en-US/browser/newtab/newtab.ftl
+index f6a32a2cb5..c8f2dc7615 100644
+--- a/browser/locales/en-US/browser/newtab/newtab.ftl
++++ b/browser/locales/en-US/browser/newtab/newtab.ftl
+@@ -1567,10 +1567,6 @@ newtab-stocks-menu-learn-more = Learn more
+ 
+ # GORILLA REPAIR: messages required by this Firefox version,
+ # grafted verbatim from the vanilla vault (branding flows via -brand terms).
+-newtab-custom-stories-personalized-checkbox =
+-  .label = Personalized stories based on your activity
+-newtab-custom-widget-picture-toggle =
+-  .label = Picture of the day
+ newtab-widget-lists-menu-button =
+     .aria-label = Lists options
+ 
+@@ -1757,9 +1753,6 @@ newtab-stocks-list-watchlist = Watchlist
+ # Context menu item that opens the stock search (by company name or ticker symbol).
+ newtab-stocks-menu-search-stocks = Search by name or symbol
+ 
+-# Context menu item linking to more information about the Stocks widget.
+-newtab-stocks-menu-learn-more = Learn more
+-
+ # Shown in the Stocks widget when its data could not be loaded.
+ newtab-stocks-error-not-available = Stock data is not available.
+ 
+diff --git a/browser/locales/en-US/browser/preferences/preferences.ftl b/browser/locales/en-US/browser/preferences/preferences.ftl
+index 612bd192d2..16f5fc64f4 100644
+--- a/browser/locales/en-US/browser/preferences/preferences.ftl
++++ b/browser/locales/en-US/browser/preferences/preferences.ftl
+@@ -409,6 +409,9 @@ preferences-contrast-control-off =
+ preferences-contrast-control-custom =
+     .label = Custom
+     .accesskey = C
++preferences-colors-manage-button2 =
++    .label = Manage colors
++    .accesskey = C
+ 
+ preferences-colors-manage-button =
+     .label = Manage Colors…
+@@ -873,6 +876,11 @@ browsing-use-full-keyboard-navigation =
+ browsing-search-on-start-typing =
+     .label = Search for text when you start typing
+     .accesskey = x
++settings-keyboard-shortcuts-group =
++    .label = Keyboard shortcuts
++    .description = Control how you move around and interact with { -brand-short-name }.
++settings-keyboard-shortcuts-customkeys-link =
++    .label = Customize keyboard shortcuts
+ 
+ settings-media-group =
+     .label = Media
+@@ -1285,6 +1293,8 @@ containers-external-links-check =
+ 
+ containers-settings-button2 =
+     .title = Gorilla Settings
++containers-remove-button3 =
++    .title = Delete
+ containers-remove-button2 =
+     .title = Remove
+ 
+diff --git a/browser/locales/en-US/browser/sidebar.ftl b/browser/locales/en-US/browser/sidebar.ftl
+index 8d7a7301ff..ae1d74e5dc 100644
+--- a/browser/locales/en-US/browser/sidebar.ftl
++++ b/browser/locales/en-US/browser/sidebar.ftl
+@@ -342,10 +342,6 @@ sidebar-widget-hide-sidebar2 =
+ # this area to pin them.
+ sidebar-pins-promo-text = Drag important Gorilla tabs here to keep them within reach
+ 
+-# Accessible label for the splitter used to resize the sidebar.
+-sidebar-resize-splitter =
+-  .aria-label = Resize sidebar
+-
+ # GORILLA REPAIR: messages required by this Firefox version,
+ # grafted verbatim from the vanilla vault (branding flows via -brand terms).
+ sidebar-bookmarks-title = Bookmarks
+diff --git a/toolkit/components/normandy/content/AboutPages.sys.mjs b/toolkit/components/normandy/content/AboutPages.sys.mjs
+index 0db9267457..21c496173e 100644
+--- a/toolkit/components/normandy/content/AboutPages.sys.mjs
++++ b/toolkit/components/normandy/content/AboutPages.sys.mjs
+@@ -43,6 +43,12 @@ ChromeUtils.defineLazyGetter(
+   () =>
+     new (class {
+       getMessagingSystemList() {
++        // GORILLA TECHNIQUE T-157-31-A (2026-10-08): Nimbus never starts (D-157-31), so its store is never ready;
++        //   there is nothing to list. Answer here instead of reading a store that never loads (about:studies
++        //   waited for all four of its values and stayed blank).
++        if (true) {
++          return [];
++        }
+         const debugEnabled = Services.prefs.getBoolPref("nimbus.debug");
+ 
+         // Do not include Firefox Labs. Those are shown on
+@@ -108,6 +114,12 @@ ChromeUtils.defineLazyGetter(
+        * content processes safely.
+        */
+       async getStudiesEnabled() {
++        // GORILLA TECHNIQUE T-157-31-A (2026-10-08): Normandy never initialises (PHYSICAL LOCK in Normandy.sys.mjs),
++        //   so RecipeRunner.initializedPromise never resolves and about:studies and about:support waited for ever.
++        //   Studies are never enabled in Gorilla: say so at once.
++        if (true) {
++          return false;
++        }
+         await lazy.RecipeRunner.initializedPromise.promise;
+         return lazy.RecipeRunner.enabled && lazy.gOptOutStudiesEnabled;
+       }
+diff --git a/toolkit/content/errors/net-error-illustrations.mjs b/toolkit/content/errors/net-error-illustrations.mjs
+index d785e4381a..31e7c893c3 100644
+--- a/toolkit/content/errors/net-error-illustrations.mjs
++++ b/toolkit/content/errors/net-error-illustrations.mjs
+@@ -2,12 +2,15 @@
+  * License, v. 2.0. If a copy of the MPL was not distributed with this
+  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+ 
++// GORILLA D-157-35 (2026-10-08): the error card draws its picture inside its own shadow root, where the theme's
++// master-icon override cannot reach; name the master Gorilla here (owner: about:telemetry, blocked by policy, showed
++// Mozilla's artwork).
+ export const NET_ERROR_ILLUSTRATIONS = {
+   noConnection: {
+-    src: "chrome://global/skin/illustrations/no-connection.svg",
++    src: "chrome://branding/content/about-logo.png",
+     className: "no-connection",
+   },
+   securityError: {
+-    src: "chrome://global/skin/illustrations/security-error.svg",
++    src: "chrome://branding/content/about-logo.png",
+   },
+ };
+diff --git a/toolkit/locales/en-US/toolkit/branding/brandings.ftl b/toolkit/locales/en-US/toolkit/branding/brandings.ftl
+index ea1e09e0a2..d99b256dff 100644
+--- a/toolkit/locales/en-US/toolkit/branding/brandings.ftl
++++ b/toolkit/locales/en-US/toolkit/branding/brandings.ftl
+@@ -58,8 +58,7 @@
+ # and kept in English.
+ -firefoxlabs-brand-name = Firefox Labs
+ 
+--smart-window-brand-name =
+-    { $plural-form ->
+-        [true] Smart Windows
+-       *[false] Smart Window
+-    }
++# GORILLA (2026-10-08): the 08.Look name, defined here once. aiWindow.ftl and aiWindowContent.ftl
++# defined it again, and Firefox kept whichever file loaded first: "Smart Window" in some places,
++# "Gorilla AI" in others, and an "Attempt to override an existing term" error each time.
++-smart-window-brand-name = Gorilla AI
+diff --git a/widget/windows/nsWindow.cpp b/widget/windows/nsWindow.cpp
+index f20add24ad..e2a825f527 100644
+--- a/widget/windows/nsWindow.cpp
++++ b/widget/windows/nsWindow.cpp
+@@ -1170,6 +1170,15 @@ nsresult nsWindow::Create(nsIWidget* aParent, const LayoutDeviceIntRect& aRect,
+     SetSmallIcon(icon);
+   }
+ 
++  // GORILLA D-157-35 (2026-10-08): no small Gorilla in a native title bar. Windows with the system caption (the
++  // Library, Page Info, dialogs) drew the program icon at 16 px beside their title. The icon stays set on the window,
++  // so the taskbar, Alt+Tab and the system menu (Alt+Space) keep it; only the caption no longer draws it.
++  if (mWindowType == WindowType::TopLevel || mWindowType == WindowType::Dialog) {
++    WTA_OPTIONS noCaptionIcon = {WTNCA_NODRAWICON, WTNCA_NODRAWICON};
++    ::SetWindowThemeAttribute(mWnd, WTA_NONCLIENT, &noCaptionIcon,
++                              sizeof(noCaptionIcon));
++  }
++
+   // If mDefaultScale is set before mWnd has been set, it will have the scale of
+   // the primary monitor, rather than the monitor that the window is actually
+   // on. For non-popup windows this gets corrected by the WM_DPICHANGED message
