@@ -1,0 +1,156 @@
+# Gorilla 157 privacy cut
+# D-157-39 (2026-10-08, build 28 item 2): Satellite mode leaves calls alone - camera/microphone-allowed sites and gorilla.linkmode.call_sites keep desktop identity and JavaScript at every level
+# Files: browser/app/profile/firefox.js, browser/locales/en-US/browser/gorillaSatellite.ftl, browser/modules/GorillaLinkMode.sys.mjs
+
+diff --git a/browser/app/profile/firefox.js b/browser/app/profile/firefox.js
+index bb44cf0262..c216ad70b0 100644
+--- a/browser/app/profile/firefox.js
++++ b/browser/app/profile/firefox.js
+@@ -4181,6 +4181,9 @@ pref("gorilla.linkmode", 0);
+ pref("gorilla.linkmode.mobile_pages", true);
+ // D-157-33: Very slow link runs no JavaScript (per tab; a site can be allowed from the toolbar button)
+ pref("gorilla.linkmode.no_javascript", true);
++// D-157-39: call sites keep their desktop version and JavaScript at every Satellite level. Also any site the user
++// allowed the camera or microphone. Local list, comma-separated hosts; nothing is fetched.
++pref("gorilla.linkmode.call_sites", "web.whatsapp.com,meet.google.com,meet.jit.si,teams.microsoft.com,teams.live.com,app.zoom.us,www.messenger.com,discord.com");
+ pref("gorilla.network.save_data", false);
+ pref("browser.ai.control.default", "blocked", locked);
+ pref("browser.ai.control.sidebarChatbot", "blocked", locked);
+diff --git a/browser/locales/en-US/browser/gorillaSatellite.ftl b/browser/locales/en-US/browser/gorillaSatellite.ftl
+index 609278762e..745d78c788 100644
+--- a/browser/locales/en-US/browser/gorillaSatellite.ftl
++++ b/browser/locales/en-US/browser/gorillaSatellite.ftl
+@@ -47,5 +47,8 @@ gorilla-satellite-button-desktop-site =
+ gorilla-satellite-button-javascript-site =
+     .label = This site: allow JavaScript
+     .tooltiptext = For a site that does not work without scripts (webmail, maps, some shops and logins). Remembered for this site only; the page reloads.
++# GORILLA D-157-39: a site that makes calls keeps its normal version and its scripts at every level
++gorilla-satellite-button-call-site =
++    .tooltiptext = This site makes calls: you allowed it the camera or microphone, or it is a known call service. It always gets its normal (desktop) version and its JavaScript, so calls can work.
+ gorilla-satellite-button-settings =
+     .label = Open Settings for Gorilla.Satellite mode
+diff --git a/browser/modules/GorillaLinkMode.sys.mjs b/browser/modules/GorillaLinkMode.sys.mjs
+index b492fe1a57..6be431dc46 100644
+--- a/browser/modules/GorillaLinkMode.sys.mjs
++++ b/browser/modules/GorillaLinkMode.sys.mjs
+@@ -24,11 +24,19 @@ const DESKTOP_SITE_PERM = "gorilla-desktop-site";
+ // itself is never touched, so the browser's own pages keep working.
+ const NO_JS_PREF = "gorilla.linkmode.no_javascript";
+ const JS_SITE_PERM = "gorilla-javascript-site";
++// Call sites (D-157-39, build 28 item 2; audit C12): a web call needs its scripts and, on most services, the desktop
++// page, so the phone identity and Very slow link's no-JavaScript rule broke calls in the very mode a satellite user
++// switches on. A site is a call site when the user allowed it the camera or the microphone (remembered, or for this
++// tab only), or when it is on the local list below (a site without scripts can never ask for the microphone). It
++// gets its desktop identity and its scripts at every level. The list is local data: nothing is fetched.
++const CALL_SITES_PREF = "gorilla.linkmode.call_sites";
++const CALL_PERMISSIONS = ["camera", "microphone"];
+ 
+ const lazy = {};
+ ChromeUtils.defineESModuleGetters(lazy, {
+   CustomizableUI:
+     "moz-src:///browser/components/customizableui/CustomizableUI.sys.mjs",
++  SitePermissions: "resource:///modules/SitePermissions.sys.mjs",
+ });
+ 
+ // The toolbar switch (maintainer, 2026-10-04: "easy to find and quite prominent", in the empty space between the
+@@ -52,6 +60,7 @@ function strings() {
+       "gorilla-satellite-mobile-pages",
+       "gorilla-satellite-no-javascript",
+       "gorilla-satellite-button-javascript-site",
++      "gorilla-satellite-button-call-site",
+       ...LEVEL_NAMES.map(n => `gorilla-satellite-mode-${n}`),
+       ...LEVEL_NAMES.map(n => `gorilla-satellite-button-${n}`),
+     ];
+@@ -214,6 +223,29 @@ export const GorillaLinkMode = {
+     );
+   },
+ 
++  // A call site (D-157-39): camera or microphone allowed (remembered, or for this tab only: SitePermissions reads both,
++  // given the tab's browser), or a host on the local list.
++  _callSite(principal, browser) {
++    try {
++      const host = principal.host.toLowerCase();
++      const listed = Services.prefs
++        .getStringPref(CALL_SITES_PREF, "")
++        .split(",")
++        .map(h => h.trim().toLowerCase())
++        .filter(Boolean);
++      if (listed.includes(host)) {
++        return true;
++      }
++      return CALL_PERMISSIONS.some(
++        id =>
++          lazy.SitePermissions.getForPrincipal(principal, id, browser).state ==
++          lazy.SitePermissions.ALLOW
++      );
++    } catch (e) {
++      return false;
++    }
++  },
++
+   // Per site, for every top-level page, decided before the page is requested so nothing is downloaded twice:
+   // - identity: a site the user sent back to its desktop version gets the desktop identity in that tab (header and
+   //   navigator alike, through the tab's customUserAgent); any other site gets "", the mobile identity of the prefs;
+@@ -235,8 +267,12 @@ export const GorillaLinkMode = {
+         channel.URI,
+         {}
+       );
++      const call =
++        (this.mobilePages() || this.noJavascript()) &&
++        this._callSite(principal, bc.embedderElement);
+       if (this.mobilePages()) {
+-        const desktop = this._sitePermitted(principal, DESKTOP_SITE_PERM);
++        const desktop =
++          call || this._sitePermitted(principal, DESKTOP_SITE_PERM);
+         const ua = desktop ? this._desktopUA : "";
+         if (bc.customUserAgent != ua) {
+           bc.customUserAgent = ua;
+@@ -246,7 +282,9 @@ export const GorillaLinkMode = {
+         }
+       }
+       const js =
+-        !this.noJavascript() || this._sitePermitted(principal, JS_SITE_PERM);
++        !this.noJavascript() ||
++        call ||
++        this._sitePermitted(principal, JS_SITE_PERM);
+       if (bc.allowJavascript != js) {
+         bc.allowJavascript = js;
+       }
+@@ -445,16 +483,35 @@ export const GorillaLinkMode = {
+       // The desktop-version switch only means something while mobile pages are asked for, on a web page.
+       const principal = win().gBrowser.contentPrincipal;
+       const web = principal.schemeIs("http") || principal.schemeIs("https");
++      // a call site always has both (D-157-39): shown ticked and greyed, with the reason on hover
++      const call =
++        web && this._callSite(principal, win().gBrowser.selectedBrowser);
++      const why = call
++        ? s["gorilla-satellite-button-call-site"].tooltiptext
++        : null;
+       desktopSite.hidden = !this.mobilePages() || !web;
+       setChecked(
+         desktopSite,
+-        web && this._sitePermitted(principal, DESKTOP_SITE_PERM)
++        call || (web && this._sitePermitted(principal, DESKTOP_SITE_PERM))
++      );
++      desktopSite.disabled = call;
++      desktopSite.setAttribute(
++        "tooltiptext",
++        why || s["gorilla-satellite-button-desktop-site"].tooltiptext
+       );
+       // the JavaScript switches belong to Very slow link only
+       noJs.hidden = this.level() != 2;
+       setChecked(noJs, Services.prefs.getBoolPref(NO_JS_PREF, true));
+       jsSite.hidden = !this.noJavascript() || !web;
+-      setChecked(jsSite, web && this._sitePermitted(principal, JS_SITE_PERM));
++      setChecked(
++        jsSite,
++        call || (web && this._sitePermitted(principal, JS_SITE_PERM))
++      );
++      jsSite.disabled = call;
++      jsSite.setAttribute(
++        "tooltiptext",
++        why || s["gorilla-satellite-button-javascript-site"].tooltiptext
++      );
+     });
+     button.appendChild(popup);
+     this._showLevel(button);
