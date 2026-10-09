@@ -1,0 +1,89 @@
+# Gorilla 157 privacy cut
+# D-157-38 part 2: Help > About reads '157.0 (64-bit) build 29, built YY:MM:DD:HH:MM:SS' and under it 'Build ID <14 digits>' (the string the harness reports); build number = branding pref gorilla.build.number, raised per release candidate
+# Files: browser/base/content/aboutDialog.js, browser/base/content/aboutDialog.xhtml, browser/branding/gorilla/pref/firefox-branding.js, browser/locales/en-US/browser/aboutDialog.ftl
+
+diff --git a/browser/base/content/aboutDialog.js b/browser/base/content/aboutDialog.js
+index a5fc845c92..36fe8783af 100644
+--- a/browser/base/content/aboutDialog.js
++++ b/browser/base/content/aboutDialog.js
+@@ -96,6 +96,8 @@ function init() {
+       buildStamp.slice(12, 14),
+     ].join(":");
+     versionIdKey += "-gorilla";
++    // GORILLA D-157-38 (2026-10-09): the build number (branding pref, raised per release candidate)
++    versionAttributes.build = Services.prefs.getIntPref("gorilla.build.number", 0);
+   }
+ 
+   // Use Fluent arguments for append version and the architecture of the build
+@@ -107,6 +109,16 @@ function init() {
+     versionAttributes
+   );
+ 
++  // GORILLA D-157-38 (2026-10-09): under the version line, the build's own BuildID in full - the string the build
++  // harness reports - so anyone can match this browser to a report or a release page.
++  let buildIdField = document.getElementById("gorilla-buildid");
++  if (buildIdField && /^\d{14}$/.test(buildStamp)) {
++    document.l10n.setAttributes(buildIdField, "aboutDialog-buildid-gorilla", {
++      buildid: buildStamp,
++    });
++    buildIdField.hidden = false;
++  }
++
+   // Show a release notes link if we have a URL.
+   let relNotesLink = document.getElementById("releasenotes");
+   let relNotesPrefType = Services.prefs.getPrefType(
+diff --git a/browser/base/content/aboutDialog.xhtml b/browser/base/content/aboutDialog.xhtml
+index 6effd77609..83ed0d7cf8 100644
+--- a/browser/base/content/aboutDialog.xhtml
++++ b/browser/base/content/aboutDialog.xhtml
+@@ -52,6 +52,8 @@
+           <label id="releasenotes" is="text-link" hidden="true" data-l10n-id="releaseNotes-link"/>
+         </hbox>
+ #endif
++        <!-- GORILLA D-157-38 (2026-10-09): the build's own BuildID, under the version line -->
++        <label id="gorilla-buildid" class="text-blurb" hidden="true"/>
+ 
+         <label id="distribution" class="text-blurb"/>
+         <label id="distributionId" class="text-blurb"/>
+diff --git a/browser/branding/gorilla/pref/firefox-branding.js b/browser/branding/gorilla/pref/firefox-branding.js
+index 8c95ebf608..fe7df93351 100644
+--- a/browser/branding/gorilla/pref/firefox-branding.js
++++ b/browser/branding/gorilla/pref/firefox-branding.js
+@@ -33,3 +33,7 @@ pref("app.update.badgeWaitTime", 0);
+ // into the console is held behind the "Scam Warning" until the user types "allow pasting" once, or has typed five
+ // commands; the console then counts itself up to 5. Not locked: the console must be able to raise it.
+ pref("devtools.selfxss.count", 0);
++
++// GORILLA D-157-38 (2026-10-09): the build number Help > About shows ("157.0 (64-bit) build 29, built ..."), raised
++// once per release candidate (Gorilla.firefox NEXT-RELEASE.md); the Build ID line under it is the build's own BuildID.
++pref("gorilla.build.number", 29);
+diff --git a/browser/locales/en-US/browser/aboutDialog.ftl b/browser/locales/en-US/browser/aboutDialog.ftl
+index cddecd5dd7..75d067d180 100644
+--- a/browser/locales/en-US/browser/aboutDialog.ftl
++++ b/browser/locales/en-US/browser/aboutDialog.ftl
+@@ -89,14 +89,18 @@ bottom-links-privacy = Privacy Notice
+ #   $bits (Number): bits of the architecture (32 or 64)
+ aboutDialog-version = { $version } ({ $bits }-bit)
+ 
+-## GORILLA D-157-38 (2026-10-08): the version line with the build stamp, taken from the build's own BuildID.
++## GORILLA D-157-38 (2026-10-08, build number 2026-10-09): the version line with the build number and the build
++## stamp, taken from the build's own BuildID, and the BuildID itself under it.
+ ## Variables:
+-##   $built (String): when this build was made, YY:MM:DD:HH:MM:SS, e.g. 26:10:08:10:37:25
+-
+-aboutDialog-version-gorilla = { $version } ({ $bits }-bit) built { $built }
+-aboutDialog-version-nightly-gorilla = { $version } ({ $isodate }) ({ $bits }-bit) built { $built }
+-aboutdialog-version-arch-gorilla = { $version } ({ $arch }) built { $built }
+-aboutdialog-version-arch-nightly-gorilla = { $version } ({ $isodate }) ({ $arch }) built { $built }
++##   $build (Number): the build number, raised once per release candidate, e.g. 29
++##   $built (String): when this build was made, YY:MM:DD:HH:MM:SS, e.g. 26:10:09:12:51:07
++##   $buildid (String): the build's own BuildID, e.g. 20261009125107
++
++aboutDialog-version-gorilla = { $version } ({ $bits }-bit) build { $build }, built { $built }
++aboutDialog-version-nightly-gorilla = { $version } ({ $isodate }) ({ $bits }-bit) build { $build }, built { $built }
++aboutdialog-version-arch-gorilla = { $version } ({ $arch }) build { $build }, built { $built }
++aboutdialog-version-arch-nightly-gorilla = { $version } ({ $isodate }) ({ $arch }) build { $build }, built { $built }
++aboutDialog-buildid-gorilla = Build ID { $buildid }
+ 
+ ##
+ 
