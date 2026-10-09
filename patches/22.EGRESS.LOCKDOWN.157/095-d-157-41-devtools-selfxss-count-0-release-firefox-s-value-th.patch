@@ -1,0 +1,17 @@
+# Gorilla 157 privacy cut
+# D-157-41: devtools.selfxss.count 0 (release Firefox's value): the console's scam warning holds a paste until 'allow pasting' is typed once
+# Files: browser/branding/gorilla/pref/firefox-branding.js
+
+diff --git a/browser/branding/gorilla/pref/firefox-branding.js b/browser/branding/gorilla/pref/firefox-branding.js
+index a3b6207a64..8c95ebf608 100644
+--- a/browser/branding/gorilla/pref/firefox-branding.js
++++ b/browser/branding/gorilla/pref/firefox-branding.js
+@@ -29,4 +29,7 @@ pref("app.update.badgeWaitTime", 0);
+ 
+ // Number of usages of the web console.
+ // If this is less than 5, then pasting code into the web console is disabled
+-pref("devtools.selfxss.count", 5);
++// GORILLA D-157-41 (2026-10-09): 0, as release Firefox (5 came from the Nightly branding this was made from). A paste
++// into the console is held behind the "Scam Warning" until the user types "allow pasting" once, or has typed five
++// commands; the console then counts itself up to 5. Not locked: the console must be able to raise it.
++pref("devtools.selfxss.count", 0);
