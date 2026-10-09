@@ -19,3 +19,4 @@ Repairs needed to carry Gorilla's patches onto Firefox 157. Apply in order, afte
 - `087-two-doubled-fluent-ids-in-onboarding-ftl-onboarding-checklis.patch`: Two doubled Fluent ids in onboarding.ftl (onboarding-checklist-minimize, -remove): second copies removed; found by verify row 7c
 - `089-d-157-38-2026-10-08-help-about-shows-built-yy-mm-dd-hh-mm-ss.patch`: D-157-38 (2026-10-08): Help > About shows 'built YY:MM:DD:HH:MM:SS' from the build's own BuildID
 - `092-about-support-showed-its-headings-and-none-of-its-data-its-n.patch`: About:support showed its headings and none of its data: its Normandy section waited on Nimbus (never starts, D-157-31); it answers at once now (T-157-31-A)
+- `097-about-support-media-tables-wrap-instead-of-running-past-the-.patch`: About:support media tables wrap instead of running past the window (they show data since the T-157-31-A fix; visual RT-OFFSCREEN/RT-BOX at 1280 px)

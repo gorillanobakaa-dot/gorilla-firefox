@@ -1,0 +1,27 @@
+# Gorilla 157 port fix
+# About:support media tables wrap instead of running past the window (they show data since the T-157-31-A fix; visual RT-OFFSCREEN/RT-BOX at 1280 px)
+# Files: toolkit/themes/shared/aboutSupport.css
+
+diff --git a/toolkit/themes/shared/aboutSupport.css b/toolkit/themes/shared/aboutSupport.css
+index 52e4a43abd..3e4f3c79ac 100644
+--- a/toolkit/themes/shared/aboutSupport.css
++++ b/toolkit/themes/shared/aboutSupport.css
+@@ -173,3 +173,18 @@ td.integer {
+ #sandbox-tbody tr > td.feature-unavailable > .user-namespaces-unavailabe-support-link {
+   margin: 0 5px;
+ }
++
++/* GORILLA (2026-10-09): the media tables wrap instead of running past the window. about:support shows its data
++   since its studies wait was cut (T-157-31-A), and the output- and input-device tables (nine columns of real device
++   names) then reached 1360 px in a 1280 px window (visual check RT-OFFSCREEN, RT-BOX). */
++#media-info-tbody td,
++#media-output-devices-tbody :is(td, th),
++#media-input-devices-tbody :is(td, th),
++#media-content-decryption-modules-tbody :is(td, th) {
++  overflow-wrap: anywhere;
++}
++#media-output-devices-tbody th.title-column,
++#media-input-devices-tbody th.title-column,
++#media-content-decryption-modules-tbody th.title-column {
++  white-space: normal;
++}
