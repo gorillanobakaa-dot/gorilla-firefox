@@ -51,6 +51,7 @@ and that is a fair conclusion to reach.
 - **[Why add-ons are blocked](THE-SEALED-APPLIANCE.md)** — the reasoning and the cost
 - **[How to bundle an extension yourself](docs/HOWTO-BUNDLE-AN-EXTENSION.md)** — Linux + Windows, for developers and LLMs
 - **[Every about: page, opened and checked](docs/ABOUT-PAGES.md)** — what each built-in page does, and what we fixed, removed and why
+- **[The hidden about: pages](docs/HIDDEN-PAGES.md)** — the 30 pages `about:about` does not list, each pictured and explained in plain words and for developers; 16 removed, 14 kept, and why
 - **[WhatsApp calls on Windows](windows/WHATSAPP-CALLS-ON-WINDOWS.md)** — broken before v155.0.1-win64.4; what was wrong and how it was found
 
 ---
