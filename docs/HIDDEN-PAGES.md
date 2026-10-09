@@ -4,9 +4,9 @@
 
 **Mapped on 8 October 2026, on the Gorilla 157.0 candidate (build 28) for Windows and in its source code. Every
 page was opened in a fresh, throwaway copy of the browser with its network cut off, so that any attempt to reach
-the internet was recorded and none could get out. The changes described here are in the source; the build that
-carries them is being built and checked now. Until it is, every line marked "to be confirmed" says so, and this
-page will name the build once it has been checked.**
+the internet was recorded and none could get out. The changes described here are in Gorilla 157.0 build 29 (Build ID
+20261009184728) and were checked on it: every removed page's address lands on the "Hmm. That address doesn't
+look right." page, and the removed pages' own files open nothing.**
 
 This page is written twice: once in plain language, once with the details. Each page below has both.
 
@@ -466,7 +466,7 @@ No Gorilla network lock was involved.
 - "report a mistake" links to Mozilla (addresses under phish-error.mozilla.com and malware-error.mozilla.com) or to Google (safebrowsing.google.com);
 - information pages at antiphishing.org, Google's unwanted-software policy, Mozilla's support site (support.mozilla.org) and Google's developer site (developers.google.com).
 
-**What we did, and why.** Removed (decision D-157-40). Safe Browsing depends on lists that someone outside your computer compiles and the browser fetches, which makes it a channel controlled by whoever keeps the lists; it was locked off in Gorilla before this change. That left a page that could never appear but was still in the browser: anyone could open it by typing its address, and its links pointed at Google and Mozilla. A door that leads nowhere is still a door, so it is gone. Its own files (the page, its script and its styling) are no longer packaged either. That closes a second way in: in Firefox a page's file can be opened directly by its internal chrome:// address. Only its text file remains, and nothing uses it. From the new build on, typing about:blocked is expected to bring up the network error page's "Hmm. That address doesn't look right." screen, the one for addresses that no page answers to (see about:neterror); this is still to be confirmed on that build. If Safe Browsing ever came back, this page would have to come back with it.
+**What we did, and why.** Removed (decision D-157-40). Safe Browsing depends on lists that someone outside your computer compiles and the browser fetches, which makes it a channel controlled by whoever keeps the lists; it was locked off in Gorilla before this change. That left a page that could never appear but was still in the browser: anyone could open it by typing its address, and its links pointed at Google and Mozilla. A door that leads nowhere is still a door, so it is gone. Its own files (the page, its script and its styling) are no longer packaged either. That closes a second way in: in Firefox a page's file can be opened directly by its internal chrome:// address. Only its text file remains, and nothing uses it. Typing about:blocked now brings up the network error page's "Hmm. That address doesn't look right." screen, the one for addresses that no page answers to (see about:neterror); checked on build 29 (Build ID 20261009184728). If Safe Browsing ever came back, this page would have to come back with it.
 
 **What it costs you.** Nothing from removing the page: it could not appear. The real cost was paid earlier, when the checking was switched off: Gorilla does not warn you, from these lists, before you open a known phishing or malware site, and does not check add-ons against the harmful-add-on list.
 
@@ -484,7 +484,7 @@ Line numbers below are those of the source before the D-157-40 change.
 - **Other code.** Only checks the URL prefix (`browser/base/content/browser-safebrowsing.js:14,86`; `browser/actors/ClickHandlerChild.sys.mjs:80`).
 - **Gorilla change (D-157-40).** Registration removed from `browser/components/about/AboutRedirector.cpp` and `browser/components/about/components.conf`. The research classed the page removable as configured, and essential again if Safe Browsing returned.
 - **Gorilla change (D-157-40, second round).** The page's own files are no longer packaged: `blockedSite.xhtml` and `blockedSite.js` (`browser/base/jar.mn`) and `blockedSite.css` (`browser/themes/shared/jar.inc.mn`). Their chrome:// addresses, a second way into the page from the address bar, therefore open nothing either. `blockedSite.ftl` remains as inert text.
-- **After the change.** about:blocked is expected to land on about:neterror with `malformedURI`, like any unregistered about: address; still to be confirmed on the build carrying both rounds.
+- **After the change.** about:blocked lands on about:neterror with `malformedURI`, like any unregistered about: address, and `chrome://browser/content/blockedSite.xhtml` opens nothing: checked on build 29 (Build ID 20261009184728).
 
 ---
 
@@ -506,7 +506,7 @@ Line numbers below are those of the source before the D-157-40 change.
 
 **Does it talk to anyone?** It contacts no one. The page could load only the browser's own built-in files, and it had no links.
 
-**What we did, and why.** Removed (decision D-157-40), together with the code that decided whether to enforce parental controls. Gorilla is built without parental controls, so the page served a feature that is not there. Reading the code, the research also found a worse problem upstream: if one hidden preference, security.restrict_to_adults.respect_platform, was switched on in a build without parental controls (such as Gorilla's), the browser asked for the parental-controls part, got nothing back, and used that nothing without checking. That code runs every time the browser creates a new top-level browsing context (the container a tab's page lives in), so the main browser process would crash. This was found by reading the code, not by running it. In Gorilla the check now always answers "do not enforce", so that path is gone. The page's own files (the page, its script, its styling and its draft text) are no longer packaged either, so its internal chrome:// address, a second way in that Firefox allows from the address bar, cannot open it. From the new build on, typing about:restricted is expected to bring up the network error page's "Hmm. That address doesn't look right." screen (see about:neterror); this is still to be confirmed on that build.
+**What we did, and why.** Removed (decision D-157-40), together with the code that decided whether to enforce parental controls. Gorilla is built without parental controls, so the page served a feature that is not there. Reading the code, the research also found a worse problem upstream: if one hidden preference, security.restrict_to_adults.respect_platform, was switched on in a build without parental controls (such as Gorilla's), the browser asked for the parental-controls part, got nothing back, and used that nothing without checking. That code runs every time the browser creates a new top-level browsing context (the container a tab's page lives in), so the main browser process would crash. This was found by reading the code, not by running it. In Gorilla the check now always answers "do not enforce", so that path is gone. The page's own files (the page, its script, its styling and its draft text) are no longer packaged either, so its internal chrome:// address, a second way in that Firefox allows from the address bar, cannot open it. Typing about:restricted now brings up the network error page's "Hmm. That address doesn't look right." screen (see about:neterror); checked on build 29 (Build ID 20261009184728).
 
 **What it costs you.** If you had switched on security.restrict_to_adults.always, it no longer blocks anything. Otherwise, nothing: Gorilla offers no parental controls of its own.
 
@@ -522,7 +522,7 @@ Line numbers below are those of the source before the D-157-40 change.
 - **Latent upstream crash.** With `security.restrict_to_adults.respect_platform` set true, the service lookup returns nothing in this configuration and the result is used without a check (`CanonicalBrowsingContext.cpp:3843-3845`); `nsHttpHandler.cpp:552-554` does check. The code runs whenever a top-level browsing context is created (`docshell/base/BrowsingContext.cpp:500-508`), so the parent process would crash. Found by reading the code, not by running it.
 - **Gorilla change (D-157-40).** Registration removed from `docshell/base/nsAboutRedirector.cpp` and `docshell/build/components.conf`. `CanonicalBrowsingContext::ShouldEnforceParentalControls()` now returns false unconditionally (marker `GORILLA D-157-40 (2026-10-08): Gorilla is built --disable-parental-controls`), which also removes the null dereference.
 - **Gorilla change (D-157-40, second round).** The page's own files are no longer packaged: `aboutRestricted.html`, `aboutRestricted.mjs` and `aboutRestricted.css` (`toolkit/content/jar.mn`) and `locales-preview/aboutRestricted.ftl` (`toolkit/locales/jar.mn`). Their chrome:// addresses therefore open nothing either.
-- **After the change.** about:restricted is expected to land on about:neterror with `malformedURI`; still to be confirmed on the build carrying both rounds.
+- **After the change.** about:restricted lands on about:neterror with `malformedURI`, and its own chrome:// file opens nothing: checked on build 29 (Build ID 20261009184728).
 - **Side effect.** `security.restrict_to_adults.always` no longer blocks anything.
 
 ---
@@ -552,7 +552,7 @@ How the four worked, explained once for all of them:
 
 **Does it talk to anyone?** It contacted no one.
 
-**What we did, and why.** Removed, with the other three and with the crash channel that did the breaking (decision D-157-40). In our threat model every piece of code that can be set off is a door, and it must earn its place or be closed. These four served Mozilla's test machines, not the person at the keyboard, and Gorilla is built without tests; the most this one could do for you was close every window you had open. The four had no files of their own, so nothing else had to go. From the new build on, typing any of the four addresses is expected to bring up the network error page's "Hmm. That address doesn't look right." screen, the one for addresses that no page answers to (see about:neterror); this is still to be confirmed on that build.
+**What we did, and why.** Removed, with the other three and with the crash channel that did the breaking (decision D-157-40). In our threat model every piece of code that can be set off is a door, and it must earn its place or be closed. These four served Mozilla's test machines, not the person at the keyboard, and Gorilla is built without tests; the most this one could do for you was close every window you had open. The four had no files of their own, so nothing else had to go. Typing any of the four addresses now brings up the network error page's "Hmm. That address doesn't look right." screen, the one for addresses that no page answers to (see about:neterror); checked on build 29 (Build ID 20261009184728).
 
 **What it costs you.** Nothing you would notice, unless you test browsers: you can no longer crash Gorilla on purpose to check that session restore brings your tabs back.
 
@@ -569,7 +569,7 @@ Line numbers below are those of the source before the D-157-40 change. This entr
 - **Windows.** `MOZ_CRASH` on Windows is a `__debugbreak` (`mfbt/Assertions.h:241-245`). Firefox's own Windows Error Reporting module is not registered (`mozglue/misc/RuntimeExceptionModule.cpp:50-55`), so whether Windows itself logs or uploads the crash is operating-system policy, outside this tree. Not verified.
 - **Who used them.** webdriver, marionette, puppeteer and mochitests (`testing/web-platform/mozilla/tests/webdriver/harness/detect_crash.py:14-42`), and GeckoView tests. Gorilla builds with `--disable-tests` (`config/mozconfig.win64:148`); the layout debugger that also uses about:crashparent is not built.
 - **Network.** None.
-- **Gorilla change (D-157-40).** The four entries are removed from `docshell/base/nsAboutRedirector.cpp` and `docshell/build/components.conf`, and the `CrashChannel` class with them (the decision's check requires `class CrashChannel final` to be absent). Android's about:crashcontentjava was removed with them. The crash pages had no files of their own, so nothing needed unpackaging. From the D-157-40 build on, the four addresses are expected to land on about:neterror with `malformedURI`; still to be confirmed on that build.
+- **Gorilla change (D-157-40).** The four entries are removed from `docshell/base/nsAboutRedirector.cpp` and `docshell/build/components.conf`, and the `CrashChannel` class with them (the decision's check requires `class CrashChannel final` to be absent). Android's about:crashcontentjava was removed with them. The crash pages had no files of their own, so nothing needed unpackaging. The four addresses land on about:neterror with `malformedURI`: checked on build 29 (Build ID 20261009184728).
 - **Surprising.** One typed address closed every window without asking.
 
 ---
@@ -592,7 +592,7 @@ Line numbers below are those of the source before the D-157-40 change. This entr
 
 **Does it talk to anyone?** It contacted no one.
 
-**What we did, and why.** Removed with the other three (see about:crashparent). It was a handy way to test the crashed-tab page by hand, but it served testers, not people browsing, and a typed address that kills part of your browser is a door with no reason to stay open. From the new build on, typing it is expected to bring up the "Hmm. That address doesn't look right." screen (see about:neterror); still to be confirmed on that build.
+**What we did, and why.** Removed with the other three (see about:crashparent). It was a handy way to test the crashed-tab page by hand, but it served testers, not people browsing, and a typed address that kills part of your browser is a door with no reason to stay open. Typing it now brings up the "Hmm. That address doesn't look right." screen (see about:neterror); checked on build 29 (Build ID 20261009184728).
 
 **What it costs you.** A crashed tab can no longer be provoked by hand for testing. If you never test the crashed-tab page, nothing.
 
@@ -628,7 +628,7 @@ Line numbers below are those of the source before the D-157-40 change. The share
 
 **Does it talk to anyone?** It contacted no one.
 
-**What we did, and why.** Removed with the other three (see about:crashparent): a test tool for Mozilla's test machines, of no use to a person browsing. From the new build on, typing it is expected to bring up the "Hmm. That address doesn't look right." screen (see about:neterror); still to be confirmed on that build.
+**What we did, and why.** Removed with the other three (see about:crashparent): a test tool for Mozilla's test machines, of no use to a person browsing. Typing it now brings up the "Hmm. That address doesn't look right." screen (see about:neterror); checked on build 29 (Build ID 20261009184728).
 
 **What it costs you.** Nothing you would notice.
 
@@ -664,7 +664,7 @@ Line numbers below are those of the source before the D-157-40 change. The share
 
 **Does it talk to anyone?** It contacted no one. In Firefox the forced shutdown can write crash files if a crash reporter exists, and it is counted in Glean, Mozilla's data-collection library. In Gorilla there is no crash reporter, and Glean never starts, so nothing is written or sent.
 
-**What we did, and why.** Removed with the other three (see about:crashparent). Only Mozilla's GeckoView tests used it (GeckoView is Mozilla's browser engine for Android apps). It also stopped uBlock Origin until its process was started again. How uBlock Origin behaves in that gap was not measured. A typed address that can switch off your protection without a word is a door we close. From the new build on, typing it is expected to bring up the "Hmm. That address doesn't look right." screen (see about:neterror); still to be confirmed on that build.
+**What we did, and why.** Removed with the other three (see about:crashparent). Only Mozilla's GeckoView tests used it (GeckoView is Mozilla's browser engine for Android apps). It also stopped uBlock Origin until its process was started again. How uBlock Origin behaves in that gap was not measured. A typed address that can switch off your protection without a word is a door we close. Typing it now brings up the "Hmm. That address doesn't look right." screen (see about:neterror); checked on build 29 (Build ID 20261009184728).
 
 **What it costs you.** Nothing you would notice.
 
@@ -949,7 +949,7 @@ Inside the browser, pressing Done also raised a "profile created" signal for Moz
 
 - neterror-connection-refused.png: a program on this same computer refused the connection. On the left is the Gorilla emblem. On the right, the heading "Unable to connect" and a line naming the address that refused. Under a second heading, "What can you do about it?", come three suggestions: the site may be busy or down for a moment, so try again shortly; if no page loads at all, check your computer's network connection; if a firewall or proxy protects your computer or network, make sure Gorilla Unleashed is allowed to reach the web. Below them is one button, **Try Again**: it switches off offline mode if it was on, and loads the page again.
 - neterror-restricted-port.png: the address used a port that Gorilla refuses. A port is the door number of a service on a computer: the address finds the building, the port finds the office inside it. Some door numbers belong to services that are not web pages, and Gorilla will not knock on them with a web request. The tab is titled "Blocked Gorilla Page", the heading reads "This address is restricted", and one sentence explains that the address uses a port normally used for things other than web browsing, so the request was cancelled for your protection. There is no button, because trying again would get the same answer.
-- neterror-unknown-about-address.png: an about: address that no page answers to (here about:gorilla-no-such-page, made up for the test). Beside the Gorilla emblem, the heading reads "Hmm. That address doesn't look right.", a line says that Gorilla Unleashed can't connect to the server at about:gorilla-no-such-page, and under "What can you do about it?" the advice is to check that you typed the website address correctly. There is no button. This is also what you should see, from the new build on, when you type the address of a page that decision D-157-40 removed, such as about:crashparent; that is still to be confirmed on that build.
+- neterror-unknown-about-address.png: an about: address that no page answers to (here about:gorilla-no-such-page, made up for the test). Beside the Gorilla emblem, the heading reads "Hmm. That address doesn't look right.", a line says that Gorilla Unleashed can't connect to the server at about:gorilla-no-such-page, and under "What can you do about it?" the advice is to check that you typed the website address correctly. There is no button. This is also what you see when you type the address of a page that decision D-157-40 removed, such as about:crashparent (checked on build 29 (Build ID 20261009184728), all 16 removed pages).
 - about-neterror.png: the address about:neterror typed into the address bar, with no failure behind it. The tab is titled "Problem loading Gorilla page" and the page is empty and dark: it has no failure to describe.
 
 Depending on the failure, the same screen can carry other controls that these pictures do not show: a **Restore default settings** button that puts the browser's encryption settings back to their defaults, and on some failures a **Learn more** link. The code also holds buttons for encrypted name lookups (DNS over HTTPS) and for the sign-in page of a café or hotel Wi-Fi network, but both of those features are locked off in Gorilla, so those buttons cannot appear. A Search button exists only in Mozilla's nightly development builds, not in Gorilla.
@@ -978,7 +978,7 @@ Line numbers below are those of the source before the D-157-40 change.
 - **Unreachable in Gorilla.** Captive-portal login needs `&captive=true` (`nsDocShell.cpp:3858-3863`), but the captive-portal service is locked off (`firefox.js:4103`). The TRR-only panel and its firefox-source-docs link: TRR mode is locked to 5 (`firefox.js:4158`). The Search button is Nightly-only (`firefox.js:1449-1453`).
 - **Why it cannot go.** `getNetErrorInfo` works only on this page (`dom/base/Document.cpp:1682-1690`), and the identity box keys off its URL (`browser/base/content/browser-siteIdentity.js:923`). If an error page's registration is missing, the load fails and no page is shown (`nsDocShell.cpp:3765-3770`).
 - **Gorilla change (D-157-40).** `toolkit/actors/NetErrorChild.sys.mjs`: `RPMCheckAlternateHostAvailable` returns at once (marker `GORILLA D-157-40 (2026-10-08): no guessed lookups.`), so `checkHost` is never reached; the comment names both guesses (`www.<word>.com` for a single word, `www.<name>` for a name with one dot). The Glean events the page records are inert: Glean never starts (`toolkit/components/glean/xpcom/FOG.cpp:155-158`) and its upload pref is locked off (`firefox.js:3923`).
-- **Unregistered about: addresses.** An about: address that nothing registers lands on this page with error code `malformedURI` (picture: about:gorilla-no-such-page). From the D-157-40 build on, the removed pages are expected to land here too; still to be confirmed on that build.
+- **Unregistered about: addresses.** An about: address that nothing registers lands on this page with error code `malformedURI` (picture: about:gorilla-no-such-page). The 16 pages removed by D-157-40 land here too: checked on build 29 (Build ID 20261009184728) by the build harness's removed-pages check, which runs after every build and every install.
 - **Surprising.** The guessed lookup ran on page load, without the user asking.
 
 ---
