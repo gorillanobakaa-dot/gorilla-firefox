@@ -5,7 +5,8 @@
 # copied on 2026-10-14. Since then only platform tags and Linux twin checks were added (D-157-01, D-157-22).
 # D-158-* were added on Linux. A whole entry may say `platforms: [linux]` or `[windows]`, a single check
 # `platform: linux` or `windows`; absent means both. Paths under gorilla-patchset/ resolve to the patch set,
-# which is a subfolder of the owner repo on Windows and the harness folder itself on Linux.
+# which is a subfolder of the owner repo on Windows and the harness folder itself on Linux. `covers:` globs name
+# the tree files an entry governs; a port packet touching one quotes the entry before any edit is made.
 # Gorilla Firefox: the maintainer's product decisions, each one a check.
 #
 # Every build is checked against this file: `fieldkit build-harness decisions <task>` and the post-install
@@ -449,6 +450,7 @@ decisions:
     decided: 2026-10-03
     by: maintainer
     provenance: 'chat 2026-10-03: "trebuie sa tinem Normandy and all the other shitty experiments turned off... I had enough of mozilla and their sneaky way of prefFlips .... Anything that gives Firefox a remote configuration and experimentation control plane that can change parts of the browser after the binary has shipped is a big no no"; and on the new tab Nimbus wait: "putem ori sa eiminam asta ori sa o highjack it?" (eliminated)'
+    covers: [toolkit/components/normandy/*, toolkit/components/nimbus/*]
     status: enforced
     audit: >
       2026-10-03, build 19: the new tab and start page were blank. Firefox 157 builds the page only after Nimbus's
@@ -881,6 +883,7 @@ decisions:
     provenance: owner in the Linux port session 2026-10-14 (Marionette is the security risk, so every door is
       closed; Normandy, Pocket, experiments and WebDriver BiDi belong to the same class); the reasoning and the three
       locks per file are in patches/09.REMOTE/MASTER_PROJECT_LOG_09_REMOTE.md
+    covers: [remote/*, testing/marionette/*]
     status: enforced
     why: Marionette, the Remote Agent and WebDriver BiDi let another program drive the browser. Nobody this build is
       for needs that, and every one of them is a way in. Closing them REDUCES what can attack the browser. A port
@@ -898,6 +901,7 @@ decisions:
     by: maintainer
     provenance: patches/13.TELEMETRY.KILL/MASTER_PROJECT_LOG_13_TELEMETRY_KILL.md (checksum sticker, D-301); owner
       instruction 2026-10-14 to log such decisions in the harness
+    covers: [third_party/rust/*/.cargo-checksum.json]
     status: pending
     why: The telemetry kill edits glean-core, a vendored crate. Cargo refuses an edited crate unless each edited
       file's SHA-256 in .cargo-checksum.json equals its content. Recomputing the hashes for OUR OWN edits keeps that
