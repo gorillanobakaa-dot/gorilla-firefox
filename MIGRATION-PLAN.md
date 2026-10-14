@@ -103,3 +103,22 @@ is to make it true, never to delete it.
 ## Techniques (added 2026-10-03)
 
 At S1 (intake) and before every build: `fieldkit build-harness techniques <task>`. Each technique in Fieldkit `fieldkit/buildh/techniques.py` (problem, concept, signals, apply, verify) is applied to every UNGUARDED place in the new tree, even when its patch no longer applies. The build gate refuses a tree where a technique does not hold.
+
+## 9. Rules learned on Linux, 2026-10-14 (each with what enforces it)
+
+The first Linux port (158) repeated work and lost time in ways this plan now forbids. Each rule names the
+mechanism that holds it, so it does not depend on a session reading this far.
+
+| Rule | Why (what happened) | Enforced by |
+|---|---|---|
+| Start every Firefox port under migration control, from this plan | the 158 port ran a day without the plan and the intent ledger, which existed only on Windows | `build-harness next` refuses a port beside `intents/INTENTS.yaml` until `migrate init`; the SessionStart hook prints `migrate brief` |
+| One copy of the plan, the intents, the decision register and the port state, in this repository | a handover was written and not read; the 157 notes lived only in a private bundle | `~/.agents/checkup.py` section 8: files present, local copy not behind its upstream |
+| Before building anything new, look for what exists | a second "port ledger" was half written before `fieldkit/migrate/` was found | this table; memory `firefox-migration-system-exists` |
+| Try a port before submitting it | an attempt (of three) was spent on a submit chained after a failing check | `build-harness submit TASK --dry-run`, named in every packet |
+| Never gate an action on a check through a pipe | `check \| tail && act` acted on a failing check twice (a lost attempt, a public push before a scan was read) | brain lesson; run the check alone and act on its own exit status |
+| A test must pass wherever it runs | an exact POSIX mode failed on Windows CI all afternoon; a relative fake path failed in a checkout under /tmp | Windows CI on every PR; a test that fails only elsewhere is fixed, never skipped |
+| Wait on a marker, never on `pgrep -f` | a waiting loop matched its own command line and sat out its 10-minute timeout | `hooks/wait-for-hook.sh` (Fieldkit) |
+| A safety classifier's refusal is quoted, not argued or worked around | the Marionette lock and the vendored checksums were refused as "security weakening" | `decisions/PRODUCT-DECISIONS.yaml` entries carry `models:` notes; port packets quote them |
+| Derived files are recomputed, never ported | the glean-core `.cargo-checksum.json` hunk ran before the source hunks it hashes | the harness skips a checksum hunk and recomputes at the group's export (D-158-02) |
+
+Corrections to an earlier belief go NEXT to it, never over it.
