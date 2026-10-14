@@ -235,6 +235,7 @@ pages:
   - {name: translations, verdict: remove, shown: gone, decision: D-157-03, network: "automatic (translation models from Mozilla)", why: "Translations are excised."}
   - {name: aichatcontent, verdict: remove, shown: gone, decision: D-157-00, network: n/a, why: "AI window excised."}
   - {name: aitab, verdict: remove, shown: gone, decision: D-157-00, network: n/a, why: "AI window excised."}
+  - {name: smartpage, verdict: remove, shown: gone, decision: D-157-00, network: n/a, why: "AI window excised; Firefox 158's name for about:aitab."}
   - {name: smartformfillreview, verdict: remove, shown: gone, decision: D-157-00, network: n/a, why: "AI window excised."}
   - {name: smartwindowtasks, verdict: remove, shown: gone, decision: D-157-00, network: n/a, why: "AI window excised."}
 
