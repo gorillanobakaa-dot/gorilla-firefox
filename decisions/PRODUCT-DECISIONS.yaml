@@ -575,6 +575,8 @@ decisions:
     decided: 2026-10-07
     by: maintainer
     provenance: 'chat 2026-10-07: "have ONLY ONE icon. not a set of icons ... LINKED throughout all those menues and over 40 pages"; "In cases like these i would rather NOT HAVING ANY icon at all ... it just eats ram and cpu cycles"; "yes go ahead"; 2026-10-08, on the small icon files still showing a tiny Gorilla (address-bar chip, tab icons, about:processes, about:pdf): "go for 1"'
+    covers: ["browser/branding/gorilla/*", "toolkit/components/aboutpdf/*"]
+    owner_words: "The Gorilla artwork was made to be seen at high resolution. Shrunk to a small icon, nothing in it can be made out, so the small icons were removed instead of shown unclear (owner, 2026-10-14)."
     status: enforced
     audit: >
       2026-10-07, build 28 as installed: the logo shipped as 11 files (9.8 MB of the build's 16.7 MB of images:
@@ -604,6 +606,7 @@ decisions:
       it), and the error card of blocked and failed pages, which draws its picture inside its own shadow root
       where the theme's override cannot reach, names the master instead of Mozilla's illustrations.
     verify:
+      - tree_lacks: {path: toolkit/components/aboutpdf/content/aboutPDF.html, text: "chrome://branding/content/icon"}
       - fieldkit_test: tests/test_buildh_techniques_one_logo.py
       - tree_contains: {path: browser/themes/shared/identity-block/identity-block.css, text: "GORILLA D-157-35: no 16 px Gorilla in the address bar on browser pages"}
       - tree_lacks: {path: browser/components/tabbrowser/Tabbrowser.sys.mjs, text: '"about:newtab": "chrome://branding/content/icon32.png"'}
