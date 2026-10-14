@@ -119,6 +119,7 @@ mechanism that holds it, so it does not depend on a session reading this far.
 | A test must pass wherever it runs | an exact POSIX mode failed on Windows CI all afternoon; a relative fake path failed in a checkout under /tmp | Windows CI on every PR; a test that fails only elsewhere is fixed, never skipped |
 | Wait on a marker, never on `pgrep -f` | a waiting loop matched its own command line and sat out its 10-minute timeout | `hooks/wait-for-hook.sh` (Fieldkit) |
 | A safety classifier's refusal is quoted, not argued or worked around | the Marionette lock and the vendored checksums were refused as "security weakening" | `decisions/PRODUCT-DECISIONS.yaml` entries carry `models:` notes; port packets quote them |
+| Port and teach, at every step, in every workflow (Firefox now, the kernel next) | the harness was taught after the fact, in a separate pass, and the same questions came back | every packet says it; an adapted or hand port without a `lesson:` line is refused; `build-harness lessons TASK` lists them for turning into rules with tests |
 | Derived files are recomputed, never ported | the glean-core `.cargo-checksum.json` hunk ran before the source hunks it hashes | the harness skips a checksum hunk and recomputes at the group's export (D-158-02) |
 
 Corrections to an earlier belief go NEXT to it, never over it.
