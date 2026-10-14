@@ -1,0 +1,99 @@
+# Gorilla Firefox: documents and tools against the decisions and the shipped build (S8 of MIGRATION-PLAN.md).
+#
+# Every value a public document or an owner tool asserts is checked like a claim. Append-only for ids; the maintainer
+# reviews and extends it. Seeded 2026-10-03 from the external review of the last four releases. See
+# fieldkit/migrate/consistency.py for the item format and the verdicts.
+
+version: 1
+items:
+- id: CONS-001
+  kind: contradiction
+  topic: 'Safe Browsing and captive-portal detection: older notes and the audit tool say ON, the shipped build locks them OFF'
+  origin: {source: 'external review of the last four releases, 3 October 2026 (Codex run i-x20, gorilla-firefox-last-four-releases-report.md)', section: '2. Gaps and contradictory claims, item 2 (Safe Browsing policy contradicts itself)'}
+  statements:
+  - where: gorilla-patchset/patches/05.PREFS/MASTER_PROJECT_LOG_FIREFOX_154_PREFS_PATCHES.md
+    quote: 'What is deliberately KEPT ON: the local malware/phishing blocklist'
+    asserts:
+    - pref: {name: browser.safebrowsing.malware.enabled, value: true}
+    - pref: {name: browser.safebrowsing.phishing.enabled, value: true}
+    - pref: {name: network.captive-portal-service.enabled, value: true}
+  - tool:
+      file: working scripts/audit_privacy_claims.py
+      list: KEPT_DOORS
+      names: [browser.safebrowsing.malware.enabled, browser.safebrowsing.phishing.enabled, network.captive-portal-service.enabled]
+  - tool:
+      file: gorilla-patchset/windows/audit_privacy_claims.py
+      list: KEPT_DOORS
+      names: [browser.safebrowsing.malware.enabled, browser.safebrowsing.phishing.enabled, network.captive-portal-service.enabled]
+  - where: docs/PRIVACY-AND-HARDENING.md
+    quote: 'Google Safe Browsing lookups: off and locked.'
+    asserts:
+    - pref: {name: browser.safebrowsing.malware.enabled, value: false, locked: true}
+    - pref: {name: browser.safebrowsing.phishing.enabled, value: false, locked: true}
+  - where: docs/PRIVACY-AND-HARDENING.md
+    quote: 'Captive-portal detection: off.'
+    asserts:
+    - pref: {name: network.captive-portal-service.enabled, value: false}
+  recommend: build-wins
+  recommend_why: 'the current public page (docs/PRIVACY-AND-HARDENING.md) already says off, and THE RULE D-157-00 (this browser never calls home) is what turned them off: list updates go to Google and the portal probe to Mozilla. The older notes describe the 155.0.1-win64.2 design; they are marked as history, not deleted, and the audit tool''s KEPT_DOORS is brought in line with the decision'
+- id: CONS-002
+  kind: lost-layer
+  topic: distribution/policies.json (the runtime re-lock of Normandy) is in the tree but not in the installed 157 build
+  origin: {source: 'external review of the last four releases, 3 October 2026 (Codex run i-x20, gorilla-firefox-last-four-releases-report.md)', section: '1. Normandy / Shield studies: distribution/policies.json locks Normandy values', measured: '2026-10-03: the 157 tree holds distribution/policies.json (12.MOZAMBIQUE.DRILL NEW_FILES); the install folder has no distribution/ folder. The local 155.0.1 install backup (build 20260914135622) has none either, so the layer was already missing from that build on this machine; the review saw it in the published release source'}
+  statements:
+  - where: gorilla-patchset/WHAT-WE-CHANGED-AND-WHY.md
+    quote: '`policies.json` re-locking all three at runtime.'
+    asserts:
+    - installed_present: [distribution/policies.json]
+  - where: gorilla-patchset/README.md
+    quote: plus `distribution/policies.json`
+    asserts:
+    - tree_present: [distribution/policies.json]
+    - installed_present: [distribution/policies.json]
+  recommend: restore
+  recommend_why: three layers were promised (source default, locked pref, policy); two hold, the third never reaches the install. Restoring it is a packaging fix with a check attached (installed_present), and it keeps the published sentence true
+- id: CONS-003
+  kind: contradiction
+  topic: Add-on blocklist and add-on updates listed as kept doors, while D-157-21 locks add-on updates off
+  origin: {source: 'external review of the last four releases, 3 October 2026 (Codex run i-x20, gorilla-firefox-last-four-releases-report.md)', section: '1. Extension installation: extension blocklist/updates as kept doors'}
+  statements:
+  - tool:
+      file: working scripts/audit_privacy_claims.py
+      list: KEPT_DOORS
+      names: [extensions.blocklist.enabled, extensions.update.enabled]
+  - tool:
+      file: gorilla-patchset/windows/audit_privacy_claims.py
+      list: KEPT_DOORS
+      names: [extensions.blocklist.enabled, extensions.update.enabled]
+  - where: gorilla-patchset/WHAT-WE-CHANGED-AND-WHY.md
+    quote: It still contacts Mozilla for the malicious add-on blocklist and its signature check.
+    asserts:
+    - pref: {name: extensions.blocklist.enabled, value: true}
+  - where: decisions/PRODUCT-DECISIONS.yaml
+    quote: Dormant reporting and update machinery switched off as well as cut
+    asserts:
+    - pref: {name: extensions.update.enabled, value: false, locked: true}
+- id: CONS-004
+  kind: undecided
+  topic: Cookies and sessions are kept on shutdown (privacy.clearOnShutdown cookies/sessions false); no decision records it
+  origin: {source: 'external review of the last four releases, 3 October 2026 (Codex run i-x20, gorilla-firefox-last-four-releases-report.md)', section: '1. Shutdown cleanup: not privacy hardening'}
+  statements:
+  - where: gorilla-patchset/patches/05.PREFS/browser_app_profile_firefox.js.patch
+    quote: +pref("privacy.clearOnShutdown.cookies",     false);
+    asserts:
+    - pref: {name: privacy.clearOnShutdown.cookies, value: false}
+    - pref: {name: privacy.clearOnShutdown.sessions, value: false}
+    - pref: {name: privacy.clearOnShutdown_v2.cookiesAndStorage, value: false}
+  recommend: record-as-is
+  recommend_why: the value has shipped in every release since the 154 patch set and people rely on staying logged in; recording it makes it a checked decision instead of an accident, and it is reversible
+- id: CONS-005
+  kind: wording
+  topic: '"Glean instrumentation removed from nsSocketTransport2": the 157 tree still calls Glean there'
+  origin: {source: 'external review of the last four releases, 3 October 2026 (Codex run i-x20, gorilla-firefox-last-four-releases-report.md)', section: '1. Network-layer Glean / FOG: a gate, not removal of every Glean symbol'}
+  statements:
+  - where: gorilla-patchset/WHAT-WE-CHANGED-AND-WHY.md
+    quote: Glean instrumentation removed from `nsSocketTransport2`,
+    asserts:
+    - tree_lacks: {path: netwerk/base/nsSocketTransport2.cpp, text: 'glean::'}
+  recommend: docs-win
+  recommend_why: 'the default for an unproven privacy claim is to make it true: gate or cut the remaining Glean calls in nsSocketTransport2.cpp (a new intent), or reword the sentence to what the code does if that is decided'
