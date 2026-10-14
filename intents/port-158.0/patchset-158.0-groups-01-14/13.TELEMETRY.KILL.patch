@@ -1,0 +1,455 @@
+diff --git a/third_party/rust/glean-core/.cargo-checksum.json b/third_party/rust/glean-core/.cargo-checksum.json
+index 4564b6ee79..cd01cc2be4 100644
+--- a/third_party/rust/glean-core/.cargo-checksum.json
++++ b/third_party/rust/glean-core/.cargo-checksum.json
+@@ -1 +1 @@
+-{"files":{".cargo_vcs_info.json":"5f638693cc160cfe1afffe452e4f424b9bac43ac765ac23d39db82148628c9f2","Cargo.lock":"a27d40c92875d8417f1c5951fa314c46a369e642bf106f8fd671814387c60754","Cargo.toml":"0845de9df25222d33363c9d768466f30352c1434029393aaf6e902584157cc66","Cargo.toml.orig":"560dcac00c03eb98ec16409d364109a2394d040aff76c8765a2afa61ca4a49f2","LICENSE":"1f256ecad192880510e84ad60474eab7589218784b9a50bc7ceee34c2b91f1d5","README.md":"026495898699b54608eb4ec16074ffafc57920d80ccb59961c501a1ea28c9985","build.rs":"8fba681e33180590093d5e0d39482eb3129a799329af8a39edbdb14df4f8d205","examples/rkv-open.rs":"ddac3dde6c698d662ecedbe060d57723e81cee4a2a58b2b1a49cce8368b020a7","src/common_metric_data.rs":"2e73987d1c501b2b29e9ccb122bfb118e85a57af8bdb2273aa81a79b6d6072fc","src/core/mod.rs":"ada8f059f0fa8a3a82315606318429d3a70200bbb2886d1a1bcaad2856a6303b","src/core_metrics.rs":"ddc750e9f4e11f88aee947360897031657aeef74fcf0f3293bd9033b78747354","src/database/conn_ext.rs":"ba7c4159c0e131efae127815de336b09715a1d30aae989126d68d5dee2d46ad9","src/database/migration.rs":"eca90969fc45dc3b09570fa732c12e5ae0fde3a3664123eb7e4cca116424b489","src/database/mod.rs":"34e691bf4b7125a4a0aa64f4ace6b5bb2d91696fdb4b635901774b2c8665d5aa","src/database/rkv.rs":"205c5f7fb35aee0f878a203aa7367f0c352a824a9e490e1dc11b13f16951af64","src/database/sqlite.rs":"eb62433e646c0123443ea82af71ef06d269e35b59f378cb9ff0598910a9983a7","src/database/sqlite/connection.rs":"8c94903e21c21fbbddda1d0f928f89bb530cbace6405aa85c2fe7f343500dd37","src/database/sqlite/schema.rs":"88ca4c2e65ec8bf3223f91aa974152e0eeade2321b1472fbe4b4052a595ea8f1","src/debug.rs":"663f77a3335256a562afad031496ea9215e315edd608398452df514dcff0b4af","src/dispatcher/global.rs":"baadcfe97eaac490a6b08479e8b4a45598445f5a9e6663ebf3095ee5f4f2a188","src/dispatcher/mod.rs":"b52e27140539f9349a7721e4e3329e3f002168664353b31fa1c7d843fb3a762d","src/error.rs":"7ef34fa675882e21d5f0b3fa59ac3ee552dcf284cef5ad0c5bdf793775634aa6","src/error_recording.rs":"d620fcca871f315970a4054f1b917a3368195f002743600610ec6bd031258805","src/event_database/mod.rs":"81068a622a0827ee80057cf7b441a1f7c2d32138aa432a92c79c62f01a550b14","src/fd_logger.rs":"4de0eb3d50ce96669de0bb581a4a794bec2cc768f2cb5221a02e739709c098e5","src/glean.udl":"63d9d771b3b98d3734d20fba86347d5200f98b3b0b72edb7ba090a19a704e263","src/glean_metrics.rs":"b3e304bafbbdc4d93bb6d5c9f75b36a36699dd1ba86fca8003da0d92e385c471","src/histogram/exponential.rs":"101c16ef06f043c2bc8eb28684ab69c748b4bc8c6f66ed4e64ee24c0ee9a364e","src/histogram/functional.rs":"fffa12a5b2b376cf9337ee0fdd6ad7961841e441b556a4e9ef29c524f933ea2d","src/histogram/linear.rs":"9214b0c99884ce35969c397c336410d0a7e898f8cee697f6b80166b451dfa781","src/histogram/mod.rs":"b4033298bdd011542cf4243a4f64634b4b9b815aa0a7c2c662a55310298dab5e","src/internal_metrics.rs":"c0bdd029059a211c4d9c5158438b78e78389d6e4a596cc241f3eed1182f93284","src/internal_pings.rs":"2b90557ace5177cbf12e53889c79a572c3772ebfb2a61ef7d42cef89467263b8","src/lib.rs":"1753c69b71ae24a9b339d98e9b71166740a15506cfc46245251eb63c0222568f","src/lib_unit_tests.rs":"99d6f2155d4e1258700b9bb2ace9eeef9ad278ea0474dcf541ae7f873c95eb99","src/metrics/boolean.rs":"88881c0b29b49d5f40b72f481da3baa41c9bf006878dfb7f6ccf4ebda5f86859","src/metrics/counter.rs":"79db27a628da982c829441152fd193b9fb6364bfafac4f352c341b465f4eedd1","src/metrics/custom_distribution.rs":"4e82436f0d50ec349669d217cabd289049d778bd71a27f53a854b776be13312f","src/metrics/datetime.rs":"7330a2510e2ef2869ed4f4056e2f1b6e0214d83ad56b5aaca3cdcf08894d6be2","src/metrics/denominator.rs":"3e3be25aa0dfa03746a73e440b1eeb007a83c9453005dc8c649a65527284b155","src/metrics/dual_labeled_counter.rs":"6230c28f7f21c3d39830917c3b15518b65ae7b8ce0fa5416d2632f8ecb7ee779","src/metrics/event.rs":"cc02d329d97665706eb28762846a77c6bf92d2e7cfcd0052e8f1b00c4055e5d9","src/metrics/experiment.rs":"f563e38f01b1480b3bb822d1b27a0b0534ef363c1b4c7f96a12a07aa7dd5ff47","src/metrics/labeled.rs":"6290367ad8df7c26549cc2a500d99dca26cbb18018860c550825fb131577d5a4","src/metrics/memory_distribution.rs":"ea63c0fa56e9ee337e8aff55649e582961539b8eb515f0dfdba2e7bb4ace68b4","src/metrics/memory_unit.rs":"ee32e020cb303dd631457374048a3ed53a2e7cbacc29c54d17d836fb15507538","src/metrics/mod.rs":"139d30826f785316253c51902e7f28c6f68cc39cbfc0c7b5304d7707648957fb","src/metrics/numerator.rs":"de8853a691980606745895c083c22036347117b3d556de66a9d9978ec0f51168","src/metrics/object.rs":"9d55fa5fd9bf96d9c21173ff71eba6f6853461b27a4357b60880e7ec08673bf5","src/metrics/ping.rs":"0a99ead789d964dcc1358d178dece5d09ed0890093f04a6663cc351bc676c106","src/metrics/quantity.rs":"a316e0053ddd15861cba8ec92d25280277cc06c9e1dda3dbb21e9880d7134600","src/metrics/rate.rs":"ff2f72be4b95adb4a29b2fc3becb759d00556d6c1b0768d0229967255c8d6006","src/metrics/recorded_experiment.rs":"6f089534bb4e1143abf0aa43e813c9fcc864fff128a825e83f09e61e96a1f6ee","src/metrics/remote_settings_config.rs":"2fb3a8a3a3511a638031222aea7234317857ddae010b61b6bf01ff5549af55fa","src/metrics/string.rs":"642c16b5d557f804a7310664fc642c58b58998f7455d6b4c7c8ead9f7e3e7258","src/metrics/string_list.rs":"2ae83b07cf15c0b8a2cf4c34f0de8a4d9c27bd244e8587b32b920e6a3b9dd15e","src/metrics/text.rs":"d312d17b8caee247d3dee3d967e1a199487fa962e8976629e444bbc2456052b6","src/metrics/time_unit.rs":"72325065e4ac0f3562f1983bda9fe3c0ab18272011dafe03d67900a3184a8eb6","src/metrics/timespan.rs":"1e3ce4f37cff42185f1f00aab3c66a81571fa26fb88a2395fdcef71c1520f340","src/metrics/timing_distribution.rs":"e3d3e4ebe0f3f46e4016fc434075403196d3546ce77aa757b84dbc4bc647eb85","src/metrics/url.rs":"289a38fb19bbf1d8a8c6522e92244c9c77b75f26e042366360de73fb56ecb72d","src/metrics/uuid.rs":"e7592f1824ed6c6b17ce63a6403960975862c77bf6b1f19b429790c6010f2d1e","src/ping/mod.rs":"bac371140d950c4c151f97696f5568f61f8040d73d1ce411651187138c54b135","src/scheduler.rs":"2463d406492b43e3b4544bc3b6cdeea99421b2bb04178a0cf38cd9cfcd00c5e4","src/session/mod.rs":"82e1baba644ddefdf9b25fde4d1fb81712b2dd8a9384239a387ee5c7ca8f72bc","src/storage/mod.rs":"079395748cb388495ac48d1cc49376e34166401d5c86c2147cfceff4ad60ccb5","src/system.rs":"e3d1b54e1d39cafe6f4dc7ff5021b08c879733f909951b0e1332b3efa9ed97bd","src/thread.rs":"f8504fb6cfc7b43566f232930d5075d8a759fd7339d81ff01ba73568298492c7","src/traits/boolean.rs":"fa955e81ee0ff1a3da86002347cf4713f4ccd4e7a32ecddc7e8eab6483820277","src/traits/counter.rs":"8ed21fad9163b10a4fec89c052437ada69bbda6c9fe9e912bd9a2531a3264427","src/traits/custom_distribution.rs":"3dd516a7cf62c48371ee36e7390707e049bca3bf45fefca2d6cb0d33c501df17","src/traits/datetime.rs":"6c3bae9b7e971181c4d0c39d873a424b4bd30bdab3dc9fd00027327902f628fd","src/traits/dual_labeled_counter.rs":"63cbed60be3e8d695788f0a3624507787a005a0aaf05bdd3828fdfb0890952e0","src/traits/event.rs":"36b4e4d0d042c8ef9e7620c08a939cf3fa3e3aa96cb000b12b203bd82de255b9","src/traits/labeled.rs":"1b2f8eea8d59e1635f64993936d880084a5e3f65cfd7a26ddf6968366890187d","src/traits/memory_distribution.rs":"7249d66626fc76d173eda4e496bf1b59632bc1376a58d808b5a827b707d37d55","src/traits/mod.rs":"1ffab9c66d37a4759c369d805386792eb39f769d6a801e1737eb19cfdb40477f","src/traits/numerator.rs":"d5991ef6463d17127ce7c969f8a3e110ec83b59714162f04d371ac43844241a1","src/traits/object.rs":"c03bad670ec7affbc578247f9e1904e898c1870b9bf25750c5094113f995623f","src/traits/ping.rs":"8831c106c03afeb458b0b028fa1ce61f056ebf8e82bc0a171a1bff255d920748","src/traits/quantity.rs":"cff0f7fdd0ee41d0457d9ca08222f652b4649eb64e0c0fbdfa76849013012c56","src/traits/rate.rs":"4f0a3a68d78631e5d5b83cbc65bfb9a41359b4fd8874296d58adebbc914a739a","src/traits/string.rs":"594a330ca03b21128040a263b3d4c85f66aed5147ac785f036f8c537c691dfd3","src/traits/string_list.rs":"b0b46bdf8c48a7480a0144eb40bf93fbfd8086af8e5f73863676fb695fb443ba","src/traits/text.rs":"b700031c6204126e73d9ea9c36f59fe6eb0b3b5dc50696072445c4420806f80f","src/traits/timespan.rs":"95d747ade6a58428f613b8860289a369386f45a8dc2b76ba741e39cbf19cc438","src/traits/timing_distribution.rs":"20e3ff9eed201a782f35584c657af0c7430673a97afeae708e2ea893a5723b95","src/traits/url.rs":"36fa73762288c4d33dd72de1a47c1f5451d2d6e751cf293d5e0ec88ebd4f9a71","src/traits/uuid.rs":"ea31080e349166d59272a119a546870650fab3dc512d356efbc98a3254165023","src/upload/directory.rs":"b676a05ae19a937e81391d749048fd7f544c629999dd71c8198319b5534da956","src/upload/mod.rs":"9ba37d7695b82831cc092fc5d0948b9cbb570735f9b4137a7758863afe4b97d0","src/upload/policy.rs":"9bb1b22f34069256f6797c478e5b169a1d22978a4e4443f55d36b5de0a6830cb","src/upload/request.rs":"6922ca8ca6944b414686234156b1d46bf9e6f4bf745b77ed7a767ad231970876","src/upload/result.rs":"c956266c54595d27d5e8b11abffe28fad5fea82995922618805b66cfdcc21d54","src/util.rs":"8fe16c1a1c89d9ca0fee425d81a5809c999092c0b7543d386a2b9a6d649ba130","tests/77ca0472-5124-4f6b-971d-4a2a928fb158.safe.bin":"857f235615a30f1b2635c9b5c861199de104ec55ac4e31c7571352c59a43df06","tests/boolean.rs":"76d6014ff108cb6514d9bceb1b2b14749a55b09921f4595a5e30f1bd3546e9f0","tests/clientid_textfile.rs":"6fdc9fe0568aec953df57f123bdbca16adb715ec1a4ac9059754409ddc59f720","tests/collection_enabled.rs":"2bb3e2a754df2260e470d3ae10be85aa15d84c448848ae5d47f1df1af486f2ac","tests/common/mod.rs":"80c189f39a4de53e8f33f42ad3d3c2aee23eac4f024061342c6a4a3f52d436ba","tests/counter.rs":"4c59def10e64de0d7a0241dde0267fd02c828b38be8cc67fba90a76004ca6721","tests/custom_distribution.rs":"41c593a0b4561e21f29d1a5b948de964a866253c58ca76ffefebe370fca150e0","tests/datetime.rs":"51bf8ebea3f5b99d2e5cab1d0e2cd15d750a05c5002b9dbec614ce7dc9093cf4","tests/docs.rs":"d246cfdef2234162f0caa5ba9f7506514938650e4e8dbf5abb8f84dc1e1a1b40","tests/dual_labeled_counter.rs":"e95a5713ec3faa2cbd4bfdafa9b2f4051bb7c3d7e3fd09ca4d730d5ee7d30ffe","tests/event.rs":"0fad31847dba64bc8f427ce8636b579251b717322df1a1a5d9eff99f7b4398f1","tests/filled-rkv.data.safe.bin":"ae583c003b7e49761c15029c84380a34f17861ee4d705363dfaa2b5ea8e01c61","tests/labeled.rs":"01ea8db75d774f6ca864f7cc772c98c21e570511cb034e0226127a2bae7b605f","tests/memory_distribution.rs":"3d9a5b8f99e03f783e3396e4320ee4dc974c895cfef2cec0b14d2a9a9f9b736f","tests/metrics_sync.rs":"e4fb9477dec465d34b1ce804a028d6400dd232491cb9e674b98d5e1cb196f6a4","tests/object.rs":"8c35676e04f6ccf54a28764700915e753fc0355bfa5d7804d72caba66fd564cd","tests/ping.rs":"13c400b2d18b8fe8b0ed46bbc94fe7cd7d7e6ac679f215af626bbc623746c8bb","tests/ping_maker.rs":"71a0c9d37edc84aa25a94c8a67f7378fef5402405fde818ae8f1f8836fd0b1d7","tests/quantity.rs":"55e7dca346fd1d27f0974b78ca3fb12427cb5da2ee637afc08a54f360f947361","tests/rate.rs":"3766230e31cc4ab960f916b4c2f9208cc8542ecea0749298197f547b745440e9","tests/session.rs":"8a18df6cd14407a8e7baca846a7f15e601c987b358901626116aa65ba3d0be1e","tests/sqlite.rs":"5a1d2ba5c0706268b02439d01039dff4bc98cb3ea0ae1094d403048f2bef0ae8","tests/sqlite_migration.rs":"599cc5f790e05a6cc9a5b303399cb19e1e1d483246171e969e88ec01a75a4218","tests/storage.rs":"990dd1d13b9ffa8af0686977a6ac3502c6befb9eaa83649587e2660f51c596c9","tests/string.rs":"397fcfd27c25f0e81e2a40db3265b0d7dc0dd56b190319c1f86cb1c2c0ed4f9d","tests/string_list.rs":"34efa2afe3e89e6635f21ec9c80650d5816e35e9cb85163d894d600a5b3a4e3a","tests/test-rkv-cases.sh":"1df53d64ba03ff60b242afb79099fb1a5847a7d29b4b8f6e3fa8d75bdeff1d71","tests/text.rs":"c3449e0dd8d774a60f47e39752c16951b8723eeea11c6a01d7fa7d3536285773","tests/timespan.rs":"3d05739a93f3e0ea7264e8fdea876bd948714e5b44e82b8fd7c0218fdb597bb3","tests/timing_distribution.rs":"072ad950b2162e503150e411119b9a000573538bd2cff93c1c1a3616d1589ef4","tests/uuid.rs":"e0e58614319f5e973126f5b4e68d9289ccd6d65e428aca215bf7dcc8a0504889","uniffi.toml":"2a779a87179526b45338797364583868aba9491df85e655da095f3068bb9c615"},"package":"c976fc97fd10188c77961b748e446170acb0bbecbc4aa74ca9a3602197d38a2a"}
+\ No newline at end of file
++{"files":{".cargo_vcs_info.json":"5f638693cc160cfe1afffe452e4f424b9bac43ac765ac23d39db82148628c9f2","Cargo.lock":"a27d40c92875d8417f1c5951fa314c46a369e642bf106f8fd671814387c60754","Cargo.toml":"0845de9df25222d33363c9d768466f30352c1434029393aaf6e902584157cc66","Cargo.toml.orig":"560dcac00c03eb98ec16409d364109a2394d040aff76c8765a2afa61ca4a49f2","LICENSE":"1f256ecad192880510e84ad60474eab7589218784b9a50bc7ceee34c2b91f1d5","README.md":"026495898699b54608eb4ec16074ffafc57920d80ccb59961c501a1ea28c9985","build.rs":"8fba681e33180590093d5e0d39482eb3129a799329af8a39edbdb14df4f8d205","examples/rkv-open.rs":"ddac3dde6c698d662ecedbe060d57723e81cee4a2a58b2b1a49cce8368b020a7","src/common_metric_data.rs":"2e73987d1c501b2b29e9ccb122bfb118e85a57af8bdb2273aa81a79b6d6072fc","src/core/mod.rs":"ada8f059f0fa8a3a82315606318429d3a70200bbb2886d1a1bcaad2856a6303b","src/core_metrics.rs":"ddc750e9f4e11f88aee947360897031657aeef74fcf0f3293bd9033b78747354","src/database/conn_ext.rs":"ba7c4159c0e131efae127815de336b09715a1d30aae989126d68d5dee2d46ad9","src/database/migration.rs":"eca90969fc45dc3b09570fa732c12e5ae0fde3a3664123eb7e4cca116424b489","src/database/mod.rs":"34e691bf4b7125a4a0aa64f4ace6b5bb2d91696fdb4b635901774b2c8665d5aa","src/database/rkv.rs":"205c5f7fb35aee0f878a203aa7367f0c352a824a9e490e1dc11b13f16951af64","src/database/sqlite.rs":"eb62433e646c0123443ea82af71ef06d269e35b59f378cb9ff0598910a9983a7","src/database/sqlite/connection.rs":"8c94903e21c21fbbddda1d0f928f89bb530cbace6405aa85c2fe7f343500dd37","src/database/sqlite/schema.rs":"88ca4c2e65ec8bf3223f91aa974152e0eeade2321b1472fbe4b4052a595ea8f1","src/debug.rs":"663f77a3335256a562afad031496ea9215e315edd608398452df514dcff0b4af","src/dispatcher/global.rs":"f4247e6fbeb3da7babe0d332ec1f5dec65c2780f0bc869f90a3d7c0719077e92","src/dispatcher/mod.rs":"b52e27140539f9349a7721e4e3329e3f002168664353b31fa1c7d843fb3a762d","src/error.rs":"7ef34fa675882e21d5f0b3fa59ac3ee552dcf284cef5ad0c5bdf793775634aa6","src/error_recording.rs":"d620fcca871f315970a4054f1b917a3368195f002743600610ec6bd031258805","src/event_database/mod.rs":"81068a622a0827ee80057cf7b441a1f7c2d32138aa432a92c79c62f01a550b14","src/fd_logger.rs":"4de0eb3d50ce96669de0bb581a4a794bec2cc768f2cb5221a02e739709c098e5","src/glean.udl":"63d9d771b3b98d3734d20fba86347d5200f98b3b0b72edb7ba090a19a704e263","src/glean_metrics.rs":"b3e304bafbbdc4d93bb6d5c9f75b36a36699dd1ba86fca8003da0d92e385c471","src/histogram/exponential.rs":"101c16ef06f043c2bc8eb28684ab69c748b4bc8c6f66ed4e64ee24c0ee9a364e","src/histogram/functional.rs":"fffa12a5b2b376cf9337ee0fdd6ad7961841e441b556a4e9ef29c524f933ea2d","src/histogram/linear.rs":"9214b0c99884ce35969c397c336410d0a7e898f8cee697f6b80166b451dfa781","src/histogram/mod.rs":"b4033298bdd011542cf4243a4f64634b4b9b815aa0a7c2c662a55310298dab5e","src/internal_metrics.rs":"c0bdd029059a211c4d9c5158438b78e78389d6e4a596cc241f3eed1182f93284","src/internal_pings.rs":"2b90557ace5177cbf12e53889c79a572c3772ebfb2a61ef7d42cef89467263b8","src/lib.rs":"58ac9dd6d6d1449f6ccc6ca051d7791ca30a76f35d1de305f7cc3714883031b1","src/lib_unit_tests.rs":"99d6f2155d4e1258700b9bb2ace9eeef9ad278ea0474dcf541ae7f873c95eb99","src/metrics/boolean.rs":"748228174de5025b60c9ba0520004717955bb4c775174c8baf47355793da6d03","src/metrics/counter.rs":"4cfb0afd3dde420811ef485fc6675d06fb349d19e8435613c88e5c3b03dd228e","src/metrics/custom_distribution.rs":"b69392cb0b86a04af3a568ce54c460f06aecc92cc974cd735aa7050bd160ac51","src/metrics/datetime.rs":"2972d41904b598fc548c4ce37694704a08a37c06d11b9f034579910040d7a765","src/metrics/denominator.rs":"4101b8747b2366e2207d0d1bf49e499e84692e22051079ac43aaf2a1e22bed63","src/metrics/dual_labeled_counter.rs":"6230c28f7f21c3d39830917c3b15518b65ae7b8ce0fa5416d2632f8ecb7ee779","src/metrics/event.rs":"1df92f77033034c8246aa02c61292298e1918e68a43a57df77f7a00415e38b19","src/metrics/experiment.rs":"f563e38f01b1480b3bb822d1b27a0b0534ef363c1b4c7f96a12a07aa7dd5ff47","src/metrics/labeled.rs":"6290367ad8df7c26549cc2a500d99dca26cbb18018860c550825fb131577d5a4","src/metrics/memory_distribution.rs":"f9a16d74f9a385ec497eb295ce0b408cb202990ced2153122f813adc17366a26","src/metrics/memory_unit.rs":"ee32e020cb303dd631457374048a3ed53a2e7cbacc29c54d17d836fb15507538","src/metrics/mod.rs":"139d30826f785316253c51902e7f28c6f68cc39cbfc0c7b5304d7707648957fb","src/metrics/numerator.rs":"40afa8757857bc1935c6badf699f9a537b554597e98abe6e05e61b710f91d78c","src/metrics/object.rs":"8a275e656bf8ae895e18e4f3a55aa2927fa391da21fbbc8afedf9dc89d4aaefe","src/metrics/ping.rs":"0a99ead789d964dcc1358d178dece5d09ed0890093f04a6663cc351bc676c106","src/metrics/quantity.rs":"fb332a6374d83874d0839d96b5ec7b3d67dd83ee10bfc11e6aa4efbc29085e60","src/metrics/rate.rs":"9dce7c2189debdee254cbb11edef668f3d68ce147efe9a32081b98dc85d4f7ce","src/metrics/recorded_experiment.rs":"6f089534bb4e1143abf0aa43e813c9fcc864fff128a825e83f09e61e96a1f6ee","src/metrics/remote_settings_config.rs":"2fb3a8a3a3511a638031222aea7234317857ddae010b61b6bf01ff5549af55fa","src/metrics/string.rs":"aec2caba8ff276ff4501857e4f01a5fd4be9abba07e728411a5f033fa093466d","src/metrics/string_list.rs":"d0fe871bc8379fc7a73aab4b63f94ffd8260675c0fba2a4d9b5bca9e8e130865","src/metrics/text.rs":"e48937a0ae7591d5f080d5fd1e2b91ae891852188b6d707074880c91cc868a4e","src/metrics/time_unit.rs":"72325065e4ac0f3562f1983bda9fe3c0ab18272011dafe03d67900a3184a8eb6","src/metrics/timespan.rs":"b1fa0c6181585641457d644d303a2105c2fb94c7c46af6453454de9c72a7a3e2","src/metrics/timing_distribution.rs":"f2b8755c8f9d8bbba9293c4fa1b981bfd7dda676ef828b5bcc56c446ec37c9dc","src/metrics/url.rs":"289a38fb19bbf1d8a8c6522e92244c9c77b75f26e042366360de73fb56ecb72d","src/metrics/uuid.rs":"001e09a6e5ea3333d9bb0838559c4039eb4de7b3351fba0cf37497008478167d","src/ping/mod.rs":"bac371140d950c4c151f97696f5568f61f8040d73d1ce411651187138c54b135","src/scheduler.rs":"2463d406492b43e3b4544bc3b6cdeea99421b2bb04178a0cf38cd9cfcd00c5e4","src/session/mod.rs":"82e1baba644ddefdf9b25fde4d1fb81712b2dd8a9384239a387ee5c7ca8f72bc","src/storage/mod.rs":"079395748cb388495ac48d1cc49376e34166401d5c86c2147cfceff4ad60ccb5","src/system.rs":"e3d1b54e1d39cafe6f4dc7ff5021b08c879733f909951b0e1332b3efa9ed97bd","src/thread.rs":"f8504fb6cfc7b43566f232930d5075d8a759fd7339d81ff01ba73568298492c7","src/traits/boolean.rs":"fa955e81ee0ff1a3da86002347cf4713f4ccd4e7a32ecddc7e8eab6483820277","src/traits/counter.rs":"8ed21fad9163b10a4fec89c052437ada69bbda6c9fe9e912bd9a2531a3264427","src/traits/custom_distribution.rs":"3dd516a7cf62c48371ee36e7390707e049bca3bf45fefca2d6cb0d33c501df17","src/traits/datetime.rs":"6c3bae9b7e971181c4d0c39d873a424b4bd30bdab3dc9fd00027327902f628fd","src/traits/dual_labeled_counter.rs":"63cbed60be3e8d695788f0a3624507787a005a0aaf05bdd3828fdfb0890952e0","src/traits/event.rs":"36b4e4d0d042c8ef9e7620c08a939cf3fa3e3aa96cb000b12b203bd82de255b9","src/traits/labeled.rs":"1b2f8eea8d59e1635f64993936d880084a5e3f65cfd7a26ddf6968366890187d","src/traits/memory_distribution.rs":"7249d66626fc76d173eda4e496bf1b59632bc1376a58d808b5a827b707d37d55","src/traits/mod.rs":"1ffab9c66d37a4759c369d805386792eb39f769d6a801e1737eb19cfdb40477f","src/traits/numerator.rs":"d5991ef6463d17127ce7c969f8a3e110ec83b59714162f04d371ac43844241a1","src/traits/object.rs":"c03bad670ec7affbc578247f9e1904e898c1870b9bf25750c5094113f995623f","src/traits/ping.rs":"8831c106c03afeb458b0b028fa1ce61f056ebf8e82bc0a171a1bff255d920748","src/traits/quantity.rs":"cff0f7fdd0ee41d0457d9ca08222f652b4649eb64e0c0fbdfa76849013012c56","src/traits/rate.rs":"4f0a3a68d78631e5d5b83cbc65bfb9a41359b4fd8874296d58adebbc914a739a","src/traits/string.rs":"594a330ca03b21128040a263b3d4c85f66aed5147ac785f036f8c537c691dfd3","src/traits/string_list.rs":"b0b46bdf8c48a7480a0144eb40bf93fbfd8086af8e5f73863676fb695fb443ba","src/traits/text.rs":"b700031c6204126e73d9ea9c36f59fe6eb0b3b5dc50696072445c4420806f80f","src/traits/timespan.rs":"95d747ade6a58428f613b8860289a369386f45a8dc2b76ba741e39cbf19cc438","src/traits/timing_distribution.rs":"20e3ff9eed201a782f35584c657af0c7430673a97afeae708e2ea893a5723b95","src/traits/url.rs":"36fa73762288c4d33dd72de1a47c1f5451d2d6e751cf293d5e0ec88ebd4f9a71","src/traits/uuid.rs":"ea31080e349166d59272a119a546870650fab3dc512d356efbc98a3254165023","src/upload/directory.rs":"b676a05ae19a937e81391d749048fd7f544c629999dd71c8198319b5534da956","src/upload/mod.rs":"9ba37d7695b82831cc092fc5d0948b9cbb570735f9b4137a7758863afe4b97d0","src/upload/policy.rs":"9bb1b22f34069256f6797c478e5b169a1d22978a4e4443f55d36b5de0a6830cb","src/upload/request.rs":"6922ca8ca6944b414686234156b1d46bf9e6f4bf745b77ed7a767ad231970876","src/upload/result.rs":"c956266c54595d27d5e8b11abffe28fad5fea82995922618805b66cfdcc21d54","src/util.rs":"8fe16c1a1c89d9ca0fee425d81a5809c999092c0b7543d386a2b9a6d649ba130","tests/77ca0472-5124-4f6b-971d-4a2a928fb158.safe.bin":"857f235615a30f1b2635c9b5c861199de104ec55ac4e31c7571352c59a43df06","tests/boolean.rs":"76d6014ff108cb6514d9bceb1b2b14749a55b09921f4595a5e30f1bd3546e9f0","tests/clientid_textfile.rs":"6fdc9fe0568aec953df57f123bdbca16adb715ec1a4ac9059754409ddc59f720","tests/collection_enabled.rs":"2bb3e2a754df2260e470d3ae10be85aa15d84c448848ae5d47f1df1af486f2ac","tests/common/mod.rs":"80c189f39a4de53e8f33f42ad3d3c2aee23eac4f024061342c6a4a3f52d436ba","tests/counter.rs":"4c59def10e64de0d7a0241dde0267fd02c828b38be8cc67fba90a76004ca6721","tests/custom_distribution.rs":"41c593a0b4561e21f29d1a5b948de964a866253c58ca76ffefebe370fca150e0","tests/datetime.rs":"51bf8ebea3f5b99d2e5cab1d0e2cd15d750a05c5002b9dbec614ce7dc9093cf4","tests/docs.rs":"d246cfdef2234162f0caa5ba9f7506514938650e4e8dbf5abb8f84dc1e1a1b40","tests/dual_labeled_counter.rs":"e95a5713ec3faa2cbd4bfdafa9b2f4051bb7c3d7e3fd09ca4d730d5ee7d30ffe","tests/event.rs":"0fad31847dba64bc8f427ce8636b579251b717322df1a1a5d9eff99f7b4398f1","tests/filled-rkv.data.safe.bin":"ae583c003b7e49761c15029c84380a34f17861ee4d705363dfaa2b5ea8e01c61","tests/labeled.rs":"01ea8db75d774f6ca864f7cc772c98c21e570511cb034e0226127a2bae7b605f","tests/memory_distribution.rs":"3d9a5b8f99e03f783e3396e4320ee4dc974c895cfef2cec0b14d2a9a9f9b736f","tests/metrics_sync.rs":"e4fb9477dec465d34b1ce804a028d6400dd232491cb9e674b98d5e1cb196f6a4","tests/object.rs":"8c35676e04f6ccf54a28764700915e753fc0355bfa5d7804d72caba66fd564cd","tests/ping.rs":"13c400b2d18b8fe8b0ed46bbc94fe7cd7d7e6ac679f215af626bbc623746c8bb","tests/ping_maker.rs":"71a0c9d37edc84aa25a94c8a67f7378fef5402405fde818ae8f1f8836fd0b1d7","tests/quantity.rs":"55e7dca346fd1d27f0974b78ca3fb12427cb5da2ee637afc08a54f360f947361","tests/rate.rs":"3766230e31cc4ab960f916b4c2f9208cc8542ecea0749298197f547b745440e9","tests/session.rs":"8a18df6cd14407a8e7baca846a7f15e601c987b358901626116aa65ba3d0be1e","tests/sqlite.rs":"5a1d2ba5c0706268b02439d01039dff4bc98cb3ea0ae1094d403048f2bef0ae8","tests/sqlite_migration.rs":"599cc5f790e05a6cc9a5b303399cb19e1e1d483246171e969e88ec01a75a4218","tests/storage.rs":"990dd1d13b9ffa8af0686977a6ac3502c6befb9eaa83649587e2660f51c596c9","tests/string.rs":"397fcfd27c25f0e81e2a40db3265b0d7dc0dd56b190319c1f86cb1c2c0ed4f9d","tests/string_list.rs":"34efa2afe3e89e6635f21ec9c80650d5816e35e9cb85163d894d600a5b3a4e3a","tests/test-rkv-cases.sh":"1df53d64ba03ff60b242afb79099fb1a5847a7d29b4b8f6e3fa8d75bdeff1d71","tests/text.rs":"c3449e0dd8d774a60f47e39752c16951b8723eeea11c6a01d7fa7d3536285773","tests/timespan.rs":"3d05739a93f3e0ea7264e8fdea876bd948714e5b44e82b8fd7c0218fdb597bb3","tests/timing_distribution.rs":"072ad950b2162e503150e411119b9a000573538bd2cff93c1c1a3616d1589ef4","tests/uuid.rs":"e0e58614319f5e973126f5b4e68d9289ccd6d65e428aca215bf7dcc8a0504889","uniffi.toml":"2a779a87179526b45338797364583868aba9491df85e655da095f3068bb9c615"},"package":"c976fc97fd10188c77961b748e446170acb0bbecbc4aa74ca9a3602197d38a2a"}
+\ No newline at end of file
+diff --git a/third_party/rust/glean-core/src/dispatcher/global.rs b/third_party/rust/glean-core/src/dispatcher/global.rs
+index af686be595..abec595865 100644
+--- a/third_party/rust/glean-core/src/dispatcher/global.rs
++++ b/third_party/rust/glean-core/src/dispatcher/global.rs
+@@ -45,6 +45,17 @@ fn guard() -> DispatchGuard {
+ ///
+ /// [`flush_init`]: fn.flush_init.html
+ pub fn launch(task: impl FnOnce() + Send + 'static) {
++    // Gorilla: telemetry is disabled at the FOG layer (FOG::InitializeFOG is a
++    // no-op), so the dispatcher is never flushed. Metric-recording tasks would
++    // otherwise pile up in the pre-init buffer forever — costing ~0.84% parent
++    // CPU on the calling threads (Renderer/Compositor/WebRender/Socket) and
++    // slowly leaking memory holding closures. Drop them immediately in
++    // production. Test mode keeps full behavior so vendored tests still pass.
++    if !TESTING_MODE.load(Ordering::SeqCst) {
++        drop(task);
++        return;
++    }
++
+     let current_thread = thread::current();
+     if let Some("glean.shutdown") = current_thread.name() {
+         log::error!("Tried to launch a task from the shutdown thread. That is forbidden.");
+diff --git a/third_party/rust/glean-core/src/lib.rs b/third_party/rust/glean-core/src/lib.rs
+index 9c2cce6cd5..9806d8af3e 100644
+--- a/third_party/rust/glean-core/src/lib.rs
++++ b/third_party/rust/glean-core/src/lib.rs
+@@ -105,6 +105,16 @@ pub(crate) const DELETION_REQUEST_PINGS_DIRECTORY: &str = "deletion_request";
+ /// Note: The initialization might still be in progress, as it runs in a separate thread.
+ static INITIALIZE_CALLED: AtomicBool = AtomicBool::new(false);
+ 
++/// Gorilla: compile-time telemetry kill switch.
++///
++/// This build never calls `glean::initialize()` (FOG::InitializeFOG is a no-op),
++/// so no metric will ever be uploaded. Guarding the hot metric-recording paths
++/// with this `const` (rather than a runtime flag) lets the optimizer dead-code-
++/// eliminate the guarded bodies entirely — no atomic load, no branch, and under
++/// LTO the eliminated bodies let callers (e.g. WebRender frame timings) drop the
++/// calls too. Set to `false` to restore stock Glean recording behavior.
++pub const GORILLA_TELEMETRY_OFF: bool = true;
++
+ /// Keep track of the debug features before Glean is initialized.
+ static PRE_INIT_DEBUG_VIEW_TAG: Mutex<String> = Mutex::new(String::new());
+ static PRE_INIT_LOG_PINGS: AtomicBool = AtomicBool::new(false);
+diff --git a/third_party/rust/glean-core/src/metrics/boolean.rs b/third_party/rust/glean-core/src/metrics/boolean.rs
+index aca08c21b8..00e2fbf495 100644
+--- a/third_party/rust/glean-core/src/metrics/boolean.rs
++++ b/third_party/rust/glean-core/src/metrics/boolean.rs
+@@ -75,6 +75,7 @@ impl BooleanMetric {
+     ///
+     /// * `value` - the value to set.
+     pub fn set(&self, value: bool) {
++        if crate::GORILLA_TELEMETRY_OFF { return; }  // Gorilla: telemetry disabled — skip clone + dispatch
+         let metric = self.clone();
+         crate::launch_with_glean(move |glean| metric.set_sync(glean, value))
+     }
+diff --git a/third_party/rust/glean-core/src/metrics/counter.rs b/third_party/rust/glean-core/src/metrics/counter.rs
+index 2ace001c9b..86dbac996a 100644
+--- a/third_party/rust/glean-core/src/metrics/counter.rs
++++ b/third_party/rust/glean-core/src/metrics/counter.rs
+@@ -110,6 +110,7 @@ impl CounterMetric {
+     ///
+     /// Logs an error if the `amount` is 0 or negative.
+     pub fn add(&self, amount: i32) {
++        if crate::GORILLA_TELEMETRY_OFF { return; }  // Gorilla: telemetry disabled — skip clone + dispatch
+         let metric = self.clone();
+         crate::launch_with_glean(move |glean| metric.add_sync(glean, amount))
+     }
+diff --git a/third_party/rust/glean-core/src/metrics/custom_distribution.rs b/third_party/rust/glean-core/src/metrics/custom_distribution.rs
+index 69f5e33d32..75d4a97938 100644
+--- a/third_party/rust/glean-core/src/metrics/custom_distribution.rs
++++ b/third_party/rust/glean-core/src/metrics/custom_distribution.rs
+@@ -105,6 +105,7 @@ impl CustomDistributionMetric {
+     /// Discards any negative value in `samples` and report an [`ErrorType::InvalidValue`]
+     /// for each of them.
+     pub fn accumulate_samples(&self, samples: Vec<i64>) {
++        if crate::GORILLA_TELEMETRY_OFF { return; }  // Gorilla: telemetry disabled — skip clone + dispatch
+         let metric = self.clone();
+         crate::launch_with_glean(move |glean| metric.accumulate_samples_sync(glean, &samples))
+     }
+@@ -124,6 +125,7 @@ impl CustomDistributionMetric {
+     /// Discards any negative value of `sample` and reports an
+     /// [`ErrorType::InvalidValue`].
+     pub fn accumulate_single_sample(&self, sample: i64) {
++        if crate::GORILLA_TELEMETRY_OFF { return; }  // Gorilla: telemetry disabled — skip clone + dispatch
+         let metric = self.clone();
+         crate::launch_with_glean(move |glean| metric.accumulate_samples_sync(glean, &[sample]))
+     }
+diff --git a/third_party/rust/glean-core/src/metrics/datetime.rs b/third_party/rust/glean-core/src/metrics/datetime.rs
+index 935215c19c..5f8f5f1d56 100644
+--- a/third_party/rust/glean-core/src/metrics/datetime.rs
++++ b/third_party/rust/glean-core/src/metrics/datetime.rs
+@@ -131,6 +131,7 @@ impl DatetimeMetric {
+     ///
+     /// * `dt` - the optinal datetime to set this to. If missing the current date is used.
+     pub fn set(&self, dt: Option<Datetime>) {
++        if crate::GORILLA_TELEMETRY_OFF { return; }  // Gorilla: telemetry disabled — skip clone + dispatch
+         let metric = self.clone();
+         crate::launch_with_glean(move |glean| {
+             metric.set_sync(glean, dt);
+diff --git a/third_party/rust/glean-core/src/metrics/denominator.rs b/third_party/rust/glean-core/src/metrics/denominator.rs
+index fdf999a8cf..515e134c2e 100644
+--- a/third_party/rust/glean-core/src/metrics/denominator.rs
++++ b/third_party/rust/glean-core/src/metrics/denominator.rs
+@@ -50,6 +50,7 @@ impl DenominatorMetric {
+     ///
+     /// Logs an error if the `amount` is 0 or negative.
+     pub fn add(&self, amount: i32) {
++        if crate::GORILLA_TELEMETRY_OFF { return; }  // Gorilla: telemetry disabled — skip clone + dispatch
+         let metric = self.clone();
+         crate::launch_with_glean(move |glean| metric.add_sync(glean, amount))
+     }
+diff --git a/third_party/rust/glean-core/src/metrics/event.rs b/third_party/rust/glean-core/src/metrics/event.rs
+index 9a1f59091a..b16cfd10d2 100644
+--- a/third_party/rust/glean-core/src/metrics/event.rs
++++ b/third_party/rust/glean-core/src/metrics/event.rs
+@@ -55,6 +55,7 @@ impl EventMetric {
+     ///             Keys must be one of the allowed extra keys.
+     ///             If any key is not allowed, an error is reported and no event is recorded.
+     pub fn record(&self, extra: HashMap<String, String>) {
++        if crate::GORILLA_TELEMETRY_OFF { return; }  // Gorilla: telemetry disabled — skip clone + dispatch
+         let timestamp = crate::get_timestamp_ms();
+         self.record_with_time(timestamp, extra);
+     }
+@@ -70,6 +71,7 @@ impl EventMetric {
+     ///             Keys must be one of the allowed extra keys.
+     ///             If any key is not allowed, an error is reported and no event is recorded.
+     pub fn record_with_time(&self, timestamp: u64, extra: HashMap<String, String>) {
++        if crate::GORILLA_TELEMETRY_OFF { return; }  // Gorilla: telemetry disabled — skip clone + dispatch
+         let metric = self.clone();
+ 
+         // Precise timestamp based on wallclock. Will be used if `enable_event_timestamps` is true.
+diff --git a/third_party/rust/glean-core/src/metrics/memory_distribution.rs b/third_party/rust/glean-core/src/metrics/memory_distribution.rs
+index 916e6db53e..4cbacf9425 100644
+--- a/third_party/rust/glean-core/src/metrics/memory_distribution.rs
++++ b/third_party/rust/glean-core/src/metrics/memory_distribution.rs
+@@ -98,6 +98,10 @@ impl MemoryDistributionMetric {
+     /// Values bigger than 1 Terabyte (2<sup>40</sup> bytes) are truncated
+     /// and an [`ErrorType::InvalidValue`] error is recorded.
+     pub fn accumulate(&self, sample: i64) {
++        // Gorilla: telemetry disabled — skip clone + dispatch (see GORILLA_TELEMETRY_OFF).
++        if crate::GORILLA_TELEMETRY_OFF {
++            return;
++        }
+         let metric = self.clone();
+         crate::launch_with_glean(move |glean| metric.accumulate_sync(glean, sample))
+     }
+@@ -180,6 +184,10 @@ impl MemoryDistributionMetric {
+     /// Values bigger than 1 Terabyte (2<sup>40</sup> bytes) are truncated
+     /// and an [`ErrorType::InvalidValue`] error is recorded.
+     pub fn accumulate_samples(&self, samples: Vec<i64>) {
++        // Gorilla: telemetry disabled — skip clone + dispatch (see GORILLA_TELEMETRY_OFF).
++        if crate::GORILLA_TELEMETRY_OFF {
++            return;
++        }
+         let metric = self.clone();
+         crate::launch_with_glean(move |glean| metric.accumulate_samples_sync(glean, samples))
+     }
+@@ -376,6 +384,12 @@ impl<'a> LocalMemoryDistribution<'a> {
+     ///
+     /// Accumulation happens in-memory only.
+     pub fn accumulate(&mut self, sample: u64) {
++        // Gorilla: telemetry disabled — skip the inline histogram accumulate.
++        // Leaving the histogram empty makes Drop::drop return early (is_empty),
++        // so no commit_histogram/dispatch happens either.
++        if crate::GORILLA_TELEMETRY_OFF {
++            return;
++        }
+         let mut sample = self.metric.memory_unit.as_bytes(sample);
+         if sample > MAX_BYTES {
+             self.errors += 1;
+diff --git a/third_party/rust/glean-core/src/metrics/numerator.rs b/third_party/rust/glean-core/src/metrics/numerator.rs
+index c47fa4b2bf..aca06978f8 100644
+--- a/third_party/rust/glean-core/src/metrics/numerator.rs
++++ b/third_party/rust/glean-core/src/metrics/numerator.rs
+@@ -42,6 +42,7 @@ impl NumeratorMetric {
+     ///
+     /// Logs an error if the `amount` is negative.
+     pub fn add_to_numerator(&self, amount: i32) {
++        if crate::GORILLA_TELEMETRY_OFF { return; }  // Gorilla: telemetry disabled — skip clone + dispatch
+         let metric = self.clone();
+         crate::launch_with_glean(move |glean| metric.add_to_numerator_sync(glean, amount));
+     }
+diff --git a/third_party/rust/glean-core/src/metrics/object.rs b/third_party/rust/glean-core/src/metrics/object.rs
+index 3f63ed7551..5a21402428 100644
+--- a/third_party/rust/glean-core/src/metrics/object.rs
++++ b/third_party/rust/glean-core/src/metrics/object.rs
+@@ -64,6 +64,7 @@ impl ObjectMetric {
+     ///
+     /// * `value` - the value to set.
+     pub fn set(&self, value: JsonValue) {
++        if crate::GORILLA_TELEMETRY_OFF { return; }  // Gorilla: telemetry disabled — skip clone + dispatch
+         let metric = self.clone();
+         crate::launch_with_glean(move |glean| metric.set_sync(glean, value))
+     }
+@@ -79,6 +80,7 @@ impl ObjectMetric {
+     ///
+     /// * `object` - JSON representation of the object to set.
+     pub fn set_string(&self, object: String) {
++        if crate::GORILLA_TELEMETRY_OFF { return; }  // Gorilla: telemetry disabled — skip clone + dispatch
+         let metric = self.clone();
+         crate::launch_with_glean(move |glean| {
+             let object = match serde_json::from_str(&object) {
+@@ -99,6 +101,7 @@ impl ObjectMetric {
+     // TODO(bug 1691073): This can probably go once we have a more generic mechanism to record
+     // errors
+     pub fn record_schema_error(&self) {
++        if crate::GORILLA_TELEMETRY_OFF { return; }  // Gorilla: telemetry disabled — skip clone + dispatch
+         let metric = self.clone();
+         crate::launch_with_glean(move |glean| {
+             let msg = "Value did not match predefined schema";
+diff --git a/third_party/rust/glean-core/src/metrics/quantity.rs b/third_party/rust/glean-core/src/metrics/quantity.rs
+index 85d7ebe117..4749f4d4a0 100644
+--- a/third_party/rust/glean-core/src/metrics/quantity.rs
++++ b/third_party/rust/glean-core/src/metrics/quantity.rs
+@@ -63,6 +63,7 @@ impl QuantityMetric {
+     ///
+     /// Logs an error if the `value` is negative.
+     pub fn set(&self, value: i64) {
++        if crate::GORILLA_TELEMETRY_OFF { return; }  // Gorilla: telemetry disabled — skip clone + dispatch
+         let metric = self.clone();
+         crate::launch_with_glean(move |glean| metric.set_sync(glean, value))
+     }
+diff --git a/third_party/rust/glean-core/src/metrics/rate.rs b/third_party/rust/glean-core/src/metrics/rate.rs
+index 407f15f59f..684e55f7e1 100644
+--- a/third_party/rust/glean-core/src/metrics/rate.rs
++++ b/third_party/rust/glean-core/src/metrics/rate.rs
+@@ -66,6 +66,7 @@ impl RateMetric {
+     ///
+     /// Logs an error if the `amount` is negative.
+     pub fn add_to_numerator(&self, amount: i32) {
++        if crate::GORILLA_TELEMETRY_OFF { return; }  // Gorilla: telemetry disabled — skip clone + dispatch
+         let metric = self.clone();
+         crate::launch_with_glean(move |glean| metric.add_to_numerator_sync(glean, amount))
+     }
+@@ -106,6 +107,7 @@ impl RateMetric {
+     ///
+     /// Logs an error if the `amount` is negative.
+     pub fn add_to_denominator(&self, amount: i32) {
++        if crate::GORILLA_TELEMETRY_OFF { return; }  // Gorilla: telemetry disabled — skip clone + dispatch
+         let metric = self.clone();
+         crate::launch_with_glean(move |glean| metric.add_to_denominator_sync(glean, amount))
+     }
+diff --git a/third_party/rust/glean-core/src/metrics/string.rs b/third_party/rust/glean-core/src/metrics/string.rs
+index 65e730f76a..240d32d683 100644
+--- a/third_party/rust/glean-core/src/metrics/string.rs
++++ b/third_party/rust/glean-core/src/metrics/string.rs
+@@ -67,6 +67,7 @@ impl StringMetric {
+     ///
+     /// Truncates the value if it is longer than `MAX_LENGTH_VALUE` bytes and logs an error.
+     pub fn set(&self, value: String) {
++        if crate::GORILLA_TELEMETRY_OFF { return; }  // Gorilla: telemetry disabled — skip clone + dispatch
+         let metric = self.clone();
+         crate::launch_with_glean(move |glean| metric.set_sync(glean, &value))
+     }
+diff --git a/third_party/rust/glean-core/src/metrics/string_list.rs b/third_party/rust/glean-core/src/metrics/string_list.rs
+index d54d7337c3..06dfe467b6 100644
+--- a/third_party/rust/glean-core/src/metrics/string_list.rs
++++ b/third_party/rust/glean-core/src/metrics/string_list.rs
+@@ -53,6 +53,7 @@ impl StringListMetric {
+     ///
+     /// Truncates the value if it is longer than `MAX_STRING_LENGTH` bytes and logs an error.
+     pub fn add(&self, value: String) {
++        if crate::GORILLA_TELEMETRY_OFF { return; }  // Gorilla: telemetry disabled — skip clone + dispatch
+         let metric = self.clone();
+         crate::launch_with_glean(move |glean| metric.add_sync(glean, value))
+     }
+@@ -105,6 +106,7 @@ impl StringListMetric {
+     ///
+     /// Truncates any value in the list if it is longer than `MAX_STRING_LENGTH` and logs an error.
+     pub fn set(&self, values: Vec<String>) {
++        if crate::GORILLA_TELEMETRY_OFF { return; }  // Gorilla: telemetry disabled — skip clone + dispatch
+         let metric = self.clone();
+         crate::launch_with_glean(move |glean| metric.set_sync(glean, values))
+     }
+diff --git a/third_party/rust/glean-core/src/metrics/text.rs b/third_party/rust/glean-core/src/metrics/text.rs
+index bfbd308987..940e01612f 100644
+--- a/third_party/rust/glean-core/src/metrics/text.rs
++++ b/third_party/rust/glean-core/src/metrics/text.rs
+@@ -70,6 +70,7 @@ impl TextMetric {
+     /// Truncates the value (at codepoint boundaries) if it is longer than `MAX_LENGTH_VALUE` bytes
+     /// and logs an error.
+     pub fn set(&self, value: String) {
++        if crate::GORILLA_TELEMETRY_OFF { return; }  // Gorilla: telemetry disabled — skip clone + dispatch
+         let metric = self.clone();
+         crate::launch_with_glean(move |glean| metric.set_sync(glean, &value))
+     }
+diff --git a/third_party/rust/glean-core/src/metrics/timespan.rs b/third_party/rust/glean-core/src/metrics/timespan.rs
+index f6a2a17f89..5294cea032 100644
+--- a/third_party/rust/glean-core/src/metrics/timespan.rs
++++ b/third_party/rust/glean-core/src/metrics/timespan.rs
+@@ -55,6 +55,7 @@ impl TimespanMetric {
+     /// [`set_stop`](TimespanMetric::set_stop)): in that case the original start
+     /// time will be preserved.
+     pub fn start(&self) {
++        if crate::GORILLA_TELEMETRY_OFF { return; }  // Gorilla: telemetry disabled — skip clone + dispatch
+         let start_time = zeitstempel::now_awake();
+ 
+         let metric = self.clone();
+@@ -87,6 +88,7 @@ impl TimespanMetric {
+     ///
+     /// This will record an error if no [`set_start`](TimespanMetric::set_start) was called.
+     pub fn stop(&self) {
++        if crate::GORILLA_TELEMETRY_OFF { return; }  // Gorilla: telemetry disabled — skip clone + dispatch
+         let stop_time = zeitstempel::now_awake();
+ 
+         let metric = self.clone();
+@@ -142,6 +144,7 @@ impl TimespanMetric {
+     /// error is recorded if no [`set_start`](TimespanMetric::set_start) was
+     /// called.
+     pub fn cancel(&self) {
++        if crate::GORILLA_TELEMETRY_OFF { return; }  // Gorilla: telemetry disabled — skip clone + dispatch
+         let metric = self.clone();
+         crate::dispatcher::launch(move || {
+             let mut lock = metric
+@@ -167,6 +170,7 @@ impl TimespanMetric {
+     ///
+     /// * `elapsed` - The elapsed time to record.
+     pub fn set_raw(&self, elapsed: Duration) {
++        if crate::GORILLA_TELEMETRY_OFF { return; }  // Gorilla: telemetry disabled — skip clone + dispatch
+         let metric = self.clone();
+         crate::launch_with_glean(move |glean| metric.set_raw_sync(glean, elapsed));
+     }
+@@ -186,6 +190,7 @@ impl TimespanMetric {
+     ///
+     /// * `elapsed_nanos` - The elapsed time to record, in nanoseconds.
+     pub fn set_raw_nanos(&self, elapsed_nanos: i64) {
++        if crate::GORILLA_TELEMETRY_OFF { return; }  // Gorilla: telemetry disabled — skip clone + dispatch
+         let elapsed = Duration::from_nanos(elapsed_nanos.try_into().unwrap_or(0));
+         self.set_raw(elapsed)
+     }
+diff --git a/third_party/rust/glean-core/src/metrics/timing_distribution.rs b/third_party/rust/glean-core/src/metrics/timing_distribution.rs
+index 13f1ec4e2e..59a317798e 100644
+--- a/third_party/rust/glean-core/src/metrics/timing_distribution.rs
++++ b/third_party/rust/glean-core/src/metrics/timing_distribution.rs
+@@ -152,8 +152,15 @@ impl TimingDistributionMetric {
+     ///
+     /// A unique [`TimerId`] for the new timer.
+     pub fn start(&self) -> TimerId {
+-        let start_time = zeitstempel::now_awake();
+         let id = self.next_id.fetch_add(1, Ordering::SeqCst).into();
++        // Gorilla: telemetry disabled (see GORILLA_TELEMETRY_OFF). Skip the clock
++        // read + clone + dispatch; the const lets the optimizer DCE the rest. A
++        // valid (monotonic) TimerId is still returned so stop_and_accumulate
++        // callers are unaffected.
++        if crate::GORILLA_TELEMETRY_OFF {
++            return id;
++        }
++        let start_time = zeitstempel::now_awake();
+         let metric = self.clone();
+         crate::launch_with_glean(move |_glean| metric.set_start(id, start_time));
+         id
+@@ -191,6 +198,10 @@ impl TimingDistributionMetric {
+     ///   same timespan metric.
+     /// * `stop_time` - Timestamp in nanoseconds.
+     pub fn stop_and_accumulate(&self, id: TimerId) {
++        // Gorilla: telemetry disabled — skip clock read + clone + dispatch.
++        if crate::GORILLA_TELEMETRY_OFF {
++            return;
++        }
+         let stop_time = zeitstempel::now_awake();
+         let metric = self.clone();
+         crate::launch_with_glean(move |glean| metric.set_stop_and_accumulate(glean, id, stop_time));
+@@ -470,6 +481,10 @@ impl TimingDistributionMetric {
+     /// the application's platforms. Otherwise the resulting data may not share the same
+     /// guarantees that other `timing_distribution` metrics' data do.
+     pub fn accumulate_raw_duration(&self, duration: Duration) {
++        // Gorilla: telemetry disabled — skip conversion + clone + dispatch.
++        if crate::GORILLA_TELEMETRY_OFF {
++            return;
++        }
+         let duration_ns = duration.as_nanos().try_into().unwrap_or(u64::MAX);
+         let metric = self.clone();
+         crate::launch_with_glean(move |glean| {
+@@ -665,6 +680,13 @@ impl<'a> LocalTimingDistribution<'a> {
+     ///
+     /// Accumulation happens in-memory only.
+     pub fn accumulate(&mut self, sample: u64) {
++        // Gorilla: telemetry disabled — skip the inline histogram accumulate.
++        // This is the hot WebRender frame-timing path. Leaving the histogram
++        // empty means Drop::drop returns early (is_empty check) and never calls
++        // commit_histogram(), so no dispatch happens either.
++        if crate::GORILLA_TELEMETRY_OFF {
++            return;
++        }
+         // Check the range prior to converting the incoming unit to
+         // nanoseconds, so we can compare against the constant
+         // MAX_SAMPLE_TIME.
+diff --git a/third_party/rust/glean-core/src/metrics/uuid.rs b/third_party/rust/glean-core/src/metrics/uuid.rs
+index bf8b046bd8..85decabaac 100644
+--- a/third_party/rust/glean-core/src/metrics/uuid.rs
++++ b/third_party/rust/glean-core/src/metrics/uuid.rs
+@@ -45,6 +45,7 @@ impl UuidMetric {
+     ///
+     /// * `value` - The [`Uuid`] to set the metric to.
+     pub fn set(&self, value: String) {
++        if crate::GORILLA_TELEMETRY_OFF { return; }  // Gorilla: telemetry disabled — skip clone + dispatch
+         let metric = self.clone();
+         crate::launch_with_glean(move |glean| metric.set_sync(glean, &value))
+     }
+diff --git a/toolkit/components/glean/xpcom/FOG.cpp b/toolkit/components/glean/xpcom/FOG.cpp
+index dced11b2cb..3c9aaa5a80 100644
+--- a/toolkit/components/glean/xpcom/FOG.cpp
++++ b/toolkit/components/glean/xpcom/FOG.cpp
+@@ -146,6 +146,12 @@ extern "C" uint32_t FOG_MaxPingLimit(void) {
+ }
+ 
+ NS_IMETHODIMP
++
++  // Gorilla: skip Glean initialization entirely — the glean.dispatche thread
++  // wastes ~3.5% parent CPU on metric bookkeeping we don't need. Upload is
++  // already disabled; this prevents the dispatcher thread from being spawned.
++  return NS_OK;
++
+ FOG::InitializeFOG(const nsACString& aDataPathOverride,
+                    const nsACString& aAppIdOverride,
+                    const bool aDisableInternalPings) {
+diff --git a/xpcom/base/MemoryTelemetry.cpp b/xpcom/base/MemoryTelemetry.cpp
+index ec24691653..a031104818 100644
+--- a/xpcom/base/MemoryTelemetry.cpp
++++ b/xpcom/base/MemoryTelemetry.cpp
+@@ -228,15 +228,22 @@ nsresult MemoryTelemetry::Shutdown() {
+ 
+ nsresult MemoryTelemetry::GatherReports(
+     const std::function<void()>& aCompletionCallback) {
++  // Gorilla: disabled — ResidentUnique reads /proc/self/smaps on a background
++  // thread every 60s, triggering vm_normal_page kernel page-table walks that
++  // waste ~9% of parent process CPU during video playback.
++  if (aCompletionCallback) {
++    aCompletionCallback();
++  }
++  mLastRun = TimeStamp::Now();
++  mTimer = nullptr;
++  return NS_OK;
++
+   auto cleanup = MakeScopeExit([&]() {
+     if (aCompletionCallback) {
+       aCompletionCallback();
+     }
+   });
+ 
+-  mLastRun = TimeStamp::Now();
+-  mTimer = nullptr;
+-
+   RefPtr<nsMemoryReporterManager> mgr = nsMemoryReporterManager::GetOrCreate();
+   MOZ_DIAGNOSTIC_ASSERT(mgr);
+   NS_ENSURE_TRUE(mgr, NS_ERROR_FAILURE);

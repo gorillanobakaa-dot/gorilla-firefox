@@ -1,0 +1,13 @@
+{
+ "step": "port-07.TOOLKIT-browser_base_content_nsContextMenu.sys.mjs-nsContextMenu.sys.mjs-h2",
+ "reason": "upstream 158 moved GenAI.sys.mjs to moz-src; the hunk removes the GenAI and LinkPreview getters; removes: GenAI: \"moz-src:///browser/components/genai/GenAI.sys.mjs\",",
+ "files": [
+  "browser/base/content/nsContextMenu.sys.mjs"
+ ],
+ "by": "cli",
+ "literal_check_said": [
+  "you removed a line that is not part of the change: GenAI: \"moz-src:///browser/components/genai/GenAI.sys.mjs\","
+ ],
+ "meaning_check": "holds",
+ "t": "2026-10-14 18:02:37"
+}

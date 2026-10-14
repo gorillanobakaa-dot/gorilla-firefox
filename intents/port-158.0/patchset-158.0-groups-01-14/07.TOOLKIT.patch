@@ -1,0 +1,3600 @@
+diff --git a/browser/base/content/nsContextMenu.sys.mjs b/browser/base/content/nsContextMenu.sys.mjs
+index 51bf7b7fc5..696f901720 100644
+--- a/browser/base/content/nsContextMenu.sys.mjs
++++ b/browser/base/content/nsContextMenu.sys.mjs
+@@ -5,8 +5,6 @@
+ const lazy = {};
+ 
+ ChromeUtils.defineESModuleGetters(lazy, {
+-  AIWindow:
+-    "moz-src:///browser/components/aiwindow/ui/modules/AIWindow.sys.mjs",
+   BrowserSearchTelemetry:
+     "moz-src:///browser/components/search/BrowserSearchTelemetry.sys.mjs",
+   BrowserUtils: "resource://gre/modules/BrowserUtils.sys.mjs",
+@@ -538,7 +536,8 @@ export class nsContextMenu {
+       "browser.tabs.splitView.enabled"
+     );
+     let currentTabInSplitView = !!window.gBrowser?.selectedTab?.splitview;
+-    let showSmartWindow = lazy.AIWindow.isAIWindowEnabled();
++    // GORILLA OVERRIDE: AI Window excised — smart-window link item never shows.
++    let showSmartWindow = false;
+     this.showItem("context-openlink", shouldShow && !isWindowPrivate);
+     this.showItem(
+       "context-openlinkprivate",
+@@ -555,10 +554,7 @@ export class nsContextMenu {
+       shouldShow && !isWindowPrivate && showContainers
+     );
+     this.showItem("context-openlinkincurrent", this.onPlainTextLink);
+-    this.showItem(
+-      "context-previewlink",
+-      lazy.LinkPreview.shouldShowContextMenu(this)
+-    );
++    this.showItem("context-previewlink", false);
+     let isHiddenTab = !!window.gBrowser?.getTabForBrowser(this.browser)?.hidden;
+     let isPinnedTab = !!window.gBrowser?.getTabForBrowser(this.browser)?.pinned;
+     this.showItem(
+@@ -933,12 +929,7 @@ export class nsContextMenu {
+ 
+     this.showAndFormatSearchContextItem();
+     this.showTranslateSelectionItem();
+-    lazy.GenAI.buildAskChatMenu(document.getElementById("context-ask-chat"), {
+-      browser: this.browser,
+-      selectionInfo: this.selectionInfo,
+-      showItem: this.showItem.bind(this),
+-      source: "page",
+-    });
++    // GORILLA: EXCISED — no GenAI ask-chat item (genai module removed).
+     this.showItem(
+       "context-create-aitab",
+       lazy.AITAB_ENABLED &&
+@@ -2345,10 +2336,8 @@ export class nsContextMenu {
+     );
+   }
+ 
+-  previewLink(url = this.linkURL) {
+-    // If we're in a view-source tab, remove the view-source: prefix
+-    url = url.replace(/^view-source:/, "");
+-    lazy.LinkPreview.handleContextMenuClick(url, this);
++  previewLink() {
++    // GORILLA OVERRIDE: genai excised — the preview item never shows.
+   }
+ 
+   /**
+diff --git a/browser/components/preferences/dialogs/browserLanguages.js b/browser/components/preferences/dialogs/browserLanguages.js
+index bc5f95d6cf..39a2d46beb 100644
+--- a/browser/components/preferences/dialogs/browserLanguages.js
++++ b/browser/components/preferences/dialogs/browserLanguages.js
+@@ -512,57 +512,9 @@ var gBrowserLanguagesDialog = {
+   },
+ 
+   async loadLocalesFromAMO() {
+-    if (!this.downloadEnabled) {
+-      return;
+-    }
+-
+-    // Disable the dropdown while we hit the network.
+-    this._availableLocalesUI.disableWithMessageId(
+-      "browser-languages-searching"
+-    );
+-
+-    // Fetch the available langpacks from AMO.
+-    let availableLangpacks;
+-    try {
+-      availableLangpacks = await AddonRepository.getAvailableLangpacks();
+-    } catch (e) {
+-      this.showError();
+-      return;
+-    }
+-
+-    // Store the available langpack info for later use.
+-    this.availableLangpacks = new Map();
+-    for (let { target_locale, url, hash } of availableLangpacks) {
+-      this.availableLangpacks.set(target_locale, { url, hash });
+-    }
+-
+-    // Remove the installed locales from the available ones.
+-    let installedLocales = new Set(await LangPackMatcher.getAvailableLocales());
+-    let notInstalledLocales = availableLangpacks
+-      .filter(({ target_locale }) => !installedLocales.has(target_locale))
+-      .map(lang => lang.target_locale);
+-
+-    // Create the rows for the remote locales.
+-    let availableItems = await getLocaleDisplayInfo(notInstalledLocales);
+-    availableItems.push({
+-      label: await document.l10n.formatValue(
+-        "browser-languages-available-label"
+-      ),
+-      className: "label-item",
+-      disabled: true,
+-      installed: false,
+-    });
+-
+-    // Remove the search option and add the remote locales.
+-    let items = this._availableLocalesUI.items;
+-    items.pop();
+-    items = items.concat(availableItems);
+-
+-    // Update the dropdown and enable it again.
+-    this._availableLocalesUI.setItems(items);
+-    this._availableLocalesUI.enableWithMessageId(
+-      "browser-languages-select-language"
+-    );
++    // 🦍 GORILLA UNLEASHED - PHYSICAL LOCK
++    // UI-triggered language pack searching is disabled.
++    return;
+   },
+ 
+   /**
+diff --git a/browser/components/urlbar/QuickSuggest.sys.mjs b/browser/components/urlbar/QuickSuggest.sys.mjs
+index ce4dc0f5e3..f0a04c8c38 100644
+--- a/browser/components/urlbar/QuickSuggest.sys.mjs
++++ b/browser/components/urlbar/QuickSuggest.sys.mjs
+@@ -276,8 +276,6 @@ const FEATURES = {
+     "moz-src:///browser/components/urlbar/private/SportsSuggestions.sys.mjs",
+   SuggestBackendMerino:
+     "moz-src:///browser/components/urlbar/private/SuggestBackendMerino.sys.mjs",
+-  SuggestBackendMl:
+-    "moz-src:///browser/components/urlbar/private/SuggestBackendMl.sys.mjs",
+   SuggestBackendRust:
+     "moz-src:///browser/components/urlbar/private/SuggestBackendRust.sys.mjs",
+   WeatherSuggestions:
+@@ -363,7 +361,6 @@ class _QuickSuggest {
+     return [
+       this.rustBackend,
+       this.#featuresByName.get("SuggestBackendMerino"),
+-      this.#featuresByName.get("SuggestBackendMl"),
+     ].filter(b => b?.isEnabled);
+   }
+ 
+@@ -428,70 +425,8 @@ class _QuickSuggest {
+    *   This is intended for tests only. See `#initPrefs()`.
+    */
+   async init(testOverrides = null) {
+-    if (this.#initStarted) {
+-      await this.initPromise;
+-      return;
+-    }
++    // GORILLA: EXCISED — Suggest/Quick-Suggest feature is disabled entirely.
+     this.#initStarted = true;
+-
+-    // Wait for dependencies to finish before initializing prefs.
+-    //
+-    // (1) Whether Suggest should be enabled depends on the user's region.
+-    await lazy.Region.init();
+-
+-    // (2) The default-branch values of Suggest prefs that are both exposed in
+-    // the UI and configurable by Nimbus depend on Nimbus.
+-    await lazy.NimbusFeatures.urlbar.ready();
+-
+-    // (3) `TelemetryEnvironment` records the values of some Suggest prefs.
+-    if (!this._testSkipTelemetryEnvironmentInit) {
+-      await lazy.TelemetryEnvironment.onInitialized();
+-    }
+-
+-    this.#initPrefs(testOverrides);
+-
+-    // Create an instance of each feature and keep it in `#featuresByName`.
+-    for (let [name, uri] of Object.entries(FEATURES)) {
+-      let { [name]: ctor } = ChromeUtils.importESModule(uri);
+-      let feature = new ctor();
+-      this.#featuresByName.set(name, feature);
+-      if (feature.merinoProvider) {
+-        this.#featuresByMerinoProvider.set(feature.merinoProvider, feature);
+-      }
+-      if (feature.rustSuggestionType) {
+-        if (feature.dynamicRustSuggestionTypes?.length) {
+-          for (let t of feature.dynamicRustSuggestionTypes) {
+-            this.#featuresByDynamicRustSuggestionType.set(t, feature);
+-          }
+-        } else {
+-          this.#featuresByRustSuggestionType.set(
+-            feature.rustSuggestionType,
+-            feature
+-          );
+-        }
+-      }
+-      if (feature.mlIntent) {
+-        this.#featuresByMlIntent.set(feature.mlIntent, feature);
+-      }
+-
+-      // Update the map from enabling preferences to features.
+-      let prefs = feature.enablingPreferences;
+-      if (prefs) {
+-        for (let p of prefs) {
+-          let features = this.#featuresByEnablingPrefs.get(p);
+-          if (!features) {
+-            features = new Set();
+-            this.#featuresByEnablingPrefs.set(p, features);
+-          }
+-          features.add(feature);
+-        }
+-      }
+-    }
+-
+-    this.#updateAll();
+-    lazy.UrlbarPrefs.addObserver(this);
+-
+-    this.#initResolvers.resolve();
+   }
+ 
+   /**
+diff --git a/browser/components/urlbar/UrlbarProviderQuickSuggest.sys.mjs b/browser/components/urlbar/UrlbarProviderQuickSuggest.sys.mjs
+index 52e3d0e5e2..4896ff1e1b 100644
+--- a/browser/components/urlbar/UrlbarProviderQuickSuggest.sys.mjs
++++ b/browser/components/urlbar/UrlbarProviderQuickSuggest.sys.mjs
+@@ -15,7 +15,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
+   QuickSuggest: "moz-src:///browser/components/urlbar/QuickSuggest.sys.mjs",
+   SearchUtils: "moz-src:///toolkit/components/search/SearchUtils.sys.mjs",
+   UrlbarPrefs: "moz-src:///browser/components/urlbar/UrlbarPrefs.sys.mjs",
+-  UrlbarResult: "chrome://browser/content/urlbar/UrlbarResult.mjs",
++  UrlbarResult: "moz-src:///browser/components/urlbar/UrlbarResult.sys.mjs",
+   UrlbarShared: "chrome://browser/content/urlbar/UrlbarShared.mjs",
+   UrlbarSearchUtils:
+     "moz-src:///browser/components/urlbar/UrlbarSearchUtils.sys.mjs",
+@@ -54,37 +54,8 @@ export class UrlbarProviderQuickSuggest extends UrlbarProvider {
+    * @param {UrlbarQueryContext} queryContext The query context object
+    */
+   async isActive(queryContext) {
+-    // If the sources don't include search or the user used a restriction
+-    // character other than search, don't allow any suggestions.
+-    if (
+-      !queryContext.sources.includes(lazy.UrlbarShared.RESULT_SOURCE.SEARCH) ||
+-      (queryContext.restrictSource &&
+-        queryContext.restrictSource != lazy.UrlbarShared.RESULT_SOURCE.SEARCH)
+-    ) {
+-      return false;
+-    }
+-
+-    if (
+-      !lazy.UrlbarPrefs.get("quickSuggestEnabled") ||
+-      queryContext.isPrivate ||
+-      queryContext.restrictInSearchMode()
+-    ) {
+-      return false;
+-    }
+-
+-    // Trim only the start of the search string because a trailing space can
+-    // affect the suggestions.
+-    let trimmedSearchString = queryContext.searchString.trimStart();
+-
+-    // Per product requirements, at least two characters must be typed to
+-    // trigger a Suggest suggestion. Suggestion keywords should always be at
+-    // least two characters long, but we check here anyway to be safe. Note we
+-    // called `trimStart()` above, so we only call `trimEnd()` here.
+-    if (trimmedSearchString.trimEnd().length < 2) {
+-      return false;
+-    }
+-    this._trimmedSearchString = trimmedSearchString;
+-    return true;
++    // GORILLA: EXCISED
++    return false;
+   }
+ 
+   /**
+@@ -513,8 +484,8 @@ export class UrlbarProviderQuickSuggest extends UrlbarProvider {
+     }
+ 
+     return new lazy.UrlbarResult({
+-      type: lazy.UrlbarShared.RESULT_TYPE.URL,
+-      source: lazy.UrlbarShared.RESULT_SOURCE.SEARCH,
++      type: UrlbarUtils.RESULT_TYPE.URL,
++      source: UrlbarUtils.RESULT_SOURCE.SEARCH,
+       isBestMatch: !!suggestion.is_top_pick,
+       payload,
+       highlights: {
+diff --git a/browser/components/urlbar/UrlbarProviderSearchSuggestions.sys.mjs b/browser/components/urlbar/UrlbarProviderSearchSuggestions.sys.mjs
+index 060f13d5c6..2cd049134a 100644
+--- a/browser/components/urlbar/UrlbarProviderSearchSuggestions.sys.mjs
++++ b/browser/components/urlbar/UrlbarProviderSearchSuggestions.sys.mjs
+@@ -23,7 +23,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
+   UrlbarPrefs: "moz-src:///browser/components/urlbar/UrlbarPrefs.sys.mjs",
+   UrlbarProviderTopSites:
+     "moz-src:///browser/components/urlbar/UrlbarProviderTopSites.sys.mjs",
+-  UrlbarResult: "chrome://browser/content/urlbar/UrlbarResult.mjs",
++  UrlbarResult: "moz-src:///browser/components/urlbar/UrlbarResult.sys.mjs",
+   UrlbarShared: "chrome://browser/content/urlbar/UrlbarShared.mjs",
+   UrlbarSearchUtils:
+     "moz-src:///browser/components/urlbar/UrlbarSearchUtils.sys.mjs",
+@@ -96,9 +96,9 @@ export class UrlbarProviderSearchSuggestions extends UrlbarProvider {
+     // If the sources don't include search or the user used a restriction
+     // character other than search, don't allow any suggestions.
+     if (
+-      !queryContext.sources.includes(lazy.UrlbarShared.RESULT_SOURCE.SEARCH) ||
++      !queryContext.sources.includes(UrlbarUtils.RESULT_SOURCE.SEARCH) ||
+       (queryContext.restrictSource &&
+-        queryContext.restrictSource != lazy.UrlbarShared.RESULT_SOURCE.SEARCH)
++        queryContext.restrictSource != UrlbarUtils.RESULT_SOURCE.SEARCH)
+     ) {
+       return false;
+     }
+@@ -139,13 +139,12 @@ export class UrlbarProviderSearchSuggestions extends UrlbarProvider {
+     return (
+       queryContext.searchString.startsWith("@") ||
+       (queryContext.restrictSource &&
+-        queryContext.restrictSource ==
+-          lazy.UrlbarShared.RESULT_SOURCE.SEARCH) ||
++        queryContext.restrictSource == UrlbarUtils.RESULT_SOURCE.SEARCH) ||
+       queryContext.tokens.some(
+-        t => t.type == lazy.UrlbarShared.TOKEN_TYPE.RESTRICT_SEARCH
++        t => t.type == lazy.UrlbarTokenizer.TYPE.RESTRICT_SEARCH
+       ) ||
+       (queryContext.searchMode &&
+-        queryContext.sources.includes(lazy.UrlbarShared.RESULT_SOURCE.SEARCH))
++        queryContext.sources.includes(UrlbarUtils.RESULT_SOURCE.SEARCH))
+     );
+   }
+ 
+@@ -236,7 +235,7 @@ export class UrlbarProviderSearchSuggestions extends UrlbarProvider {
+    * @param {UrlbarQueryContext} queryContext
+    * @param {(provider: UrlbarProvider, result: UrlbarResult) => void} addCallback
+    *   Callback invoked by the provider to add a new result.
+-   * @param {UrlbarParentController} controller The UrlbarParentController instance.
++   * @param {UrlbarController} controller The UrlbarController instance.
+    */
+   async startQuery(queryContext, addCallback, controller) {
+     let instance = this.queryInstance;
+@@ -266,7 +265,7 @@ export class UrlbarProviderSearchSuggestions extends UrlbarProvider {
+       lazy.UrlbarTokenizer.isRestrictionToken(queryContext.tokens[0]) &&
+       (queryContext.tokens.length > 1 ||
+         queryContext.tokens[0].type ==
+-          lazy.UrlbarShared.TOKEN_TYPE.RESTRICT_SEARCH)
++          lazy.UrlbarTokenizer.TYPE.RESTRICT_SEARCH)
+     ) {
+       leadingRestrictionToken = queryContext.tokens[0].value;
+     }
+@@ -275,7 +274,7 @@ export class UrlbarProviderSearchSuggestions extends UrlbarProvider {
+     // when the search shortcut is used and it's not user typed. Don't strip
+     // other restriction chars, so that it's possible to search for things
+     // including one of those (e.g. "c#").
+-    if (leadingRestrictionToken === lazy.UrlbarShared.RESTRICT_TOKENS.SEARCH) {
++    if (leadingRestrictionToken === lazy.UrlbarTokenizer.RESTRICT.SEARCH) {
+       query = UrlbarUtils.substringAfter(query, leadingRestrictionToken).trim();
+     }
+ 
+@@ -346,14 +345,14 @@ export class UrlbarProviderSearchSuggestions extends UrlbarProvider {
+       return /** @type {UrlbarResultCommand[]} */ ([
+         {
+           name: RESULT_MENU_COMMANDS.TRENDING_BLOCK,
+-          l10n: { id: "urlbar-result-menu-trending-dont-show2" },
++          l10n: { id: "urlbar-result-menu-trending-dont-show" },
+         },
+         {
+           name: "separator",
+         },
+         {
+           name: RESULT_MENU_COMMANDS.TRENDING_HELP,
+-          l10n: { id: "urlbar-result-menu-learn-more2" },
++          l10n: { id: "urlbar-result-menu-learn-more" },
+         },
+       ]);
+     }
+@@ -539,8 +538,8 @@ export class UrlbarProviderSearchSuggestions extends UrlbarProvider {
+ 
+         results.push(
+           new lazy.UrlbarResult({
+-            type: lazy.UrlbarShared.RESULT_TYPE.SEARCH,
+-            source: lazy.UrlbarShared.RESULT_SOURCE.SEARCH,
++            type: UrlbarUtils.RESULT_TYPE.SEARCH,
++            source: UrlbarUtils.RESULT_SOURCE.SEARCH,
+             isRichSuggestion: !!entry.icon,
+             richSuggestionIconSize: entry.icon
+               ? UrlbarProviderSearchSuggestions.RICH_ICON_SIZE
+@@ -650,13 +649,7 @@ export class UrlbarProviderSearchSuggestions extends UrlbarProvider {
+    *   Whether we should fetch trending results.
+    */
+   #shouldFetchTrending(queryContext) {
+-    return !!(
+-      queryContext.searchString == "" &&
+-      lazy.UrlbarPrefs.get("trending.featureGate") &&
+-      lazy.UrlbarPrefs.get("suggest.trending") &&
+-      (queryContext.searchMode ||
+-        !lazy.UrlbarPrefs.get("trending.requireSearchMode"))
+-    );
++    return false;
+   }
+ 
+   /*
+@@ -698,15 +691,15 @@ export class UrlbarProviderSearchSuggestions extends UrlbarProvider {
+ 
+ function makeFormHistoryResult(queryContext, engine, entry) {
+   return new lazy.UrlbarResult({
+-    type: lazy.UrlbarShared.RESULT_TYPE.SEARCH,
+-    source: lazy.UrlbarShared.RESULT_SOURCE.HISTORY,
++    type: UrlbarUtils.RESULT_TYPE.SEARCH,
++    source: UrlbarUtils.RESULT_SOURCE.HISTORY,
+     payload: {
+       engine: engine.name,
+       suggestion: entry.value,
+       title: entry.value,
+       lowerCaseSuggestion: entry.value.toLocaleLowerCase(),
+       isBlockable: true,
+-      blockL10n: { id: "urlbar-result-menu-remove-from-history2" },
++      blockL10n: { id: "urlbar-result-menu-remove-from-history" },
+       helpUrl:
+         Services.urlFormatter.formatURLPref("app.support.baseURL") +
+         "awesome-bar-result-menu",
+diff --git a/services/settings/dumps/main/search-config-v2.json b/services/settings/dumps/main/search-config-v2.json
+index 5f5ca5f622..fad5bb36bd 100644
+--- a/services/settings/dumps/main/search-config-v2.json
++++ b/services/settings/dumps/main/search-config-v2.json
+@@ -118,2040 +118,7 @@
+       "last_modified": 1702906502241,
+       "recordType": "defaultEngines",
+       "schema": 1702901837584,
+-      "specificDefaults": [
+-        {
+-          "default": "baidu",
+-          "environment": {
+-            "locales": [
+-              "zh-CN"
+-            ],
+-            "regions": [
+-              "cn"
+-            ]
+-          }
+-        },
+-        {
+-          "default": "baidu",
+-          "environment": {
+-            "distributions": [
+-              "MozillaOnline"
+-            ]
+-          }
+-        },
+-        {
+-          "default": "1und1",
+-          "environment": {
+-            "distributions": [
+-              "1und1"
+-            ]
+-          }
+-        },
+-        {
+-          "default": "webde",
+-          "environment": {
+-            "distributions": [
+-              "webde"
+-            ]
+-          }
+-        },
+-        {
+-          "default": "mailcom",
+-          "environment": {
+-            "distributions": [
+-              "mail.com"
+-            ]
+-          }
+-        },
+-        {
+-          "default": "qwant",
+-          "environment": {
+-            "distributions": [
+-              "qwant-001",
+-              "qwant-002"
+-            ]
+-          }
+-        },
+-        {
+-          "default": "gmx-de",
+-          "environment": {
+-            "distributions": [
+-              "gmx"
+-            ]
+-          }
+-        },
+-        {
+-          "default": "gmx-en-GB",
+-          "environment": {
+-            "distributions": [
+-              "gmxcouk"
+-            ]
+-          }
+-        },
+-        {
+-          "default": "gmx-es",
+-          "environment": {
+-            "distributions": [
+-              "gmxes"
+-            ]
+-          }
+-        },
+-        {
+-          "default": "gmx-fr",
+-          "environment": {
+-            "distributions": [
+-              "gmxfr"
+-            ]
+-          }
+-        }
+-      ]
+-    },
+-    {
+-      "base": {
+-        "classification": "unknown",
+-        "name": "1&1 Suche",
+-        "urls": {
+-          "search": {
+-            "base": "https://go.1und1.de/br/moz_search_web/",
+-            "params": [
+-              {
+-                "name": "enc",
+-                "value": "UTF-8"
+-              }
+-            ],
+-            "searchTermParamName": "q"
+-          },
+-          "suggestions": {
+-            "base": "https://suggestplugin.ui-portal.de/s",
+-            "params": [
+-              {
+-                "name": "brand",
+-                "value": "1und1"
+-              },
+-              {
+-                "name": "origin",
+-                "value": "br_splugin_ff_sg"
+-              }
+-            ],
+-            "searchTermParamName": "q"
+-          }
+-        }
+-      },
+-      "id": "e870e51d-efed-41d3-8d65-f833ee8e9d96",
+-      "identifier": "1und1",
+-      "last_modified": 1702906502336,
+-      "recordType": "engine",
+-      "schema": 1702901817337,
+-      "variants": [
+-        {
+-          "environment": {
+-            "distributions": [
+-              "1und1"
+-            ]
+-          }
+-        }
+-      ]
+-    },
+-    {
+-      "base": {
+-        "classification": "unknown",
+-        "name": "Allegro",
+-        "urls": {
+-          "search": {
+-            "base": "https://allegro.pl/listing",
+-            "params": [
+-              {
+-                "name": "sourceid",
+-                "value": "Mozilla-search"
+-              }
+-            ],
+-            "searchTermParamName": "string"
+-          }
+-        }
+-      },
+-      "id": "3cc3f699-284a-4320-b131-395d9b218ade",
+-      "identifier": "allegro-pl",
+-      "last_modified": 1702906502364,
+-      "recordType": "engine",
+-      "schema": 1702901811834,
+-      "variants": [
+-        {
+-          "environment": {
+-            "locales": [
+-              "pl",
+-              "szl"
+-            ]
+-          }
+-        }
+-      ]
+-    },
+-    {
+-      "base": {
+-        "aliases": [
+-          "百度",
+-          "baidu"
+-        ],
+-        "classification": "general",
+-        "name": "百度",
+-        "urls": {
+-          "search": {
+-            "base": "https://www.baidu.com/baidu",
+-            "params": [
+-              {
+-                "name": "ie",
+-                "value": "utf-8"
+-              }
+-            ],
+-            "searchTermParamName": "wd"
+-          },
+-          "suggestions": {
+-            "base": "https://www.baidu.com/su",
+-            "params": [
+-              {
+-                "name": "ie",
+-                "value": "utf-8"
+-              },
+-              {
+-                "name": "action",
+-                "value": "opensearch"
+-              }
+-            ],
+-            "searchTermParamName": "wd"
+-          }
+-        }
+-      },
+-      "id": "ad58537f-f397-46ec-a1a8-935e12f0aab6",
+-      "identifier": "baidu",
+-      "last_modified": 1718719100295,
+-      "recordType": "engine",
+-      "schema": 1718698349444,
+-      "variants": [
+-        {
+-          "environment": {
+-            "locales": [
+-              "zh-CN"
+-            ]
+-          },
+-          "subVariants": [
+-            {
+-              "environment": {
+-                "applications": [
+-                  "firefox-android",
+-                  "focus-android",
+-                  "firefox-ios",
+-                  "focus-ios"
+-                ]
+-              },
+-              "urls": {
+-                "search": {
+-                  "base": "https://m.baidu.com/s",
+-                  "params": [],
+-                  "searchTermParamName": "word"
+-                }
+-              }
+-            }
+-          ]
+-        }
+-      ]
+-    },
+-    {
+-      "base": {
+-        "aliases": [
+-          "bing"
+-        ],
+-        "classification": "general",
+-        "name": "Bing",
+-        "partnerCode": "MOZI",
+-        "urls": {
+-          "search": {
+-            "base": "https://www.bing.com/search",
+-            "params": [
+-              {
+-                "name": "pc",
+-                "value": "{partnerCode}"
+-              },
+-              {
+-                "name": "form",
+-                "value": "MOZLBR"
+-              }
+-            ],
+-            "searchTermParamName": "q"
+-          },
+-          "suggestions": {
+-            "base": "https://www.bing.com/osjson.aspx",
+-            "params": [
+-              {
+-                "name": "form",
+-                "value": "OSDJAS"
+-              }
+-            ],
+-            "searchTermParamName": "query"
+-          },
+-          "trending": {
+-            "base": "https://www.bing.com/osjson.aspx"
+-          }
+-        }
+-      },
+-      "id": "05645095-d26e-4f20-9137-f24a14a23f28",
+-      "identifier": "bing",
+-      "last_modified": 1753192235011,
+-      "recordType": "engine",
+-      "schema": 1753150537498,
+-      "variants": [
+-        {
+-          "environment": {
+-            "allRegionsAndLocales": true,
+-            "applications": [
+-              "firefox",
+-              "firefox-android",
+-              "firefox-ios"
+-            ]
+-          },
+-          "subVariants": [
+-            {
+-              "environment": {
+-                "channels": [
+-                  "esr"
+-                ]
+-              },
+-              "partnerCode": "MOZR",
+-              "telemetrySuffix": "esr"
+-            },
+-            {
+-              "environment": {
+-                "applications": [
+-                  "firefox-android"
+-                ]
+-              },
+-              "partnerCode": "MOZB",
+-              "urls": {
+-                "search": {
+-                  "params": [
+-                    {
+-                      "name": "pc",
+-                      "value": "{partnerCode}"
+-                    },
+-                    {
+-                      "name": "form",
+-                      "value": "MOZMBA"
+-                    }
+-                  ],
+-                  "searchTermParamName": "q"
+-                }
+-              }
+-            },
+-            {
+-              "environment": {
+-                "applications": [
+-                  "firefox-ios"
+-                ]
+-              },
+-              "partnerCode": "MOZW",
+-              "urls": {
+-                "search": {
+-                  "params": [
+-                    {
+-                      "name": "pc",
+-                      "value": "{partnerCode}"
+-                    },
+-                    {
+-                      "name": "form",
+-                      "value": "MOZWSB"
+-                    }
+-                  ],
+-                  "searchTermParamName": "q"
+-                }
+-              }
+-            },
+-            {
+-              "environment": {
+-                "applications": [
+-                  "firefox-android"
+-                ],
+-                "distributions": [
+-                  "dt-001"
+-                ]
+-              },
+-              "partnerCode": "MZTOF",
+-              "telemetrySuffix": "MZTOF",
+-              "urls": {
+-                "search": {
+-                  "params": [
+-                    {
+-                      "name": "pc",
+-                      "value": "{partnerCode}"
+-                    },
+-                    {
+-                      "name": "form",
+-                      "value": "MZTOFO"
+-                    }
+-                  ],
+-                  "searchTermParamName": "q"
+-                }
+-              }
+-            },
+-            {
+-              "environment": {
+-                "applications": [
+-                  "firefox-android"
+-                ],
+-                "distributions": [
+-                  "vivo-001"
+-                ]
+-              },
+-              "partnerCode": "MZCP",
+-              "telemetrySuffix": "MZCP",
+-              "urls": {
+-                "search": {
+-                  "params": [
+-                    {
+-                      "name": "pc",
+-                      "value": "{partnerCode}"
+-                    },
+-                    {
+-                      "name": "form",
+-                      "value": "MZVIVO"
+-                    }
+-                  ],
+-                  "searchTermParamName": "q"
+-                }
+-              }
+-            },
+-            {
+-              "environment": {
+-                "experiment": "adblockers"
+-              },
+-              "partnerCode": "MZABT",
+-              "urls": {
+-                "search": {
+-                  "params": [
+-                    {
+-                      "name": "pc",
+-                      "value": "{partnerCode}"
+-                    },
+-                    {
+-                      "name": "form",
+-                      "value": "ABT"
+-                    }
+-                  ],
+-                  "searchTermParamName": "q"
+-                }
+-              }
+-            }
+-          ]
+-        }
+-      ]
+-    },
+-    {
+-      "base": {
+-        "classification": "unknown",
+-        "name": "Ordbok",
+-        "urls": {
+-          "search": {
+-            "base": "https://ordbok.uib.no/perl/ordbok.cgi",
+-            "params": [
+-              {
+-                "name": "sourceid",
+-                "value": "Mozilla-search"
+-              }
+-            ],
+-            "searchTermParamName": "OPP"
+-          }
+-        }
+-      },
+-      "id": "7ed2240b-b161-4b49-a7fe-35db89544f74",
+-      "identifier": "bok-NO",
+-      "last_modified": 1702906502320,
+-      "recordType": "engine",
+-      "schema": 1702901820444,
+-      "variants": [
+-        {
+-          "environment": {
+-            "locales": [
+-              "nb-NO",
+-              "nn-NO"
+-            ]
+-          }
+-        }
+-      ]
+-    },
+-    {
+-      "base": {
+-        "classification": "unknown",
+-        "name": "Ceneje.si",
+-        "urls": {
+-          "search": {
+-            "base": "https://www.ceneje.si/search_new.aspx",
+-            "params": [
+-              {
+-                "name": "FF-SearchBox",
+-                "value": "1"
+-              }
+-            ],
+-            "searchTermParamName": "q"
+-          }
+-        }
+-      },
+-      "id": "5e515970-4129-48fc-b0d0-8a61c92903d2",
+-      "identifier": "ceneji",
+-      "last_modified": 1702906502317,
+-      "recordType": "engine",
+-      "schema": 1702901821058,
+-      "variants": [
+-        {
+-          "environment": {
+-            "locales": [
+-              "sl"
+-            ]
+-          }
+-        }
+-      ]
+-    },
+-    {
+-      "base": {
+-        "classification": "unknown",
+-        "name": "Cốc Cốc",
+-        "partnerCode": "firefox",
+-        "urls": {
+-          "search": {
+-            "base": "https://coccoc.com/search",
+-            "params": [
+-              {
+-                "name": "s",
+-                "value": "ff"
+-              },
+-              {
+-                "name": "utm_source",
+-                "value": "{partnerCode}"
+-              }
+-            ],
+-            "searchTermParamName": "query"
+-          },
+-          "suggestions": {
+-            "base": "https://coccoc.com/composer/autocomplete",
+-            "params": [
+-              {
+-                "name": "of",
+-                "value": "b"
+-              },
+-              {
+-                "name": "s",
+-                "value": "ff"
+-              }
+-            ],
+-            "searchTermParamName": "q"
+-          }
+-        }
+-      },
+-      "id": "20104daa-cb8a-40b9-a8c5-2433f4476c3e",
+-      "identifier": "coccoc",
+-      "last_modified": 1718719100314,
+-      "recordType": "engine",
+-      "schema": 1718698356483,
+-      "variants": [
+-        {
+-          "environment": {
+-            "locales": [
+-              "vi"
+-            ]
+-          },
+-          "subVariants": [
+-            {
+-              "environment": {
+-                "applications": [
+-                  "firefox-android",
+-                  "focus-android",
+-                  "firefox-ios",
+-                  "focus-ios"
+-                ]
+-              },
+-              "partnerCode": "ffmobile"
+-            }
+-          ]
+-        }
+-      ]
+-    },
+-    {
+-      "base": {
+-        "classification": "unknown",
+-        "name": "다음",
+-        "urls": {
+-          "search": {
+-            "base": "https://search.daum.net/search",
+-            "params": [
+-              {
+-                "name": "w",
+-                "value": "tot"
+-              },
+-              {
+-                "name": "nil_ch",
+-                "value": "ffsr"
+-              }
+-            ],
+-            "searchTermParamName": "q"
+-          },
+-          "suggestions": {
+-            "base": "https://suggest.search.daum.net/sushi/opensearch/pc",
+-            "params": [
+-              {
+-                "name": "DA",
+-                "value": "JU2"
+-              }
+-            ],
+-            "searchTermParamName": "q"
+-          }
+-        }
+-      },
+-      "id": "3330e927-6733-4239-9738-b41c5c460b11",
+-      "identifier": "daum-kr",
+-      "last_modified": 1718719100316,
+-      "recordType": "engine",
+-      "schema": 1718698358587,
+-      "variants": [
+-        {
+-          "environment": {
+-            "locales": [
+-              "ko"
+-            ]
+-          },
+-          "subVariants": [
+-            {
+-              "environment": {
+-                "applications": [
+-                  "firefox-android",
+-                  "focus-android"
+-                ]
+-              },
+-              "urls": {
+-                "search": {
+-                  "base": "https://m.search.daum.net/search"
+-                }
+-              }
+-            }
+-          ]
+-        }
+-      ]
+-    },
+-    {
+-      "base": {
+-        "aliases": [
+-          "duckduckgo",
+-          "ddg"
+-        ],
+-        "classification": "general",
+-        "name": "DuckDuckGo",
+-        "partnerCode": "ffab",
+-        "urls": {
+-          "search": {
+-            "base": "https://duckduckgo.com/",
+-            "params": [
+-              {
+-                "name": "t",
+-                "value": "{partnerCode}"
+-              }
+-            ],
+-            "searchTermParamName": "q"
+-          },
+-          "suggestions": {
+-            "base": "https://ac.duckduckgo.com/ac/",
+-            "params": [
+-              {
+-                "name": "type",
+-                "value": "list"
+-              }
+-            ],
+-            "searchTermParamName": "q"
+-          }
+-        }
+-      },
+-      "id": "04e99a38-13ee-47d8-8aa4-64482b3dea99",
+-      "identifier": "ddg",
+-      "last_modified": 1718719100285,
+-      "recordType": "engine",
+-      "schema": 1718698362015,
+-      "variants": [
+-        {
+-          "environment": {
+-            "allRegionsAndLocales": true
+-          },
+-          "subVariants": [
+-            {
+-              "environment": {
+-                "channels": [
+-                  "esr"
+-                ]
+-              },
+-              "partnerCode": "ftsa",
+-              "telemetrySuffix": "esr"
+-            }
+-          ]
+-        },
+-        {
+-          "environment": {
+-            "allRegionsAndLocales": true,
+-            "applications": [
+-              "firefox-android",
+-              "focus-android"
+-            ]
+-          },
+-          "partnerCode": "fpas"
+-        },
+-        {
+-          "environment": {
+-            "allRegionsAndLocales": true,
+-            "applications": [
+-              "firefox-ios",
+-              "focus-ios"
+-            ]
+-          },
+-          "partnerCode": "ffip"
+-        },
+-        {
+-          "environment": {
+-            "distributions": [
+-              "mint-001"
+-            ]
+-          },
+-          "partnerCode": "lm",
+-          "telemetrySuffix": "lm"
+-        }
+-      ]
+-    },
+-    {
+-      "base": {
+-        "aliases": [
+-          "ebay"
+-        ],
+-        "classification": "unknown",
+-        "name": "eBay",
+-        "partnerCode": "5338192028",
+-        "urls": {
+-          "search": {
+-            "base": "https://www.ebay.com/sch/",
+-            "params": [
+-              {
+-                "name": "toolid",
+-                "value": "20004"
+-              },
+-              {
+-                "name": "campid",
+-                "value": "{partnerCode}"
+-              },
+-              {
+-                "name": "mkevt",
+-                "value": "1"
+-              },
+-              {
+-                "name": "mkcid",
+-                "value": "1"
+-              },
+-              {
+-                "name": "mkrid",
+-                "value": "711-53200-19255-0"
+-              }
+-            ],
+-            "searchTermParamName": "kw"
+-          },
+-          "suggestions": {
+-            "base": "https://autosug.ebay.com/autosug",
+-            "params": [
+-              {
+-                "name": "sId",
+-                "value": "0"
+-              },
+-              {
+-                "name": "fmt",
+-                "value": "osr"
+-              }
+-            ],
+-            "searchTermParamName": "kwd"
+-          }
+-        }
+-      },
+-      "id": "d8b7ed81-00f3-478a-a835-dc0677d7190a",
+-      "identifier": "ebay",
+-      "last_modified": 1718719100298,
+-      "recordType": "engine",
+-      "schema": 1718698365997,
+-      "variants": [
+-        {
+-          "environment": {
+-            "locales": [
+-              "en-US"
+-            ],
+-            "regions": [
+-              "us"
+-            ]
+-          },
+-          "subVariants": [
+-            {
+-              "environment": {
+-                "applications": [
+-                  "firefox-android",
+-                  "focus-android"
+-                ]
+-              },
+-              "partnerCode": "5338791379"
+-            }
+-          ]
+-        }
+-      ]
+-    },
+-    {
+-      "base": {
+-        "aliases": [
+-          "ebay"
+-        ],
+-        "classification": "unknown",
+-        "name": "eBay",
+-        "partnerCode": "5338192028",
+-        "urls": {
+-          "search": {
+-            "base": "https://www.ebay.at/sch/",
+-            "params": [
+-              {
+-                "name": "toolid",
+-                "value": "20004"
+-              },
+-              {
+-                "name": "campid",
+-                "value": "{partnerCode}"
+-              },
+-              {
+-                "name": "mkevt",
+-                "value": "1"
+-              },
+-              {
+-                "name": "mkcid",
+-                "value": "1"
+-              },
+-              {
+-                "name": "mkrid",
+-                "value": "5221-53469-19255-0"
+-              }
+-            ],
+-            "searchTermParamName": "kw"
+-          },
+-          "suggestions": {
+-            "base": "https://autosug.ebay.com/autosug",
+-            "params": [
+-              {
+-                "name": "sId",
+-                "value": "16"
+-              },
+-              {
+-                "name": "fmt",
+-                "value": "osr"
+-              }
+-            ],
+-            "searchTermParamName": "kwd"
+-          }
+-        }
+-      },
+-      "id": "8dee7454-6c6c-4b22-a411-4e474c7afbb3",
+-      "identifier": "ebay-at",
+-      "last_modified": 1718719100305,
+-      "recordType": "engine",
+-      "schema": 1718698368829,
+-      "variants": [
+-        {
+-          "environment": {
+-            "locales": [
+-              "de",
+-              "dsb",
+-              "hsb"
+-            ],
+-            "regions": [
+-              "at"
+-            ]
+-          },
+-          "subVariants": [
+-            {
+-              "environment": {
+-                "applications": [
+-                  "firefox-android",
+-                  "focus-android"
+-                ]
+-              },
+-              "partnerCode": "5338791379"
+-            }
+-          ]
+-        }
+-      ]
+-    },
+-    {
+-      "base": {
+-        "aliases": [
+-          "ebay"
+-        ],
+-        "classification": "unknown",
+-        "name": "eBay",
+-        "partnerCode": "5338192028",
+-        "urls": {
+-          "search": {
+-            "base": "https://www.ebay.com.au/sch/",
+-            "params": [
+-              {
+-                "name": "toolid",
+-                "value": "20004"
+-              },
+-              {
+-                "name": "campid",
+-                "value": "{partnerCode}"
+-              },
+-              {
+-                "name": "mkevt",
+-                "value": "1"
+-              },
+-              {
+-                "name": "mkcid",
+-                "value": "1"
+-              },
+-              {
+-                "name": "mkrid",
+-                "value": "705-53470-19255-0"
+-              }
+-            ],
+-            "searchTermParamName": "kw"
+-          },
+-          "suggestions": {
+-            "base": "https://autosug.ebay.com/autosug",
+-            "params": [
+-              {
+-                "name": "sId",
+-                "value": "15"
+-              },
+-              {
+-                "name": "fmt",
+-                "value": "osr"
+-              }
+-            ],
+-            "searchTermParamName": "kwd"
+-          }
+-        }
+-      },
+-      "id": "e5a64fe0-2cb9-4b22-83d3-4e529c3702a9",
+-      "identifier": "ebay-au",
+-      "last_modified": 1718719100302,
+-      "recordType": "engine",
+-      "schema": 1718698373814,
+-      "variants": [
+-        {
+-          "environment": {
+-            "locales": [
+-              "cy",
+-              "en-GB",
+-              "en-US",
+-              "gd"
+-            ],
+-            "regions": [
+-              "au"
+-            ]
+-          },
+-          "subVariants": [
+-            {
+-              "environment": {
+-                "applications": [
+-                  "firefox-android",
+-                  "focus-android"
+-                ]
+-              },
+-              "partnerCode": "5338791379"
+-            }
+-          ]
+-        }
+-      ]
+-    },
+-    {
+-      "base": {
+-        "aliases": [
+-          "ebay"
+-        ],
+-        "classification": "unknown",
+-        "name": "eBay",
+-        "partnerCode": "5338192028",
+-        "urls": {
+-          "search": {
+-            "base": "https://www.befr.ebay.be/sch/",
+-            "params": [
+-              {
+-                "name": "toolid",
+-                "value": "20004"
+-              },
+-              {
+-                "name": "campid",
+-                "value": "{partnerCode}"
+-              },
+-              {
+-                "name": "mkevt",
+-                "value": "1"
+-              },
+-              {
+-                "name": "mkcid",
+-                "value": "1"
+-              },
+-              {
+-                "name": "mkrid",
+-                "value": "1553-53471-19255-0"
+-              }
+-            ],
+-            "searchTermParamName": "kw"
+-          },
+-          "suggestions": {
+-            "base": "https://autosug.ebay.com/autosug",
+-            "params": [
+-              {
+-                "name": "sId",
+-                "value": "23"
+-              },
+-              {
+-                "name": "fmt",
+-                "value": "osr"
+-              }
+-            ],
+-            "searchTermParamName": "kwd"
+-          }
+-        }
+-      },
+-      "id": "5f40614e-4fc6-4dee-a897-07b258e00820",
+-      "identifier": "ebay-be",
+-      "last_modified": 1718719100300,
+-      "recordType": "engine",
+-      "schema": 1718698383258,
+-      "variants": [
+-        {
+-          "environment": {
+-            "locales": [
+-              "br",
+-              "en-US",
+-              "fr",
+-              "wo",
+-              "fy-NL",
+-              "nl"
+-            ],
+-            "regions": [
+-              "be"
+-            ]
+-          },
+-          "subVariants": [
+-            {
+-              "environment": {
+-                "applications": [
+-                  "firefox-android",
+-                  "focus-android"
+-                ]
+-              },
+-              "partnerCode": "5338791379"
+-            }
+-          ]
+-        }
+-      ]
+-    },
+-    {
+-      "base": {
+-        "aliases": [
+-          "ebay"
+-        ],
+-        "classification": "unknown",
+-        "name": "eBay",
+-        "partnerCode": "5338192028",
+-        "urls": {
+-          "search": {
+-            "base": "https://www.ebay.ca/sch/",
+-            "params": [
+-              {
+-                "name": "toolid",
+-                "value": "20004"
+-              },
+-              {
+-                "name": "campid",
+-                "value": "{partnerCode}"
+-              },
+-              {
+-                "name": "mkevt",
+-                "value": "1"
+-              },
+-              {
+-                "name": "mkcid",
+-                "value": "1"
+-              },
+-              {
+-                "name": "mkrid",
+-                "value": "706-53473-19255-0"
+-              }
+-            ],
+-            "searchTermParamName": "kw"
+-          },
+-          "suggestions": {
+-            "base": "https://autosug.ebay.com/autosug",
+-            "params": [
+-              {
+-                "name": "sId",
+-                "value": "2"
+-              },
+-              {
+-                "name": "fmt",
+-                "value": "osr"
+-              }
+-            ],
+-            "searchTermParamName": "kwd"
+-          }
+-        }
+-      },
+-      "id": "336d7fa9-7579-4981-bfb0-024c6c5f977d",
+-      "identifier": "ebay-ca",
+-      "last_modified": 1718719100278,
+-      "recordType": "engine",
+-      "schema": 1718698388762,
+-      "variants": [
+-        {
+-          "environment": {
+-            "locales": [
+-              "br",
+-              "en-US",
+-              "fr",
+-              "wo"
+-            ],
+-            "regions": [
+-              "ca"
+-            ]
+-          },
+-          "subVariants": [
+-            {
+-              "environment": {
+-                "applications": [
+-                  "firefox-android",
+-                  "focus-android"
+-                ]
+-              },
+-              "partnerCode": "5338791379"
+-            }
+-          ]
+-        },
+-        {
+-          "environment": {
+-            "excludedRegions": [
+-              "pl"
+-            ],
+-            "locales": [
+-              "en-CA"
+-            ]
+-          },
+-          "subVariants": [
+-            {
+-              "environment": {
+-                "applications": [
+-                  "firefox-android",
+-                  "focus-android"
+-                ]
+-              },
+-              "partnerCode": "5338791379"
+-            }
+-          ]
+-        }
+-      ]
+-    },
+-    {
+-      "base": {
+-        "aliases": [
+-          "ebay"
+-        ],
+-        "classification": "unknown",
+-        "name": "eBay",
+-        "partnerCode": "5338192028",
+-        "urls": {
+-          "search": {
+-            "base": "https://www.ebay.ch/sch/",
+-            "params": [
+-              {
+-                "name": "toolid",
+-                "value": "20004"
+-              },
+-              {
+-                "name": "campid",
+-                "value": "{partnerCode}"
+-              },
+-              {
+-                "name": "mkevt",
+-                "value": "1"
+-              },
+-              {
+-                "name": "mkcid",
+-                "value": "1"
+-              },
+-              {
+-                "name": "mkrid",
+-                "value": "5222-53480-19255-0"
+-              }
+-            ],
+-            "searchTermParamName": "kw"
+-          },
+-          "suggestions": {
+-            "base": "https://autosug.ebay.com/autosug",
+-            "params": [
+-              {
+-                "name": "sId",
+-                "value": "193"
+-              },
+-              {
+-                "name": "fmt",
+-                "value": "osr"
+-              }
+-            ],
+-            "searchTermParamName": "kwd"
+-          }
+-        }
+-      },
+-      "id": "8d8484a2-b856-4edd-93d7-c53a7aaca6e1",
+-      "identifier": "ebay-ch",
+-      "last_modified": 1718719100276,
+-      "recordType": "engine",
+-      "schema": 1718698406340,
+-      "variants": [
+-        {
+-          "environment": {
+-            "locales": [
+-              "br",
+-              "de",
+-              "dsb",
+-              "en-US",
+-              "fr",
+-              "hsb",
+-              "wo"
+-            ],
+-            "regions": [
+-              "ch"
+-            ]
+-          },
+-          "subVariants": [
+-            {
+-              "environment": {
+-                "applications": [
+-                  "firefox-android",
+-                  "focus-android"
+-                ]
+-              },
+-              "partnerCode": "5338791379"
+-            }
+-          ]
+-        },
+-        {
+-          "environment": {
+-            "excludedRegions": [
+-              "pl"
+-            ],
+-            "locales": [
+-              "rm"
+-            ]
+-          },
+-          "subVariants": [
+-            {
+-              "environment": {
+-                "applications": [
+-                  "firefox-android",
+-                  "focus-android"
+-                ]
+-              },
+-              "partnerCode": "5338791379"
+-            }
+-          ]
+-        }
+-      ]
+-    },
+-    {
+-      "base": {
+-        "aliases": [
+-          "ebay"
+-        ],
+-        "classification": "unknown",
+-        "name": "eBay",
+-        "partnerCode": "5338192028",
+-        "urls": {
+-          "search": {
+-            "base": "https://www.ebay.de/sch/",
+-            "params": [
+-              {
+-                "name": "toolid",
+-                "value": "20004"
+-              },
+-              {
+-                "name": "campid",
+-                "value": "{partnerCode}"
+-              },
+-              {
+-                "name": "mkevt",
+-                "value": "1"
+-              },
+-              {
+-                "name": "mkcid",
+-                "value": "1"
+-              },
+-              {
+-                "name": "mkrid",
+-                "value": "707-53477-19255-0"
+-              }
+-            ],
+-            "searchTermParamName": "kw"
+-          },
+-          "suggestions": {
+-            "base": "https://autosug.ebay.com/autosug",
+-            "params": [
+-              {
+-                "name": "sId",
+-                "value": "77"
+-              },
+-              {
+-                "name": "fmt",
+-                "value": "osr"
+-              }
+-            ],
+-            "searchTermParamName": "kwd"
+-          }
+-        }
+-      },
+-      "id": "e991a5f7-616e-43b0-b349-7995b837a520",
+-      "identifier": "ebay-de",
+-      "last_modified": 1718719100269,
+-      "recordType": "engine",
+-      "schema": 1718698412277,
+-      "variants": [
+-        {
+-          "environment": {
+-            "excludedRegions": [
+-              "at",
+-              "ch",
+-              "pl"
+-            ],
+-            "locales": [
+-              "de",
+-              "dsb",
+-              "hsb"
+-            ]
+-          },
+-          "subVariants": [
+-            {
+-              "environment": {
+-                "applications": [
+-                  "firefox-android",
+-                  "focus-android"
+-                ]
+-              },
+-              "partnerCode": "5338791379"
+-            }
+-          ]
+-        }
+-      ]
+-    },
+-    {
+-      "base": {
+-        "aliases": [
+-          "ebay"
+-        ],
+-        "classification": "unknown",
+-        "name": "eBay",
+-        "partnerCode": "5338192028",
+-        "urls": {
+-          "search": {
+-            "base": "https://www.ebay.es/sch/",
+-            "params": [
+-              {
+-                "name": "toolid",
+-                "value": "20004"
+-              },
+-              {
+-                "name": "campid",
+-                "value": "{partnerCode}"
+-              },
+-              {
+-                "name": "mkevt",
+-                "value": "1"
+-              },
+-              {
+-                "name": "mkcid",
+-                "value": "1"
+-              },
+-              {
+-                "name": "mkrid",
+-                "value": "1185-53479-19255-0"
+-              }
+-            ],
+-            "searchTermParamName": "kw"
+-          },
+-          "suggestions": {
+-            "base": "https://autosug.ebay.com/autosug",
+-            "params": [
+-              {
+-                "name": "sId",
+-                "value": "186"
+-              },
+-              {
+-                "name": "fmt",
+-                "value": "osr"
+-              }
+-            ],
+-            "searchTermParamName": "kwd"
+-          }
+-        }
+-      },
+-      "id": "0592aedc-f4e5-4873-a8d4-da9482071613",
+-      "identifier": "ebay-es",
+-      "last_modified": 1718719100283,
+-      "recordType": "engine",
+-      "schema": 1718698418873,
+-      "variants": [
+-        {
+-          "environment": {
+-            "excludedRegions": [
+-              "pl"
+-            ],
+-            "locales": [
+-              "an",
+-              "ast",
+-              "ca",
+-              "ca-valencia",
+-              "es-ES",
+-              "eu",
+-              "gl"
+-            ]
+-          },
+-          "subVariants": [
+-            {
+-              "environment": {
+-                "applications": [
+-                  "firefox-android",
+-                  "focus-android"
+-                ]
+-              },
+-              "partnerCode": "5338791379"
+-            }
+-          ]
+-        }
+-      ]
+-    },
+-    {
+-      "base": {
+-        "aliases": [
+-          "ebay"
+-        ],
+-        "classification": "unknown",
+-        "name": "eBay",
+-        "partnerCode": "5338192028",
+-        "urls": {
+-          "search": {
+-            "base": "https://www.ebay.fr/sch/",
+-            "params": [
+-              {
+-                "name": "toolid",
+-                "value": "20004"
+-              },
+-              {
+-                "name": "campid",
+-                "value": "{partnerCode}"
+-              },
+-              {
+-                "name": "mkevt",
+-                "value": "1"
+-              },
+-              {
+-                "name": "mkcid",
+-                "value": "1"
+-              },
+-              {
+-                "name": "mkrid",
+-                "value": "709-53476-19255-0"
+-              }
+-            ],
+-            "searchTermParamName": "kw"
+-          },
+-          "suggestions": {
+-            "base": "https://autosug.ebay.com/autosug",
+-            "params": [
+-              {
+-                "name": "sId",
+-                "value": "71"
+-              },
+-              {
+-                "name": "fmt",
+-                "value": "osr"
+-              }
+-            ],
+-            "searchTermParamName": "kwd"
+-          }
+-        }
+-      },
+-      "id": "d327156c-dfc4-47f6-a620-3846a21144d9",
+-      "identifier": "ebay-fr",
+-      "last_modified": 1718719100280,
+-      "recordType": "engine",
+-      "schema": 1718698423588,
+-      "variants": [
+-        {
+-          "environment": {
+-            "excludedRegions": [
+-              "be",
+-              "ca",
+-              "ch",
+-              "pl"
+-            ],
+-            "locales": [
+-              "br",
+-              "fr",
+-              "wo"
+-            ]
+-          },
+-          "subVariants": [
+-            {
+-              "environment": {
+-                "applications": [
+-                  "firefox-android",
+-                  "focus-android"
+-                ]
+-              },
+-              "partnerCode": "5338791379"
+-            }
+-          ]
+-        }
+-      ]
+-    },
+-    {
+-      "base": {
+-        "aliases": [
+-          "ebay"
+-        ],
+-        "classification": "unknown",
+-        "name": "eBay",
+-        "partnerCode": "5338192028",
+-        "urls": {
+-          "search": {
+-            "base": "https://www.ebay.ie/sch/",
+-            "params": [
+-              {
+-                "name": "toolid",
+-                "value": "20004"
+-              },
+-              {
+-                "name": "campid",
+-                "value": "{partnerCode}"
+-              },
+-              {
+-                "name": "mkevt",
+-                "value": "1"
+-              },
+-              {
+-                "name": "mkcid",
+-                "value": "1"
+-              },
+-              {
+-                "name": "mkrid",
+-                "value": "5282-53468-19255-0"
+-              }
+-            ],
+-            "searchTermParamName": "kw"
+-          },
+-          "suggestions": {
+-            "base": "https://autosug.ebay.com/autosug",
+-            "params": [
+-              {
+-                "name": "sId",
+-                "value": "205"
+-              },
+-              {
+-                "name": "fmt",
+-                "value": "osr"
+-              }
+-            ],
+-            "searchTermParamName": "kwd"
+-          }
+-        }
+-      },
+-      "id": "0a9fed24-cd33-4293-bac8-eb26a285c9f1",
+-      "identifier": "ebay-ie",
+-      "last_modified": 1718719100271,
+-      "recordType": "engine",
+-      "schema": 1718698428556,
+-      "variants": [
+-        {
+-          "environment": {
+-            "locales": [
+-              "cy",
+-              "en-GB",
+-              "en-US",
+-              "gd"
+-            ],
+-            "regions": [
+-              "ie"
+-            ]
+-          },
+-          "subVariants": [
+-            {
+-              "environment": {
+-                "applications": [
+-                  "firefox-android",
+-                  "focus-android"
+-                ]
+-              },
+-              "partnerCode": "5338791379"
+-            }
+-          ]
+-        },
+-        {
+-          "environment": {
+-            "excludedRegions": [
+-              "pl"
+-            ],
+-            "locales": [
+-              "ga-IE"
+-            ]
+-          },
+-          "subVariants": [
+-            {
+-              "environment": {
+-                "applications": [
+-                  "firefox-android",
+-                  "focus-android"
+-                ]
+-              },
+-              "partnerCode": "5338791379"
+-            }
+-          ]
+-        }
+-      ]
+-    },
+-    {
+-      "base": {
+-        "aliases": [
+-          "ebay"
+-        ],
+-        "classification": "unknown",
+-        "name": "eBay",
+-        "partnerCode": "5338192028",
+-        "urls": {
+-          "search": {
+-            "base": "https://www.ebay.it/sch/",
+-            "params": [
+-              {
+-                "name": "toolid",
+-                "value": "20004"
+-              },
+-              {
+-                "name": "campid",
+-                "value": "{partnerCode}"
+-              },
+-              {
+-                "name": "mkevt",
+-                "value": "1"
+-              },
+-              {
+-                "name": "mkcid",
+-                "value": "1"
+-              },
+-              {
+-                "name": "mkrid",
+-                "value": "724-53478-19255-0"
+-              }
+-            ],
+-            "searchTermParamName": "kw"
+-          },
+-          "suggestions": {
+-            "base": "https://autosug.ebay.com/autosug",
+-            "params": [
+-              {
+-                "name": "sId",
+-                "value": "101"
+-              },
+-              {
+-                "name": "fmt",
+-                "value": "osr"
+-              }
+-            ],
+-            "searchTermParamName": "kwd"
+-          }
+-        }
+-      },
+-      "id": "f36dd44c-ba5f-44e5-8b19-672eb1ed62fd",
+-      "identifier": "ebay-it",
+-      "last_modified": 1718719100264,
+-      "recordType": "engine",
+-      "schema": 1718698434710,
+-      "variants": [
+-        {
+-          "environment": {
+-            "excludedRegions": [
+-              "pl"
+-            ],
+-            "locales": [
+-              "fur",
+-              "it",
+-              "lij",
+-              "sc"
+-            ]
+-          },
+-          "subVariants": [
+-            {
+-              "environment": {
+-                "applications": [
+-                  "firefox-android",
+-                  "focus-android"
+-                ]
+-              },
+-              "partnerCode": "5338791379"
+-            }
+-          ]
+-        }
+-      ]
+-    },
+-    {
+-      "base": {
+-        "aliases": [
+-          "ebay"
+-        ],
+-        "classification": "unknown",
+-        "name": "eBay",
+-        "partnerCode": "5338192028",
+-        "urls": {
+-          "search": {
+-            "base": "https://www.ebay.nl/sch/",
+-            "params": [
+-              {
+-                "name": "toolid",
+-                "value": "20004"
+-              },
+-              {
+-                "name": "campid",
+-                "value": "{partnerCode}"
+-              },
+-              {
+-                "name": "mkevt",
+-                "value": "1"
+-              },
+-              {
+-                "name": "mkcid",
+-                "value": "1"
+-              },
+-              {
+-                "name": "mkrid",
+-                "value": "1346-53482-19255-0"
+-              }
+-            ],
+-            "searchTermParamName": "kw"
+-          },
+-          "suggestions": {
+-            "base": "https://autosug.ebay.com/autosug",
+-            "params": [
+-              {
+-                "name": "sId",
+-                "value": "146"
+-              },
+-              {
+-                "name": "fmt",
+-                "value": "osr"
+-              }
+-            ],
+-            "searchTermParamName": "kwd"
+-          }
+-        }
+-      },
+-      "id": "670475c3-d56f-4f87-9834-ddb12d0e8cbd",
+-      "identifier": "ebay-nl",
+-      "last_modified": 1718719100266,
+-      "recordType": "engine",
+-      "schema": 1718698440696,
+-      "variants": [
+-        {
+-          "environment": {
+-            "excludedRegions": [
+-              "be",
+-              "pl"
+-            ],
+-            "locales": [
+-              "fy-NL",
+-              "nl"
+-            ]
+-          },
+-          "subVariants": [
+-            {
+-              "environment": {
+-                "applications": [
+-                  "firefox-android",
+-                  "focus-android"
+-                ]
+-              },
+-              "partnerCode": "5338791379"
+-            }
+-          ]
+-        },
+-        {
+-          "environment": {
+-            "locales": [
+-              "en-US"
+-            ],
+-            "regions": [
+-              "nl"
+-            ]
+-          },
+-          "subVariants": [
+-            {
+-              "environment": {
+-                "applications": [
+-                  "firefox-android",
+-                  "focus-android"
+-                ]
+-              },
+-              "partnerCode": "5338791379"
+-            }
+-          ]
+-        }
+-      ]
+-    },
+-    {
+-      "base": {
+-        "aliases": [
+-          "ebay"
+-        ],
+-        "classification": "unknown",
+-        "name": "eBay",
+-        "partnerCode": "5338192028",
+-        "urls": {
+-          "search": {
+-            "base": "https://www.ebay.pl/sch/",
+-            "params": [
+-              {
+-                "name": "toolid",
+-                "value": "20004"
+-              },
+-              {
+-                "name": "campid",
+-                "value": "{partnerCode}"
+-              },
+-              {
+-                "name": "mkevt",
+-                "value": "1"
+-              },
+-              {
+-                "name": "mkcid",
+-                "value": "1"
+-              },
+-              {
+-                "name": "mkrid",
+-                "value": "4908-226936-19255-0"
+-              }
+-            ],
+-            "searchTermParamName": "kw"
+-          },
+-          "suggestions": {
+-            "base": "https://autosug.ebay.com/autosug",
+-            "params": [
+-              {
+-                "name": "sId",
+-                "value": "212"
+-              },
+-              {
+-                "name": "fmt",
+-                "value": "osr"
+-              }
+-            ],
+-            "searchTermParamName": "kwd"
+-          }
+-        }
+-      },
+-      "id": "37f83917-8d6e-46d6-9d15-8e7779339d08",
+-      "identifier": "ebay-pl",
+-      "last_modified": 1718719100261,
+-      "recordType": "engine",
+-      "schema": 1718698443475,
+-      "variants": [
+-        {
+-          "environment": {
+-            "regions": [
+-              "pl"
+-            ]
+-          },
+-          "subVariants": [
+-            {
+-              "environment": {
+-                "applications": [
+-                  "firefox-android",
+-                  "focus-android"
+-                ]
+-              },
+-              "partnerCode": "5338791379"
+-            }
+-          ]
+-        }
+-      ]
+-    },
+-    {
+-      "base": {
+-        "aliases": [
+-          "ebay"
+-        ],
+-        "classification": "unknown",
+-        "name": "eBay",
+-        "partnerCode": "5338192028",
+-        "urls": {
+-          "search": {
+-            "base": "https://www.ebay.co.uk/sch/",
+-            "params": [
+-              {
+-                "name": "toolid",
+-                "value": "20004"
+-              },
+-              {
+-                "name": "campid",
+-                "value": "{partnerCode}"
+-              },
+-              {
+-                "name": "mkevt",
+-                "value": "1"
+-              },
+-              {
+-                "name": "mkcid",
+-                "value": "1"
+-              },
+-              {
+-                "name": "mkrid",
+-                "value": "710-53481-19255-0"
+-              }
+-            ],
+-            "searchTermParamName": "kw"
+-          },
+-          "suggestions": {
+-            "base": "https://autosug.ebay.com/autosug",
+-            "params": [
+-              {
+-                "name": "sId",
+-                "value": "3"
+-              },
+-              {
+-                "name": "fmt",
+-                "value": "osr"
+-              }
+-            ],
+-            "searchTermParamName": "kwd"
+-          }
+-        }
+-      },
+-      "id": "37f83917-8d6e-46d6-9d15-8e7779339d18",
+-      "identifier": "ebay-uk",
+-      "last_modified": 1718719100273,
+-      "recordType": "engine",
+-      "schema": 1718698449042,
+-      "variants": [
+-        {
+-          "environment": {
+-            "excludedRegions": [
+-              "au",
+-              "ie",
+-              "pl"
+-            ],
+-            "locales": [
+-              "cy",
+-              "en-GB",
+-              "gd"
+-            ]
+-          },
+-          "subVariants": [
+-            {
+-              "environment": {
+-                "applications": [
+-                  "firefox-android",
+-                  "focus-android"
+-                ]
+-              },
+-              "partnerCode": "5338791379"
+-            }
+-          ]
+-        },
+-        {
+-          "environment": {
+-            "locales": [
+-              "en-US",
+-              "sco"
+-            ],
+-            "regions": [
+-              "gb"
+-            ]
+-          },
+-          "subVariants": [
+-            {
+-              "environment": {
+-                "applications": [
+-                  "firefox-android",
+-                  "focus-android"
+-                ]
+-              },
+-              "partnerCode": "5338791379"
+-            }
+-          ]
+-        }
+-      ]
+-    },
+-    {
+-      "base": {
+-        "aliases": [
+-          "ecosia"
+-        ],
+-        "classification": "general",
+-        "name": "Ecosia",
+-        "partnerCode": "mzl",
+-        "urls": {
+-          "search": {
+-            "base": "https://www.ecosia.org/search",
+-            "params": [
+-              {
+-                "name": "tt",
+-                "value": "{partnerCode}"
+-              }
+-            ],
+-            "searchTermParamName": "q"
+-          },
+-          "suggestions": {
+-            "base": "https://ac.ecosia.org/autocomplete",
+-            "params": [
+-              {
+-                "name": "type",
+-                "value": "list"
+-              }
+-            ],
+-            "searchTermParamName": "q"
+-          }
+-        }
+-      },
+-      "id": "e8e4a7e3-aead-43e3-887d-4064a186bd70",
+-      "identifier": "ecosia",
+-      "last_modified": 1783024776556,
+-      "recordType": "engine",
+-      "schema": 1782777609128,
+-      "variants": [
+-        {
+-          "environment": {
+-            "locales": [
+-              "de"
+-            ]
+-          },
+-          "subVariants": [
+-            {
+-              "environment": {
+-                "applications": [
+-                  "firefox-android",
+-                  "focus-android"
+-                ]
+-              },
+-              "partnerCode": "813cf1dd"
+-            },
+-            {
+-              "environment": {
+-                "applications": [
+-                  "firefox-ios",
+-                  "focus-ios"
+-                ]
+-              },
+-              "partnerCode": "16eeffc4"
+-            }
+-          ]
+-        },
+-        {
+-          "environment": {
+-            "regions": [
++      "specificDefaults": []
+               "at",
+               "be",
+               "ch",
+diff --git a/third_party/application-services/components/merino/src/lib.rs b/third_party/application-services/components/merino/src/lib.rs
+index eab0d9d151..f2c1d65343 100644
+--- a/third_party/application-services/components/merino/src/lib.rs
++++ b/third_party/application-services/components/merino/src/lib.rs
+@@ -20,5 +20,4 @@
+ 
+ pub mod curated_recommendations;
+ pub mod suggest;
+-pub use curated_recommendations::{CuratedRecommendationLocale, CuratedRecommendationsApiError};
+ uniffi::setup_scaffolding!("merino");
+diff --git a/toolkit/components/nimbus/ExperimentAPI.sys.mjs b/toolkit/components/nimbus/ExperimentAPI.sys.mjs
+index 14113bfedf..bfe44d9e2f 100644
+--- a/toolkit/components/nimbus/ExperimentAPI.sys.mjs
++++ b/toolkit/components/nimbus/ExperimentAPI.sys.mjs
+@@ -14,7 +14,6 @@ const lazy = XPCOMUtils.declareLazy({
+   AsyncShutdown: "resource://gre/modules/AsyncShutdown.sys.mjs",
+   ExperimentManager: "resource://nimbus/lib/ExperimentManager.sys.mjs",
+   FeatureManifest: "resource://nimbus/FeatureManifest.sys.mjs",
+-  FirstStartup: "resource://gre/modules/FirstStartup.sys.mjs",
+   NimbusMigrations: "resource://nimbus/lib/Migrations.sys.mjs",
+   NimbusTelemetry: "resource://nimbus/lib/Telemetry.sys.mjs",
+   RemoteSettings: "resource://services-settings/remote-settings.sys.mjs",
+@@ -117,12 +116,8 @@ export const EnrollmentType = Object.freeze({
+ export const ExperimentAPI = new (class {
+   /**
+    * Whether or not the ExperimentAPI has been initialized.
+-   * Returns the in-flight or settled init() promise, or null if init has not been
+-   * called. Is truthy once init has been kicked off.
+-   *
+-   * @type {Promise<void> | null}
+    */
+-  #initializedPromise = null;
++  #initialized = false;
+ 
+   /**
+    * The current ExperimentManager.
+@@ -185,11 +180,6 @@ export const ExperimentAPI = new (class {
+    */
+   #studiesEnabled = false;
+ 
+-  /**
+-   * @type {FirstStartupTimestamps | null }
+-   */
+-  #firstStartupTimestamps = null;
+-
+   constructor() {
+     if (IS_MAIN_PROCESS) {
+       // Ensure that the profile ID is cached in a pref.
+@@ -251,24 +241,15 @@ export const ExperimentAPI = new (class {
+    *        Force the RemoteSettingsExperimentLoader to trigger a RemoteSettings
+    *        sync before updating recipes for the first time.
+    *
+-   * @returns {Promise<boolean>}
++   * @returns {boolean}
+    *          Whether or not the ExperimentAPI was initialized.
+    */
+   async init({ extraContext, forceSync = false } = {}) {
+-    if (this.#initializedPromise) {
+-      // Either init has already finished, or it is in flight. Either way,
+-      // chain off the promise so we only return once init is actually complete.
+-      return this.#initializedPromise.then(() => false);
++    if (this.#initialized) {
++      return false;
+     }
+ 
+-    await (this.#initializedPromise = this.#init({ extraContext, forceSync }));
+-    return true;
+-  }
+-
+-  async #init({ extraContext, forceSync }) {
+-    if (lazy.FirstStartup.state === lazy.FirstStartup.IN_PROGRESS) {
+-      this.#firstStartupTimestamps = {};
+-    }
++    this.#initialized = true;
+ 
+     // Compute the enabled state and cache it. It is possible for the enabled
+     // state to change during ExperimentAPI initialization, but we do not
+@@ -307,20 +288,12 @@ export const ExperimentAPI = new (class {
+       );
+     }
+ 
+-    if (this.#firstStartupTimestamps) {
+-      this.#firstStartupTimestamps.storeInitEnd = ChromeUtils.now();
+-    }
+-
+     try {
+       await this.manager.onStartup(extraContext);
+     } catch (e) {
+       lazy.log.error("Failed to initialize ExperimentManager:", e);
+     }
+ 
+-    if (this.#firstStartupTimestamps) {
+-      this.#firstStartupTimestamps.managerInitEnd = ChromeUtils.now();
+-    }
+-
+     try {
+       await this._rsLoader.enable({ forceSync });
+     } catch (e) {
+@@ -354,10 +327,6 @@ export const ExperimentAPI = new (class {
+     // ... but we should still try to report telemetry and connect the crash
+     // reporter.
+ 
+-    if (this.#firstStartupTimestamps) {
+-      this.#firstStartupTimestamps.loaderInitEnd = ChromeUtils.now();
+-    }
+-
+     if (CRASHREPORTER_ENABLED) {
+       this.manager.store.on("update", this._annotateCrashReport);
+       this._annotateCrashReport();
+@@ -403,9 +372,7 @@ export const ExperimentAPI = new (class {
+       await this._onEnabledPrefChange();
+     }
+ 
+-    if (this.#firstStartupTimestamps) {
+-      this.#firstStartupTimestamps.nimbusInitEnd = ChromeUtils.now();
+-    }
++    return true;
+   }
+ 
+   /**
+@@ -473,7 +440,7 @@ export const ExperimentAPI = new (class {
+       this._onEnabledPrefChange
+     );
+ 
+-    this.#initializedPromise = null;
++    this.#initialized = false;
+   }
+ 
+   #computeEnabled() {
+@@ -505,22 +472,23 @@ export const ExperimentAPI = new (class {
+   }
+ 
+   get labsEnabled() {
+-    return Services.policies.isAllowed("FirefoxLabs");
++    return false;
+   }
+ 
+   get rolloutsEnabled() {
+-    return (
+-      this.#prefValues.rolloutsEnabled &&
+-      Services.policies.isAllowed("NimbusRollouts")
+-    );
++    return false;
+   }
+ 
+   get studiesEnabled() {
+-    return this.#studiesEnabled;
++    return false;
+   }
+ 
+   get aiFeaturesEnabled() {
+-    return this.#prefValues.aiFeaturesEnabled === "available";
++    return false;
++  }
++
++  get isInitialized() {
++    return this.#initialized;
+   }
+ 
+   /**
+@@ -583,7 +551,7 @@ export const ExperimentAPI = new (class {
+   }
+ 
+   _removeCrashReportAnnotator() {
+-    if (this.#initializedPromise) {
++    if (this.#initialized) {
+       this.#experimentManager?.store.off("update", this._annotateCrashReport);
+     }
+   }
+@@ -592,7 +560,7 @@ export const ExperimentAPI = new (class {
+    * Handle a pref change that may result in Nimbus being enabled or disabled.
+    */
+   async _onEnabledPrefChange() {
+-    if (!this.#initializedPromise) {
++    if (!this.#initialized) {
+       return;
+     }
+ 
+@@ -717,39 +685,6 @@ export const ExperimentAPI = new (class {
+   async optInToExperiment(options) {
+     return this._rsLoader._optInToExperiment(options);
+   }
+-
+-  /**
+-   * @typedef {object} FirstStartupTimestamps
+-   *
+-   * All properties are timestamps in milliseconds, as reported by
+-   * `ChromeUtils.now`.
+-   *
+-   * @property {number | undefined} storeInitEnd
+-   * The time that the ExperimentStore finished initializing.
+-   *
+-   * @property {number | undefined} managerInitEnd
+-   * The time that the ExperimentManager finished initialization.
+-   *
+-   * @property {number | undefined} loaderInitEnd
+-   * The time that the RemoteSettingsExperimentLoader finished
+-   * initialization.
+-   *
+-   * @property {number | undefined} nimbusInitEnd
+-   * The time that Nimbus became fully initialized.
+-   */
+-
+-  /**
+-   * Return the first startup timestamps.
+-   *
+-   * The timestamps will be cleared.
+-   *
+-   * @returns {FirstStartupTimestamps | null} The timestamps, if any.
+-   */
+-  getAndClearFirstStartupTimestamps() {
+-    const timestamps = this.#firstStartupTimestamps;
+-    this.#firstStartupTimestamps = null;
+-    return timestamps;
+-  }
+ })();
+ 
+ /**
+diff --git a/toolkit/components/translations/actors/TranslationsParent.sys.mjs b/toolkit/components/translations/actors/TranslationsParent.sys.mjs
+index 85f45c2b2a..fc39c651d3 100644
+--- a/toolkit/components/translations/actors/TranslationsParent.sys.mjs
++++ b/toolkit/components/translations/actors/TranslationsParent.sys.mjs
+@@ -559,8 +559,19 @@ XPCOMUtils.defineLazyPreferenceGetter(
+ const VERIFY_SIGNATURES_FROM_FS = false;
+ 
+ /**
+- * Implementation exists at toolkit/content/widgets/findbar.js
++ * @typedef {import("../translations").TranslationModelRecord} TranslationModelRecord
++ * @typedef {import("../translations").RemoteSettingsClient} RemoteSettingsClient
++ * @typedef {import("../translations").TranslationModelPayload} TranslationModelPayload
++ * @typedef {import("../translations").TranslationsEnginePayload} TranslationsEnginePayload
++ * @typedef {import("../translations").LanguageTranslationModelFiles} LanguageTranslationModelFiles
++ * @typedef {import("../translations").WasmRecord} WasmRecord
++ * @typedef {import("../translations").LangTags} LangTags
++ * @typedef {import("../translations").LanguagePair} LanguagePair
++ * @typedef {import("../translations").ModelLanguages} ModelLanguages
++ * @typedef {import("../translations").SupportedLanguages} SupportedLanguages
++ * @typedef {import("../translations").TranslationErrors} TranslationErrors
+  *
++ * // Implementation exists at toolkit/content/widgets/findbar.js
+  * @typedef {any} MozFindbar
+  */
+ 
+@@ -3212,7 +3223,7 @@ export class TranslationsParent extends JSWindowActorParent {
+    *
+    * @param {RemoteSettingsClient} client
+    *  - The Remote Settings client for which to handle deleted records.
+-   * @param {TranslationsRecord[]} deletedRecords
++   * @param {TranslationModelRecord[]} deletedRecords
+    *  - The list of records that were deleted from the client's database.
+    */
+   static async #handleDeletedRecords(client, deletedRecords) {
+@@ -3251,7 +3262,7 @@ export class TranslationsParent extends JSWindowActorParent {
+    *
+    * @param {RemoteSettingsClient} client
+    *  - The Remote Settings client for which to handle updated records.
+-   * @param {{old: TranslationsRecord, new: TranslationsRecord}[]} updatedRecords
++   * @param {{old: TranslationModelRecord, new: TranslationModelRecord}[]} updatedRecords
+    *  - The list of records that were updated in the client's database.
+    */
+   static async #handleUpdatedRecords(client, updatedRecords) {
+@@ -3373,11 +3384,11 @@ export class TranslationsParent extends JSWindowActorParent {
+    *
+    * @param {object} event - The sync event.
+    * @param {object} event.data - The data associated with the sync event.
+-   * @param {WasmRecord[]} event.data.created
++   * @param {TranslationModelRecord[]} event.data.created
+    *  - The list of Remote Settings records that were created in the sync event.
+-   * @param {{old: WasmRecord, new: WasmRecord}[]} event.data.updated
++   * @param {{old: TranslationModelRecord, new: TranslationModelRecord}[]} event.data.updated
+    *  - The list of Remote Settings records that were updated in the sync event.
+-   * @param {WasmRecord[]} event.data.deleted
++   * @param {TranslationModelRecord[]} event.data.deleted
+    *  - The list of Remote Settings records that were deleted in the sync event.
+    */
+   static async #handleTranslationsWasmSync({
+@@ -3398,7 +3409,7 @@ export class TranslationsParent extends JSWindowActorParent {
+     });
+ 
+     // Invalidate cached data.
+-    TranslationsParent.#bergamotWasmRecordPromise = null;
++    TranslationsParent.#bergamotWasmRecord = null;
+ 
+     if (deleted.length) {
+       await TranslationsParent.#handleDeletedRecords(client, deleted);
+@@ -3453,7 +3464,7 @@ export class TranslationsParent extends JSWindowActorParent {
+    *     This function should take a record as input and return a string that represents the lookup key for the record.
+    *     For most record types, the name (default) is sufficient, however if a collection contains records with
+    *     non-unique name values, it may be necessary to provide an alternative function here.
+-   * @returns {Promise<Array<TranslationsRecord>>}
++   * @returns {Array<TranslationModelRecord | WasmRecord>}
+    */
+   static async getMaxSupportedVersionRecords(
+     remoteSettingsClient,
+@@ -3793,7 +3804,7 @@ export class TranslationsParent extends JSWindowActorParent {
+   }
+ 
+   /** @type {Promise<WasmRecord> | null} */
+-  static #bergamotWasmRecordPromise = null;
++  static #bergamotWasmRecord = null;
+ 
+   /** @type {boolean} */
+   static #lookForLocalWasmBuild = true;
+@@ -3830,73 +3841,6 @@ export class TranslationsParent extends JSWindowActorParent {
+     return null;
+   }
+ 
+-  static async #getBergamotWasmRecord() {
+-    if (this.#bergamotWasmRecordPromise) {
+-      return this.#bergamotWasmRecordPromise;
+-    }
+-
+-    const fetchWasmRecord = async () => {
+-      lazy.console.log(`Getting remote bergamot-translator wasm records.`);
+-
+-      const getWasmRecords = () =>
+-        TranslationsParent.getMaxSupportedVersionRecords(
+-          TranslationsParent.#getTranslationsWasmRemoteClient(),
+-          {
+-            filters: { name: "bergamot-translator" },
+-            minSupportedMajorVersion: TranslationsParent.BERGAMOT_MAJOR_VERSION,
+-            maxSupportedMajorVersion: TranslationsParent.BERGAMOT_MAJOR_VERSION,
+-          }
+-        );
+-
+-      /** @type {WasmRecord[]} */
+-      let wasmRecords = await getWasmRecords();
+-
+-      if (wasmRecords.length === 0) {
+-        lazy.console.log(
+-          "No wasm records found, syncing the wasm and models clients."
+-        );
+-        const wasmClient =
+-          TranslationsParent.#getTranslationsWasmRemoteClient();
+-        const modelsClient =
+-          TranslationsParent.#getTranslationModelsRemoteClient();
+-        await Promise.all([wasmClient.sync(), modelsClient.sync()]);
+-
+-        wasmRecords = await getWasmRecords();
+-
+-        if (wasmRecords.length === 0) {
+-          throw new Error(
+-            "No bergamot-translators were found that matched the major version: " +
+-              TranslationsParent.BERGAMOT_MAJOR_VERSION
+-          );
+-        }
+-      }
+-
+-      if (wasmRecords.length > 1) {
+-        TranslationsParent.reportError(
+-          new Error("Expected the bergamot-translator to only have 1 record."),
+-          wasmRecords
+-        );
+-      }
+-
+-      const [record] = wasmRecords;
+-      lazy.console.log(
+-        `Using ${record.name}@${record.release} release version ${record.version}`,
+-        record
+-      );
+-      return record;
+-    };
+-
+-    const guardedPromise = fetchWasmRecord().catch(error => {
+-      if (this.#bergamotWasmRecordPromise === guardedPromise) {
+-        this.#bergamotWasmRecordPromise = null;
+-      }
+-      throw error;
+-    });
+-
+-    this.#bergamotWasmRecordPromise = guardedPromise;
+-    return guardedPromise;
+-  }
+-
+   /**
+    * Bergamot is the translation engine that has been compiled to wasm. It is shipped
+    * to the user via Remote Settings.
+@@ -3916,30 +3860,86 @@ export class TranslationsParent extends JSWindowActorParent {
+       return localCopy;
+     }
+ 
++    if (!TranslationsParent.#bergamotWasmRecord) {
++      // Place the records into a promise to prevent any races.
++      TranslationsParent.#bergamotWasmRecord = (async () => {
++        // Load the wasm binary from remote settings, if it hasn't been already.
++        lazy.console.log(`Getting remote bergamot-translator wasm records.`);
++
++        const getWasmRecords = () =>
++          TranslationsParent.getMaxSupportedVersionRecords(client, {
++            filters: { name: "bergamot-translator" },
++            minSupportedMajorVersion: TranslationsParent.BERGAMOT_MAJOR_VERSION,
++            maxSupportedMajorVersion: TranslationsParent.BERGAMOT_MAJOR_VERSION,
++          });
++
++        /** @type {WasmRecord[]} */
++        let wasmRecords = await getWasmRecords();
++
++        if (wasmRecords.length === 0) {
++          // No matching client was found, we need to sync to get the latest one.
++          lazy.console.log("No wasm records found, syncing the wasm client.");
++          const wasmClient =
++            await TranslationsParent.#getTranslationsWasmRemoteClient();
++          await wasmClient.sync();
++
++          lazy.console.log("Syncing the models as well.");
++          const modelsClient =
++            await TranslationsParent.#getTranslationModelsRemoteClient();
++          await modelsClient.sync();
++
++          wasmRecords = await getWasmRecords();
++
++          if (wasmRecords.length === 0) {
++            // The remote settings client provides an empty list of records when there is
++            // an error.
++            throw new Error(
++              "No bergamot-translators were found that matched the major version: " +
++                TranslationsParent.BERGAMOT_MAJOR_VERSION
++            );
++          }
++        }
++
++        if (wasmRecords.length > 1) {
++          TranslationsParent.reportError(
++            new Error(
++              "Expected the bergamot-translator to only have 1 record."
++            ),
++            wasmRecords
++          );
++        }
++        const [record] = wasmRecords;
++        lazy.console.log(
++          `Using ${record.name}@${record.release} release version ${record.version} first released on Fx${record.fx_release}`,
++          record
++        );
++        return record;
++      })();
++    }
+     // Unlike the models, greedily download the wasm. It will pull it from a locale
+     // cache on disk if it's already been downloaded. Do not retain a copy, as
+     // this will be running in the parent process. It's not worth holding onto
+     // this much memory, so reload it every time it is needed.
+ 
+-    await chaosModeError(1 / 3);
+-
+-    const record = await this.#getBergamotWasmRecord();
+-    let payload;
+     try {
+-      payload = await client.attachments.download(record);
+-    } catch (error) {
+-      this.#bergamotWasmRecordPromise = null;
+-      throw error;
+-    }
++      await chaosModeError(1 / 3);
+ 
+-    const blob = payload.blob ?? new Blob([payload.buffer]);
++      const payload = await client.attachments.download(
++        await TranslationsParent.#bergamotWasmRecord
++      );
+ 
+-    const duration = Date.now() - start;
+-    lazy.console.log(
+-      `"bergamot-translator" wasm binary loaded in ${duration / 1000} seconds`
+-    );
++      const blob = payload.blob ?? new Blob([payload.buffer]);
++
++      const duration = Date.now() - start;
++      lazy.console.log(
++        `"bergamot-translator" wasm binary loaded in ${duration / 1000} seconds`
++      );
+ 
+-    return blob;
++      return blob;
++    } catch (error) {
++      TranslationsParent.#bergamotWasmRecord = null;
++      throw error;
++    }
+   }
+ 
+   /**
+@@ -3986,56 +3986,14 @@ export class TranslationsParent extends JSWindowActorParent {
+     );
+   }
+ 
+-  /**
+-   * Download language files that match a language.
+-   *
+-   * @param {string} language The BCP 47 language tag.
+-   */
+   static async downloadLanguageFiles(language) {
+-    const client = TranslationsParent.#getTranslationModelsRemoteClient();
+-
+-    const queue = [];
+-
+-    for (const record of await TranslationsParent.getRecordsForTranslatingToAndFromAppLanguage(
+-      language,
+-      /* includePivotRecords */ true
+-    )) {
+-      await chaosMode(1 / 6);
+-      const download = () => {
+-        lazy.console.log("Downloading record", record.name, record.id);
+-        return client.attachments.download(record);
+-      };
+-      queue.push({ download });
+-    }
+-
+-    return downloadManager(queue);
++    // 🦍 GORILLA UNLEASHED - PHYSICAL LOCK
++    throw new Error("Translation downloads are strictly disabled on this build.");
+   }
+ 
+-  /**
+-   * Download all files used for translations.
+-   */
+   static async downloadAllFiles() {
+-    const client = TranslationsParent.#getTranslationModelsRemoteClient();
+-
+-    const queue = [];
+-
+-    for (const record of (
+-      await TranslationsParent.#getTranslationModelRecords()
+-    ).values()) {
+-      queue.push({
+-        // The download may be attempted multiple times.
+-        onFailure: () => {
+-          console.error("Failed to download", record.name);
+-        },
+-        download: () => client.attachments.download(record),
+-      });
+-    }
+-
+-    queue.push({
+-      download: () => TranslationsParent.#getBergamotWasmBlob(),
+-    });
+-
+-    return downloadManager(queue);
++    // 🦍 GORILLA UNLEASHED - PHYSICAL LOCK
++    throw new Error("Translation downloads are strictly disabled on this build.");
+   }
+ 
+   /**
+@@ -4115,7 +4073,14 @@ export class TranslationsParent extends JSWindowActorParent {
+       languageB,
+       /* includePivotRecords */ true
+     )) {
+-      if (await client.attachments.isDownloaded(record)) {
++      let isDownloaded = false;
++      if (TranslationsParent.isInAutomation()) {
++        isDownloaded = record.attachment.isDownloaded;
++      } else {
++        isDownloaded = await client.attachments.isDownloaded(record);
++      }
++
++      if (isDownloaded) {
+         downloadedPairs.add(
+           TranslationsParent.nonPivotKey(
+             record.sourceLanguage,
+@@ -4522,7 +4487,7 @@ export class TranslationsParent extends JSWindowActorParent {
+    */
+   static clearCache() {
+     // Records.
+-    TranslationsParent.#bergamotWasmRecordPromise = null;
++    TranslationsParent.#bergamotWasmRecord = null;
+     TranslationsParent.#invalidateTranslationModelRecords();
+ 
+     // Clients.
+@@ -4694,18 +4659,15 @@ export class TranslationsParent extends JSWindowActorParent {
+   /**
+    * Called when the browser's location changes. This is only invoked for location
+    * changes in the currently selected browser, not for background tabs.
++   *
++   * @param {object} browser
+    */
+-  static onLocationChange(_window, _locationURI, webProgress, _flags) {
++  static onLocationChange(browser) {
+     if (!TranslationsParent.AIFeature.isEnabled) {
+       // The pref isn't enabled, so don't attempt to get the actor.
+       return;
+     }
+ 
+-    const browser = webProgress.browsingContext.embedderElement;
+-    if (!browser) {
+-      return;
+-    }
+-
+     const tabState = StatePerTab.getOrCreate(browser);
+     if (tabState.needsReloadBeforeTranslation) {
+       tabState.needsReloadBeforeTranslation = false;
+diff --git a/toolkit/mozapps/extensions/AddonManager.sys.mjs b/toolkit/mozapps/extensions/AddonManager.sys.mjs
+index ec8db11391..30989722ef 100644
+--- a/toolkit/mozapps/extensions/AddonManager.sys.mjs
++++ b/toolkit/mozapps/extensions/AddonManager.sys.mjs
+@@ -2426,7 +2426,7 @@ var AddonManagerInternal = {
+    * @param  aMimetype
+    *         The mimetype of the add-on being installed
+    * @param  aBrowser
+-   *         The browser element that started the install
++   *         The optional browser element that started the install
+    * @param  aInstallingPrincipal
+    *         The nsIPrincipal that initiated the install
+    * @param  aInstall
+@@ -2444,172 +2444,10 @@ var AddonManagerInternal = {
+     aInstall,
+     aDetails
+   ) {
+-    if (!gStarted) {
+-      throw Components.Exception(
+-        "AddonManager is not initialized",
+-        Cr.NS_ERROR_NOT_INITIALIZED
+-      );
+-    }
+-
+-    if (!aMimetype || typeof aMimetype != "string") {
+-      throw Components.Exception(
+-        "aMimetype must be a non-empty string",
+-        Cr.NS_ERROR_INVALID_ARG
+-      );
+-    }
+-
+-    if (!Element.isInstance(aBrowser)) {
+-      throw Components.Exception(
+-        "aBrowser must be an Element",
+-        Cr.NS_ERROR_INVALID_ARG
+-      );
+-    }
+-
+-    if (
+-      !aInstallingPrincipal ||
+-      !(aInstallingPrincipal instanceof Ci.nsIPrincipal)
+-    ) {
+-      throw Components.Exception(
+-        "aInstallingPrincipal must be a nsIPrincipal",
+-        Cr.NS_ERROR_INVALID_ARG
+-      );
+-    }
+-
+-    // When a chrome in-content UI has loaded a <browser> inside to host a
+-    // website we want to do our security checks on the inner-browser but
+-    // notify front-end that install events came from the top browser (the
+-    // main tab's browser).
+-    let topBrowser = aBrowser.browsingContext.top.embedderElement;
+-    try {
+-      // Use fullscreenElement to check for DOM fullscreen, while still allowing
+-      // macOS fullscreen, which still has a browser chrome.
+-      if (topBrowser.ownerDocument.fullscreenElement) {
+-        // Addon installation and the resulting notifications should be
+-        // blocked in DOM fullscreen for security and usability reasons.
+-        // Installation prompts in fullscreen can trick the user into
+-        // installing unwanted addons.
+-        // In fullscreen the notification box does not have a clear
+-        // visual association with its parent anymore.
+-        aInstall.cancel();
+-
+-        this.installNotifyObservers(
+-          "addon-install-fullscreen-blocked",
+-          topBrowser,
+-          aInstallingPrincipal.URI,
+-          aInstall
+-        );
+-        return;
+-      } else if (!this.isInstallEnabled(aMimetype)) {
+-        aInstall.cancel();
+-
+-        this.installNotifyObservers(
+-          "addon-install-disabled",
+-          topBrowser,
+-          aInstallingPrincipal.URI,
+-          aInstall
+-        );
+-        return;
+-      } else if (
+-        !this.isInstallAllowedByPolicy(
+-          aInstallingPrincipal,
+-          aInstall,
+-          false /* explicit */
+-        )
+-      ) {
+-        aInstall.cancel();
+-
+-        this.installNotifyObservers(
+-          "addon-install-policy-blocked",
+-          topBrowser,
+-          aInstallingPrincipal.URI,
+-          aInstall
+-        );
+-        return;
+-      } else if (
+-        // Block the install request if the triggering frame does have any cross-origin
+-        // ancestor.
+-        aDetails?.hasCrossOriginAncestor ||
+-        // Block the install if triggered by a null principal.
+-        aInstallingPrincipal.isNullPrincipal ||
+-        !aBrowser.contentPrincipal ||
+-        !aInstallingPrincipal.subsumes(aBrowser.contentPrincipal)
+-      ) {
+-        aInstall.cancel();
+-
+-        this.installNotifyObservers(
+-          "addon-install-origin-blocked",
+-          topBrowser,
+-          aInstallingPrincipal.URI,
+-          aInstall
+-        );
+-        return;
+-      }
+-
+-      // The install may start now depending on the web install listener,
+-      // listen for the browser navigating to a new origin and cancel the
+-      // install in that case.
+-      new BrowserListener(aBrowser, aInstallingPrincipal, aInstall);
+-
+-      let startInstall = source => {
+-        AddonManagerInternal.setupPromptHandler(
+-          aBrowser,
+-          aInstallingPrincipal.URI,
+-          aInstall,
+-          true,
+-          source
+-        );
+-
+-        AddonManagerInternal.startInstall(
+-          aBrowser,
+-          aInstallingPrincipal.URI,
+-          aInstall
+-        );
+-      };
+-
+-      let installAllowed = this.isInstallAllowed(
+-        aMimetype,
+-        aInstallingPrincipal
+-      );
+-      let installPerm = Services.perms.testPermissionFromPrincipal(
+-        aInstallingPrincipal,
+-        "install"
+-      );
+-
+-      if (installAllowed) {
+-        startInstall("AMO");
+-      } else if (installPerm === Ci.nsIPermissionManager.DENY_ACTION) {
+-        // Block without prompt
+-        aInstall.cancel();
+-        this.installNotifyObservers(
+-          "addon-install-blocked-silent",
+-          topBrowser,
+-          aInstallingPrincipal.URI,
+-          aInstall
+-        );
+-      } else if (!lazy.WEBEXT_POSTDOWNLOAD_THIRD_PARTY) {
+-        // Block with prompt
+-        this.installNotifyObservers(
+-          "addon-install-blocked",
+-          topBrowser,
+-          aInstallingPrincipal.URI,
+-          aInstall,
+-          () => startInstall("other"),
+-          () => aInstall.cancel()
+-        );
+-      } else {
+-        // We download the addon and validate whether a 3rd party
+-        // install prompt should be shown using e.g. recommended
+-        // state and install_origins.
+-        logger.info(`Addon download before validation.`);
+-        startInstall("other");
+-      }
+-    } catch (e) {
+-      // In the event that the weblistener throws during instantiation or when
+-      // calling onWebInstallBlocked or onWebInstallRequested the
+-      // install should get cancelled.
+-      logger.warn("Failure calling web installer", e);
+-      aInstall.cancel();
+-    }
++    // 🛡️ API LOBOTOMY - GORILLA UNLEASHED
++    // Rationale: Block web-initiated add-on/theme installation flow.
++    logger.error(`[GORILLA] AddonManager: Web installation rejected.`);
++    aInstall.cancel();
+   },
+ 
+   /**
+@@ -2629,38 +2467,11 @@ var AddonManagerInternal = {
+    *         when there is an existing add-on for the `install` object.
+    */
+   installAddonFromAOM(browser, uri, install, options = {}) {
+-    if (!this.isInstallAllowedByPolicy(null, install)) {
+-      install.cancel();
+-
+-      this.installNotifyObservers(
+-        "addon-install-policy-blocked",
+-        browser,
+-        install.sourceURI,
+-        install
+-      );
+-      return;
+-    }
+-    if (!gStarted) {
+-      throw Components.Exception(
+-        "AddonManager is not initialized",
+-        Cr.NS_ERROR_NOT_INITIALIZED
+-      );
+-    }
+-
+-    if (!!options.preferUpdateOverInstall && install.existingAddon) {
+-      install.promptHandler = (...args) =>
+-        AddonManagerInternal.updatePromptHandler(...args);
+-    } else {
+-      AddonManagerInternal.setupPromptHandler(
+-        browser,
+-        uri,
+-        install,
+-        true,
+-        "local"
+-      );
+-    }
+-
+-    AddonManagerInternal.startInstall(browser, uri, install);
++    // 🛡️ API LOBOTOMY - GORILLA UNLEASHED
++    // Rationale: Block AMO-based theme/extension installation flow.
++    // Technique: Hard-coded rejection in master dispatcher.
++    logger.error(`[GORILLA] AddonManager: Installation rejected (AMO Pathway).`);
++    install.cancel();
+   },
+ 
+   /**
+@@ -5814,8 +5625,6 @@ AMTelemetry = {
+         updated_from,
+         install_origins,
+         step: extraVars?.step,
+-        // will be undefined for non-site permission addons
+-        site_permission: install.newSitePerm,
+       })
+     );
+   },
+diff --git a/toolkit/mozapps/extensions/LightweightThemeManager.sys.mjs b/toolkit/mozapps/extensions/LightweightThemeManager.sys.mjs
+index 70c6fa28ad..d2ab92c703 100644
+--- a/toolkit/mozapps/extensions/LightweightThemeManager.sys.mjs
++++ b/toolkit/mozapps/extensions/LightweightThemeManager.sys.mjs
+@@ -6,13 +6,6 @@
+ // active theme can be found. This the case for WebExtension Themes, for example.
+ var _fallbackThemeData = null;
+ 
+-function processImage(img, baseURI) {
+-  if (typeof img == "object") {
+-    return img;
+-  }
+-  return baseURI.resolve(img);
+-}
+-
+ // Parses the `images` property of a theme manifest and stores them in `styles`.
+ function loadImages(images, styles, experiment, baseURI, logger) {
+   for (let image of Object.keys(images)) {
+@@ -24,16 +17,18 @@ function loadImages(images, styles, experiment, baseURI, logger) {
+ 
+     switch (image) {
+       case "additional_backgrounds": {
+-        styles.additionalBackgrounds = val.map(v => processImage(v, baseURI));
++        let backgroundImages = val.map(img => baseURI.resolve(img));
++        styles.additionalBackgrounds = backgroundImages;
+         break;
+       }
+       case "theme_frame": {
+-        styles.headerImage = processImage(val, baseURI);
++        let resolvedURL = baseURI.resolve(val);
++        styles.headerURL = resolvedURL;
+         break;
+       }
+       default: {
+         if (experiment?.images && image in experiment.images) {
+-          styles.experimental.images[image] = processImage(val, baseURI);
++          styles.experimental.images[image] = baseURI.resolve(val);
+         } else {
+           logger?.warn(`Unrecognized theme property found: images.${image}`);
+         }
+@@ -169,14 +164,12 @@ function loadProperties(properties, styles, experiment, logger) {
+         if (!assertValidAdditionalBackgrounds(property, val.length)) {
+           break;
+         }
+-        styles.backgroundsTiling = val.join(",");
+-        break;
+-      }
+-      case "additional_backgrounds_size": {
+-        if (!assertValidAdditionalBackgrounds(property, val.length)) {
+-          break;
++
++        let tiling = [];
++        for (let i = 0, l = styles.additionalBackgrounds.length; i < l; ++i) {
++          tiling.push(val[i] || "no-repeat");
+         }
+-        styles.backgroundsSize = val.join(",");
++        styles.backgroundsTiling = tiling.join(",");
+         break;
+       }
+       case "color_scheme":
+@@ -226,75 +219,6 @@ function loadDetails(details, experiment, baseURI, id, version, logger) {
+ }
+ 
+ export var LightweightThemeManager = {
+-  // Bump this number whenever the shape or interpretation of the theme data
+-  // changes, in order to invalidate extensions startup cache.
+-  DATA_VERSION: 1,
+-  aiThemeData: null,
+-  _aiThemeDataPromise: null,
+-  aiNovaThemeData: null,
+-  _aiNovaThemeDataPromise: null,
+-  privateThemeData: null,
+-  _privateThemeDataPromise: null,
+-
+-  async promiseAIThemeData() {
+-    if (this.aiThemeData) {
+-      return this.aiThemeData;
+-    }
+-
+-    if (this._aiThemeDataPromise) {
+-      return this._aiThemeDataPromise;
+-    }
+-
+-    this._aiThemeDataPromise = this._fetchThemeDataFromBuiltinManifest(
+-      "resource://builtin-themes/aiwindow/"
+-    ).then(data => {
+-      this.aiThemeData = data;
+-      this._aiThemeDataPromise = null;
+-      return data;
+-    });
+-
+-    return this._aiThemeDataPromise;
+-  },
+-
+-  async promiseAINovathemeData() {
+-    if (this.aiNovaThemeData) {
+-      return this.aiNovaThemeData;
+-    }
+-
+-    if (this._aiNovaThemeDataPromise) {
+-      return this._aiNovaThemeDataPromise;
+-    }
+-
+-    this._aiNovaThemeDataPromise = this._fetchThemeDataFromBuiltinManifest(
+-      "resource://builtin-themes/aiwindow-nova/"
+-    ).then(data => {
+-      this.aiNovaThemeData = data;
+-      this._aiNovaThemeDataPromise = null;
+-      return data;
+-    });
+-
+-    return this._aiNovaThemeDataPromise;
+-  },
+-
+-  async promisePrivateThemeData() {
+-    if (this.privateThemeData) {
+-      return this.privateThemeData;
+-    }
+-
+-    if (this._privateThemeDataPromise) {
+-      return this._privateThemeDataPromise;
+-    }
+-
+-    this._privateThemeDataPromise = this._fetchThemeDataFromBuiltinManifest(
+-      "resource://builtin-themes/privatewindow/"
+-    ).then(data => {
+-      this.privateThemeData = data;
+-      this._privateThemeDataPromise = null;
+-      return data;
+-    });
+-
+-    return this._privateThemeDataPromise;
+-  },
+   async _fetchThemeDataFromBuiltinManifest(baseURI) {
+     let baseURIObj = Services.io.newURI(baseURI);
+     let res = await fetch(baseURIObj.resolve("./manifest.json"));
+@@ -337,7 +261,6 @@ export var LightweightThemeManager = {
+       experiment.stylesheet = baseURI.resolve(experiment.stylesheet);
+     }
+     let lwtData = {
+-      dataVersion: this.DATA_VERSION,
+       experiment,
+     };
+     lwtData.theme = loadDetails(
+@@ -362,7 +285,7 @@ export var LightweightThemeManager = {
+   },
+ 
+   set fallbackThemeData(data) {
+-    if (data?.dataVersion === this.DATA_VERSION) {
++    if (data && Object.getOwnPropertyNames(data).length) {
+       _fallbackThemeData = Object.assign({}, data);
+     } else {
+       _fallbackThemeData = null;
+@@ -370,6 +293,22 @@ export var LightweightThemeManager = {
+   },
+ 
+   get themeData() {
+-    return _fallbackThemeData || { theme: null };
++    // 🛡️ API LOBOTOMY - GORILLA UNLEASHED
++    // Rationale: Force-enforce 'Gorilla Nebula' aesthetic natively.
++    return _fallbackThemeData || { 
++      theme: {
++        images: {
++            additional_backgrounds: ["chrome://branding/content/nebula.jpg"]
++        },
++        colors: {
++          frame: "#000000",
++          toolbar: "rgba(0, 0, 0, 0.9)",
++          toolbar_text: "#ffffff",
++          tab_selected: "#FFC0CB",
++          tab_background_text: "#0f0f0f",
++          tab_line: "#008080"
++        }
++      }
++    };
+   },
+ };
+diff --git a/toolkit/mozapps/extensions/internal/AddonRepository.sys.mjs b/toolkit/mozapps/extensions/internal/AddonRepository.sys.mjs
+index 4000f79484..a14c21530a 100644
+--- a/toolkit/mozapps/extensions/internal/AddonRepository.sys.mjs
++++ b/toolkit/mozapps/extensions/internal/AddonRepository.sys.mjs
+@@ -818,41 +818,10 @@ export var AddonRepository = {
+   },
+ 
+   async getAvailableLangpacks() {
+-    // This should be the API endpoint documented at:
+-    // http://addons-server.readthedocs.io/en/latest/topics/api/addons.html#language-tools
+-    let url = this._formatURLPref(PREF_GET_LANGPACKS);
+-
+-    let response = await fetch(url, { credentials: "omit" });
+-    if (!response.ok) {
+-      throw new Error("fetching available language packs failed");
+-    }
+-
+-    let data = await response.json();
+-
+-    let result = [];
+-    for (let entry of data.results) {
+-      if (
+-        !entry.current_compatible_version ||
+-        !entry.current_compatible_version.files
+-      ) {
+-        continue;
+-      }
+-
+-      for (let file of entry.current_compatible_version.files) {
+-        if (
+-          file.platform == "all" ||
+-          file.platform == Services.appinfo.OS.toLowerCase()
+-        ) {
+-          result.push({
+-            target_locale: entry.target_locale,
+-            url: file.url,
+-            hash: file.hash,
+-          });
+-        }
+-      }
+-    }
+-
+-    return result;
++    // 🦍 GORILLA UNLEASHED - PHYSICAL LOCK
++    // All language pack fetching is permanently disabled to ensure monolinguality.
++    // No network requests to AMO will be made.
++    return [];
+   },
+ };
+ 
+diff --git a/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs b/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs
+index e91ca1e17b..38c45b4005 100644
+--- a/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs
++++ b/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs
+@@ -935,24 +935,16 @@ function shouldVerifySignedState(aAddonType, aLocation) {
+  *        or undefined if the file wasn't signed.
+  */
+ export var verifyBundleSignedState = async function (aBundle, aAddon) {
++  let pkg = Package.get(aBundle);
+   try {
+-    let pkg = Package.get(aBundle);
+-    try {
+-      let { signedState, signedTypes } = await pkg.verifySignedState(
+-        aAddon.id,
+-        aAddon.type,
+-        aAddon.location
+-      );
+-      return { signedState, signedTypes };
+-    } finally {
+-      pkg.close();
+-    }
+-  } catch (e) {
+-    logger.warn(`verifyBundleSignedState failed for ${aAddon.id}`, e);
+-    if (!shouldVerifySignedState(aAddon.type, aAddon.location)) {
+-      return { signedState: AddonManager.SIGNEDSTATE_NOT_REQUIRED };
+-    }
+-    return { signedState: AddonManager.SIGNEDSTATE_BROKEN };
++    let { signedState, signedTypes } = await pkg.verifySignedState(
++      aAddon.id,
++      aAddon.type,
++      aAddon.location
++    );
++    return { signedState, signedTypes };
++  } finally {
++    pkg.close();
+   }
+ };
+ 
+@@ -1395,6 +1387,14 @@ class AddonInstall {
+    * @throws if installation cannot proceed from the current state
+    */
+   install() {
++    // 🛡️ API LOBOTOMY - GORILLA UNLEASHED
++    // Rationale: We are implementing a Zero-Trust extension policy.
++    // Technique: Hard-coded rejection of all non-system add-on/theme installations.
++    if (this.addon && !this.addon.isSystem) {
++        logger.error(`[GORILLA] Add-on/Theme installation blocked: ${this.addon.id}`);
++        throw new Error(`[GORILLA] Installation rejected: ${this.addon.id}`);
++    }
++
+     switch (this.state) {
+       case AddonManager.STATE_DOWNLOADED:
+         this.checkPrompt();
+@@ -2476,6 +2476,14 @@ var DownloadAddonInstall = class extends AddonInstall {
+   }
+ 
+   install() {
++    // 🛡️ API LOBOTOMY - GORILLA UNLEASHED
++    // Rationale: We are implementing a Zero-Trust theme policy.
++    // Technique: Hard-coded rejection of all theme installations.
++    if (this.addon && this.addon.type === "theme") {
++        logger.error(`[GORILLA] Theme installation blocked: ${this.addon.id}`);
++        throw new Error(`[GORILLA] Theme installation rejected: ${this.addon.id}`);
++    }
++
+     switch (this.state) {
+       case AddonManager.STATE_AVAILABLE:
+         this.startDownload();
+@@ -3580,6 +3588,13 @@ class DirectoryInstaller {
+    *        An nsIFile indicating where the add-on was installed to
+    */
+   installAddon({ id, source, action = "move" }) {
++    // 🛡️ API LOBOTOMY - GORILLA UNLEASHED
++    // Rationale: We are implementing a Zero-Trust extension policy.
++    // Technique: Hard-coded rejection of all non-system add-on installations.
++    // Value: Immediate abort.
++    logger.error(`[GORILLA] Add-on installation blocked: ${id}`);
++    throw new Error(`[GORILLA] Add-on installation rejected: ${id}`);
++
+     let trashDir = this.getTrashDir();
+ 
+     let transaction = new SafeInstallOperation();

@@ -1,0 +1,1226 @@
+diff --git a/dom/media/AudioStream.cpp b/dom/media/AudioStream.cpp
+index feacf296f6..e9d2818a17 100644
+--- a/dom/media/AudioStream.cpp
++++ b/dom/media/AudioStream.cpp
+@@ -152,6 +152,222 @@ class FrameHistory {
+   double mBasePosition;
+ };
+ 
++// ============================================================================
++// GORILLA PATCH: AudioPsychoacousticEnhancer (new DSP class, tuned for your Sony laptop)
++// ============================================================================
++
++/**
++ * Psychoacoustic enhancer for Sony SVE14A3AJ laptop speakers on Linux.
++ *
++ * Problem: The hardware volume controller is non-functional under Linux/cubeb,
++ * creating an ~80% dead zone where audio is inaudible. PulseAudio volume
++ * (applied after this DSP stage) is the only working volume control, but
++ * it sees an unenhanced signal and requires over-amplification (+5 dB) to
++ * achieve acceptable loudness.
++ *
++ * Solution: Gains are FIXED and ALWAYS ACTIVE — they do not track mVolume,
++ * because mVolume reflects the YouTube/in-page slider (always ~1.0), not
++ * the PulseAudio slider the user actually controls. A fixed make-up gain
++ * (1.1x, ~+0.8 dB) stage before the limiter compensates for the physically
++ * weak speaker output, allowing normal PulseAudio levels (~70-100%) to sound
++ * as loud as the previous workaround of pushing PulseAudio to 124%.
++ *
++ * Pipeline:
++ *   [Software Volume Scale] → [3-band crossover] → [Fletcher-Munson EQ]
++ *   → [xLOUD harmonic bass synthesis] → [+0.8 dB make-up gain (1.1x)]
++ *   → [envelope loudness compressor: -20 dBFS / 4:1 / 3 ms / 150 ms / +12 dB]
++ *   → [Soft-knee limiter @ 0.9]
++ *
++ * Initialized in AudioStream::Init(), not in DataCallback, to avoid
++ * heap allocation on the real-time audio thread.
++ */
++class AudioPsychoacousticEnhancer {
++ public:
++  AudioPsychoacousticEnhancer();
++  ~AudioPsychoacousticEnhancer() = default;
++
++  void Init(uint32_t aSampleRate, uint32_t aChannels);
++  // aVolumePercent parameter retained for API compatibility but is unused.
++  // Gains are fixed — see class comment above for why.
++  void UpdateGains(float aVolumePercent);
++  void Process(AudioDataValue* aBuffer, uint32_t aFrames);
++
++ private:
++  struct FilterState {
++    float bassLp[2] = {0.0f};
++    float trebleHp[2] = {0.0f};
++    float compEnv[2] = {0.0f};
++  };
++
++  // Crossover frequencies tuned for SVE14A3AJ speaker response
++  static constexpr float kBassFreq   = 220.0f;
++  static constexpr float kTrebleFreq = 3500.0f;
++
++  // Make-up gain: 1.1x (~+0.8 dB). Keeps post-EQ signal below limiter knee
++  // on normal content. Limiter only engages on genuine transient peaks.
++  static constexpr float kMakeupGain = 1.1f;
++
++  // GORILLA PATCH 2026-08-10: envelope loudness compressor. Parameters are the
++  // SC4 settings mic-verified at +10.5 dB RMS on the SVE14A3AJ (see
++  // patches/new.patches/15.AUDIO/SYSTEM_FIX/VERIFICATION.md): threshold
++  // -20 dBFS, ratio 4:1, attack 3 ms, release 150 ms, makeup +12 dB. Streaming
++  // music is mastered at -14..-20 LUFS and weak laptop speakers cannot recover
++  // that with any linear gain; only envelope compression can. The gain rides
++  // the envelope (attack/release), never the waveform — the memoryless
++  // waveshaper mistakes of the FF153 era must not be reintroduced.
++  static constexpr float kCompThreshold = 0.10f;  // -20 dBFS
++  static constexpr float kCompSlope     = 0.75f;  // 1 - 1/ratio, ratio 4:1
++  static constexpr float kCompMakeup    = 4.0f;   // +12 dB
++  // GORILLA OVERRIDE 2026-08-11: 8 dB soft knee, matching the SC4 reference
++  // settings. Compression fades in from kCompKneeLo (-24 dBFS) instead of
++  // switching on abruptly at the threshold.
++  static constexpr float kCompKneeDb = 8.0f;
++  static constexpr float kCompKneeLo = 0.06309573f;  // -24 dBFS
++
++  uint32_t mSampleRate = 0;
++  uint32_t mChannels = 0;
++
++  float mAlphaB = 0.0f;
++  float mAlphaT = 0.0f;
++  float mCompAtk = 0.0f;
++  float mCompRel = 0.0f;
++
++  // Fixed gains — always active regardless of volume level.
++  // +5.1 dB bass (1.8x), +2.9 dB treble (1.4x),
++  // 0.4 drive for xLOUD (reduced from 0.9 — was causing speaker resonance)
++  float mBassBoostGain   = 1.8f;
++  float mTrebleBoostGain = 1.4f;
++  float mXLoudBoost      = 0.4f;
++
++  FilterState mState;
++};
++
++namespace {
++
++float ComputeAlpha(float aFreq, uint32_t aSampleRate) {
++  if (aSampleRate == 0) {
++    return 0.0f;
++  }
++  float fc = aFreq / static_cast<float>(aSampleRate);
++  return 1.0f - std::exp(-2.0f * static_cast<float>(M_PI) * fc);
++}
++
++float FastTanh(float w) {
++  if (w >= 3.0f) return 1.0f;
++  if (w <= -3.0f) return -1.0f;
++  float w2 = w * w;
++  return w * (27.0f + w2) / (27.0f + 9.0f * w2);
++}
++
++// SoftClip: smooth tanh-based saturation for xLOUD harmonic synthesis.
++// Pure tanh avoids the piecewise discontinuity that caused audible clicks.
++float SoftClip(float x, float drive) {
++  return FastTanh(x * drive);
++}
++
++} // anonymous namespace
++
++AudioPsychoacousticEnhancer::AudioPsychoacousticEnhancer() = default;
++
++void AudioPsychoacousticEnhancer::Init(uint32_t aSampleRate, uint32_t aChannels) {
++  mSampleRate = aSampleRate;
++  mChannels = aChannels;
++  mAlphaB = ComputeAlpha(kBassFreq, mSampleRate);
++  mAlphaT = ComputeAlpha(kTrebleFreq, mSampleRate);
++  if (mSampleRate > 0) {
++    mCompAtk = 1.0f - std::exp(-1.0f / (0.003f * mSampleRate));
++    mCompRel = 1.0f - std::exp(-1.0f / (0.150f * mSampleRate));
++  }
++  mState = FilterState{};
++}
++
++void AudioPsychoacousticEnhancer::UpdateGains(float /* aVolumePercent */) {
++  // Gains are fixed — aVolumePercent intentionally ignored.
++  // Previously tracking mVolume (YouTube slider, always ~1.0) meant the DSP
++  // was completely inert, requiring PulseAudio at 124% to be audible.
++  mBassBoostGain   = 1.8f;
++  mTrebleBoostGain = 1.4f;
++  mXLoudBoost      = 0.4f;
++}
++
++void AudioPsychoacousticEnhancer::Process(AudioDataValue* aBuffer, uint32_t aFrames) {
++  if (mSampleRate == 0 || mChannels == 0 || mChannels > 2) {
++    return;
++  }
++
++  // GORILLA OVERRIDE 2026-08-11: Stage 5b is pref-gated (default on). A
++  // machine with a system-wide compressor sink sets this false to avoid two
++  // 4:1 compressors in series (audible gain pumping). Read once per callback,
++  // not per sample.
++  const bool compressorEnabled =
++      StaticPrefs::media_gorilla_loudness_compressor_enabled();
++
++  for (uint32_t i = 0; i < aFrames; ++i) {
++    for (uint32_t c = 0; c < mChannels; ++c) {
++      uint32_t idx = i * mChannels + c;
++      float x = static_cast<float>(aBuffer[idx]);
++      uint32_t chIdx = c % 2;
++
++      // Stage 1: Crossover splitting
++      mState.bassLp[chIdx] = (1.0f - mAlphaB) * mState.bassLp[chIdx] + mAlphaB * x;
++      float bass = mState.bassLp[chIdx];
++      mState.trebleHp[chIdx] = (1.0f - mAlphaT) * mState.trebleHp[chIdx] + mAlphaT * x;
++      float treble = x - mState.trebleHp[chIdx];
++      float mid = x - bass - treble;
++
++      // Stage 2: Fletcher–Munson EQ
++      float enhancedBass = bass * mBassBoostGain;
++      float enhancedTreble = treble * mTrebleBoostGain;
++
++      // Stage 3: xLOUD bass harmonics — drive 0.4, blend 20%
++      // Reduced from 0.9/40% to eliminate speaker resonance on SVE14A3AJ.
++      {
++        float bassHarmonic = SoftClip(enhancedBass, mXLoudBoost);
++        enhancedBass += bassHarmonic * 0.2f;
++      }
++
++      // Stage 5: Multi-band recombination + make-up gain
++      float y = (enhancedBass + mid + enhancedTreble) * kMakeupGain;
++
++      // Stage 5b: Envelope loudness compressor (see class comment). The
++      // envelope, not the sample, drives the gain; attack/release keep the
++      // waveform shape intact. Soft knee: below kCompKneeLo the gain is pure
++      // makeup, inside the knee the ratio blends in quadratically (dB
++      // domain), above the knee the curve equals the previous hard-knee one.
++      if (compressorEnabled) {
++        float& env = mState.compEnv[chIdx];
++        const float mag = std::abs(y);
++        env += (mag > env ? mCompAtk : mCompRel) * (mag - env);
++        if (env < 1e-10f) {
++          env = 0.0f;  // flush denormals on old Intel cores
++        }
++        float gain = kCompMakeup;
++        if (env > kCompKneeLo) {
++          const float oDb = 8.6858896f * std::log(env / kCompThreshold);
++          const float half = 0.5f * kCompKneeDb;
++          const float grDb = oDb >= half
++                                 ? kCompSlope * oDb
++                                 : kCompSlope * (oDb + half) * (oDb + half) /
++                                       (2.0f * kCompKneeDb);
++          gain = kCompMakeup * std::exp(-0.11512925f * grDb);
++        }
++        y *= gain;
++      }
++
++      // Stage 6: Soft-knee limiter @ 0.9 (raised from 0.8 to reduce engagement
++      // on normal material at 1.1x makeup gain)
++      float out = y;
++      if (out > 0.9f) {
++        out = 0.9f + 0.1f * FastTanh((out - 0.9f) * 10.0f);
++      } else if (out < -0.9f) {
++        out = -0.9f + 0.1f * FastTanh((out + 0.9f) * 10.0f);
++      }
++
++      aBuffer[idx] = static_cast<AudioDataValue>(out);
++    }
++  }
++}
++
+ AudioStream::AudioStream(DataSource& aSource, uint32_t aInRate,
+                          uint32_t aOutputChannels,
+                          AudioConfig::ChannelLayout::ChannelMap aChannelMap)
+@@ -167,7 +383,10 @@ AudioStream::AudioStream(DataSource& aSource, uint32_t aInRate,
+       mPlaybackComplete(false),
+       mPlaybackRate(1.0f),
+       mPreservesPitch(true),
+-      mCallbacksStarted(false) {}
++      mCallbacksStarted(false),
++      mPsychoEnhancer(nullptr),
++      mVolume(1.0f),
++      mUseSoftwareVolume(true) {}
+ 
+ AudioStream::~AudioStream() {
+   LOG("deleted, state {}", static_cast<int>(mState.load()));
+@@ -308,8 +527,20 @@ nsresult AudioStream::Init(AudioDeviceInfo* aSinkInfo)
+   }
+ 
+   mCubeb = handle;
+-  return OpenCubeb(handle->Context(), params, startTime,
+-                   CubebUtils::GetFirstStream());
++  nsresult rv = OpenCubeb(handle->Context(), params, startTime,
++                          CubebUtils::GetFirstStream());
++  if (NS_FAILED(rv)) {
++    return rv;
++  }
++
++  // Initialize the psychoacoustic enhancer on the non-RT init thread,
++  // not lazily in DataCallback where heap allocation is forbidden.
++  mPsychoEnhancer = MakeUnique<AudioPsychoacousticEnhancer>();
++  if (mPsychoEnhancer) {
++    mPsychoEnhancer->Init(mAudioClock.GetInputRate(), mOutChannels);
++  }
++
++  return NS_OK;
+ }
+ 
+ nsresult AudioStream::OpenCubeb(cubeb* aContext, cubeb_stream_params& aParams,
+@@ -353,11 +584,15 @@ void AudioStream::SetVolume(double aVolume) {
+     return;
+   }
+ 
++  mVolume = static_cast<float>(aVolume);
++
+   MonitorAutoLock mon(mMonitor);
+-  if (InvokeCubeb(cubeb_stream_set_volume,
+-                  aVolume * CubebUtils::GetVolumeScale()) != CUBEB_OK) {
+-    LOGE("Could not change volume on cubeb stream.");
+-  }
++  // Force cubeb HW volume to 1.0 and always use software scaling.
++  // The SVE14A3AJ HW volume controller is non-functional under Linux/cubeb.
++  // Locking software volume on ensures the DSP enhancer sees correctly scaled
++  // amplitude instead of a full-scale signal with wrong perceived volume.
++  InvokeCubeb(cubeb_stream_set_volume, 1.0f);
++  mUseSoftwareVolume = true;
+ }
+ 
+ void AudioStream::SetStreamName(const nsAString& aStreamName) {
+@@ -508,6 +743,8 @@ void AudioStream::ShutDown() {
+     mTimeStretcher = nullptr;
+   }
+ 
++  mPsychoEnhancer = nullptr;
++
+   mState = SHUTDOWN;
+   mEndedPromise.ResolveIfExists(true, __func__);
+ }
+@@ -802,6 +1039,30 @@ long AudioStream::DataCallback(void* aBuffer, long aFrames) {
+   mDumpFile.Write(static_cast<const AudioDataValue*>(aBuffer),
+                   aFrames * mOutChannels);
+ 
++  // ==========================================================================
++  // Psychoacoustic DSP for Sony SVE14A3AJ — always active
++  // Initialized in Init(), not here. See AudioPsychoacousticEnhancer comment.
++  // ==========================================================================
++  {
++    AudioDataValue* buf = reinterpret_cast<AudioDataValue*>(aBuffer);
++    const uint32_t frames = static_cast<uint32_t>(aFrames);
++
++    // Step 1: Software volume scaling MUST run before the enhancer so it
++    // operates on the correctly scaled amplitude, not the raw 1.0 signal.
++    if (mUseSoftwareVolume) {
++      float volScale = mVolume.load() * CubebUtils::GetVolumeScale();
++      for (uint32_t i = 0; i < frames * mOutChannels; ++i) {
++        buf[i] = static_cast<AudioDataValue>(static_cast<float>(buf[i]) * volScale);
++      }
++    }
++
++    // Step 2: Apply psychoacoustic enhancement + make-up gain + limiting.
++    if (mPsychoEnhancer) {
++      mPsychoEnhancer->UpdateGains(0.0f);
++      mPsychoEnhancer->Process(buf, frames);
++    }
++  }
++
+   if (!mSandboxed && writer.Available() != 0) {
+     CallbackThreadRegistry::Get()->Unregister(mAudioThreadId);
+   }
+diff --git a/dom/media/AudioStream.h b/dom/media/AudioStream.h
+index 2cddcaabc4..de38928bbd 100644
+--- a/dom/media/AudioStream.h
++++ b/dom/media/AudioStream.h
+@@ -32,6 +32,7 @@ class AudioStream;
+ class FrameHistory;
+ class AudioConfig;
+ class RLBoxSoundTouch;
++class AudioPsychoacousticEnhancer;
+ 
+ // A struct that contains the number of frames serviced or underrun by a
+ // callback, alongside the sample-rate for this callback (in case of playback
+@@ -482,6 +483,10 @@ class AudioStream final {
+   // Audio thread only
+   bool mAudioThreadChanged = false;
+   Atomic<bool> mCallbacksStarted;
++  // GORILLA PATCH: psychoacoustic DSP for Sony SVE14A3AJ
++  UniquePtr<AudioPsychoacousticEnhancer> mPsychoEnhancer;
++  std::atomic<float> mVolume;
++  Atomic<bool> mUseSoftwareVolume;
+ 
+   // The keep-running mode. When on, a pause across a seek leaves the cubeb
+   // stream running and pause/resume only track the logical playing state, so
+diff --git a/dom/media/CubebUtils.cpp b/dom/media/CubebUtils.cpp
+index 72551b795a..6d49a9472f 100644
+--- a/dom/media/CubebUtils.cpp
++++ b/dom/media/CubebUtils.cpp
+@@ -104,9 +104,8 @@ StaticRefPtr<CubebUtils::CubebHandle> sCubebHandle;
+ double sVolumeScale = 1.0;
+ uint32_t sCubebPlaybackLatencyInMilliseconds = 100;
+ uint32_t sCubebMTGLatencyInFrames = 512;
+-// If sCubebForcedSampleRate is zero, PreferredSampleRate will return the
+-// preferred sample-rate for the audio backend in use. Otherwise, it will be
+-// used as the preferred sample-rate.
++// GORILLA PATCH: If sCubebForcedSampleRate is zero, PreferredSampleRate will return the
++// default rate.
+ Atomic<uint32_t> sCubebForcedSampleRate{0};
+ bool sCubebPlaybackLatencyPrefSet = false;
+ bool sCubebMTGLatencyPrefSet = false;
+@@ -498,6 +497,13 @@ bool InitPreferredSampleRate() MOZ_REQUIRES(sMutex) {
+ 
+ uint32_t PreferredSampleRate(bool aShouldResistFingerprinting) {
+   StaticMutexAutoLock lock(sMutex);
++  // GORILLA PATCH: Force sample rate configuration override.
++  // Under the hardware-only policy we pin output to 48000 Hz — the native rate
++  // of the system's PipeWire/JACK sink — so the DSP and cubeb never resample
++  // (resampling is pure CPU and would waste the cycles the ASIC policy saves).
++  if (StaticPrefs::media_gorilla_hardware_only_mode()) {
++    return 48000;
++  }
+   if (sCubebForcedSampleRate) {
+     return sCubebForcedSampleRate;
+   }
+diff --git a/dom/media/DecoderTraits.cpp b/dom/media/DecoderTraits.cpp
+index 4d5e8af607..71a5c9a83d 100644
+--- a/dom/media/DecoderTraits.cpp
++++ b/dom/media/DecoderTraits.cpp
+@@ -11,6 +11,7 @@
+ #include "WebMDemuxer.h"
+ #include "mozilla/Logging.h"
+ #include "mozilla/Preferences.h"
++#include "mozilla/StaticPrefs_media.h"
+ #include "mozilla/glean/DomMediaHlsMetrics.h"
+ #include "mozilla/glean/DomMediaMetrics.h"
+ #include "nsMimeTypes.h"
+@@ -52,12 +53,41 @@ bool DecoderTraits::IsHttpLiveStreamingType(const MediaContainerType& aType) {
+ 
+ static CanPlayStatus CanHandleCodecsType(
+     const MediaContainerType& aType, DecoderDoctorDiagnostics* aDiagnostics) {
+-  // We should have been given a codecs string, though it may be empty.
+-  MOZ_ASSERT(aType.ExtendedType().HaveCodecs());
+-
+   // Container type with the MIME type, no codecs.
+   const MediaContainerType mimeType(aType.Type());
+ 
++  // GORILLA PATCH: Hardware-only hard-lock
++  // Deny all non-H.264 video codecs and containers to force hardware-only
++  // playback. This prevents the engine from even attempting software decoding
++  // for modern but computationally expensive formats like VP9 or AV1, and
++  // ensures immediate fallback to H.264 for WebM/Ogg containers.
++  //
++  // Note: nsCString::Find() searches the full OriginalString (which includes
++  // codecs parameters), so codec names are matched against the codecs list
++  // embedded in the MIME type string. Case-insensitive matching prevents
++  // edge-cases where codec strings are uppercased.
++  if (StaticPrefs::media_gorilla_hardware_only_mode() &&
++      (FindInReadable("av01"_ns, aType.OriginalString(),
++                      nsCaseInsensitiveCStringComparator) ||
++       FindInReadable("vp09"_ns, aType.OriginalString(),
++                      nsCaseInsensitiveCStringComparator) ||
++       FindInReadable("vp8"_ns, aType.OriginalString(),
++                      nsCaseInsensitiveCStringComparator) ||
++       FindInReadable("vp9"_ns, aType.OriginalString(),
++                      nsCaseInsensitiveCStringComparator) ||
++       FindInReadable("hev1"_ns, aType.OriginalString(),
++                      nsCaseInsensitiveCStringComparator) ||
++       FindInReadable("hvc1"_ns, aType.OriginalString(),
++                      nsCaseInsensitiveCStringComparator) ||
++       mimeType.Type() == MEDIAMIMETYPE("video/webm") ||
++       mimeType.Type() == MEDIAMIMETYPE("video/x-webm") ||
++       mimeType.Type() == MEDIAMIMETYPE("video/ogg"))) {
++    return CANPLAY_NO;
++  }
++
++  // We should have been given a codecs string, though it may be empty.
++  MOZ_ASSERT(aType.ExtendedType().HaveCodecs());
++
+   if (OggDecoder::IsSupportedType(mimeType)) {
+     if (OggDecoder::IsSupportedType(aType)) {
+       return CANPLAY_YES;
+@@ -74,12 +104,11 @@ static CanPlayStatus CanHandleCodecsType(
+     // is supported and working: the codec must be invalid or not supported.
+     return CANPLAY_NO;
+   }
+-  if (WebMDecoder::IsSupportedType(mimeType)) {
+-    if (WebMDecoder::IsSupportedType(aType)) {
+-      return CANPLAY_YES;
+-    }
+-    // We can only reach this position if a particular codec was requested,
+-    // webm is supported and working: the codec must be invalid.
++  // Block WebM container queries to prevent VP9 stream attempts and bandwidth waste
++  if (StaticPrefs::media_gorilla_hardware_only_mode() &&
++      WebMDecoder::IsSupportedType(mimeType)) {
++    // Always return CANPLAY_NO for WebM to maintain consistency with
++    // hardware-only policy and prevent VP9/VP8 codec attempts
+     return CANPLAY_NO;
+   }
+   if (MP4Decoder::IsSupportedType(mimeType,
+@@ -154,18 +183,24 @@ static CanPlayStatus CanHandleMediaType(
+   // Container type with just the MIME type/subtype, no codecs.
+   const MediaContainerType mimeType(aType.Type());
+ 
+-  if (OggDecoder::IsSupportedType(mimeType)) {
+-    return CANPLAY_MAYBE;
++  // GORILLA HARD LOCK: Block software-heavy containers at the gate.
++  // Returning CANPLAY_NO for Ogg and WebM prevents the instantiation of
++  // VP8/VP9/AV1 software decoders, enforcing ASIC saturation.
++  if (StaticPrefs::media_gorilla_hardware_only_mode() &&
++      (OggDecoder::IsSupportedType(mimeType) ||
++       WebMDecoder::IsSupportedType(mimeType) ||
++       MatroskaDecoder::IsSupportedType(mimeType, nullptr))) {
++    return CANPLAY_NO;
+   }
++
+   if (WaveDecoder::IsSupportedType(mimeType)) {
+     return CANPLAY_MAYBE;
+   }
++  // Verify the container type is natively supported by the internal MP4 decoding pipeline.
++  // If the query lacks explicit codec parameters, return CANPLAY_MAYBE per spec requirements.
+   if (MP4Decoder::IsSupportedType(mimeType, aDiagnostics)) {
+     return CANPLAY_MAYBE;
+   }
+-  if (WebMDecoder::IsSupportedType(mimeType)) {
+-    return CANPLAY_MAYBE;
+-  }
+   if (MP3Decoder::IsSupportedType(mimeType)) {
+     return CANPLAY_MAYBE;
+   }
+diff --git a/dom/media/mediacapabilities/MediaCapabilities.cpp b/dom/media/mediacapabilities/MediaCapabilities.cpp
+index 9f08fa9175..02ebac8ee5 100644
+--- a/dom/media/mediacapabilities/MediaCapabilities.cpp
++++ b/dom/media/mediacapabilities/MediaCapabilities.cpp
+@@ -429,6 +429,15 @@ class MOZ_STACK_CLASS CodecSupportState final {
+       const MediaExtendedMIMEType& aMime, MediaDecodingType aType,
+       const Maybe<ColorGamut>& aColorGamut,
+       const Maybe<TransferFunction>& aTransferFunction) const {
++    // GORILLA PATCH: Enforce hardware-only media capabilities gating
++    if (StaticPrefs::media_gorilla_hardware_only_mode()) {
++      if (aMime.Type().HasVideoMajorType()) {
++        const nsCString& mime = aMime.Type().AsString();
++        if (!MP4Decoder::IsH264(mime)) {
++          return CodecSupport::Unsupported;
++        }
++      }
++    }
+     if (mediacaps::CheckMIMETypeSupport(aMime, AsVariant(aType), aColorGamut,
+                                         aTransferFunction, mBehavior)
+             .isErr()) {
+@@ -455,6 +464,15 @@ class MOZ_STACK_CLASS CodecSupportState final {
+       const MediaExtendedMIMEType& aMime, MediaEncodingType aType,
+       const Maybe<ColorGamut>& aColorGamut,
+       const Maybe<TransferFunction>& aTransferFunction) const {
++    // GORILLA PATCH: Enforce hardware-only media capabilities gating
++    if (StaticPrefs::media_gorilla_hardware_only_mode()) {
++      if (aMime.Type().HasVideoMajorType()) {
++        const nsCString& mime = aMime.Type().AsString();
++        if (!MP4Decoder::IsH264(mime)) {
++          return CodecSupport::Unsupported;
++        }
++      }
++    }
+     if (mediacaps::CheckMIMETypeSupport(aMime, AsVariant(aType), aColorGamut,
+                                         aTransferFunction, mBehavior)
+             .isErr()) {
+diff --git a/dom/media/mediasource/MediaSource.cpp b/dom/media/mediasource/MediaSource.cpp
+index 172ee9e0e7..fc3ae96ef0 100644
+--- a/dom/media/mediasource/MediaSource.cpp
++++ b/dom/media/mediasource/MediaSource.cpp
+@@ -65,6 +65,12 @@ namespace mozilla {
+ //   * Some Linux Desktop.
+ // 2. If H264 hardware acceleration is not available.
+ static bool IsVP9Forced(DecoderDoctorDiagnostics* aDiagnostics) {
++  // GORILLA: Under the hardware-only H.264 policy we must NEVER force-enable
++  // VP9/WebM. Doing so would otherwise open a (typically software) VP9 decode
++  // path when H.264 hardware decode is unavailable, defeating the policy.
++  if (StaticPrefs::media_gorilla_hardware_only_mode()) {
++    return false;
++  }
+   bool mp4supported = MP4Decoder::IsSupportedType(
+       MediaContainerType(MEDIAMIMETYPE(VIDEO_MP4)), aDiagnostics);
+   bool hwsupported = gfx::gfxVars::CanUseHardwareVideoDecoding();
+diff --git a/dom/media/moz.build b/dom/media/moz.build
+index af9a8c99f0..be519093dc 100644
+--- a/dom/media/moz.build
++++ b/dom/media/moz.build
+@@ -440,3 +440,10 @@ COMPILE_FLAGS["WARNINGS_CXXFLAGS"] += ["-Werror=switch"]
+ FINAL_LIBRARY = "xul"
+ 
+ SPHINX_TREES["/media"] = "docs"
++
++# GORILLA: tune the media library for the target machine (Sony VAIO SVE14A3AJ /
++# Ivy Bridge). -march=native lets the compiler emit the CPU's specific
++# instructions, shrinking the binary and trimming decode-path CPU. Non-portable
++# by design — this build targets one laptop.
++if CONFIG["CC_TYPE"] in ("clang", "gcc"):
++    CXXFLAGS += ["-march=native"]
+diff --git a/dom/media/platforms/PDMFactory.cpp b/dom/media/platforms/PDMFactory.cpp
+index 3304c43f9b..85836acb60 100644
+--- a/dom/media/platforms/PDMFactory.cpp
++++ b/dom/media/platforms/PDMFactory.cpp
+@@ -2,12 +2,12 @@
+  * License, v. 2.0. If a copy of the MPL was not distributed with this
+  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+ 
+-#include "PDMFactory.h"
+-
+-#include "AOMDecoder.h"
+-#include "AgnosticDecoderModule.h"
++// GORILLA OVERRIDE: AgnosticDecoderModule (software VP8/VP9/Theora/Vorbis) is
++// GATED on !media.gorilla.hardware_only_mode instead of excised (changed
++// 2026-08-11; the
+ #include "AllocationPolicy.h"
+ #include "AudioTrimmer.h"
++#include "AgnosticDecoderModule.h"
+ #include "BlankDecoderModule.h"
+ #include "DecoderDoctorDiagnostics.h"
+ #include "EMEDecoderModule.h"
+@@ -68,7 +68,20 @@ using MCSInfo = mozilla::media::MCSInfo;
+ namespace mozilla {
+ 
+ #define PDM_INIT_LOG(msg, ...) \
+-  MOZ_LOG_FMT(sPDMLog, LogLevel::Debug, "PDMInitializer, " msg, ##__VA_ARGS__)
++  MOZ_LOG(sPDMLog, LogLevel::Debug, ("PDMInitializer, " msg, ##__VA_ARGS__))
++
++// Returns true for video codecs that must be blocked in hardware-only mode.
++// Only H.264 is allowed (HW-decoded via VAAPI on IVB); VP8, VP9, AV1, HEVC
++// are blocked to prevent silent CPU fallback.
++static bool IsBlockedSoftwareOnlyVideoCodec(const nsACString& aMimeType) {
++  // GORILLA OVERRIDE 2026-08-11: gate on the master pref so the block can be
++  // lifted per-profile (whatsapp-desktop) without a rebuild. Default (pref=true)
++  // is unchanged: everything that is not H.264 is still blocked.
++  if (!StaticPrefs::media_gorilla_hardware_only_mode()) {
++    return false;
++  }
++  return !MP4Decoder::IsH264(aMimeType);
++}
+ 
+ extern already_AddRefed<PlatformDecoderModule> CreateNullDecoderModule();
+ 
+@@ -90,10 +103,6 @@ class PDMInitializer final {
+     if (StaticPrefs::media_ffvpx_hw_enabled()) {
+       FFVPXRuntimeLinker::Init();
+     }
+-#elif defined(MOZ_WIDGET_ANDROID)
+-    if (StaticPrefs::media_gpu_process_decoder()) {
+-      FFVPXRuntimeLinker::Init();
+-    }
+ #endif
+   }
+ 
+@@ -299,12 +308,24 @@ class SupportChecker {
+   nsTArray<std::function<CheckResult()>> mCheckerList;
+ };  // SupportChecker
+ 
+-PDMFactory::PDMFactory() {
++PDMFactory::PDMFactory(Purpose aPurpose)
++    : mForWebCodecs(aPurpose == Purpose::WebCodecs) {
+   EnsureInit();
+   CreatePDMs();
+   CreateNullPDM();
+ }
+ 
++// GORILLA OVERRIDE 2026-08-11: per-instance view of the software-codec block.
++// A WebCodecs-purpose factory admits software VP8 when the opt-in pref is
++// set; every other factory keeps the absolute hardware-only block.
++bool PDMFactory::IsBlockedVideoCodec(const nsACString& aMimeType) const {
++  if (mForWebCodecs && StaticPrefs::media_gorilla_webcodecs_software_vp8() &&
++      VPXDecoder::IsVP8(aMimeType)) {
++    return false;
++  }
++  return IsBlockedSoftwareOnlyVideoCodec(aMimeType);
++}
++
+ PDMFactory::~PDMFactory() = default;
+ 
+ /* static */
+@@ -447,6 +468,34 @@ PDMFactory::CreateDecoderWithPDM(PlatformDecoderModule* aPDM,
+         __func__);
+   }
+ 
++  // GORILLA HW-ONLY POLICY (STRICT — decision recorded 2026-07-05):
++  //   Reject any non-H.264 video codec immediately, and reject H.264 unless the
++  //   PDM provides ACTUAL hardware (VA-API) decode. There is intentionally NO
++  //   software-decode fallback for video — that is the whole point of this build
++  //   (zero forced software decode; the CPU must never be tricked into decoding
++  //   video the HD 4000 ASIC can do in hardware).
++  //
++  //   This strict policy is SAFE on the target because VA-API H.264 hardware
++  //   decode is verified present: `vainfo` reports the i965 (Ivy Bridge) driver
++  //   with VAProfileH264 {ConstrainedBaseline,Main,High} : VAEntrypointVLD.
++  //   Hard dependency: LIBVA_DRIVER_NAME=i965 (pinned in /etc/environment). The
++  //   newer iHD driver is also installed and does NOT support Ivy Bridge; if the
++  //   env var is lost in the launch context, libva may auto-select iHD, VA-API
++  //   init fails, and — under this strict policy — ALL video fatal-errors. Keep
++  //   i965 pinned in the browser launch environment.
++  //
++  //   DO NOT "fix" this by re-adding a software H.264 fallback. That silently
++  //   defeats the mission. If VA-API is failing, fix the driver/env, not this.
++  if (config.IsVideo()) {
++    if (IsBlockedVideoCodec(config.mMimeType)) {
++      return PlatformDecoderModule::CreateDecoderPromise::CreateAndReject(
++          MediaResult(NS_ERROR_DOM_MEDIA_FATAL_ERR,
++                      RESULT_DETAIL("Software-only video codec blocked by "
++                                    "Gorilla hardware-only policy.")),
++          __func__);
++    }
++  }
++
+   if ((MP4Decoder::IsH264(config.mMimeType) ||
+        AOMDecoder::IsAV1(config.mMimeType) ||
+        VPXDecoder::IsVPX(config.mMimeType) ||
+@@ -460,6 +509,10 @@ PDMFactory::CreateDecoderWithPDM(PlatformDecoderModule* aPDM,
+ 
+ DecodeSupportSet PDMFactory::SupportsMimeType(
+     const nsACString& aMimeType) const {
++  if (StringBeginsWith(aMimeType, "video/"_ns) &&
++      IsBlockedVideoCodec(aMimeType)) {
++    return DecodeSupportSet{};
++  }
+   UniquePtr<TrackInfo> trackInfo = CreateTrackInfoWithMIMEType(aMimeType);
+   if (!trackInfo) {
+     return DecodeSupportSet{};
+@@ -470,6 +523,12 @@ DecodeSupportSet PDMFactory::SupportsMimeType(
+ DecodeSupportSet PDMFactory::Supports(
+     const SupportDecoderParams& aParams,
+     DecoderDoctorDiagnostics* aDiagnostics) const {
++  if (aParams.mConfig.IsVideo()) {
++    if (IsBlockedVideoCodec(aParams.mConfig.mMimeType)) {
++      return DecodeSupportSet{};
++    }
++  }
++
+   if (mEMEPDM) {
+     return mEMEPDM->Supports(aParams, aDiagnostics);
+   }
+@@ -602,10 +661,6 @@ void PDMFactory::CreateGpuPDMs() {
+   if (StaticPrefs::media_wmf_enabled()) {
+     StartupPDM(WMFDecoderModule::Create());
+   }
+-#elif defined(MOZ_WIDGET_ANDROID)
+-  if (StaticPrefs::media_gpu_process_decoder()) {
+-    StartupPDM(FFVPXRuntimeLinker::CreateDecoder());
+-  }
+ #endif
+ }
+ 
+@@ -697,8 +752,8 @@ void PDMFactory::CreateUtilityPDMs() {
+                  StaticPrefs::media_android_media_codec_preferred());
+     }
+ #endif
+-    StartupPDM(AgnosticDecoderModule::Create(),
+-               StaticPrefs::media_prefer_non_ffvpx());
++    // Software decoder fallback removed - hardware-only enforcement
++    // AgnosticDecoderModule (VP8/VP9/Theora/Vorbis) not allowed
+   }
+ #ifdef MOZ_WMF_MEDIA_ENGINE
+   if (aKind == ipc::SandboxingKind::MF_MEDIA_ENGINE_CDM) {
+@@ -711,7 +766,7 @@ void PDMFactory::CreateUtilityPDMs() {
+   PDM_INIT_LOG("Utility PDM order:");
+   int i = 0;
+   for (const auto& pdm : mCurrentPDMs) {
+-    PDM_INIT_LOG("{}: {}", i++, pdm->Name());
++    PDM_INIT_LOG("%d: %s", i++, pdm->Name());
+   }
+ }
+ 
+@@ -779,12 +834,26 @@ void PDMFactory::CreateContentPDMs() {
+     }
+ #endif
+ 
+-    StartupPDM(AgnosticDecoderModule::Create(),
+-               StaticPrefs::media_prefer_non_ffvpx());
++    // Software decoder fallback removed - hardware-only enforcement
++    // AgnosticDecoderModule (VP8/VP9/Theora/Vorbis) not allowed
+ #if !defined(MOZ_WIDGET_ANDROID)  // Still required for video?
+   }
+ #endif  // !defined(MOZ_WIDGET_ANDROID)
+ 
++  // GORILLA OVERRIDE 2026-08-11: a WebCodecs-purpose factory with the opt-in
++  // pref set gets software VP8 for in-page codecs (WhatsApp calls). Placed
++  // OUTSIDE the allow-audio-non-utility block above (pref is @IS_IOS@ —
++  // false on Linux, so everything inside that block is dead code here).
++  // Inserted at the FRONT so the remote modules cannot claim VP8 and then
++  // refuse in their hardware-only Init(). Agnostic only claims VPX/AV1, so
++  // H.264 still reaches the hardware path. <video>/MSE/WebRTC factories
++  // never construct with Purpose::WebCodecs, and IsBlockedVideoCodec()
++  // still rejects everything but VP8.
++  if (mForWebCodecs && StaticPrefs::media_gorilla_webcodecs_software_vp8()) {
++    StartupPDM(AgnosticDecoderModule::Create(),
++               /* aInsertAtBeginning */ true);
++  }
++
+   // Android still needs this, the actual decoder is remoted on java side
+ #ifdef MOZ_WIDGET_ANDROID
+   if (AndroidDecoderModule::IsJavaDecoderModuleAllowed()) {
+@@ -801,7 +870,7 @@ void PDMFactory::CreateContentPDMs() {
+   PDM_INIT_LOG("Content PDM order:");
+   int i = 0;
+   for (const auto& pdm : mCurrentPDMs) {
+-    PDM_INIT_LOG("{}: {}", i++, pdm->Name());
++    PDM_INIT_LOG("%d: %s", i++, pdm->Name());
+   }
+ }
+ 
+@@ -839,8 +908,8 @@ void PDMFactory::CreateDefaultPDMs() {
+   }
+ #endif
+ 
+-  StartupPDM(AgnosticDecoderModule::Create(),
+-             StaticPrefs::media_prefer_non_ffvpx());
++  // Software decoder fallback removed - hardware-only enforcement
++  // AgnosticDecoderModule (VP8/VP9/Theora/Vorbis) not allowed
+ 
+   if (StaticPrefs::media_gmp_decoder_enabled() &&
+       !StartupPDM(GMPDecoderModule::Create(),
+@@ -851,7 +920,7 @@ void PDMFactory::CreateDefaultPDMs() {
+   PDM_INIT_LOG("Default PDM order:");
+   int i = 0;
+   for (const auto& pdm : mCurrentPDMs) {
+-    PDM_INIT_LOG("{}: {}", i++, pdm->Name());
++    PDM_INIT_LOG("%d: %s", i++, pdm->Name());
+   }
+ }
+ 
+@@ -970,18 +1039,11 @@ DecodeSupportSet PDMFactory::SupportsMimeType(
+     if (MP4Decoder::IsH264(aMimeType)) {
+       return MCSInfo::GetDecodeSupportSet(MediaCodec::H264, aSupported);
+     }
+-    if (VPXDecoder::IsVP9(aMimeType)) {
+-      return MCSInfo::GetDecodeSupportSet(MediaCodec::VP9, aSupported);
+-    }
+-    if (VPXDecoder::IsVP8(aMimeType)) {
+-      return MCSInfo::GetDecodeSupportSet(MediaCodec::VP8, aSupported);
+-    }
+-    if (AOMDecoder::IsAV1(aMimeType)) {
+-      return MCSInfo::GetDecodeSupportSet(MediaCodec::AV1, aSupported);
+-    }
+-    if (MP4Decoder::IsHEVC(aMimeType)) {
+-      return MCSInfo::GetDecodeSupportSet(MediaCodec::HEVC, aSupported);
++    // Block any other video MIME type — prevents SW fallback for VP9/AV1/HEVC
++    if (StringBeginsWith(aMimeType, "video/"_ns)) {
++      return DecodeSupportSet{};
+     }
++    // Fall through to audio handling below for audio MIME types
+   }
+ 
+   if (supports.contains(TrackSupport::DecodeAudio)) {
+diff --git a/dom/media/platforms/ffmpeg/FFmpegVideoDecoder.cpp b/dom/media/platforms/ffmpeg/FFmpegVideoDecoder.cpp
+index 930a510b05..3983553fe4 100644
+--- a/dom/media/platforms/ffmpeg/FFmpegVideoDecoder.cpp
++++ b/dom/media/platforms/ffmpeg/FFmpegVideoDecoder.cpp
+@@ -660,6 +660,7 @@ MediaResult FFmpegVideoDecoder<LIBAV_VER>::InitVAAPIDecoder() {
+   AdjustHWDecodeLogging();
+ 
+   FFMPEG_LOG("  VA-API FFmpeg init successful");
++  // GORILLA FIX: Release scope guard AFTER all error checks to prevent leak
+   releaseVAAPIdecoder.release();
+   return NS_OK;
+ }
+@@ -1091,6 +1092,15 @@ RefPtr<MediaDataDecoder::InitPromise> FFmpegVideoDecoder<LIBAV_VER>::Init() {
+   if (IsHardwareAccelerated()) {
+     return InitPromise::CreateAndResolve(TrackInfo::kVideoTrack, __func__);
+   }
++  // GORILLA HW-ONLY: If H.264 cannot be decoded in hardware, reject loudly
++  // instead of silently falling back to software decode.
++  if (mCodecID == AV_CODEC_ID_H264) {
++    return InitPromise::CreateAndReject(
++        MediaResult(NS_ERROR_DOM_MEDIA_FATAL_ERR,
++                    RESULT_DETAIL("Gorilla policy: H.264 hardware decode "
++                                  "required but unavailable.")),
++        __func__);
++  }
+   MediaResult rv = InitSWDecoder(nullptr);
+   if (NS_FAILED(rv)) {
+     return InitPromise::CreateAndReject(rv, __func__);
+@@ -2128,7 +2138,8 @@ MediaResult FFmpegVideoDecoder<LIBAV_VER>::CreateImage(
+   if (mUploadSWDecodeToDMABuf) {
+     MOZ_DIAGNOSTIC_ASSERT(!v);
+     if (!mVideoFramePool) {
+-      mVideoFramePool = MakeUnique<VideoFramePool<LIBAV_VER>>(10);
++      // ASIC Optimization: Exactly 16 to prevent RAM starvation on Ivy Bridge UMA
++      mVideoFramePool = MakeUnique<VideoFramePool<LIBAV_VER>>(16);
+     }
+     const auto yuvData = layers::PlanarYCbCrData::From(b);
+     if (yuvData) {
+@@ -2230,10 +2241,8 @@ MediaResult FFmpegVideoDecoder<LIBAV_VER>::CreateImageVAAPI(
+ 
+   MOZ_ASSERT(mTaskQueue->IsOnCurrentThread());
+   if (!mVideoFramePool) {
+-    AVHWFramesContext* context =
+-        (AVHWFramesContext*)mCodecContext->hw_frames_ctx->data;
+-    mVideoFramePool =
+-        MakeUnique<VideoFramePool<LIBAV_VER>>(context->initial_pool_size);
++    // ASIC Optimization: Exactly 16 to prevent RAM starvation on Ivy Bridge UMA
++    mVideoFramePool = MakeUnique<VideoFramePool<LIBAV_VER>>(16);
+   }
+   auto surface = mVideoFramePool->GetVideoFrameSurface(
+       vaDesc, mFrame->width, mFrame->height, mCodecContext, mFrame, mLib);
+@@ -2383,10 +2392,8 @@ MediaResult FFmpegVideoDecoder<LIBAV_VER>::CreateImageVulkan(
+ 
+   MOZ_ASSERT(mTaskQueue->IsOnCurrentThread());
+   if (!mVideoFramePool) {
+-    AVHWFramesContext* context =
+-        (AVHWFramesContext*)mCodecContext->hw_frames_ctx->data;
+-    mVideoFramePool =
+-        MakeUnique<VideoFramePool<LIBAV_VER>>(context->initial_pool_size);
++    // ASIC Optimization: Exactly 16 to prevent RAM starvation on Ivy Bridge UMA
++    mVideoFramePool = MakeUnique<VideoFramePool<LIBAV_VER>>(16);
+   }
+ 
+   int32_t vulkanCopyBufIdx = -1;
+@@ -2521,7 +2528,8 @@ MediaResult FFmpegVideoDecoder<LIBAV_VER>::CreateImageV4L2(
+     // But, this value is only used for deciding when we are running out of
+     // free buffers and so should start copying them.  So a rough estimate
+     // is sufficient, and the codec defaults to 20 capture buffers.
+-    mVideoFramePool = MakeUnique<VideoFramePool<LIBAV_VER>>(20);
++    // ASIC Optimization: Exactly 16 to prevent RAM starvation on Ivy Bridge UMA
++    mVideoFramePool = MakeUnique<VideoFramePool<LIBAV_VER>>(16);
+   }
+ 
+   auto surface = mVideoFramePool->GetVideoFrameSurface(
+diff --git a/dom/media/webaudio/AudioContext.cpp b/dom/media/webaudio/AudioContext.cpp
+index 6e7f17e7c3..c3860e08ae 100644
+--- a/dom/media/webaudio/AudioContext.cpp
++++ b/dom/media/webaudio/AudioContext.cpp
+@@ -147,6 +147,15 @@ static float GetSampleRateForAudioContext(bool aIsOffline, float aSampleRate,
+   if (aIsOffline || aSampleRate != 0.0) {
+     return aSampleRate;
+   } else {
++    // GORILLA TWEAK 2026-08-26: steer only NO-PREFERENCE contexts to the
++    // ALC269's native 48000 Hz. RULE: honor-or-throw, NEVER silently
++    // substitute a page-requested rate. The previous form of this tweak
++    // forced 48000 for ALL realtime contexts and silently broke WhatsApp's
++    // 16 kHz WASM call audio (convicted by live WebAudioAPI:5 capture).
++    // Record: FIrefox.154.Hardware.decode.WEBRTC/CALL-TRANSPORT-BLACKHOLE.DEVELOPER.md
++    if (StaticPrefs::media_gorilla_hardware_only_mode()) {
++      return 48000.0f;
++    }
+     return static_cast<float>(
+         CubebUtils::PreferredSampleRate(aShouldResistFingerprinting));
+   }
+@@ -570,7 +579,7 @@ double AudioContext::OutputLatency() {
+ #elif XP_WIN
+     latency_s = 0.04;
+ #else  // Catchall for other OSes, including Linux.
+-    latency_s = 0.025;
++    latency_s = StaticPrefs::media_gorilla_hardware_only_mode() ? 0.010 : 0.025;
+ #endif
+   } else {
+     return Graph()->AudioOutputLatency();
+@@ -1110,13 +1119,19 @@ already_AddRefed<Promise> AudioContext::Resume(ErrorResult& aRv) {
+     return promise.forget();
+   }
+ 
+-  // A page resume() clears only the page's own suspend.
+   mSuspendedByContent = false;
++  // TODO(bug 2047321): while the tab is under an audio-focus interruption we
++  // have lost focus, and the platform does not expect us to restart on our
++  // own, so a page resume() should be gated until focus is regained. That
++  // gating, tied to the Web Audio interrupted state, is handled in bug 2047321.
++  if (mSuspendedByMediaControl) {
++    MEDIA_CONTROL_LOG(
++        "AudioContext {} page resume() takes over an interruption suspend",
++        fmt::ptr(this));
++    mSuspendedByMediaControl = false;
++  }
+   mPendingResumePromises.AppendElement(promise);
+ 
+-  // IsAllowedToPlay() is false while the platform has interrupted the tab's
+-  // audio, so a resume() requested during the interruption is not started here;
+-  // its promise stays parked above and is settled when the interruption ends.
+   const bool isAllowedToPlay = media::AutoplayPolicy::IsAllowedToPlay(*this);
+   AUTOPLAY_LOG("Trying to resume AudioContext {}, IsAllowedToPlay={}",
+                fmt::ptr(this), isAllowedToPlay);
+diff --git a/dom/media/webaudio/AudioDestinationNode.cpp b/dom/media/webaudio/AudioDestinationNode.cpp
+index b179d24565..59aa8bce29 100644
+--- a/dom/media/webaudio/AudioDestinationNode.cpp
++++ b/dom/media/webaudio/AudioDestinationNode.cpp
+@@ -212,6 +212,33 @@ class DestinationNodeEngine final : public AudioNodeEngine {
+     *aOutput = aInput;
+     aOutput->mVolume *= mVolume;
+ 
++    // GORILLA TWEAK: Apply soft-limiting to prevent digital hard clipping
++    if (!aOutput->IsNull() && StaticPrefs::media_gorilla_hardware_only_mode()) {
++      uint32_t channelCount = aOutput->ChannelCount();
++      AutoTArray<const float*, 8> channels;
++      for (uint32_t c = 0; c < channelCount; ++c) {
++        channels.AppendElement(static_cast<const float*>(aOutput->mChannelData[c]));
++      }
++      float volume = aOutput->mVolume;
++      aOutput->AllocateChannels(channelCount);
++      for (uint32_t c = 0; c < channelCount; ++c) {
++        float* dest = aOutput->ChannelFloatsForWrite(c);
++        const float* src = channels[c];
++        for (uint32_t i = 0; i < WEBAUDIO_BLOCK_SIZE; ++i) {
++          float x = src[i] * volume;
++          // Fast-Tanh soft clipping approximation
++          if (x > 1.0f) {
++            dest[i] = 1.0f;
++          } else if (x < -1.0f) {
++            dest[i] = -1.0f;
++          } else {
++            dest[i] = x * (27.0f + x * x) / (27.0f + 9.0f * x * x);
++          }
++        }
++      }
++      aOutput->mVolume = 1.0f;
++    }
++
+     if (mSuspended) {
+       return;
+     }
+diff --git a/dom/media/webaudio/DynamicsCompressorNode.cpp b/dom/media/webaudio/DynamicsCompressorNode.cpp
+index 5c99477d89..3dcf086aab 100644
+--- a/dom/media/webaudio/DynamicsCompressorNode.cpp
++++ b/dom/media/webaudio/DynamicsCompressorNode.cpp
+@@ -78,6 +78,12 @@ class DynamicsCompressorNodeEngine final : public AudioNodeEngine {
+       return;
+     }
+ 
++    // GORILLA PATCH removed 2026-08-10: the hardware-only bypass that lived
++    // here rested on a false premise (WebAudio graphs never chain through the
++    // AudioStream DSP; the paths are parallel) and silenced any site relying
++    // on this node's automatic make-up gain. See
++    // patches/new.patches/15.AUDIO/2026-08-10_WHISPER_SAGA.md.
++
+     const uint32_t channelCount = aInput.ChannelCount();
+     if (mCompressor->numberOfChannels() != channelCount) {
+       // Create a new compressor object with a new channel count
+diff --git a/dom/media/webcodecs/VideoDecoder.cpp b/dom/media/webcodecs/VideoDecoder.cpp
+index 58510aabba..cf02d97d8e 100644
+--- a/dom/media/webcodecs/VideoDecoder.cpp
++++ b/dom/media/webcodecs/VideoDecoder.cpp
+@@ -26,6 +26,7 @@
+ #include "mozilla/dom/VideoDecoderBinding.h"
+ #include "mozilla/dom/VideoFrameBinding.h"
+ #include "mozilla/dom/WebCodecsUtils.h"
++#include "mozilla/StaticPrefs_media.h"
+ #include "nsPrintfCString.h"
+ 
+ #ifdef XP_MACOSX
+@@ -199,6 +200,16 @@ static bool CanDecode(const Config& aConfig) {
+     return false;
+   }
+ 
++  // GORILLA OVERRIDE 2026-08-11: the container fallback below consults the
++  // HTMLMediaElement Layer-1 gate (DecoderTraits), which answers CANPLAY_NO
++  // for VP8/WebM by design (YouTube steering). The WebCodecs-only software
++  // VP8 opt-in must not be vetoed by that gate; DecoderAgent's own
++  // Purpose::WebCodecs factory decides actual decodability.
++  if (StaticPrefs::media_gorilla_webcodecs_software_vp8() &&
++      aConfig.mCodec.EqualsLiteral("vp8")) {
++    return true;
++  }
++
+   // TODO (1880326): code below is wrongly using the logic of HTMLMediaElement
+   // for determining if a codec can be played, and incorrect codec string for
+   // h264 are accepted for HTMLMediaElement for compat reasons. Perform stricter
+@@ -717,6 +728,16 @@ bool VideoDecoderTraits::Validate(const VideoDecoderConfig& aConfig,
+     return false;
+   }
+ 
++  // GORILLA OVERRIDE 2026-08-11: the hardware-only codec check was REMOVED from
++  // here. Validate() failure means "config is malformed" and surfaces as
++  // TypeError; a valid-but-unsupported codec must instead resolve
++  // isConfigSupported() with {supported:false} (spec: #check-configuration-support).
++  // Enforcement is unchanged and still absolute — IsSupportedVideoCodec() returns
++  // H.264-only under hardware-only mode, and CanDecode() already consults it. This
++  // only restores a CLEAN refusal, matching Layer 1's canPlayType()=CANPLAY_NO
++  // pattern that lets sites fall back to H.264 instead of aborting.
++  // Cause of: WhatsApp Web calls hanging forever (WEBCODECS-CALL-PATH.DEVELOPER.md).
++
+   if (aConfig.mCodedWidth.WasPassed() != aConfig.mCodedHeight.WasPassed()) {
+     aErrorMessage.AppendPrintf(
+         "Missing coded %s",
+diff --git a/dom/media/webcodecs/VideoEncoder.cpp b/dom/media/webcodecs/VideoEncoder.cpp
+index 63861040f5..11a53cbb47 100644
+--- a/dom/media/webcodecs/VideoEncoder.cpp
++++ b/dom/media/webcodecs/VideoEncoder.cpp
+@@ -21,6 +21,7 @@
+ #include "mozilla/dom/VideoFrame.h"
+ #include "mozilla/dom/VideoFrameBinding.h"
+ #include "mozilla/dom/WebCodecsUtils.h"
++#include "mozilla/StaticPrefs_media.h"
+ #include "nsIGlobalObject.h"
+ #include "nsPrintfCString.h"
+ #include "nsRFPService.h"
+@@ -427,6 +428,12 @@ bool VideoEncoderTraits::Validate(const VideoEncoderConfig& aConfig,
+     return false;
+   }
+ 
++  // GORILLA OVERRIDE 2026-08-11: hardware-only codec check REMOVED from Validate()
++  // for the same reason as VideoDecoder.cpp — a Validate() failure becomes
++  // TypeError("config is invalid"), but a valid-but-unsupported codec must resolve
++  // {supported:false}. IsSupportedVideoCodec() still enforces H.264-only, so the
++  // policy is unchanged; callers are simply told "no" correctly instead of throwing.
++
+   // 2.
+   if (aConfig.mWidth == 0 || aConfig.mHeight == 0) {
+     aErrorMessage.AppendPrintf("Invalid VideoEncoderConfig: %s equal to 0",
+diff --git a/dom/media/webcodecs/WebCodecsUtils.cpp b/dom/media/webcodecs/WebCodecsUtils.cpp
+index 359d29fade..01b1b7fa42 100644
+--- a/dom/media/webcodecs/WebCodecsUtils.cpp
++++ b/dom/media/webcodecs/WebCodecsUtils.cpp
+@@ -605,6 +605,17 @@ nsCString ConfigToString(const VideoDecoderConfig& aConfig) {
+ 
+ bool IsSupportedVideoCodec(const nsAString& aCodec) {
+   LOG("IsSupportedVideoCodec: {}", NS_ConvertUTF16toUTF8(aCodec).get());
++  // GORILLA PATCH: Enforce hardware-only media capabilities gating for WebCodecs
++  if (StaticPrefs::media_gorilla_hardware_only_mode()) {
++    // GORILLA OVERRIDE 2026-08-11: opt-in software VP8 for WebCodecs only
++    // (WhatsApp Web calls: VP8 over DataChannel, no WebRTC media section).
++    // The media pipeline is unaffected; see PDMFactory Purpose::WebCodecs.
++    if (StaticPrefs::media_gorilla_webcodecs_software_vp8() &&
++        aCodec.EqualsLiteral("vp8")) {
++      return true;
++    }
++    return IsH264CodecString(aCodec);
++  }
+   // The only codec string accepted for vp8 is "vp8"
+   if (!IsVP9CodecString(aCodec) && !IsH264CodecString(aCodec) &&
+       !IsAV1CodecString(aCodec) && !aCodec.EqualsLiteral("vp8")) {
+diff --git a/dom/media/webrtc/libwebrtcglue/VideoConduit.cpp b/dom/media/webrtc/libwebrtcglue/VideoConduit.cpp
+index 1c8727ac98..471e4371fc 100644
+--- a/dom/media/webrtc/libwebrtcglue/VideoConduit.cpp
++++ b/dom/media/webrtc/libwebrtcglue/VideoConduit.cpp
+@@ -3,6 +3,7 @@
+  * You can obtain one at http://mozilla.org/MPL/2.0/. */
+ 
+ #include "VideoConduit.h"
++#include "mozilla/StaticPrefs_media.h"
+ 
+ #include <algorithm>
+ #include <cmath>
+@@ -2145,7 +2146,11 @@ bool WebrtcVideoConduit::HasH264Hardware() {
+   return gfx::gfxVars::IsInitialized() && gfx::gfxVars::HasWebrtcH264Hw();
+ }
+ 
+-bool WebrtcVideoConduit::HasAv1() { return true; }
++// GORILLA OVERRIDE: AV1 answered as unsupported in hardware-only mode — H.264-only
++// policy, no AV1 ASIC on Intel HD 4000 (MEDIA_CODEC_LESSONS 6-layer gate).
++bool WebrtcVideoConduit::HasAv1() {
++  return !StaticPrefs::media_gorilla_hardware_only_mode();
++}
+ 
+ Maybe<int> WebrtcVideoConduit::ActiveSendPayloadType() const {
+   MOZ_ASSERT(mCallThread->IsOnCurrentThread());
+diff --git a/dom/media/webrtc/libwebrtcglue/WebrtcVideoCodecFactory.cpp b/dom/media/webrtc/libwebrtcglue/WebrtcVideoCodecFactory.cpp
+index 842047269a..44fb6014a0 100644
+--- a/dom/media/webrtc/libwebrtcglue/WebrtcVideoCodecFactory.cpp
++++ b/dom/media/webrtc/libwebrtcglue/WebrtcVideoCodecFactory.cpp
+@@ -43,6 +43,9 @@ static media::DecodeSupportSet WebrtcSoftwareDecodeFallback(
+     case webrtc::VideoCodecType::kVideoCodecVP8:
+     case webrtc::VideoCodecType::kVideoCodecVP9:
+     case webrtc::VideoCodecType::kVideoCodecAV1:
++      if (StaticPrefs::media_gorilla_hardware_only_mode()) {
++        return {};
++      }
+       return {media::DecodeSupport::SoftwareDecode};
+     case webrtc::VideoCodecType::kVideoCodecGeneric:
+     case webrtc::VideoCodecType::kVideoCodecH265:
+@@ -89,7 +92,9 @@ static media::EncodeSupportSet WebrtcLibwebrtcEncodeSupport(
+     case CodecType::VP8:
+     case CodecType::VP9:
+     case CodecType::AV1:
+-      libwebrtcSupport += media::EncodeSupport::SoftwareEncode;
++      if (!StaticPrefs::media_gorilla_hardware_only_mode()) {
++        libwebrtcSupport += media::EncodeSupport::SoftwareEncode;
++      }
+       break;
+     case CodecType::H264:
+       libwebrtcSupport += WebrtcGmpEncoderSupports(aConfig);
+@@ -183,14 +188,23 @@ std::unique_ptr<webrtc::VideoDecoder> WebrtcVideoDecoderFactory::Create(
+ 
+     // Use libvpx decoders as fallbacks.
+     case webrtc::VideoCodecType::kVideoCodecVP8:
++      if (StaticPrefs::media_gorilla_hardware_only_mode()) {
++        return nullptr;
++      }
+       if (!decoder) {
+         decoder = webrtc::CreateVp8Decoder(aEnv);
+       }
+       break;
+     case webrtc::VideoCodecType::kVideoCodecVP9:
++      if (StaticPrefs::media_gorilla_hardware_only_mode()) {
++        return nullptr;
++      }
+       decoder = webrtc::VP9Decoder::Create();
+       break;
+     case webrtc::VideoCodecType::kVideoCodecAV1:
++      if (StaticPrefs::media_gorilla_hardware_only_mode()) {
++        return nullptr;
++      }
+       decoder = webrtc::CreateDav1dDecoder();
+       break;
+     default:
+@@ -211,6 +225,9 @@ std::unique_ptr<webrtc::VideoEncoder> WebrtcVideoEncoderFactory::Create(
+     case webrtc::VideoCodecType::kVideoCodecH265:
+       MOZ_CRASH("Unimplemented codec");
+     case webrtc::VideoCodecType::kVideoCodecAV1:
++      if (StaticPrefs::media_gorilla_hardware_only_mode()) {
++        return nullptr;
++      }
+       if (StaticPrefs::media_webrtc_simulcast_av1_enabled()) {
+         return std::make_unique<webrtc::SimulcastEncoderAdapter>(
+             aEnv, mInternalFactory.get(), nullptr, aFormat);
+@@ -223,9 +240,15 @@ std::unique_ptr<webrtc::VideoEncoder> WebrtcVideoEncoderFactory::Create(
+       }
+       break;
+     case webrtc::VideoCodecType::kVideoCodecVP8:
++      if (StaticPrefs::media_gorilla_hardware_only_mode()) {
++        return nullptr;
++      }
+       return std::make_unique<webrtc::SimulcastEncoderAdapter>(
+           aEnv, mInternalFactory.get(), nullptr, aFormat);
+     case webrtc::VideoCodecType::kVideoCodecVP9:
++      if (StaticPrefs::media_gorilla_hardware_only_mode()) {
++        return nullptr;
++      }
+       if (StaticPrefs::media_webrtc_simulcast_vp9_enabled()) {
+         return std::make_unique<webrtc::SimulcastEncoderAdapter>(
+             aEnv, mInternalFactory.get(), nullptr, aFormat);
+@@ -277,12 +300,21 @@ WebrtcVideoEncoderFactory::InternalFactory::Create(
+       }
+       // libvpx fallbacks.
+       case webrtc::VideoCodecType::kVideoCodecVP8:
++        if (StaticPrefs::media_gorilla_hardware_only_mode()) {
++          return nullptr;
++        }
+         encoder = webrtc::CreateVp8Encoder(aEnv);
+         break;
+       case webrtc::VideoCodecType::kVideoCodecVP9:
++        if (StaticPrefs::media_gorilla_hardware_only_mode()) {
++          return nullptr;
++        }
+         encoder = webrtc::CreateVp9Encoder(aEnv);
+         break;
+       case webrtc::VideoCodecType::kVideoCodecAV1:
++        if (StaticPrefs::media_gorilla_hardware_only_mode()) {
++          return nullptr;
++        }
+         encoder = webrtc::CreateLibaomAv1Encoder(aEnv);
+         break;
+       default:
+diff --git a/gfx/thebes/gfxPlatformGtk.cpp b/gfx/thebes/gfxPlatformGtk.cpp
+index de866d03d3..73acfd6bbc 100644
+--- a/gfx/thebes/gfxPlatformGtk.cpp
++++ b/gfx/thebes/gfxPlatformGtk.cpp
+@@ -282,6 +282,15 @@ void gfxPlatformGtk::InitPlatformHardwareVideoConfig() {
+                               "Blocklisted by gfxInfo", failureId);
+     }
+   }
++  // GORILLA: Under the hardware-only H.264 policy the decoded frame MUST reach
++  // the compositor without a CPU read-back. UserForceEnable (not UserEnable)
++  // is required so that mUser=ForceEnabled is checked before mEnvironment in
++  // FeatureState::GetValue(), bypassing any gfxInfo environment block.
++  // UserEnable only sets mUser=Enabled which loses to mEnvironment=Blocklisted.
++  if (StaticPrefs::media_gorilla_hardware_only_mode() &&
++      gfxConfig::GetFeature(Feature::DMABUF).IsEnabled()) {
++    featureZeroCopy.UserForceEnable("Forced by Gorilla hardware-only policy");
++  }
+   if (featureZeroCopy.IsEnabled()) {
+     gfxVars::SetHwDecodedVideoZeroCopy(true);
+   }
+@@ -326,6 +335,9 @@ void gfxPlatformGtk::InitWebRenderConfig() {
+ 
+ void gfxPlatformGtk::InitPlatformGPUProcessPrefs() {
+ #ifdef MOZ_WAYLAND
++  // Wayland surface handles (wl_egl_window) live in the parent process and
++  // cannot be shared with the GPU process via GtkCompositorWidgetInitData.
++  // VA-API decode still works via the RDD process (media.rdd-ffmpeg.enabled).
+   if (IsWaylandDisplay()) {
+     FeatureState& gpuProc = gfxConfig::GetFeature(Feature::GPU_PROCESS);
+     gpuProc.ForceDisable(FeatureStatus::Blocked,

@@ -1,0 +1,20 @@
+{
+ "step": "port-01.MEDIA-dom_media_ipc_RemoteVideoDecoder.cpp-RemoteVideoDecoder.cpp-h1",
+ "reason": "Firefox 158 renamed YUVColorSpace to yuvColorSpace and already computes image/imageData; the literal + lines would declare a dead variable named like the type. The edit reads the metadata for every frame through the 158 locals and sets the BT709 defaults.",
+ "files": [
+  "dom/media/ipc/RemoteVideoDecoder.cpp"
+ ],
+ "by": "cli",
+ "literal_check_said": [
+  "missing added line: YUVColorSpace YUVColorSpace = gfx::YUVColorSpace::BT709;",
+  "missing added line: if (auto* image = video->mImage->AsPlanarYCbCrImage()) {",
+  "missing added line: if (auto* data = image->GetData()) {",
+  "missing added line: YUVColorSpace = data->mYUVColorSpace;",
+  "missing added line: colorPrimaries = data->mColorPrimaries;",
+  "missing added line: transferFunction = data->mTransferFunction;",
+  "missing added line: colorRange = data->mColorRange;",
+  "you removed a line that is not part of the change: YUVColorSpace yuvColorSpace = gfx::YUVColorSpace::Default;"
+ ],
+ "meaning_check": "holds",
+ "t": "2026-10-14 17:46:34"
+}

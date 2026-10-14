@@ -1,0 +1,14 @@
+{
+ "step": "port-05.PREFS-modules_libpref_init_StaticPrefList.yaml-StaticPrefList.yaml-h23",
+ "reason": "upstream 158 added a macOS nightly branch to the same #if; the hunk collapses the whole #if to value: false; removes: #elif defined(XP_MACOSX) && defined(NIGHTLY_BUILD); removes: value: false",
+ "files": [
+  "modules/libpref/init/StaticPrefList.yaml"
+ ],
+ "by": "cli",
+ "literal_check_said": [
+  "you removed a line that is not part of the change: #elif defined(XP_MACOSX) && defined(NIGHTLY_BUILD)",
+  "you removed a line that is not part of the change: value: false"
+ ],
+ "meaning_check": "holds",
+ "t": "2026-10-14 18:01:24"
+}

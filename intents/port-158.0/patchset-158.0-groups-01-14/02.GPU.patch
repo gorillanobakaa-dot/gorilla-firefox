@@ -1,0 +1,134 @@
+diff --git a/gfx/thebes/gfxPlatform.cpp b/gfx/thebes/gfxPlatform.cpp
+index 1432529c98..1800343be2 100644
+--- a/gfx/thebes/gfxPlatform.cpp
++++ b/gfx/thebes/gfxPlatform.cpp
+@@ -3068,8 +3068,11 @@ void gfxPlatform::InitHardwareVideoConfig() {
+   if (status == nsIGfxInfo::FEATURE_BLOCKED_PLATFORM_TEST) {
+     featureDec.ForceDisable(FeatureStatus::Unavailable,
+                             "Force disabled by gfxInfo", failureId);
+-  } else if (Preferences::GetBool("media.hardware-video-decoding.failed",
++  } else if (false &&
++             Preferences::GetBool("media.hardware-video-decoding.failed",
+                                   false)) {
++    // GORILLA: sticky sanity-test kill-switch dead-coded. One bad boot must
++    // never permanently disable VA-API decode / QuickSync encode.
+     featureDec.ForceDisable(FeatureStatus::Unavailable,
+                             "Force disabled by failed sanity test",
+                             "FEATURE_FAILURE_SANITY_TEST_FAILED"_ns);
+@@ -3117,8 +3120,11 @@ void gfxPlatform::InitHardwareVideoConfig() {
+   if (status == nsIGfxInfo::FEATURE_BLOCKED_PLATFORM_TEST) {
+     featureEnc.ForceDisable(FeatureStatus::Unavailable,
+                             "Force disabled by gfxInfo", failureId);
+-  } else if (Preferences::GetBool("media.hardware-video-decoding.failed",
++  } else if (false &&
++             Preferences::GetBool("media.hardware-video-decoding.failed",
+                                   false)) {
++    // GORILLA: sticky sanity-test kill-switch dead-coded. One bad boot must
++    // never permanently disable VA-API decode / QuickSync encode.
+     // Decoding is better exercised than encoding. If it is broken on this
+     // configuration, encoding is unlikely to be sane either.
+     featureEnc.ForceDisable(FeatureStatus::Unavailable,
+diff --git a/widget/GfxDriverInfo.cpp b/widget/GfxDriverInfo.cpp
+index 0c9cb0936e..14e302ec04 100644
+--- a/widget/GfxDriverInfo.cpp
++++ b/widget/GfxDriverInfo.cpp
+@@ -204,24 +204,27 @@ already_AddRefed<const GfxDeviceFamily> GfxDriverInfo::GetDeviceFamily(
+       APPEND_DEVICE(0x2e13); /* IntelQ45_2 */
+       break;
+     case DeviceFamily::IntelHDGraphicsToIvyBridge:
+-      APPEND_DEVICE(0x015A); /* IntelIvyBridge_GT1_1 (HD Graphics) */
++      // GORILLA 2026-08-02: 0x015A freed too — owner ruling, fleet unlock is TOTAL.
++      // APPEND_DEVICE(0x015A); /* IntelIvyBridge_GT1_1 (HD Graphics) */
+       // clang-format off
+-      APPEND_DEVICE(0x0152); /* IntelIvyBridge_GT1_2 (HD Graphics 2500, desktop) */
+-      APPEND_DEVICE(0x0162); /* IntelIvyBridge_GT2_1 (HD Graphics 4000, desktop) */
+-      APPEND_DEVICE(0x0166); /* IntelIvyBridge_GT2_2 (HD Graphics 4000, mobile) */
+-      APPEND_DEVICE(0x016A); /* IntelIvyBridge_GT2_3 (HD Graphics P4000, workstation) */
++      // GORILLA: Ivy Bridge un-blocklisted (HD 4000 mobile 0x0166 = this machine).
++      // APPEND_DEVICE(0x0152); /* IntelIvyBridge_GT1_2 (HD Graphics 2500, desktop) */
++      // APPEND_DEVICE(0x0162); /* IntelIvyBridge_GT2_1 (HD Graphics 4000, desktop) */
++      // APPEND_DEVICE(0x0166); /* IntelIvyBridge_GT2_2 (HD Graphics 4000, mobile) */
++      // APPEND_DEVICE(0x016A); /* IntelIvyBridge_GT2_3 (HD Graphics P4000, workstation) */
+       // clang-format on
+       [[fallthrough]];
+     case DeviceFamily::IntelHDGraphicsToSandyBridge:
+       APPEND_DEVICE(0x0042); /* IntelHDGraphics */
+       APPEND_DEVICE(0x0046); /* IntelMobileHDGraphics */
+-      APPEND_DEVICE(0x0102); /* IntelSandyBridge_1 */
+-      APPEND_DEVICE(0x0106); /* IntelSandyBridge_2 */
+-      APPEND_DEVICE(0x0112); /* IntelSandyBridge_3 */
+-      APPEND_DEVICE(0x0116); /* IntelSandyBridge_4 */
+-      APPEND_DEVICE(0x0122); /* IntelSandyBridge_5 */
+-      APPEND_DEVICE(0x0126); /* IntelSandyBridge_6 */
+-      APPEND_DEVICE(0x010a); /* IntelSandyBridge_7 */
++      // GORILLA: Sandy Bridge un-blocklisted (FF153-era fleet unlock).
++      // APPEND_DEVICE(0x0102); /* IntelSandyBridge_1 */
++      // APPEND_DEVICE(0x0106); /* IntelSandyBridge_2 */
++      // APPEND_DEVICE(0x0112); /* IntelSandyBridge_3 — freed 2026-08-02, owner ruling */
++      // APPEND_DEVICE(0x0116); /* IntelSandyBridge_4 */
++      // APPEND_DEVICE(0x0122); /* IntelSandyBridge_5 */
++      // APPEND_DEVICE(0x0126); /* IntelSandyBridge_6 */
++      // APPEND_DEVICE(0x010a); /* IntelSandyBridge_7 — freed 2026-08-02, owner ruling */
+       break;
+     case DeviceFamily::IntelHaswell:
+       APPEND_DEVICE(0x0402); /* IntelHaswell_GT1_1 */
+@@ -261,13 +264,15 @@ already_AddRefed<const GfxDeviceFamily> GfxDriverInfo::GetDeviceFamily(
+       APPEND_DEVICE(0x0D2E); /* IntelHaswell_GT3e_5 */
+       break;
+     case DeviceFamily::IntelSandyBridge:
+-      APPEND_DEVICE(0x0102);
+-      APPEND_DEVICE(0x0106);
+-      APPEND_DEVICE(0x010a);
+-      APPEND_DEVICE(0x0112);
+-      APPEND_DEVICE(0x0116);
+-      APPEND_DEVICE(0x0122);
+-      APPEND_DEVICE(0x0126);
++      // GORILLA: Sandy Bridge un-blocklisted (FF153-era fleet unlock).
++      // APPEND_DEVICE(0x0102);
++      // APPEND_DEVICE(0x0106);
++      // GORILLA 2026-08-02: 0x010a + 0x0112 freed too — owner ruling, fleet unlock is TOTAL.
++      // APPEND_DEVICE(0x010a);
++      // APPEND_DEVICE(0x0112);
++      // APPEND_DEVICE(0x0116);
++      // APPEND_DEVICE(0x0122);
++      // APPEND_DEVICE(0x0126);
+       break;
+     case DeviceFamily::IntelGen7Baytrail:
+       APPEND_DEVICE(0x0f30);
+diff --git a/widget/GfxInfoBase.cpp b/widget/GfxInfoBase.cpp
+index 9ebeb94673..aa39b624e5 100644
+--- a/widget/GfxInfoBase.cpp
++++ b/widget/GfxInfoBase.cpp
+@@ -1,3 +1,14 @@
++/*
++ * @gorilla-unleashed-154 ─ MODIFIED
++ * ────────────────────────────────────────────────────────────
++ * Timestamp : 2026-07-05
++ * Change    : Intel/AMD/NVIDIA blocklist short-circuit re-applied onto
++ *             mozilla-central tip (previous copy was from a stale revision
++ *             and no longer compiled against the 154.0a1 tree).
++ * Notes     : Force-enables hardware acceleration for Intel Ivy Bridge
++ *             (HD 4000). See 02.GPU/00_GPU_HISTORY_AND_ROADMAP.md.
++ * ────────────────────────────────────────────────────────────
++ */
+ /*
+  * This Source Code Form is subject to the terms of the Mozilla Public
+  * License, v. 2.0. If a copy of the MPL was not distributed with this
+@@ -1184,6 +1195,17 @@ nsresult GfxInfoBase::GetFeatureStatusImpl(
+     return NS_OK;
+   }
+ 
++  // GORILLA OVERRIDE: Short-circuit blocklist for Intel/AMD/NVIDIA
++  // This universally force-enables hardware acceleration (WebRender/VA-API)
++  // for all GPU vendors present in this system (Intel HD 4000, AMD, NVIDIA).
++  // Case-insensitive: Linux probes report vendor IDs in lowercase hex.
++  if (adapterVendorID.LowerCaseEqualsLiteral("0x8086") ||
++      adapterVendorID.LowerCaseEqualsLiteral("0x1002") ||
++      adapterVendorID.LowerCaseEqualsLiteral("0x10de")) {
++    *aStatus = nsIGfxInfo::FEATURE_STATUS_OK;
++    return NS_OK;
++  }
++
+   // We only check either the given blocklist, or the static list, as given.
+   int32_t status;
+   if (aDriverInfo.Length()) {

@@ -1,0 +1,19 @@
+diff --git a/toolkit/themes/shared/design-system/dist/tokens-shared.css b/toolkit/themes/shared/design-system/dist/tokens-shared.css
+index 3840b86f15..9c4970ee61 100644
+--- a/toolkit/themes/shared/design-system/dist/tokens-shared.css
++++ b/toolkit/themes/shared/design-system/dist/tokens-shared.css
+@@ -723,9 +723,11 @@
+       --button-background-color-disabled: var(--button-background-color);
+       /* TODO Bug 1821203 - Gray use needs to be consolidated */
+       --button-background-color: transparent;
+-      --button-background-color-destructive: light-dark(var(--color-red-50), var(--color-red-30));
+-      --button-background-color-destructive-hover: light-dark(var(--color-red-60), var(--color-red-20));
+-      --button-background-color-destructive-active: light-dark(var(--color-red-70), var(--color-red-10));
++      --button-background-color-hover: light-dark(var(--color-violet-desaturated-10), var(--color-violet-desaturated-50));
++      --button-background-color-active: light-dark(var(--color-violet-desaturated-20), var(--color-violet-desaturated-60));
++      --button-background-color-destructive: light-dark(var(--color-red-50), var(--color-red-20));
++      --button-background-color-destructive-hover: light-dark(var(--color-red-60), var(--color-red-30));
++      --button-background-color-destructive-active: light-dark(var(--color-red-70), var(--color-red-40));
+       --button-background-color-ghost: var(--button-background-color);
+       --button-background-color-ghost-selected: var(--button-background-color-selected);
+       --button-background-color-muted: light-dark(var(--color-gray-20), var(--color-gray-55));
