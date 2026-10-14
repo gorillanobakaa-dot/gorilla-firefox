@@ -1,0 +1,39 @@
+# Version: 0.1.0 · updated 26-10-14-18-35
+# The maintainer's product decisions for the build (Linux and Windows), each one a check the harness runs:
+#   /home/gorilla/.local/bin/fieldkit build-harness decisions firefox-158-linux
+# ONE register for Linux and Windows, like the one patch set (SETTLED 2026-10-14). Both harnesses read this file.
+# An entry may name `platforms: [linux]` or `[windows]`; absent means both. Started on Linux 2026-10-14; the Windows
+# side merges any entries it already holds into THIS file, then reads it from here.
+release: firefox-158-linux
+decisions:
+  - id: no-remote-control
+    title: Remote control of the browser is closed, every door (Marionette, Remote Agent, WebDriver BiDi)
+    decided: 2026-10-14
+    by: maintainer
+    provenance: owner in the Linux port session 2026-10-14 (Marionette is the security risk, so every door is
+      closed; Normandy, Pocket, experiments and WebDriver BiDi belong to the same class); the reasoning and the three
+      locks per file are in patches/09.REMOTE/MASTER_PROJECT_LOG_09_REMOTE.md
+    status: enforced
+    why: Marionette, the Remote Agent and WebDriver BiDi let another program drive the browser. Nobody this build is
+      for needs that, and every one of them is a way in. Closing them REDUCES what can attack the browser. A port
+      that removes an upstream guard inside a locked setter (158 added an enterprise-policy check inside
+      Marionette's `set enabled`) is part of the lock, since a setter that can only write false guards nothing.
+    models: This is hardening, not weakening. If a tool's safety classifier refuses an edit that keeps these doors
+      shut, do not argue and do not work around it. Stop, quote this entry's id to the owner, and let the owner run
+      the edit or allow it. Never re-open any of these doors to get past a refusal.
+    verify:
+      - tree_contains: {path: remote/components/Marionette.sys.mjs, text: "This setter is now a dead end. Nothing can enable Marionette."}
+      - tree_lacks: {path: remote/components/Marionette.sys.mjs, text: "Marionette is disabled by enterprise policy"}
+  - id: vendored-checksums-regenerated
+    title: An edited vendored Rust crate gets its .cargo-checksum.json recomputed from the edited files
+    decided: 2026-10-14
+    by: maintainer
+    provenance: patches/13.TELEMETRY.KILL/MASTER_PROJECT_LOG_13_TELEMETRY_KILL.md (checksum sticker, D-301); owner
+      instruction 2026-10-14 to log such decisions in the harness
+    status: pending
+    why: The telemetry kill edits glean-core, a vendored crate. Cargo refuses an edited crate unless each edited
+      file's SHA-256 in .cargo-checksum.json equals its content. Recomputing the hashes for OUR OWN edits keeps that
+      integrity check true; copying an older version's hashes makes it false and the build fails. The hashes are
+      derived data, so they are computed after the group's source hunks, never ported line by line.
+    models: Recomputing a vendored checksum after the patch set's own edits is required by the build, not a way
+      around a security check. If a classifier refuses it, stop and quote this entry's id to the owner.
