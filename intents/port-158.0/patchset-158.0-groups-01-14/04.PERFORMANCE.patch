@@ -1,0 +1,248 @@
+diff --git a/dom/base/CCGCScheduler.cpp b/dom/base/CCGCScheduler.cpp
+index 0fa024fb3c..0346e16b63 100644
+--- a/dom/base/CCGCScheduler.cpp
++++ b/dom/base/CCGCScheduler.cpp
+@@ -18,19 +18,21 @@
+ namespace mozilla {
+ MOZ_RUNINIT const TimeDuration kOneMinute = TimeDuration::FromSeconds(60.0f);
+ MOZ_RUNINIT const TimeDuration kCCDelay = TimeDuration::FromSeconds(6);
++// GORILLA: IVB (4c/8t) tuning — more eager cycle collection, smaller gaps.
+ MOZ_RUNINIT const TimeDuration kCCSkippableDelay =
+-    TimeDuration::FromMilliseconds(250);
++    TimeDuration::FromMilliseconds(120);
+ MOZ_RUNINIT const TimeDuration kTimeBetweenForgetSkippableCycles =
+     TimeDuration::FromSeconds(2);
+ MOZ_RUNINIT const TimeDuration kForgetSkippableSliceDuration =
+     TimeDuration::FromMilliseconds(2);
++// GORILLA: IVB (4c/8t) tuning — tighter CC scheduling for low-core box.
+ MOZ_RUNINIT const TimeDuration kICCIntersliceDelay =
+-    TimeDuration::FromMilliseconds(250);
++    TimeDuration::FromMilliseconds(120);
+ MOZ_RUNINIT const TimeDuration kICCSliceBudget =
+-    TimeDuration::FromMilliseconds(3);
++    TimeDuration::FromMilliseconds(4);
+ MOZ_RUNINIT const TimeDuration kIdleICCSliceBudget =
+-    TimeDuration::FromMilliseconds(2);
+-MOZ_RUNINIT const TimeDuration kMaxICCDuration = TimeDuration::FromSeconds(2);
++    TimeDuration::FromMilliseconds(4);
++MOZ_RUNINIT const TimeDuration kMaxICCDuration = TimeDuration::FromSeconds(1.5);
+ 
+ MOZ_RUNINIT const TimeDuration kCCForced = kOneMinute * 2;
+ MOZ_RUNINIT const TimeDuration kMaxCCLockedoutTime =
+diff --git a/js/src/frontend/Stencil.cpp b/js/src/frontend/Stencil.cpp
+index 246b8b2a7f..c2eedf95ca 100644
+--- a/js/src/frontend/Stencil.cpp
++++ b/js/src/frontend/Stencil.cpp
+@@ -4,9 +4,17 @@
+ 
+ #include "frontend/Stencil.h"
+ 
++// GORILLA UNLEASHED: Surgical Lobotomy (Blindness)
++// Sever all outbound telemetry data streams in JS cache.
++#undef MOZ_TELEMETRY_REPORTING
++#define MOZ_TELEMETRY_REPORTING 0
++#define GLEAN_DISABLED 1
++
+ #include "mozilla/Assertions.h"             // MOZ_RELEASE_ASSERT
+ #include "mozilla/CheckedInt.h"             // mozilla::CheckedInt
++#ifndef GLEAN_DISABLED
+ #include "mozilla/glean/JsSrcMetrics.h"     // javascript_self_hosted_cache
++#endif
+ #include "mozilla/Maybe.h"                  // mozilla::Maybe
+ #include "mozilla/OperatorNewExtensions.h"  // mozilla::KnownNotNull
+ #include "mozilla/PodOperations.h"          // mozilla::PodCopy
+@@ -3103,8 +3111,10 @@ bool CompilationStencil::delazifySelfHostedFunction(
+       JS_LOG(selfHosted, Debug,
+              "self_hosted_cache: reusing JIT code for script '%s'",
+              nameStr.get());
++#ifndef GLEAN_DISABLED
+       mozilla::glean::javascript_self_hosted_cache::hits.AddToNumerator();
+       mozilla::glean::javascript_self_hosted_cache::total.Add();
++#endif
+ 
+       if (!cx->zone()->ensureJitZoneExists(cx)) {
+         return false;
+@@ -3134,7 +3144,9 @@ bool CompilationStencil::delazifySelfHostedFunction(
+       JS_LOG(selfHosted, Debug,
+              "self_hosted_cache: new JIT code entry for script '%s'",
+              nameStr.get());
++#ifndef GLEAN_DISABLED
+       mozilla::glean::javascript_self_hosted_cache::total.Add();
++#endif
+ 
+       if (!cx->zone()->ensureJitZoneExists(cx)) {
+         return false;
+diff --git a/mfbt/Maybe.h b/mfbt/Maybe.h
+index 934a10e5de..e8ec5880e1 100644
+--- a/mfbt/Maybe.h
++++ b/mfbt/Maybe.h
+@@ -101,13 +101,32 @@ struct MaybePoisoner {
+   }
+ };
+ 
++template <typename T>
++constexpr bool IsCopyConstructibleHelper() {
++  if constexpr (IsComplete<T>::value) {
++    return std::is_copy_constructible_v<T>;
++  } else {
++    return true;
++  }
++}
++
++template <typename T>
++constexpr bool IsMoveConstructibleHelper() {
++  if constexpr (IsComplete<T>::value) {
++    return std::is_move_constructible_v<T>;
++  } else {
++    return true;
++  }
++}
++
+ template <typename T,
+           bool TriviallyDestructibleAndCopyable =
+               IsTriviallyDestructibleAndCopyable<T>,
+-          bool Copyable = std::is_copy_constructible_v<T>,
+-          bool Movable = std::is_move_constructible_v<T>>
++          bool Copyable = IsCopyConstructibleHelper<T>(),
++          bool Movable = IsMoveConstructibleHelper<T>()>
+ class Maybe_CopyMove_Enabler;
+ 
++
+ #define MOZ_MAYBE_COPY_OPS()                                                \
+   Maybe_CopyMove_Enabler(const Maybe_CopyMove_Enabler& aOther) {            \
+     if (downcast(aOther).isSome()) {                                        \
+@@ -398,36 +417,36 @@ MOZ_GSL_OWNER MOZ_EMPTY_BASES Maybe : private detail::MaybeStorage<T>,
+    * Maybe<T> can be copy-constructed from a Maybe<U> if T is constructible from
+    * a const U&.
+    */
+-  template <typename U,
+-            std::enable_if_t<std::is_constructible_v<T, const U&>, bool> = true>
++  template <typename U>
++    requires(std::is_constructible_v<T, const U&>)
+   MOZ_IMPLICIT Maybe(const Maybe<U>& aOther) {
+     if (aOther.isSome()) {
+       emplace(*aOther);
+     }
+   }
+ 
+-  template <typename U, std::enable_if_t<!std::is_constructible_v<T, const U&>,
+-                                         bool> = true>
++  template <typename U>
++    requires(!std::is_constructible_v<T, const U&>)
+   explicit Maybe(const Maybe<U>& aOther) = delete;
+ 
+   /**
+    * Maybe<T> can be move-constructed from a Maybe<U> if T is constructible from
+    * a U&&.
+    */
+-  template <typename U,
+-            std::enable_if_t<std::is_constructible_v<T, U&&>, bool> = true>
++  template <typename U>
++    requires(std::is_constructible_v<T, U &&>)
+   MOZ_IMPLICIT Maybe(Maybe<U>&& aOther) {
+     if (aOther.isSome()) {
+       emplace(std::move(*aOther));
+       aOther.reset();
+     }
+   }
+-  template <typename U,
+-            std::enable_if_t<!std::is_constructible_v<T, U&&>, bool> = true>
++  template <typename U>
++    requires(!std::is_constructible_v<T, U &&>)
+   explicit Maybe(Maybe<U>&& aOther) = delete;
+ 
+-  template <typename U,
+-            std::enable_if_t<std::is_constructible_v<T, const U&>, bool> = true>
++  template <typename U>
++    requires(std::is_constructible_v<T, const U&>)
+   Maybe& operator=(const Maybe<U>& aOther) {
+     if (aOther.isSome()) {
+       if (mIsSome) {
+@@ -441,12 +460,12 @@ MOZ_GSL_OWNER MOZ_EMPTY_BASES Maybe : private detail::MaybeStorage<T>,
+     return *this;
+   }
+ 
+-  template <typename U, std::enable_if_t<!std::is_constructible_v<T, const U&>,
+-                                         bool> = true>
++  template <typename U>
++    requires(!std::is_constructible_v<T, const U&>)
+   Maybe& operator=(const Maybe<U>& aOther) = delete;
+ 
+-  template <typename U,
+-            std::enable_if_t<std::is_constructible_v<T, U&&>, bool> = true>
++  template <typename U>
++    requires(std::is_constructible_v<T, U &&>)
+   Maybe& operator=(Maybe<U>&& aOther) {
+     if (aOther.isSome()) {
+       if (mIsSome) {
+@@ -462,8 +481,8 @@ MOZ_GSL_OWNER MOZ_EMPTY_BASES Maybe : private detail::MaybeStorage<T>,
+     return *this;
+   }
+ 
+-  template <typename U,
+-            std::enable_if_t<!std::is_constructible_v<T, U&&>, bool> = true>
++  template <typename U>
++    requires(!std::is_constructible_v<T, U &&>)
+   Maybe& operator=(Maybe<U>&& aOther) = delete;
+ 
+   constexpr Maybe& operator=(Nothing) {
+@@ -871,10 +890,9 @@ MOZ_GSL_OWNER MOZ_EMPTY_BASES Maybe : private detail::MaybeStorage<T>,
+   constexpr void emplace(Args&&... aArgs);
+ 
+   template <typename U>
+-  constexpr std::enable_if_t<std::is_same_v<T, U> &&
+-                             std::is_copy_constructible_v<U> &&
+-                             !std::is_move_constructible_v<U>>
+-  emplace(U&& aArgs) {
++    requires(std::is_same_v<T, U> && std::is_copy_constructible_v<U> &&
++             !std::is_move_constructible_v<U>)
++  constexpr void emplace(U&& aArgs) {
+     emplace(aArgs);
+   }
+ 
+diff --git a/mfbt/MaybeStorageBase.h b/mfbt/MaybeStorageBase.h
+index dc4a9bbad6..66d38ddb80 100644
+--- a/mfbt/MaybeStorageBase.h
++++ b/mfbt/MaybeStorageBase.h
+@@ -13,11 +13,27 @@
+ 
+ namespace mozilla::detail {
+ 
++template <typename U, typename = void>
++struct IsComplete : std::false_type {};
++
++template <typename U>
++struct IsComplete<U, std::void_t<decltype(sizeof(U))>> : std::true_type {};
++
++template <typename T>
++constexpr bool IsTriviallyDestructibleAndCopyableHelper() {
++  if constexpr (IsComplete<T>::value) {
++    return std::is_trivially_destructible_v<T> &&
++           (std::is_trivially_copy_constructible_v<T> ||
++            !std::is_copy_constructible_v<T>);
++  } else {
++    return false;
++  }
++}
++
+ template <typename T>
+ constexpr bool IsTriviallyDestructibleAndCopyable =
+-    std::is_trivially_destructible_v<T> &&
+-    (std::is_trivially_copy_constructible_v<T> ||
+-     !std::is_copy_constructible_v<T>);
++    IsTriviallyDestructibleAndCopyableHelper<T>();
++
+ 
+ template <typename T, bool TriviallyDestructibleAndCopyable =
+                           IsTriviallyDestructibleAndCopyable<T>>
+@@ -31,8 +47,8 @@ struct MaybeStorageBase<T, false> {
+   union Union {
+     constexpr Union() : empty{} {}
+     explicit Union(const T& aVal) : val{aVal} {}
+-    template <typename U,
+-              typename = std::enable_if_t<std::is_move_constructible_v<U>>>
++    template <typename U>
++      requires(std::is_constructible_v<NonConstT, U>)
+     explicit Union(U&& aVal) : val{std::forward<U>(aVal)} {}
+     template <typename... Args>
+     explicit Union(std::in_place_t, Args&&... aArgs)

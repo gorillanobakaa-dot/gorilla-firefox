@@ -1,0 +1,18 @@
+diff --git a/modules/libpref/init/StaticPrefList.yaml b/modules/libpref/init/StaticPrefList.yaml
+index f88e7842de..665dd2181a 100644
+--- a/modules/libpref/init/StaticPrefList.yaml
++++ b/modules/libpref/init/StaticPrefList.yaml
+@@ -20449,13 +20449,7 @@
+ 
+ - name: webgl.disable-angle
+   type: RelaxedAtomicBool
+-#if defined(XP_WIN)
+-  value: false
+-#elif defined(XP_MACOSX) && defined(NIGHTLY_BUILD)
+   value: false
+-#else
+-  value: true
+-#endif
+   mirror: always
+ 
+ - name: webgl.disable-wgl

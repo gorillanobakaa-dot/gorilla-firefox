@@ -1,0 +1,90 @@
+diff --git a/netwerk/dns/nsHostResolver.cpp b/netwerk/dns/nsHostResolver.cpp
+index 6ce08c2b01..be7d2a3ab7 100644
+--- a/netwerk/dns/nsHostResolver.cpp
++++ b/netwerk/dns/nsHostResolver.cpp
+@@ -182,8 +182,11 @@ nsresult nsHostResolver::Init() MOZ_NO_THREAD_SAFETY_ANALYSIS {
+   LOG(("Native HTTPS records supported=%d", bool(sNativeHTTPSSupported)));
+ 
+   nsCOMPtr<nsIThreadPool> threadPool = new nsThreadPool();
+-  MOZ_ALWAYS_SUCCEEDS(threadPool->SetThreadLimit(MaxResolverThreads()));
+-  MOZ_ALWAYS_SUCCEEDS(threadPool->SetIdleThreadLimit(8));
++  // GORILLA v2: Raise thread pool limits for high-concurrency workloads.
++  // Hardcoding 16 threads / 12 idle handles peak burst from simultaneous
++  // WebRTC sessions + many tabs without thrashing thread create/destroy.
++  MOZ_ALWAYS_SUCCEEDS(threadPool->SetThreadLimit(16));
++  MOZ_ALWAYS_SUCCEEDS(threadPool->SetIdleThreadLimit(12));
+   MOZ_ALWAYS_SUCCEEDS(threadPool->SetIdleThreadMaximumTimeout(poolTimeoutMs));
+   MOZ_ALWAYS_SUCCEEDS(threadPool->SetIdleThreadGraceTimeout(100));
+   MOZ_ALWAYS_SUCCEEDS(
+diff --git a/netwerk/protocol/http/HttpConnectionUDP.cpp b/netwerk/protocol/http/HttpConnectionUDP.cpp
+index db77675dde..6f9e86f8a1 100644
+--- a/netwerk/protocol/http/HttpConnectionUDP.cpp
++++ b/netwerk/protocol/http/HttpConnectionUDP.cpp
+@@ -317,14 +317,27 @@ nsresult HttpConnectionUDP::InitCommon(nsIUDPSocket* aSocket,
+     return rv;
+   }
+ 
+-  rv = mSocket->SetRecvBufferSize(
+-      StaticPrefs::network_http_http3_recvBufferSize());
++  // GORILLA v2 NETWORKING OPTIMIZATION: Graceful buffer size degradation
++  // Attempt to set 64MB receive buffer for optimal HTTP/3 performance.
++  // If kernel's net.core.rmem_max is too low, continue with smaller buffers
++  // rather than aborting — HTTP/3 will still function, just with reduced
++  // throughput on high-bandwidth connections.
++  rv = mSocket->SetRecvBufferSize(67108864);  // 64MB
+   if (NS_FAILED(rv)) {
+-    LOG(("HttpConnectionUDP::InitCommon SetRecvBufferSize failed %d [this=%p]",
++    LOG(("HttpConnectionUDP::InitCommon SetRecvBufferSize failed %d [this=%p] - "
++         "Continuing with default kernel receive buffers.",
+          static_cast<uint32_t>(rv), this));
+-    mSocket->Close();
+-    mSocket = nullptr;
+-    return rv;
++    // Do not abort — graceful degradation.
++  }
++
++  // GORILLA: Set outgoing socket send buffer to 4MB to prevent upload starvation
++  // under high concurrent connections, cooperating with kernel BBR pacing.
++  rv = mSocket->SetSendBufferSize(4194304);
++  if (NS_FAILED(rv)) {
++    LOG(("HttpConnectionUDP::InitCommon SetSendBufferSize failed %d [this=%p] - "
++         "Continuing with default kernel send buffers.",
++         static_cast<uint32_t>(rv), this));
++    // Do not abort — graceful degradation.
+   }
+ 
+   if (aPeerAddr.raw.family == AF_INET) {
+diff --git a/netwerk/protocol/http/nsHttpTransaction.cpp b/netwerk/protocol/http/nsHttpTransaction.cpp
+index 5e3b2be300..6444a96af2 100644
+--- a/netwerk/protocol/http/nsHttpTransaction.cpp
++++ b/netwerk/protocol/http/nsHttpTransaction.cpp
+@@ -74,6 +74,11 @@
+ 
+ using namespace mozilla::net;
+ 
++// GORILLA v2: Upload chunking strategy constant.
++// For large uploads (> 10MB) under BBR, limit each ReadSegments call to 256KB
++// so the pacing clock can drain the buffer between writes, maintaining low RTT.
++static const uint32_t kGorillaUploadChunkSize = 256 * 1024;
++
+ namespace mozilla::net {
+ 
+ //-----------------------------------------------------------------------------
+@@ -878,8 +883,16 @@ nsresult nsHttpTransaction::ReadSegments(nsAHttpSegmentReader* reader,
+ 
+   mDeferredSendProgress = false;
+   mReader = reader;
++  // GORILLA v2: Upload chunking strategy for BBR.
++  // For large uploads (mRequestSize > 10MB) limit each ReadSegments call to
++  // kGorillaUploadChunkSize (256KB) so the BBR pacing clock drains the buffer
++  // more effectively between writes, maintaining low RTT and max throughput.
++  uint32_t readCount = count;
++  if (mRequestSize > 10 * 1024 * 1024 && readCount > kGorillaUploadChunkSize) {
++    readCount = kGorillaUploadChunkSize;
++  }
+   nsresult rv =
+-      mRequestStream->ReadSegments(ReadRequestSegment, this, count, countRead);
++      mRequestStream->ReadSegments(ReadRequestSegment, this, readCount, countRead);
+   mReader = nullptr;
+ 
+   if (m0RTTInProgress && (mEarlyDataDisposition == EARLY_NONE) &&

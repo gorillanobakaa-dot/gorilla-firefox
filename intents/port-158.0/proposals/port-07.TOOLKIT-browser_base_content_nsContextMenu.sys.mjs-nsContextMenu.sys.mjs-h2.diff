@@ -1,0 +1,13 @@
+diff --git a/browser/base/content/nsContextMenu.sys.mjs b/browser/base/content/nsContextMenu.sys.mjs
+index 67a55293aa..0bb4b672d6 100644
+--- a/browser/base/content/nsContextMenu.sys.mjs
++++ b/browser/base/content/nsContextMenu.sys.mjs
+@@ -13,8 +13,6 @@ ChromeUtils.defineESModuleGetters(lazy, {
+     "moz-src:///toolkit/components/contextualidentity/ContextualIdentityService.sys.mjs",
+   DevToolsShim: "chrome://devtools-startup/content/DevToolsShim.sys.mjs",
+   E10SUtils: "resource://gre/modules/E10SUtils.sys.mjs",
+-  GenAI: "moz-src:///browser/components/genai/GenAI.sys.mjs",
+-  LinkPreview: "moz-src:///browser/components/genai/LinkPreview.sys.mjs",
+   LoginHelper: "resource://gre/modules/LoginHelper.sys.mjs",
+   LoginManagerContextMenu:
+     "resource://gre/modules/LoginManagerContextMenu.sys.mjs",

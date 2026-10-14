@@ -1,0 +1,13 @@
+{
+ "step": "port-05.PREFS-modules_libpref_init_StaticPrefList.yaml-StaticPrefList.yaml-h1",
+ "reason": "upstream 158 replaced the nightly macro with value: true; the hunk sets the pref to false; removes: value: true",
+ "files": [
+  "modules/libpref/init/StaticPrefList.yaml"
+ ],
+ "by": "cli",
+ "literal_check_said": [
+  "you removed a line that is not part of the change: value: true"
+ ],
+ "meaning_check": "holds",
+ "t": "2026-10-14 17:59:03"
+}

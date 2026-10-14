@@ -1,0 +1,53 @@
+diff --git a/distribution/policies.json b/distribution/policies.json
+new file mode 100644
+index 0000000000..83a64e955e
+--- /dev/null
++++ b/distribution/policies.json
+@@ -0,0 +1,21 @@
++{
++  "policies": {
++    "Preferences": {
++      "app.normandy.enabled": {
++        "Value": false,
++        "Status": "locked",
++        "Type": "boolean"
++      },
++      "app.normandy.api_url": {
++        "Value": "",
++        "Status": "locked",
++        "Type": "string"
++      },
++      "app.normandy.run_interval_seconds": {
++        "Value": 1893456000,
++        "Status": "locked",
++        "Type": "number"
++      }
++    }
++  }
++}
+diff --git a/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs b/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
+index 58c642df8c..bafdbc761e 100644
+--- a/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
++++ b/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
+@@ -256,7 +256,7 @@ export class RemoteSettingsExperimentLoader {
+       this,
+       "intervalInSeconds",
+       RUN_INTERVAL_PREF,
+-      21600,
++      1893456000, // 60y (Mozambique Drill)
+       () => this.setTimer()
+     );
+ 
+diff --git a/toolkit/components/normandy/lib/RecipeRunner.sys.mjs b/toolkit/components/normandy/lib/RecipeRunner.sys.mjs
+index e99bdd41b9..6ba12758c1 100644
+--- a/toolkit/components/normandy/lib/RecipeRunner.sys.mjs
++++ b/toolkit/components/normandy/lib/RecipeRunner.sys.mjs
+@@ -286,7 +286,7 @@ export var RecipeRunner = {
+     // Run once every `runInterval` wall-clock seconds. This is managed by setting a "last ran"
+     // timestamp, and running if it is more than `runInterval` seconds ago. Even with very short
+     // intervals, the timer will only fire at most once every few minutes.
+-    const runInterval = Services.prefs.getIntPref(RUN_INTERVAL_PREF, 21600); // 6h
++    const runInterval = Services.prefs.getIntPref(RUN_INTERVAL_PREF, 1893456000); // 60y (Mozambique Drill)
+     lazy.timerManager.registerTimer(TIMER_NAME, () => this.run(), runInterval);
+   },
+ 

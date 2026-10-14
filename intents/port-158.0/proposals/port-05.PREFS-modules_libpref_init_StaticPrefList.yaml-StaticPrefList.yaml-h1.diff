@@ -1,0 +1,13 @@
+diff --git a/modules/libpref/init/StaticPrefList.yaml b/modules/libpref/init/StaticPrefList.yaml
+index f88e7842de..a2a37ed222 100644
+--- a/modules/libpref/init/StaticPrefList.yaml
++++ b/modules/libpref/init/StaticPrefList.yaml
+@@ -302,7 +302,7 @@
+ 
+ - name: accessibility.tagged_pdf_output.enabled
+   type: bool
+-  value: true
++  value: false
+   mirror: always
+ 
+ # Whether to enable support for the UI Automation API on Windows. Values:

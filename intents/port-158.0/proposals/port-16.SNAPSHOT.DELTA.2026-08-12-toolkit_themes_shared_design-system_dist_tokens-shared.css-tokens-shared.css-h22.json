@@ -1,0 +1,17 @@
+{
+ "step": "port-16.SNAPSHOT.DELTA.2026-08-12-toolkit_themes_shared_design-system_dist_tokens-shared.css-tokens-shared.css-h22",
+ "reason": "adapted: 158 moved the hover/active button tokens out of this scope and dropped the ghost-hover/active/menu lines, but kept the muted tokens, which 158's moz-button.css uses. Gorilla's hover/active and destructive colours are set here; the muted tokens are KEPT so 158's muted buttons keep a background\nkeeps: --button-background-color-muted: light-dark(var(--color-gray-20), var(--color-gray-55));\nkeeps: --button-background-color-muted-hover: light-dark(var(--color-gray-30), var(--color-gray-45));\nkeeps: --button-background-color-muted-active: light-dark(var(--color-gray-40), var(--color-gray-35));\nkeeps: --button-background-color-muted-disabled: var(--button-background-color-muted);\nkeeps: --button-background-color-muted-selected: var(--button-background-color-muted-active);",
+ "files": [
+  "toolkit/themes/shared/design-system/dist/tokens-shared.css"
+ ],
+ "by": "cli",
+ "literal_check_said": [
+  "line should be gone: --button-background-color-muted: light-dark(var(--color-gray-20), var(--color-gray-55));",
+  "line should be gone: --button-background-color-muted-hover: light-dark(var(--color-gray-30), var(--color-gray-45));",
+  "line should be gone: --button-background-color-muted-active: light-dark(var(--color-gray-40), var(--color-gray-35));",
+  "line should be gone: --button-background-color-muted-disabled: var(--button-background-color-muted);",
+  "line should be gone: --button-background-color-muted-selected: var(--button-background-color-muted-active);"
+ ],
+ "meaning_check": "holds",
+ "t": "2026-10-14 20:16:41"
+}

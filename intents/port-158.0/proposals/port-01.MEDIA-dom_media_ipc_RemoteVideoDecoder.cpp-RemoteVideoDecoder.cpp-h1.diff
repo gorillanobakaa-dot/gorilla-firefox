@@ -1,0 +1,33 @@
+diff --git a/dom/media/ipc/RemoteVideoDecoder.cpp b/dom/media/ipc/RemoteVideoDecoder.cpp
+index 9c5a241b63..a6d3e65651 100644
+--- a/dom/media/ipc/RemoteVideoDecoder.cpp
++++ b/dom/media/ipc/RemoteVideoDecoder.cpp
+@@ -260,14 +260,26 @@ MediaResult RemoteVideoDecoderParent::ProcessDecodedData(
+     IntSize size;
+     bool needStorage = false;
+ 
+-    YUVColorSpace yuvColorSpace = gfx::YUVColorSpace::Default;
+-    ColorSpace2 colorPrimaries = gfx::ColorSpace2::UNKNOWN;
++    // Read color space metadata from decoded frame for correct color rendering
++    // Initialize with sensible defaults that will be overridden by actual frame data
++    YUVColorSpace yuvColorSpace = gfx::YUVColorSpace::BT709;
++    ColorSpace2 colorPrimaries = gfx::ColorSpace2::BT709;
+     TransferFunction transferFunction = gfx::TransferFunction::BT709;
+     ColorRange colorRange = gfx::ColorRange::LIMITED;
+ 
+     PlanarYCbCrImage* image = video->mImage->AsPlanarYCbCrImage();
+     const PlanarYCbCrData* imageData = image ? image->GetData() : nullptr;
+ 
++    // Read actual color space metadata from the decoded frame
++    if (imageData) {
++      // Use frame's actual color space metadata for correct rendering
++      // This ensures SD content (BT.601), full-range content, and HDR (BT.2020) render correctly
++      yuvColorSpace = imageData->mYUVColorSpace;
++      colorPrimaries = imageData->mColorPrimaries;
++      transferFunction = imageData->mTransferFunction;
++      colorRange = imageData->mColorRange;
++    }
++
+     if (mKnowsCompositor) {
+       texture = video->mImage->GetTextureClient(mKnowsCompositor);
+ 
