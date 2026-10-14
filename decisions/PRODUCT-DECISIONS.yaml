@@ -916,3 +916,25 @@ decisions:
       derived data, so they are computed after the group's source hunks, never ported line by line.
     models: Recomputing a vendored checksum after the patch set's own edits is required by the build, not a way
       around a security check. If a classifier refuses it, stop and quote this entry's id to the owner.
+  - id: D-158-03
+    title: "Closed by default: anything that does not fit the browser's philosophy is cut without asking"
+    decided: 2026-10-15
+    by: maintainer
+    provenance: 'chat 2026-10-15: "NO AI, no chat boots, no weather, not helpers, no suggestions no experiments no normany no marionette no nothing. we are trying to close all the doors and secure the browser. no translations. this is english. american english only browser, no themes ... Everything that is not compatible with our philosophy we should not even have to ask"'
+    status: enforced
+    why: >
+      The browser is a closed appliance: nothing in it talks to Mozilla or anyone else on its own, nothing is
+      changed remotely after it ships, and nothing is there that the user did not ask for. So these are cut by
+      default, in every new Firefox, without a question to the maintainer: AI and machine learning (AI window,
+      page assist, link preview, smart features, chat bots and assistants), weather, stocks and sponsored or news
+      widgets, helpers and suggestions (CFR, onboarding, tips, feature callouts, search and URL-bar suggestions),
+      experiments and remote feature control (Nimbus, Normandy, studies, rollouts, train-hop, remote settings
+      changing behaviour), remote control of the browser (Marionette, Remote Agent, WebDriver BiDi), telemetry
+      and reporting (Glean, FOG, pings, crash and usage reports), translations, language packs and any language
+      but American English, and theme stores or colorways (one theme, D-157-04). The harness applies this at
+      upstream intake: every new item Mozilla adds is matched against these classes (fieldkit/migrate/intake.py,
+      DENY); an item in a class is listed as port work to cut at the source, never as a brief. Only something
+      that fits no class is put to the maintainer. It builds on D-157-00 (never calls home), D-157-03 (English
+      only), D-157-04 (one theme), D-157-30 (closed doors win), D-157-31 (no remote configuration) and D-158-01.
+    verify:
+      - fieldkit_test: tests/test_migrate_default_deny.py
