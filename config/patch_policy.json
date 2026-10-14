@@ -1,0 +1,83 @@
+{
+  "_comment": "Linux (Debian) patch policy for the port flow (fieldkit build-harness start firefox). Derived 2026-10-14 from the Windows machine's config/patch_policy.json: same groups, same order, Linux statuses. The Windows file disabled 01.MEDIA and excluded the GTK, socket and font patches because they are Linux code; here they are the point. Every status carries its reason; change the reason when you change the status.",
+  "patchset_root": "patches",
+  "fuzz": 3,
+  "_fuzz_note": "patch --fuzz=3 as on Windows (recreate_success.sh lineage). The replay proof applies with --fuzz=0 and is the stricter judge of the exported set.",
+  "groups": {
+    "01.MEDIA": {
+      "status": "enabled",
+      "reason": "VA-API / VDPAU / PulseAudio: the Linux media group. Disabled on Windows (DXVA2/WASAPI), it is the reason this build exists on Linux: hardware H.264 only, the 6-layer codec gate (GOLDEN_RULES)."
+    },
+    "02.GPU": {
+      "status": "enabled",
+      "reason": "Gecko's graphics blocklist patches, cross-platform; on Linux widget/gtk/GfxInfo.cpp is included (Windows excluded it)."
+    },
+    "03.NETWORKING": {
+      "status": "enabled",
+      "reason": "C++ patches in netwerk/. nsSocketTransport2.cpp was excluded on Windows; on Linux it is applied and must be verified against 158 (first port)."
+    },
+    "04.PERFORMANCE": {
+      "status": "enabled",
+      "reason": "Expected platform-neutral (Windows verified nothing assumes a Linux scheduler; here the scheduler IS Linux)."
+    },
+    "05.PREFS": {
+      "status": "enabled",
+      "reason": "Baked-in prefs. NEW_FILES carries a mozconfig that is NOT used: the Linux build uses the repository's mozconfig (clang-21, lld, sccache, Wayland)."
+    },
+    "06.QUOTA": {
+      "status": "enabled",
+      "reason": "Storage quota, platform-neutral."
+    },
+    "07.TOOLKIT": {
+      "status": "enabled",
+      "reason": "AI feature removal, cross-platform JS/C++."
+    },
+    "08.Look": {
+      "status": "enabled",
+      "reason": "Locale patches and the browser/branding/gorilla tree. Windows installer assets inside it are inert on Linux; the .deb takes its icon from deb_template."
+    },
+    "09.REMOTE": {
+      "status": "enabled",
+      "reason": "Marionette / CDP / WebDriver lockout, cross-platform."
+    },
+    "10.OVERRIDES": {
+      "status": "enabled",
+      "reason": "NEW_FILES only (user.js); apply.sh never copies user.js into the tree."
+    },
+    "11.FONT.SYSTEM": {
+      "status": "enabled",
+      "reason": "The font system: Microsoft fonts are fetched by scripts/fonts-microsoft.sh and shipped inside the .deb (settled 2026-08-03); browser/fonts/moz.build is included here (Windows excluded it)."
+    },
+    "12.MOZAMBIQUE.DRILL": {
+      "status": "enabled",
+      "reason": "RecipeRunner / RemoteSettingsExperimentLoader timer neutralisation, cross-platform JS."
+    },
+    "13.TELEMETRY.KILL": {
+      "status": "enabled",
+      "reason": "GLEAN_DISABLED injection plus policies.json, cross-platform."
+    },
+    "14.EGRESS.LOCKDOWN": {
+      "status": "enabled",
+      "reason": "No .patch files; documentation or NEW_FILES only."
+    },
+    "16.SNAPSHOT.DELTA.2026-08-12": {
+      "status": "enabled",
+      "reason": "The 2026-08-12 completeness sweep from the LINUX build tree: one patch per changed file. The generated activity-stream bundle stays excluded (generated output, regenerate instead); the dom/media patches Windows excluded are Linux media and are included.",
+      "exclude": [
+        "browser_extensions_newtab_data_content_activity-stream.bundle.js.patch"
+      ]
+    },
+    "20.SNAPSHOT.DELTA.155.0.1": {
+      "status": "enabled",
+      "reason": "The 155.0.1 snapshot delta the 157 port started from: bundled uBlock Origin, the AIWindow stub, built-in extensions. Platform-neutral."
+    },
+    "21.PORT.FIXES.157": {
+      "status": "enabled",
+      "reason": "The 157 port's repairs, exported by the harness on Windows: excision creep, a misplaced hunk, a broken override. Cross-platform source."
+    },
+    "22.EGRESS.LOCKDOWN.157": {
+      "status": "enabled",
+      "reason": "Every privacy cut made in source for 157 (telemetry, Remote Settings, Normandy, hidden about: pages). Cross-platform; 80 patches, 57 files touched by more than one patch: a stacked series, apply in order only."
+    }
+  }
+}
