@@ -1,12 +1,880 @@
-# Version: 0.1.0 · updated 26-10-14-18-35
-# The maintainer's product decisions for the build (Linux and Windows), each one a check the harness runs:
-#   /home/gorilla/.local/bin/fieldkit build-harness decisions firefox-158-linux
-# ONE register for Linux and Windows, like the one patch set (SETTLED 2026-10-14). Both harnesses read this file.
-# An entry may name `platforms: [linux]` or `[windows]`; absent means both. Started on Linux 2026-10-14; the Windows
-# side merges any entries it already holds into THIS file, then reads it from here.
-release: firefox-158-linux
+# Version: 1.0.0 · updated 26-10-14-18-38
+# ONE register for Linux and Windows, like the one patch set (SETTLED 2026-10-14). Both harnesses read it:
+#   /home/gorilla/.local/bin/fieldkit build-harness decisions TASK
+# D-157-00..42 come from the Windows owner repo (Gorilla.firefox, last changed 2026-10-09, commit 6f2d835),
+# copied on 2026-10-14. Since then only platform tags and Linux twin checks were added (D-157-01, D-157-22).
+# D-158-* were added on Linux. A whole entry may say `platforms: [linux]` or `[windows]`, a single check
+# `platform: linux` or `windows`; absent means both. Paths under gorilla-patchset/ resolve to the patch set,
+# which is a subfolder of the owner repo on Windows and the harness folder itself on Linux.
+# Gorilla Firefox: the maintainer's product decisions, each one a check.
+#
+# Every build is checked against this file: `fieldkit build-harness decisions <task>` and the post-install
+# "decisions" row. A release and the regression baseline need every entry ENFORCED (--strict): a PENDING entry
+# blocks them. The baseline records this file's sha256, so "the baseline" always means "this build, with these
+# decisions".
+#
+# Rules:
+# - Only the maintainer decides. An agent may ADD an entry with status: pending and provenance naming where the
+#   maintainer said it; it never changes a decision's meaning, never sets status: retired, and never deletes one.
+#   Commits to this file go through the pre-commit hook (GORILLA_OWNER_APPROVED=1, set by the maintainer only).
+# - status: enforced needs at least one verify check. A decision nobody verifies is forgotten (that is how decisions
+#   from an earlier port were lost).
+# - why: what the user gains and what it costs them. Convenience matters: a protection users hate gets switched off.
+# - Check kinds: see fieldkit/buildh/decisions.py.
+
+release: "157.0"
+
 decisions:
-  - id: no-remote-control
+
+  - id: D-157-00
+    title: "THE RULE: this browser never calls home"
+    decided: 2026-10-02
+    by: maintainer
+    provenance: chat 2026-10-02 ("THIS BROWSER NEVER CALLS HOME. this browser is a privacy and security hardened browser ... We are going to make only a few compromises but only minor ones")
+    status: enforced
+    why: >
+      Gorilla contacts only the sites the user opens. No Mozilla, Google, Microsoft, Cloudflare or certificate
+      authority is contacted on the browser's own initiative: no telemetry, updates, experiments, suggestions,
+      pings, prefetch, location or background downloads. Security wins over convenience; the only compromises are
+      the ones listed in this file as trade-offs (D-157-08 captchas, D-157-12 video). Any new Firefox feature that
+      calls out is cut at the source before a release, and every cut is checked here or by the leak gate. Cost:
+      features that need a server (sync, suggestions, translations, location, automatic updates) do not exist.
+    verify:
+      - fieldkit_test: tests/test_leakgate.py
+
+  - id: D-157-01
+    title: No automatic updates
+    decided: 2026-10-02
+    by: maintainer
+    provenance: chat 2026-10-02 (reaffirmed; decided for the Debian build before)
+    status: enforced
+    why: >
+      The browser never downloads or installs anything by itself and never contacts an update server. To update, the
+      user downloads a new build and replaces the old one. Cost: updates are manual.
+    verify:
+      - mozconfig_has: {file: config/mozconfig.win64, platform: windows, text: "ac_add_options --disable-updater"}
+      - mozconfig_has: {file: gorilla-patchset/mozconfig, text: "ac_add_options --disable-updater"}
+      - mozconfig_has: {file: config/mozconfig.win64, platform: windows, text: "ac_add_options --disable-maintenance-service"}
+      - installed_absent: [updater.exe, maintenanceservice.exe, maintenanceservice_installer.exe, updater.ini]
+      - tree_contains: {path: toolkit/modules/UpdateUtils.sys.mjs, text: "PHYSICAL LOCK (D-157-01): nothing about updates is written outside the profile"}
+
+  - id: D-157-02
+    title: "Content sandbox: level 4 on Linux; Mozilla's own Windows level on Windows"
+    decided: 2026-10-02
+    by: maintainer
+    provenance: chat 2026-10-02 ("make the 4 linux-only, keep 9 on windows")
+    status: enforced
+    why: >
+      Level 4 is the strict setting on Linux; Windows uses a different scale where Mozilla's default is its strictest.
+      Forcing the Linux number on Windows weakened the Windows sandbox. Users notice nothing.
+    verify:
+      - tree_contains: {path: modules/libpref/init/all.js, text: "#ifdef XP_LINUX\npref(\"security.sandbox.content.level\", 4);\n#endif"}
+
+  - id: D-157-03
+    title: English only - no language packs, no translations, no locale switching
+    decided: 2026-10-02
+    by: maintainer
+    provenance: chat 2026-10-02 ("Gorilla browser was an english only ... no translation"); same on the Debian build
+    status: enforced
+    audit: >
+      2026-10-02 audit of build 11: only en-US ships (res/multilocale.txt, localization/en-US only). Gaps:
+      intl.multilingual.enabled and downloadEnabled ship TRUE (Gorilla's false lines in firefox.js are overridden by
+      Mozilla's later RELEASE_OR_BETA block; the same bug was in 155.0.1), so Settings offers a language switcher.
+      Translations are disabled in code with locked prefs, but the code and its model/wasm dumps still ship.
+    why: >
+      One language means no translation engine (which downloads models and sends text) and no language-pack add-ons
+      (a side door for extensions). Cost: the interface is English only.
+    verify:
+      - pref: {name: intl.multilingual.enabled, value: false, locked: true}
+      - pref: {name: intl.multilingual.downloadEnabled, value: false, locked: true}
+      - pref: {name: browser.translations.enable, value: false, locked: true}
+      - omni_absent: [chrome/toolkit/content/global/translations/, translations/, defaults/settings/main/translations-models.json, defaults/settings/main/translations-wasm.json]
+
+  - id: D-157-04
+    title: One theme only - the Gorilla dark theme (pink tabs, cyan borders); no switching to light or any other theme
+    decided: 2026-10-02
+    by: maintainer
+    provenance: chat 2026-10-02 ("Gorilla browser had only one theme OUR, the approved one")
+    status: enforced
+    audit: >
+      2026-10-02 audit of build 11: NOT locked. Mozilla's light, dark and alpenglow themes and the "System theme -
+      auto" default still ship (also in 155.0.1); installing themes is blocked but enabling a built-in one is not,
+      and Settings links to the theme list. The Gorilla look is patched CSS (master-redirect.css, !important), so
+      most colours survive another theme, but the background image does not. ui.systemUsesDarkTheme = 1 and
+      browser.theme.content-theme = 0 ship unlocked.
+    why: >
+      One approved look, no theme add-ons (themes are add-ons: a side door), nothing for a page to fingerprint by
+      theme. Cost: no choice of look. Web pages keep their own dark mode: this is about the browser's frame.
+    verify:
+      - omni_absent: [chrome/browser/content/builtin-themes/light/, chrome/browser/content/builtin-themes/dark/, chrome/browser/content/builtin-themes/alpenglow/]
+      - pref: {name: ui.systemUsesDarkTheme, value: 1, locked: true}
+      - pref: {name: browser.theme.content-theme, value: 0, locked: true}
+
+  - id: D-157-05
+    title: No extensions except uBlock Origin
+    decided: 2026-10-02
+    by: maintainer
+    provenance: chat 2026-10-02 (reaffirmed; "the only exception was the addblock")
+    status: enforced
+    audit: >
+      2026-10-02 audit of build 11: PARTLY. uBlock Origin is bundled and every install route (file, website,
+      about:addons, themes, language packs) is cut in XPIInstall/AddonManager. Gaps: about:debugging "Load Temporary
+      Add-on" bypasses the cuts (installTemporaryAddon), and devtools.chrome.enabled / devtools.debugger.remote-enabled
+      ship true (not an official build), which opens the chrome-privileged Browser Console.
+    why: >
+      Extensions are the biggest privacy side door in a browser. uBlock Origin stays because it removes ads and
+      trackers and its filter-list updates are its own. Cost: no other add-ons, and uBlock itself updates only with a
+      new Gorilla build.
+    verify:
+      - pref: {name: devtools.chrome.enabled, value: false, locked: true}
+      - pref: {name: devtools.debugger.remote-enabled, value: false, locked: true}
+      - tree_contains: {path: toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs, text: "GORILLA UNLEASHED - PHYSICAL LOCK: no temporary add-ons"}
+
+  - id: D-157-06
+    title: "Fingerprinting: the light protection on and locked; the Tor-style mode off and NOT locked; local time kept"
+    decided: 2026-10-02
+    by: maintainer
+    provenance: chat 2026-10-02 (option 3, recommended variant; "let's keep the local hour ... the feedback was really strong")
+    status: enforced
+    why: >
+      fingerprintingProtection blurs what sites can measure (canvas and others) while keeping local time, page dark
+      mode and per-site zoom: almost nobody notices it. resistFingerprinting forces UTC time, light pages, en-US and
+      canvas prompts; users rejected that before, so it is opt-in. No GPU model string, no local network
+      candidates hidden by mDNS in WebRTC (no_host lock removed 2026-10-03 on the owner's word: "1 yes remove no_host" - it broke same-LAN calls). No motion or orientation sensors. Location: see D-157-13.
+    verify:
+      - pref: {name: privacy.fingerprintingProtection, value: true, locked: true}
+      - pref: {name: privacy.resistFingerprinting, value: false, locked: false}
+      - pref: {name: privacy.resistFingerprinting.letterboxing, value: false}
+      - pref: {name: webgl.enable-debug-renderer-info, value: false, locked: true}
+      - pref: {name: media.peerconnection.ice.no_host, value: false, locked: false}
+      - pref: {name: device.sensors.enabled, value: false, locked: true}
+
+  - id: D-157-07
+    title: "Revocation: offline only - the revocation list ships inside each build; no OCSP, no Remote Settings, no calls"
+    decided: 2026-10-02
+    by: maintainer
+    provenance: chat 2026-10-02 ("de fapt vreau lista offline ... sa ai cat mai putina comunicare cu orice site posibil ... doesn't call home"; replaces the earlier "B after the CRLite check" and "A+D")
+    status: enforced
+    why: >
+      The browser does not call home and does not ask certificate authorities about the sites the user visits.
+      Revoked intermediate certificate authorities are still refused, from the list bundled in the build (OneCRL,
+      loaded at startup without any network). Cost, stated in the public privacy report: revocation of ordinary
+      site certificates is not checked, and the bundled list is only as fresh as the build. Releases are about
+      monthly, and each port takes Mozilla's newest dump from the release source.
+    audit: >
+      2026-10-02: CRLite cannot work (its filters come only through Remote Settings, which is cut) and with CRLite in
+      enforce mode Firefox already skipped live OCSP for public sites; the bundled OneCRL dump (1,880 records, June
+      2026 in 157.0) was never applied, because records reach certificate storage only on a sync event.
+    verify:
+      - pref: {name: security.OCSP.enabled, value: 0, locked: true}
+      - tree_contains: {path: security/manager/ssl/RemoteSecuritySettings.sys.mjs, text: "GORILLA UNLEASHED - PHYSICAL LOCK: offline OneCRL"}
+      - tree_contains: {path: services/settings/dumps/security-state/onecrl.json, text: "\"data\""}
+
+  - id: D-157-12
+    title: "The video compromise: Widevine (Netflix, YouTube films) and OpenH264 (video calls), fetched only when a page needs them"
+    decided: 2026-10-02
+    by: maintainer
+    provenance: chat 2026-10-02 ("netflix and youtube ... people need these ... and from time to time to make webrtc video calls... let's keep that")
+    status: enforced
+    why: >
+      Without them protected films do not play and some video calls fail. They cannot be shipped inside the build
+      (their licences forbid it), so they are downloaded - but only when a page actually asks for protected video
+      or a call needs H.264, never at startup or in the background, and straight from the makers (Google, Cisco)
+      using addresses and checksums built into Gorilla, never through Mozilla's update server.
+    verify:
+      - pref: {name: media.eme.enabled, value: true, locked: true}
+      - pref: {name: media.gmp-widevinecdm.enabled, value: true, locked: true}
+      - pref: {name: media.gmp-gmpopenh264.enabled, value: true, locked: true}
+      - tree_contains: {path: toolkit/modules/GMPInstallManager.sys.mjs, text: "GORILLA UNLEASHED - PHYSICAL LOCK: video plugins on demand"}
+
+  - id: D-157-13
+    title: No location, ever
+    decided: 2026-10-02
+    by: maintainer
+    provenance: chat 2026-10-02 ("location? ... this is not a mobile browser ... no location in this browser")
+    status: enforced
+    why: >
+      Sites cannot ask where the user is; neither Mozilla's nor Windows' (Microsoft's) location service is used.
+      Cost: "find me on the map" and "nearest shop" need the address typed in.
+    verify:
+      - pref: {name: geo.enabled, value: false, locked: true}
+      - pref: {name: geo.provider.ms-windows-location, value: false, locked: true}
+      - pref: {name: permissions.default.geo, value: 2, locked: true}
+
+  - id: D-157-14
+    title: No speculative connections, prefetch, DNS prefetch, hyperlink pings or beacons
+    decided: 2026-10-02
+    by: maintainer
+    provenance: chat 2026-10-02 ("no bullshit downloads in the background from other pages ... No pings")
+    status: enforced
+    why: >
+      The browser connects only to what the user opens: nothing for links merely hovered, guessed or prefetched,
+      and pages cannot fire tracking pings or beacons on the way out. Cost: a first click may feel a few
+      milliseconds slower.
+    verify:
+      - pref: {name: browser.urlbar.speculativeConnect.enabled, value: false, locked: true}
+      - pref: {name: browser.places.speculativeConnect.enabled, value: false, locked: true}
+      - pref: {name: network.http.speculative-parallel-limit, value: 0, locked: true}
+      - pref: {name: network.dns.disablePrefetch, value: true, locked: true}
+      - pref: {name: network.prefetch-next, value: false, locked: true}
+      - pref: {name: browser.send_pings, value: false, locked: true}
+      - pref: {name: beacon.enabled, value: false, locked: true}
+      - pref: {name: network.early-hints.preconnect.enabled, value: false, locked: true}
+      - pref: {name: network.preconnect, value: false, locked: true}
+      - pref: {name: network.early-hints.enabled, value: false, locked: true}
+
+  - id: D-157-15
+    title: No MITM-detection ping to Mozilla
+    decided: 2026-10-02
+    by: maintainer
+    provenance: chat 2026-10-02 ("cut all five leaks and close every avenue")
+    status: enforced
+    why: >
+      On an unknown-issuer certificate error the browser used to ask mitmdetection.services.mozilla.com. Cut. Cost:
+      the error page no longer guesses that antivirus or a proxy is intercepting.
+    verify:
+      - pref: {name: security.certerrors.mitm.priming.enabled, value: false, locked: true}
+      - tree_contains: {path: toolkit/actors/NetErrorParent.sys.mjs, text: "GORILLA UNLEASHED - PHYSICAL LOCK: no MITM priming"}
+
+  - id: D-157-16
+    title: Web pages may not probe the local network or this computer without asking
+    decided: 2026-10-02
+    by: maintainer
+    provenance: chat 2026-10-02 ("close every avenue")
+    status: enforced
+    why: >
+      A public page can no longer scan the router, printers or local services silently. Cost: a page that really
+      talks to a local device (router admin, casting) asks first.
+    verify:
+      - pref: {name: network.lna.blocking, value: true, locked: true}
+      - tree_contains: {path: netwerk/protocol/http/DnsAndConnectSocket.cpp, text: "PHYSICAL LOCK (D-157-16): the local-network check runs BEFORE the connection"}
+      - tree_contains: {path: netwerk/protocol/http/nsHttpChannel.cpp, text: "PHYSICAL LOCK (D-157-16): local network access through a proxy"}
+
+  - id: D-157-17
+    title: "Windows: no single sign-on, no trust in the Windows certificate store"
+    decided: 2026-10-02
+    by: maintainer
+    provenance: chat 2026-10-02 ("privacy and security hardened browser ... the users can suck it")
+    status: enforced
+    why: >
+      Windows account credentials are never sent to Microsoft logins, and certificates added to Windows by
+      antivirus, proxies or employers are not trusted, so HTTPS cannot be silently intercepted. Cost: antivirus
+      "HTTPS scanning" and corporate inspection proxies produce certificate errors.
+    verify:
+      - pref: {name: network.http.windows-sso.enabled, value: false, locked: true}
+      - pref: {name: security.enterprise_roots.enabled, value: false, locked: true}
+      - pref: {name: security.certerrors.mitm.auto_enable_enterprise_roots, value: false, locked: true}
+
+  - id: D-157-18
+    title: No third-party DNS (no DNS-over-HTTPS, no rollout to Cloudflare)
+    decided: 2026-10-02
+    by: maintainer
+    provenance: chat 2026-10-02 ("THIS BROWSER NEVER CALLS HOME")
+    status: enforced
+    why: >
+      DNS goes to the system's own resolver only; no DNS provider is chosen for the user by region. Cost: the
+      internet provider sees which names are looked up (as with every other program on the computer).
+    verify:
+      - pref: {name: network.trr.mode, value: 5, locked: true}
+
+  - id: D-157-19
+    title: No remote download verdicts, search suggestions, search-engine updates or region lookups
+    decided: 2026-10-02
+    by: maintainer
+    provenance: chat 2026-10-02 ("close every avenue")
+    status: enforced
+    why: >
+      Nothing typed in the address bar leaves the computer before Enter; downloaded files are not described to
+      Google; the browser never asks where it is. Cost: no search suggestions while typing.
+    verify:
+      - pref: {name: browser.safebrowsing.downloads.remote.enabled, value: false, locked: true}
+      - pref: {name: browser.search.suggest.enabled, value: false, locked: true}
+      - pref: {name: browser.search.update, value: false, locked: true}
+      - pref: {name: browser.region.update.enabled, value: false, locked: true}
+
+  - id: D-157-20
+    title: No backup feature (its default folder is OneDrive) and no profile manager (its tour loads Mozilla CDN images)
+    decided: 2026-10-02
+    by: maintainer
+    provenance: chat 2026-10-02 ("close every avenue"); no OneDrive or cloud sync, ever
+    status: enforced
+    why: >
+      Cost: no built-in profile backup or profile switcher; copy the profile folder by hand.
+    verify:
+      - pref: {name: browser.backup.enabled, value: false, locked: true}
+      - pref: {name: browser.profiles.enabled, value: false, locked: true}
+
+  - id: D-157-21
+    title: Dormant reporting and update machinery switched off as well as cut
+    decided: 2026-10-02
+    by: maintainer
+    provenance: chat 2026-10-02 ("no faking calling home")
+    status: enforced
+    why: >
+      Code paths were already cut at the source; the prefs now say so too, so nothing can wake them.
+    verify:
+      - pref: {name: extensions.update.enabled, value: false, locked: true}
+      - pref: {name: extensions.systemAddon.update.enabled, value: false, locked: true}
+      - pref: {name: datareporting.usage.uploadEnabled, value: false, locked: true}
+      - pref: {name: network.connectivity-service.enabled, value: false, locked: true}
+      - pref: {name: extensions.ml.enabled, value: false, locked: true}
+      - pref: {name: browser.newtabpage.activity-stream.discoverystream.sections.personalization.enabled, value: false, locked: true}
+
+  - id: D-157-22
+    title: Every build configuration carries every disable (no stale mozconfig)
+    decided: 2026-10-02
+    by: maintainer
+    provenance: chat 2026-10-02 ("fix everything that needs to be fixed"); the patch-set copy of the Windows mozconfig had lost three disables
+    status: enforced
+    why: >
+      Rebuilding from the patch set must give the same browser: no default-browser agent (it reported daily), no
+      speech API, no Wi-Fi scanning.
+    verify:
+      - mozconfig_has: {file: gorilla-patchset/windows/mozconfig.win64, text: "ac_add_options --disable-default-browser-agent"}
+      - mozconfig_has: {file: gorilla-patchset/windows/mozconfig.win64, text: "ac_add_options --disable-webspeech"}
+      - mozconfig_has: {file: gorilla-patchset/windows/mozconfig.win64, text: "ac_add_options --disable-necko-wifi"}
+      - mozconfig_has: {file: config/mozconfig.win64, platform: windows, text: "ac_add_options --disable-default-browser-agent"}
+      - mozconfig_has: {file: gorilla-patchset/mozconfig, text: "ac_add_options --disable-default-browser-agent"}
+      - mozconfig_has: {file: gorilla-patchset/mozconfig, text: "ac_add_options --disable-webspeech"}
+      - mozconfig_has: {file: gorilla-patchset/mozconfig, text: "ac_add_options --disable-necko-wifi"}
+
+  - id: D-157-23
+    title: "Search: no partner code sent with searches"
+    decided: 2026-10-02
+    by: maintainer
+    provenance: chat 2026-10-02 ("no faking calling home")
+    status: enforced
+    why: >
+      Searches no longer carry Mozilla's partner code (client=firefox-b-d), which tells the search engine the
+      request came from a Firefox build. Cost: none visible.
+    verify:
+      - tree_lacks: {path: services/settings/dumps/main/search-config-v2.json, text: "firefox-b-d"}
+
+  - id: D-157-24
+    title: Gorilla branding everywhere, and every logo crisp (no Nightly leftovers)
+    decided: 2026-10-02
+    by: maintainer
+    provenance: 'chat 2026-10-02, screenshot of the About window ("the window where it says... Nightly... the image is blurry")'
+    status: enforced
+    why: >
+      The About window showed Mozilla's "Nightly" wordmark and a logo made from a soft copy (edge energy 12.6 where
+      the master gives 29.3). Every logo raster must come from the master, and no Nightly or Mozilla update link may
+      remain. The existing logo check only looked at about-logo.svg, so the PNGs went unchecked.
+    verify:
+      - image_sharp: {path: browser/branding/gorilla/content/about-logo.png, master: "owner:gorilla-patchset/deb_template/usr/share/icons/hicolor/1024x1024/apps/gorilla-unleashed.png"}
+      - tree_lacks: {path: browser/branding/gorilla/content/about-wordmark.svg, text: "m334.11 76.65"}
+      - tree_lacks: {path: browser/branding/gorilla/pref/firefox-branding.js, text: "nightly.mozilla.org"}
+
+  - id: D-157-25
+    title: "Safe Browsing (malware, phishing) and captive-portal detection are OFF: the build wins over old docs and the audit script"
+    decided: 2026-10-03
+    by: maintainer
+    provenance: 'chat 2026-10-03, consistency briefs CONS-001..005, owner answer: "1 build, 2 restore, 3 build, 4 as is, 5 make true"'
+    status: enforced
+    why: >
+      Both need Google or Mozilla servers (list updates, portal probes), which breaks D-157-00. The 05.PREFS log
+      ("deliberately KEPT ON") and KEPT_DOORS in audit_privacy_claims.py are corrected to match. Cost: no built-in
+      phishing/malware lists (uBlock still blocks known bad hosts); hotel/airport Wi-Fi login pages must be opened by hand.
+    verify:
+      - pref: {name: browser.safebrowsing.malware.enabled, value: false, locked: true}
+      - pref: {name: browser.safebrowsing.phishing.enabled, value: false, locked: true}
+      - pref: {name: network.captive-portal-service.enabled, value: false, locked: true}
+
+  - id: D-157-26
+    title: "distribution/policies.json is restored: the redundant runtime lock (the Mozambique drill's policy layer) ships in every install"
+    decided: 2026-10-03
+    by: maintainer
+    provenance: 'chat 2026-10-03, consistency briefs CONS-001..005, owner answer: "1 build, 2 restore, 3 build, 4 as is, 5 make true"'
+    status: enforced
+    why: >
+      The policy file re-locks Normandy, experiments and other doors at runtime even if a pref were somehow changed.
+      It was in the tree but missing from the 155.0.1 and 157 installs. Invisible to users.
+    verify:
+      - installed_present: [distribution/policies.json]
+
+  - id: D-157-27
+    title: "Add-on updates stay OFF (D-157-21): the audit script's KEPT_DOORS is corrected"
+    decided: 2026-10-03
+    by: maintainer
+    provenance: 'chat 2026-10-03, consistency briefs CONS-001..005, owner answer: "1 build, 2 restore, 3 build, 4 as is, 5 make true"'
+    status: enforced
+    why: >
+      Update checks would contact Mozilla. uBlock Origin updates with each new Gorilla build; its filter lists update
+      by themselves. The add-on blocklist stays as it ships.
+    verify:
+      - pref: {name: extensions.update.enabled, value: false, locked: true}
+
+  - id: D-157-28
+    title: "Cookies, sessions and site storage are kept on shutdown (accepted as is)"
+    decided: 2026-10-03
+    by: maintainer
+    provenance: 'chat 2026-10-03, consistency briefs CONS-001..005, owner answer: "1 build, 2 restore, 3 build, 4 as is, 5 make true"'
+    status: trade-off
+    why: >
+      Users stay logged in after a restart. Clearing on shutdown is better for privacy but logs everyone out every time;
+      users can still clear data themselves. Recorded so the shipped value is a decision, not an accident.
+
+  - id: D-157-29
+    title: "Glean instrumentation is cut from nsSocketTransport2 at the source, so the public wording (removed) is true"
+    decided: 2026-10-03
+    by: maintainer
+    provenance: 'chat 2026-10-03, consistency briefs CONS-001..005, owner answer: "1 build, 2 restore, 3 build, 4 as is, 5 make true"'
+    status: enforced
+    audit: >
+      2026-10-04: the source cut is in (patch 22.EGRESS.LOCKDOWN.157/037, three PHYSICAL LOCK comments in
+      nsSocketTransport2.cpp, no glean:: call left); the check named in pending_on is added and the entry enforced,
+      as pending_on said. Builds 18 to 21 carry the cut.
+    why: >
+      WHAT-WE-CHANGED says Glean was removed from nsSocketTransport2, while the 157 tree still has gated glean:: calls.
+      Make the sentence true. No user impact.
+    verify:
+      - tree_lacks: {path: netwerk/base/nsSocketTransport2.cpp, text: "glean::"}
+      - tree_contains: {path: netwerk/base/nsSocketTransport2.cpp, text: "PHYSICAL LOCK: no Glean in nsSocketTransport2 (D-157-29)"}
+
+  - id: D-157-30
+    title: "Standing decision policy: speed, responsiveness, low RAM and closed doors win, unless a recorded trade-off says otherwise"
+    decided: 2026-10-03
+    by: maintainer
+    provenance: 'chat 2026-10-03: "the user prefers anything that speeds up download and upload speeds, improve the firefox responsiveness, minimizes the RAM memory usage footprint. closes open doors left by glean foag telemetry etc etc. that should help you take decisions automatically. the only trade offs are the ones recorded"'
+    status: trade-off
+    why: >
+      When a brief's options differ only in these terms, the option that is faster (download, upload, latency,
+      responsiveness), lighter (RAM) or closes a reporting/telemetry door is chosen without asking, and recorded with
+      this entry as its provenance. Exceptions are only the recorded trade-offs (e.g. D-157-28: users stay logged in,
+      because re-entering e-mail passwords after every restart drew complaints; D-157-12 video). Anything that opens a
+      network door, weakens security, or touches a recorded trade-off still needs the maintainer.
+
+  - id: D-157-31
+    title: "No remote configuration or experiment control plane: nothing can change the browser after the binary has shipped"
+    decided: 2026-10-03
+    by: maintainer
+    provenance: 'chat 2026-10-03: "trebuie sa tinem Normandy and all the other shitty experiments turned off... I had enough of mozilla and their sneaky way of prefFlips .... Anything that gives Firefox a remote configuration and experimentation control plane that can change parts of the browser after the binary has shipped is a big no no"; and on the new tab Nimbus wait: "putem ori sa eiminam asta ori sa o highjack it?" (eliminated)'
+    status: enforced
+    audit: >
+      2026-10-03, build 19: the new tab and start page were blank. Firefox 157 builds the page only after Nimbus's
+      newtabTrainhop feature reports ready; Normandy is cut (the only caller of ExperimentAPI.init in 157), so Nimbus
+      never answered. The same feature carries "train-hop": Mozilla can replace the whole new-tab page with an XPI
+      downloaded from archive.mozilla.org and push layout, ads, widget and default-pref changes to it.
+    why: >
+      The browser you install is the browser you run: no experiment, rollout, pref flip or remotely delivered page
+      can change it afterwards. Normandy, Nimbus and the Mozambique Drill stay off; the new tab no longer waits for
+      Nimbus, and train-hop is cut at the source. Cost: none for users; new-tab fixes arrive only with a new build.
+    verify:
+      - tree_lacks: {path: browser/modules/AboutNewTab.sys.mjs, text: "nimbusFeature.ready()"}
+      - tree_contains: {path: browser/components/newtab/AboutNewTabResourceMapping.sys.mjs, text: "PHYSICAL LOCK (D-157-31): no train-hop"}
+      - tree_contains: {path: browser/components/newtab/AboutNewTabResourceMapping.sys.mjs, text: "PHYSICAL LOCK (D-157-31): never download or install a newtab XPI"}
+      - tree_contains: {path: browser/extensions/newtab/lib/PrefsFeed.sys.mjs, text: "PHYSICAL LOCK (D-157-31): nothing sent by Mozilla reconfigures the new tab"}
+      - tree_contains: {path: toolkit/components/normandy/Normandy.sys.mjs, text: "PHYSICAL LOCK: Normandy never initialises"}
+      - tree_contains: {path: services/settings/Utils.sys.mjs, text: "the data built into this binary is always used"}
+      - tree_contains: {path: browser/components/aboutwelcome/actors/AboutWelcomeParent.sys.mjs, text: "PHYSICAL LOCK (D-157-31): about:welcome never starts or waits for Nimbus"}
+      - tree_contains: {path: browser/components/defaultlaunchonlogin/DefaultLaunchOnLogin.sys.mjs, text: "PHYSICAL LOCK (D-157-31): never start or wait for Nimbus"}
+      - tree_contains: {path: toolkit/components/backgroundtasks/BackgroundTasksUtils.sys.mjs, text: "PHYSICAL LOCK (D-157-31): background tasks never start Nimbus"}
+      - tree_contains: {path: toolkit/components/search/ConfigSearchEngine.sys.mjs, text: "PHYSICAL LOCK (D-157-31, D-157-23): search URLs never take parameters from Nimbus"}
+      - fieldkit_test: tests/test_buildh_techniques.py
+      - pref: {name: browser.newtabpage.trainhopAddon.xpiBaseURL, value: "", locked: true}
+      - pref: {name: app.normandy.enabled, value: false, locked: true}
+      - pref: {name: messaging-system.rsexperimentloader.enabled, value: false, locked: true}
+      - pref: {name: nimbus.rollouts.enabled, value: false, locked: true}
+
+  - id: D-157-32
+    title: "Gorilla.Satellite mode is a switch every user can find: in Settings and on the toolbar, in plain words, complete"
+    decided: 2026-10-04
+    by: maintainer
+    provenance: 'chat 2026-10-04: "NUmele butonui trebuie sa fie usor de inteles . Gorilla.Satellite mode, si on hover o explicatie mai lunga,,,, facut sa mearga pe retele de 5 KB pe secundca ... none of this marketing bullshit coming soon or preview"; then "make it easy to find and quite preeminent and visible ... place it on the upper corner bar in that emprty sapce ... between the url search bar and ... ublock origin and the hamburger"'
+    status: enforced
+    audit: >
+      2026-10-04, before build 23: proved on a copy of the unpacked build (fieldkit probes satellite-settings and
+      satellite-button): the Settings switch is on the General page with its three levels and hover text over each
+      whole row; the toolbar button sits right after the address bar, shows "Gorilla.Satellite mode: Off" and changes
+      to the level chosen from its menu; each menu level shows its long explanation on hover; every level sets its
+      prefs and Off restores the shipped values.
+    why: >
+      Satellite mode was only a pref (gorilla.linkmode) that nobody would find. Users in the field are not
+      terminal-literate: the switch has to be where they look, say what it does, and explain itself on hover. Three
+      levels: Off; Satellite (fast but far: no autoplay or video preload, longer timeouts, pages kept on disk); Very
+      slow link (down to 5 KB/s: also no pictures, no web fonts, Save-Data, 6 connections per site). The words live in
+      one file (browser/gorillaSatellite.ftl) that Settings and the button both read, so they cannot disagree.
+      Nothing is sent anywhere. Cost: about 175 pixels of toolbar; a user can remove the button (Customize Toolbar)
+      and it stays removed.
+    verify:
+      - tree_contains: {path: browser/components/preferences/config/privacy.mjs, text: "GORILLA UNLEASHED - SATELLITE MODE: the switch a user sees"}
+      - tree_contains: {path: browser/components/preferences/preferences.xhtml, text: 'href="browser/gorillaSatellite.ftl"'}
+      - tree_contains: {path: browser/locales/en-US/browser/gorillaSatellite.ftl, text: "gorilla-satellite-button-off"}
+      - tree_contains: {path: browser/modules/GorillaLinkMode.sys.mjs, text: 'const BUTTON_ID = "gorilla-satellite-button";'}
+      - tree_contains: {path: browser/themes/shared/toolbarbuttons.css, text: "#gorilla-satellite-button {"}
+      - tree_contains: {path: browser/themes/shared/jar.inc.mn, text: "skin/classic/browser/gorilla-satellite.svg"}
+      - tree_contains: {path: toolkit/content/widgets/lit-utils.mjs, text: '<span class="label-wrapper" title=${ifDefined(this.title)}>'}
+      - pref: {name: gorilla.linkmode, value: 0}
+
+  - id: D-157-33
+    title: "Satellite mode aims at near-instant pages at 5 KB/s: mobile pages, cache kept across restarts, no re-checking in Very slow link"
+    decided: 2026-10-04
+    by: maintainer
+    provenance: 'chat 2026-10-04: "some of the tablets today, are 13 inches but still request mobile versions of the pages and they get it. That makes them extremely fast ... combine the best of the worlds"; answer to briefs A-D: "A yes, B yes, C yes, D yes as always... we aim for the settings that makes the loading of the pages almost instant. Anything that enables us to operate at full speed on the slowest network possible like 5kB/s and still get the best experience"'
+    status: enforced
+    audit: >
+      2026-10-04, bench on the unpacked build at 5 KB/s (Very slow link before this decision): first visit 40.9 s
+      (Off: 95.6 s), the same page again 21.5 s, after a restart 40.9 s. The restart number exposed that Gorilla
+      empties the cache at every shutdown (privacy.clearOnShutdown.cache), so the 256 MB disk cache of D-157-30 never
+      survived a restart; the repeat number is the page's 103 KB HTML downloaded again. Probe satellite-mobile proved
+      the identity a local page receives at every level (header and navigator), the per-site desktop switch, the
+      tick-box, and that Off removes every override.
+    why: >
+      While a satellite level is on: (A) the cache is no longer emptied at shutdown (history, form data and downloads
+      still are); (B) in Very slow link a page already in the cache is shown without asking the site whether it
+      changed (browser.cache.check_doc_frequency 2; Reload fetches a fresh copy); (C) sites are told the browser is
+      Firefox for Android (Mozilla's own Android values), so they send their much smaller phone pages; a tick-box
+      turns it off and a toolbar menu item sends one site back to its desktop version. Costs accepted by the
+      maintainer: visited pages stay on disk after closing; a page can be out of date until Reload; a phone
+      identity on a large screen is a rare mix a site could notice, and a site switched back to desktop still sees
+      the Android navigator.platform. (D) Very slow link runs no JavaScript, per tab, with "This site: allow
+      JavaScript" in the toolbar menu and a tick-box to turn it off: measured on real sites over the owner's link
+      with pictures and fonts already off, BBC News 1,175 KB -> 101 KB, Guardian 685 -> 148 KB, CNN 11,831 ->
+      608 KB, Reuters 2,142 -> 315 KB, DuckDuckGo 1,511 -> 207 KB, Wikipedia 384 -> 322 KB, text readable on all
+      six (pictures of each page looked at). Mobile pages alone barely changed those sizes (most sites send one
+      responsive page; Wikipedia's mobile page was larger with scripts on). Cost of (D): sites that are
+      applications (webmail, maps) need the per-site allow. Off is unchanged.
+    verify:
+      - tree_contains: {path: browser/modules/GorillaLinkMode.sys.mjs, text: '"privacy.clearOnShutdown_v2.cache": false,'}
+      - tree_contains: {path: browser/modules/GorillaLinkMode.sys.mjs, text: '"browser.cache.check_doc_frequency": 2,'}
+      - tree_contains: {path: browser/modules/GorillaLinkMode.sys.mjs, text: '"browser.cache.disk_cache_ssl": true,'}
+      - tree_contains: {path: browser/modules/GorillaLinkMode.sys.mjs, text: 'const DESKTOP_SITE_PERM = "gorilla-desktop-site";'}
+      - tree_contains: {path: browser/locales/en-US/browser/gorillaSatellite.ftl, text: "gorilla-satellite-mobile-pages"}
+      - tree_contains: {path: browser/components/preferences/config/privacy.mjs, text: 'id: "gorillaMobilePages"'}
+      - pref: {name: gorilla.linkmode.mobile_pages, value: true}
+      - pref: {name: gorilla.linkmode.no_javascript, value: true}
+      - tree_contains: {path: browser/modules/GorillaLinkMode.sys.mjs, text: 'const JS_SITE_PERM = "gorilla-javascript-site";'}
+      - tree_contains: {path: browser/components/preferences/config/privacy.mjs, text: 'id: "gorillaNoJavascript"'}
+      - pref: {name: privacy.clearOnShutdown_v2.cache, value: true}
+
+  - id: D-157-34
+    title: "The Gorilla Unleashed brand voice stays: strings like 'another Gorilla browser' and 'Account Gorilla settings' are the brand, not mistakes"
+    decided: 2026-10-07
+    by: maintainer
+    provenance: 'chat 2026-10-07: "LEAVE THOSE sentences alone... they are part of the brand. Gorilla branding... Unleashed gorilla... we built a whole persona around that Browser ... this browser went through a long process of debranding that did not quite succeed because every Opus or Fable wanted to FIX IT. There is no Fixing"'
+    status: enforced
+    why: >
+      The over-Gorilla'd wording in the interface (Import Gorilla bookmarks from another Gorilla browser, Account
+      Gorilla settings are unavailable, Gorilla history, Gorilla extensions) is the Gorilla Unleashed persona, put
+      there on purpose. Models kept "correcting" it back to plain English, undoing the debranding. No model changes
+      a Gorilla string's wording; the only open branding work is the opposite direction: the Firefox icons and
+      artwork still shipping (fox illustrations in Settings and Add-ons), removed when the maintainer finds a way.
+    verify:
+      - tree_contains: {path: browser/locales/en-US/browser/preferences/preferences.ftl, text: "Bring your Gorilla bookmarks, passwords, Gorilla history, Gorilla extensions, and autofill data from another Gorilla browser."}
+      - tree_contains: {path: browser/locales/en-US/browser/preferences/preferences.ftl, text: "Account Gorilla settings are unavailable."}
+      - tree_contains: {path: browser/locales/en-US/browser/browser.ftl, text: "Import Gorilla bookmarks from another Gorilla browser"}
+      - tree_contains: {path: browser/locales/en-US/browser/firefoxView.ftl, text: "Import Gorilla history from another Gorilla browser"}
+  - id: D-157-35
+    title: One master Gorilla logo for every large picture, and no Gorilla drawn small anywhere in the browser
+    decided: 2026-10-07
+    by: maintainer
+    provenance: 'chat 2026-10-07: "have ONLY ONE icon. not a set of icons ... LINKED throughout all those menues and over 40 pages"; "In cases like these i would rather NOT HAVING ANY icon at all ... it just eats ram and cpu cycles"; "yes go ahead"; 2026-10-08, on the small icon files still showing a tiny Gorilla (address-bar chip, tab icons, about:processes, about:pdf): "go for 1"'
+    status: enforced
+    audit: >
+      2026-10-07, build 28 as installed: the logo shipped as 11 files (9.8 MB of the build's 16.7 MB of images:
+      about-logo.svg wrapping a 1400 px PNG, 1000 and 500 px PNGs, private copies, a 768 px about.svg, ...). An SVG
+      that wraps a raster makes Firefox decode the whole photo in every process that shows it: 12-21 MB per
+      process (probe image-memory); 14.3 MB of images on the new tab. The artwork was also drawn at 24 px beside
+      the page titles of Settings, Add-ons, Firefox View and Policies (visual RT-TINYLOGO).
+    why: >
+      The Gorilla theme was designed on Linux around ONE icon linked everywhere, so pages do not carry their own
+      copies into memory. The one master is browser/branding/gorilla/content/about-logo.png (1400 px, the exact
+      pixels of the retired wrapper, Lanczos-made from the canonical 2598 px master): one file, decoded once per
+      process at the size it is drawn. With every page pointing at it the new tab holds 6.0 MB of images instead
+      of 14.3, the private window 10.9 instead of 25.8, and the pictures are pixel-identical. Below 64 CSS px the
+      artwork's detail is lost, so it is not drawn there at all (page-title logos, sidebar category icons, a
+      16 px toolbar button and menu item). 2026-10-08, the same for the 16-128 px icon ladder: no Gorilla as a tab
+      icon or page favicon, none in the address-bar chip of browser pages (the "Gorilla" label stays), none in
+      about:processes or about:pdf; rows and dialogs that need a symbol use Firefox's neutral ones (info, reload,
+      pdf, page, folder). The ladder stays for Windows (program and file-type .ico files) and where technique
+      T-157-35-B lists why (never shown in Gorilla, written to a file, or 64 px and more). Cost: no Gorilla in the
+      tab strip or address bar; the brand shows large on the pages instead. 2026-10-08, part 3: Firefox decodes a
+      CSS picture once at its full size when a page first shows it and keeps that unlocked copy until memory
+      pressure (7.8 MB per process for the master logo, measured with probe image-surfaces: still there after 75 s);
+      for the browser's own pictures (chrome://, resource://) the full-size copy is dropped as soon as a smaller copy
+      is decoded (image/SurfaceCache.cpp). Web content keeps Firefox's behaviour. 2026-10-08, part 5
+      (owner: the Library window and about:telemetry): windows with the system caption no longer draw the
+      program icon at 16 px beside their title (WTNCA_NODRAWICON; the taskbar, Alt+Tab and the system menu keep
+      it), and the error card of blocked and failed pages, which draws its picture inside its own shadow root
+      where the theme's override cannot reach, names the master instead of Mozilla's illustrations.
+    verify:
+      - fieldkit_test: tests/test_buildh_techniques_one_logo.py
+      - tree_contains: {path: browser/themes/shared/identity-block/identity-block.css, text: "GORILLA D-157-35: no 16 px Gorilla in the address bar on browser pages"}
+      - tree_lacks: {path: browser/components/tabbrowser/Tabbrowser.sys.mjs, text: '"about:newtab": "chrome://branding/content/icon32.png"'}
+      - tree_contains: {path: image/SurfaceCache.cpp, text: "void PruneUnusedNativeSize(Function&& aRemoveCallback)"}
+      - tree_contains: {path: browser/themes/shared/master-redirect.css, text: '--gorilla-master-icon: url("chrome://branding/content/about-logo.png");'}
+      - tree_contains: {path: toolkit/content/widgets/moz-page-nav/moz-page-nav.css, text: "GORILLA D-157-35: no 24 px Gorilla beside the page title"}
+      - image_sharp: {path: browser/branding/gorilla/content/about-logo.png, master: "owner:gorilla-patchset/deb_template/usr/share/icons/hicolor/1024x1024/apps/gorilla-unleashed.png"}
+      - omni_absent: [chrome/browser/content/branding/about-logo.svg, chrome/browser/content/branding/about-logo@2x.png, chrome/browser/content/branding/about-logo-private, chrome/browser/content/branding/about.svg, chrome/browser/content/branding/about.png]
+      - tree_contains: {path: widget/windows/nsWindow.cpp, text: "WTA_OPTIONS noCaptionIcon = {WTNCA_NODRAWICON, WTNCA_NODRAWICON};"}
+      - tree_contains: {path: toolkit/content/errors/net-error-illustrations.mjs, text: 'src: "chrome://branding/content/about-logo.png",'}
+      - tree_lacks: {path: toolkit/content/errors/net-error-illustrations.mjs, text: "illustrations/security-error.svg"}
+
+  - id: D-157-36
+    title: "No developer pages that record for Mozilla or hand it data: about:glean, about:logging, about:profiling and about:windows-messages are gone, and a captured profile goes only to a viewer on this machine"
+    decided: 2026-10-08
+    by: maintainer
+    provenance: 'chat 2026-10-08: "I thought we disabled about:logging capabilities from the source code, not only from prefs"; "about:windows-messages ... I do not recall working on that"; standing policy D-157-30 (closed doors and speed win)'
+    status: enforced
+    audit: >
+      2026-10-08, build 28 as installed, every about: page opened by probe about-pages behind a dead proxy:
+      about:glean is the test bench of Glean, Mozilla's telemetry library (debug-tagged pings for Mozilla's Glean
+      Debug Ping Viewer, metric values, links to Mozilla's data dictionary); its menus showed text and its submit
+      button did nothing, because Glean never starts in Gorilla (FOG.cpp). about:logging and about:profiling ended a
+      recording by opening profiler.firefox.com, Mozilla's hosted viewer, with the captured profile (open tabs,
+      addresses, timings), and about:logging could upload it to api.profiler.firefox.com; about:processes had a
+      profiler button per process doing the same. about:windows-messages showed the last six of each listed window
+      message per window, which the browser formatted into strings and kept for it all the time.
+    why: >
+      Every channel is a door: a vendor-hosted viewer is code delivered by the vendor and a place the data lands,
+      and a telemetry test bench for a library that never runs is a door with nothing behind it but a button.
+      The four pages are removed from the page registry (nsAboutRedirector.cpp, AboutRedirector.cpp,
+      components.conf); the profiler's hand-off refuses any viewer that is not on this machine (localhost,
+      127.0.0.1, [::1]) at source, so the devtools Performance panel fails closed too; about:processes has no
+      profiler buttons; nothing is recorded for about:windows-messages (nsWindowDbg.cpp); no link is left to the
+      removed pages (about:networking's Logging entry, about:webrtc's Enable logging button) and DevTools has no
+      Performance panel, whose recording ended in the refused hand-off. Kept: MOZ_LOG in the
+      environment still logs to a file (the leak gate's HTTP log uses it), and the Gecko profiler itself stays
+      compiled. Cost: no built-in profiler or logging page; profile with the harness (build-harness weigh, the
+      probes) or a profiler viewer run locally.
+    verify:
+      - tree_lacks: {path: docshell/base/nsAboutRedirector.cpp, text: '{"glean", "chrome://global/content/aboutGlean.html",'}
+      - tree_lacks: {path: docshell/base/nsAboutRedirector.cpp, text: '{"logging", "chrome://global/content/aboutLogging/aboutLogging.html",'}
+      - tree_lacks: {path: docshell/base/nsAboutRedirector.cpp, text: '{"windows-messages", "chrome://global/content/aboutWindowsMessages.html",'}
+      - tree_lacks: {path: browser/components/about/AboutRedirector.cpp, text: '"chrome://devtools/content/performance-new/aboutprofiling/index.html",'}
+      - tree_lacks: {path: docshell/build/components.conf, text: "about_pages.append('glean')"}
+      - tree_contains: {path: devtools/client/performance-new/shared/browser.js, text: "GORILLA D-157-36 (2026-10-08): a captured profile is never handed to a site on the network."}
+      - tree_contains: {path: widget/windows/nsWindowDbg.cpp, text: "bool recordInAboutPage = false;"}
+      - tree_contains: {path: modules/libpref/init/all.js, text: 'pref("toolkit.aboutProcesses.showProfilerIcons", false);'}
+      - tree_lacks: {path: toolkit/content/aboutNetworking.html, text: 'href="about:logging"'}
+      - tree_lacks: {path: toolkit/content/aboutwebrtc/aboutWebrtc.mjs, text: "    add(new EnableLogging().render());"}
+      - tree_contains: {path: browser/app/profile/firefox.js, text: 'pref("devtools.performance.enabled", false);'}
+      - fieldkit_test: tests/test_buildh_aboutpages.py
+
+
+  - id: D-157-37
+    title: Inactive tabs always show a thin cyan border; nothing about a tab changes under the mouse
+    decided: 2026-10-08
+    by: maintainer
+    provenance: 'chat 2026-10-08: "the inactive tab has lost is thin cyan border. ONLY the active border is visible because of the pink"; "the border only APPREARN WHEN YOU HOVER YOUR MOUSE OVER IT. That''s gonna require processing power? and it is not exactly aesthetically appealing"'
+    status: enforced
+    audit: >
+      2026-10-08, probe tab-borders: build 27 (20261007110752) and build 28 draw no outline on an inactive tab
+      (outline-color transparent); master-redirect.css drew a cyan outline, at 80 % opacity, only while the pointer
+      was over the tab. No permanent tab border exists anywhere in the patch-set history, 155 included.
+    why: >
+      The tab strip should read at a glance: the active tab pink, every other tab outlined in cyan. A static 1 px
+      outline is painted with the tab strip and costs nothing more; a hover-only outline made each tab restyle and
+      repaint whenever the pointer crossed it (standing policy D-157-30: the cheaper option wins). The inactive rule
+      holds background, outline, shadow and opacity with !important, so upstream's hover tint does not apply either.
+    verify:
+      - tree_contains: {path: browser/themes/shared/master-redirect.css, text: "/* --- INACTIVE TAB: THIN CYAN BORDER, ALWAYS (owner 2026-10-08) --- */"}
+      - tree_lacks: {path: browser/themes/shared/master-redirect.css, text: ".tabbrowser-tab:not([selected]):hover .tab-background"}
+
+  - id: D-157-38
+    title: "Help > About says which build it is and when it was made: \"157.0 (64-bit) build N, built YY:MM:DD:HH:MM:SS\" and under it \"Build ID <14 digits>\", the build's own BuildID, and the harness holds every stage to it"
+    decided: 2026-10-08
+    by: maintainer
+    provenance: 'chat 2026-10-08: "when you go to Help and report--> About Gorilla Unleashed the part where it shows tje version number also carries a \"built YY:MM:DD:HH:SS\" timestamp so we the users can keep track of what build is and when it was actually done ... integrated and synced with the rest of it"'
+    status: enforced
+    why: >
+      Users and maintainer can tell builds apart at a glance: the About window ends its version line with the
+      moment the build was made (read as year, month, day, hour, minute, second; the owner's YY:MM:DD:HH:SS with
+      the minutes the reading needs). It is the build's own BuildID (application.ini), the same number the harness
+      records: build-verify checks the built BuildID is newer than the gate and that the built browser's About
+      window shows it, and records it in build-result.json; post-install ("stamp") checks the installed browser is
+      that build and shows it. No network, no new data: the number was already in every build.
+      Part 2, 2026-10-09 (chat: 'this format 157.0 (64-bit) build 29, built 26:10:09:12:51:0 looks OK. The only
+      problem is that i do not have a way to check whether ... is actually the new build (20261009103433) and it
+      was / is installed when you say it was. We could add that long string of the build ... under'): the line
+      reads "157.0 (64-bit) build 29, built YY:MM:DD:HH:MM:SS" and under it "Build ID <the 14 digits>", the string
+      the harness reports. The build number is the branding pref gorilla.build.number, raised once per release
+      candidate. The owner's build pins the BuildID when the compile starts, no longer when an attempt starts (an
+      attempt halted before compiling had left "built 10:34" on a 12:51 compile).
+    verify:
+      - tree_contains: {path: browser/base/content/aboutDialog.js, text: "GORILLA D-157-38 (2026-10-08): every version line also says when this build was made"}
+      - tree_contains: {path: browser/locales/en-US/browser/aboutDialog.ftl, text: "aboutDialog-version-gorilla = { $version } ({ $bits }-bit) build { $build }, built { $built }"}
+      - tree_contains: {path: browser/locales/en-US/browser/aboutDialog.ftl, text: "aboutDialog-buildid-gorilla = Build ID { $buildid }"}
+      - tree_contains: {path: browser/base/content/aboutDialog.xhtml, text: '<label id="gorilla-buildid" class="text-blurb" hidden="true"/>'}
+      - tree_contains: {path: browser/branding/gorilla/pref/firefox-branding.js, text: 'pref("gorilla.build.number", '}
+      - fieldkit_test: tests/test_buildh_buildstamp.py
+
+  - id: D-157-39
+    title: "Satellite mode leaves calls alone: a site allowed the camera or microphone, or a known call service, keeps its desktop version and its JavaScript at every level"
+    decided: 2026-10-08
+    by: maintainer
+    provenance: 'build 28 programme item 2, owner 2026-10-07: "Satellite mode for calls: sites with camera/microphone get the desktop identity and JavaScript"; chat 2026-10-08: "go ahead with item 2, the satellite camera/mic sites"; audit C-webrtc-satellite C12'
+    status: enforced
+    audit: >
+      2026-10-08, probe satellite-calls on build 20261008130017: in Very slow link a site with a remembered
+      microphone permission, and a site on a call list, received the Android identity and ran no scripts, so a web
+      call could not start in the mode a satellite user switches on (D-157-33 gives every site the phone identity
+      and, in Very slow link, no JavaScript).
+    why: >
+      A site is a call site when the user allowed it the camera or the microphone (remembered, or for that tab only)
+      or when its host is on gorilla.linkmode.call_sites, a local list (WhatsApp Web, Google Meet, Jitsi Meet,
+      Microsoft Teams, Zoom's web app, Messenger, Discord) for the sites that cannot ask for the microphone while
+      their scripts are off. It gets the desktop identity and its scripts at every level, decided before the page
+      is requested like every other per-site choice (T-157-33-A); the toolbar menu shows its two switches ticked and
+      greyed with the reason. Nothing is fetched: the list is local and editable in about:config. Cost: a call
+      site downloads its full desktop page and scripts in Very slow link; it still reports the Android
+      navigator.platform, as any site switched to desktop does (D-157-33).
+    verify:
+      - tree_contains: {path: browser/modules/GorillaLinkMode.sys.mjs, text: 'const CALL_SITES_PREF = "gorilla.linkmode.call_sites";'}
+      - tree_contains: {path: browser/modules/GorillaLinkMode.sys.mjs, text: "this._callSite(principal, bc.embedderElement);"}
+      - tree_contains: {path: browser/locales/en-US/browser/gorillaSatellite.ftl, text: "gorilla-satellite-button-call-site ="}
+      - pref: {name: gorilla.linkmode.call_sites, value: "web.whatsapp.com,meet.google.com,meet.jit.si,teams.microsoft.com,teams.live.com,app.zoom.us,www.messenger.com,discord.com"}
+      - fieldkit_test: tests/test_buildh_satellite.py
+
+  - id: D-157-40
+    title: "Hidden about: pages: every page the source can register is reviewed in decisions/ABOUT-PAGES.yaml; the 16 that serve Mozilla, its tests or switched-off features are gone, and what fed them is cut"
+    decided: 2026-10-08
+    by: maintainer
+    provenance: 'chat 2026-10-08: "why is the about:fingerprintingprotection page shown in about: about?"; "Dive deep in all the about: pages and find each and every one that is hidden ... Afterwards let''s eliminate all of them. everything we can get away with it from the source code and made all those page removal patches and permanent part of our harness"; standing policy D-157-30'
+    status: enforced
+    audit: >
+      2026-10-08, build 28 (20261008151853) and the source: the source names 84 about: pages, the build registered
+      70, about:about listed 40 and hid 30. Every hidden page was opened and pictured (probe about-pages, shots) and
+      read in the source (Work.to.do/hidden-pages/research A, B, C). about:fingerprintingprotection is the measuring
+      page of Mozilla's user-characteristics study, loaded by an invisible browser once per study wave; asrouter and
+      messagepreview are Mozilla's messaging console and preview; referrals redirects to firefox.com with a
+      per-profile code; crashparent/crashcontent/crashgpu/crashextensions kill the browser, a tab's process, the GPU
+      process or every add-on from one typed address (test tools); blocked and restricted serve Safe Browsing and
+      parental controls, both absent; settings and performance are second names; the four profile-switcher pages
+      opened blank. Also found: the network error page looked up a guessed name (www.<word>.com) on its own;
+      ShouldEnforceParentalControls dereferenced a null service when security.restrict_to_adults.respect_platform
+      was set (a browser crash); a Nightly-only line still registered the excised about:inference. 2026-10-09, the
+      page-by-page reading after the registrations were removed: a profiles.ini from upstream Firefox (a store ID)
+      still forced the profile switcher on whatever the locked pref said; the messaging console's commands were
+      still accepted from about:welcome, about:newtab, about:home and about:privatebrowsing (the parent never checked
+      the sender); and the removed pages' own files were still packaged, so their chrome:// addresses still opened.
+    why: >
+      Every channel is a door, and a hidden page is a door nobody checks. The 16 pages are removed from the page
+      registry (nsAboutRedirector.cpp, AboutRedirector.cpp, both components.conf) with the code that only they used
+      (the crash channel, the referral and profile gates). What fed them is cut at source: the user-characteristics
+      collection never starts (nsRFPService.cpp) and its opt-out is locked on; the messaging console's switch, the
+      referral switch, and the profile selector at start-up (GetShowProfileSelector) are off for good; parental
+      controls are never enforced (no service is built). The network error page no longer makes the guessed lookup.
+      Nothing forces the profile switcher on (SelectableProfileService); the messaging console's commands are refused
+      whoever sends them (ASRouterParentProcessMessageHandler); the removed pages' files are not packaged
+      (asrouter-admin, messagepreview and its actors, usercharacteristics, aboutRestricted, blockedSite), so no
+      chrome:// address opens them either.
+      Kept, each with its reason in the register: the 14 hidden pages the browser needs (error, crash-recovery,
+      session, Reader View, Split View, DevTools, cache detail) and every listed page. The register is enforced
+      before the build (this decision) and after it (build-harness about-pages compares the pages a build
+      registers). Cost: a crashed tab can no longer be provoked by hand for testing; a profiles.ini from upstream
+      Firefox with ShowSelector=1 starts straight into the default profile; one-word addresses that fail get no
+      "did you mean www.<word>.com" hint.
+    verify:
+      - about_register: {file: decisions/ABOUT-PAGES.yaml}
+      - tree_lacks: {path: docshell/base/nsAboutRedirector.cpp, text: "class CrashChannel final"}
+      - tree_contains: {path: toolkit/components/resistfingerprinting/nsRFPService.cpp, text: "GORILLA D-157-40 (2026-10-08): no user-characteristics collection."}
+      - tree_lacks: {path: toolkit/components/resistfingerprinting/nsRFPService.cpp, text: "    nsUserCharacteristics::MaybeSubmitPing();"}
+      - tree_contains: {path: docshell/base/CanonicalBrowsingContext.cpp, text: "GORILLA D-157-40 (2026-10-08): Gorilla is built --disable-parental-controls"}
+      - tree_contains: {path: toolkit/profile/nsToolkitProfileService.cpp, text: "GORILLA D-157-40 (2026-10-08): the new profile switcher"}
+      - tree_contains: {path: toolkit/actors/NetErrorChild.sys.mjs, text: "GORILLA D-157-40 (2026-10-08): no guessed lookups."}
+      - tree_lacks: {path: docshell/build/components.conf, text: "about_pages.append('inference')"}
+      - pref: {name: toolkit.telemetry.user_characteristics_ping.opt-out, value: true, locked: true}
+      - pref: {name: toolkit.telemetry.user_characteristics_ping.send-once, value: false, locked: true}
+      - pref: {name: browser.referrals.enabled, value: false, locked: true}
+      - pref: {name: browser.newtabpage.activity-stream.asrouter.devtoolsEnabled, value: false, locked: true}
+      - tree_contains: {path: browser/components/profiles/SelectableProfileService.sys.mjs, text: "GORILLA D-157-40 (2026-10-09): no forcing on."}
+      - tree_contains: {path: browser/components/asrouter/modules/ASRouterParentProcessMessageHandler.sys.mjs, text: "if (CONSOLE_COMMANDS.has(name) && !ASRouterPreferences.devtoolsEnabled) {"}
+      - omni_absent: [chrome/browser/content/browser/asrouter/asrouter-admin, chrome/browser/content/browser/messagepreview/, actors/AboutMessagePreview, chrome/toolkit/content/global/usercharacteristics/, chrome/toolkit/content/global/aboutRestricted/, localization/en-US/locales-preview/aboutRestricted.ftl, chrome/browser/content/browser/blockedSite, chrome/browser/skin/classic/browser/blockedSite.css]
+      - fieldkit_test: tests/test_buildh_about_register.py
+
+  - id: D-157-41
+    title: "The console's scam warning is on: a paste into the developer console waits until the user types \"allow pasting\" once"
+    decided: 2026-10-09
+    by: maintainer
+    provenance: 'chat 2026-10-09: "it makes sense to drop it to 0" (after the explanation of devtools.selfxss.count and the options for the console); the removal of the console itself was weighed and not taken'
+    status: enforced
+    audit: >
+      2026-10-09, reading the hidden pages: Gorilla's branding set devtools.selfxss.count to 5, as Firefox's Nightly
+      and unofficial brandings do; release Firefox sets 0. At 5 the web console never shows its "Scam Warning" and a
+      pasted script runs at once, in the page the user is logged in to (self-XSS: "press F12 and paste this").
+    why: >
+      Gorilla is made for people who are not terminal-literate; they are who "paste this into the console" scams aim
+      at. At 0 the console blocks a paste until "allow pasting" is typed once, or until five commands have been typed
+      by hand; it then raises the count to 5 itself, so the pref is not locked. Nothing is sent anywhere either way.
+      Cost: a developer types "allow pasting" once; the address bar's Inspector quick action and the "Inspect
+      Accessibility Properties" item stay hidden until the developer tools have been used. Kept on purpose: the
+      console and the developer tools themselves (they send nothing, and they are how anyone can check what Gorilla
+      and a page do); the console that runs code with the browser's own powers is already shut (devtools.chrome.enabled
+      locked off).
+    verify:
+      - tree_contains: {path: browser/branding/gorilla/pref/firefox-branding.js, text: 'pref("devtools.selfxss.count", 0);'}
+      - pref: {name: devtools.selfxss.count, value: 0}
+  - id: D-157-42
+    title: "The built-in security lists (Certificate Transparency logs, key pins, HSTS preload) are taken fresh at every build, and no release ships with one that switches off within six weeks"
+    decided: 2026-10-09
+    by: maintainer
+    provenance: 'chat 2026-10-09, choosing option 1 (refresh at build time) of the time-bomb finding: "I think we can go with number one. Since once per month, or following the Mozilla release cycle we''re going to release a new update"'
+    status: enforced
+    audit: >
+      2026-10-09, the first proactive scan (build-harness timebombs): three dates compiled into build 29 switch a
+      protection off without a word. Certificate Transparency, enforced in Gorilla (mode 2), is skipped from
+      2026-12-01 (CertVerifier.cpp: "skipping CT - built-in information has expired"); key pinning stops on
+      2026-12-25; HSTS preload on 2027-01-22. Firefox users never meet them because their browser updates itself
+      every four weeks; Gorilla does not. Mozilla stamps the CT list to expire about ten weeks after it is made.
+    why: >
+      An update channel stays closed: the lists are pulled when the maintainer builds, from the repository the
+      harness already takes Firefox from (Mozilla's own; it sees one more fetch from the build machine and learns
+      nothing new), and a file is taken only when it is pure data that expires later than the tree's
+      (build-harness lists-refresh; then recorded like any change). Build-verify fails a build whose lists switch off
+      within six weeks of the build day, and release-check a release within six weeks of publishing. Cost: a Gorilla
+      build keeps Certificate Transparency checking for at most about ten weeks from its build day, so releases
+      follow Mozilla's four-week cycle; a user who skips two releases loses it until they install a new one.
+    verify:
+      - fieldkit_test: tests/test_buildh_timebombs.py
+  - id: D-157-08
+    title: Captchas are accepted as a cost
+    decided: 2026-10-02
+    by: maintainer
+    provenance: chat 2026-10-02 ("we have to put up with captchas because they appear on google site")
+    status: trade-off
+    why: >
+      Privacy protections make some sites (Google among them) show more captchas. Accepted: no protection is
+      removed to avoid them.
+
+  - id: D-157-09
+    title: "The first regression baseline: seeded from a release run whose only failure is the missing baseline"
+    decided: 2026-10-02
+    by: maintainer
+    provenance: chat 2026-10-02 ("1 A")
+    status: enforced
+    why: >
+      Without it no release could ever pass, so users would never get a fixed build. Every other rule must pass,
+      only the maintainer can do it at a real terminal, and the next release run must pass in full.
+    verify:
+      - fieldkit_test: tests/test_leakgate_bootstrap.py
+
+  - id: D-157-10
+    title: Only the maintainer approves leak-gate allowlist entries and dispositions, at a real terminal
+    decided: 2026-10-02
+    by: maintainer
+    provenance: leakgate SPEC.md; chat 2026-10-02 (chat-approval route removed)
+    status: enforced
+    why: >
+      A model may propose an exception to the leak rules; it can never approve one. Users never see this; it is
+      what keeps "privacy browser" true.
+    verify:
+      - fieldkit_test: tests/test_leakgate.py::test_no_approval_path_exists_without_the_owner_terminal_check
+
+  - id: D-157-11
+    title: Build 157 (the build carrying these decisions) is the regression baseline
+    decided: 2026-10-02
+    by: maintainer
+    provenance: chat 2026-10-02 ("we are going to use this build as the baseline")
+    status: enforced
+    why: >
+      Every later build is compared with this one: a new connection or more requests than this build made is a
+      regression that blocks the release. Enforced by the harness itself: leakgate-baseline refuses while any other
+      decision is not ENFORCED and stores this file's sha256 in the baseline, so the baseline always names the
+      decisions it was taken with.
+    verify:
+      - fieldkit_test: tests/test_buildh_decisions.py
+  - id: D-158-01
     title: Remote control of the browser is closed, every door (Marionette, Remote Agent, WebDriver BiDi)
     decided: 2026-10-14
     by: maintainer
@@ -24,7 +892,7 @@ decisions:
     verify:
       - tree_contains: {path: remote/components/Marionette.sys.mjs, text: "This setter is now a dead end. Nothing can enable Marionette."}
       - tree_lacks: {path: remote/components/Marionette.sys.mjs, text: "Marionette is disabled by enterprise policy"}
-  - id: vendored-checksums-regenerated
+  - id: D-158-02
     title: An edited vendored Rust crate gets its .cargo-checksum.json recomputed from the edited files
     decided: 2026-10-14
     by: maintainer
