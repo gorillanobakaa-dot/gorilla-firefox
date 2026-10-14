@@ -554,6 +554,8 @@ decisions:
     decided: 2026-10-07
     by: maintainer
     provenance: 'chat 2026-10-07: "LEAVE THOSE sentences alone... they are part of the brand. Gorilla branding... Unleashed gorilla... we built a whole persona around that Browser ... this browser went through a long process of debranding that did not quite succeed because every Opus or Fable wanted to FIX IT. There is no Fixing"'
+    covers: ["browser/locales/en-US/*", "toolkit/locales/en-US/*", "browser/branding/gorilla/*"]
+    debranding: "Why the wording exists (owner, 2026-10-14): a modified Firefox may not present itself as Firefox or Mozilla. The Gorilla names and the joke strings (the address bar placeholder among them) make it unmistakable that this build is not Mozilla's, so no complaint about it reaches Mozilla."
     status: enforced
     why: >
       The over-Gorilla'd wording in the interface (Import Gorilla bookmarks from another Gorilla browser, Account
