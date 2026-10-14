@@ -1,0 +1,289 @@
+# The reviewed register of every about: page the Firefox source can register (D-157-40, owner review 2026-10-08).
+#
+# Every name any of the four registration routes can produce is here: the C++ redirect tables, the components.conf
+# page lists, about;1?what= component contracts, and code that registers a page at run time
+# (fieldkit build-harness about-registry prints the map: tree, pristine upstream, and what a build registered).
+#
+# Checked twice:
+#   before the build  decision D-157-40 (check kind about_register): every page the tree can register is listed
+#                     here, and no page marked remove is registered.
+#   after the build   build-harness about-pages (row "registered pages match the register"): the pages the built
+#                     browser actually registers, against this list.
+#
+# verdict   keep | remove
+# shown     listed (about:about shows it) | hidden (registered with HIDE_FROM_ABOUTABOUT, or by code that hides it)
+#           | not built (its build condition is false for Gorilla) | gone (removed from the source)
+# only      windows | linux: the page exists on that platform's build only
+# was       hidden: a removed page that was hidden (docs/hidden-pages explains every page that is or was hidden)
+# decision  the product decision that removed or reshaped it
+# network   what the page itself can contact: none | on click | automatic (what) | conditional (when)
+# why       one line; the long explanation for hidden pages is docs/hidden-pages/README.md in the public repo
+version: 1
+reviewed: 2026-10-08
+pages:
+  # ---------------------------------------------------------------------------------------------------------------
+  # Hidden pages that stay: the browser needs them, and none of them contacts anyone on its own
+  # ---------------------------------------------------------------------------------------------------------------
+  - name: blank
+    verdict: keep
+    shown: hidden
+    network: none
+    why: The empty page every new tab, window and frame starts as; web standards require it.
+  - name: srcdoc
+    verdict: keep
+    shown: hidden
+    network: none
+    why: The address of frames whose HTML is written inline (iframe srcdoc); without it websites break. It never loads.
+  - name: neterror
+    verdict: keep
+    shown: hidden
+    decision: D-157-40
+    network: on click (Learn more to Mozilla's support site)
+    why: The "problem loading page" screen for every failed load. Its automatic guessed DNS lookup (www.<word>.com, www.<name>) is cut (NetErrorChild.sys.mjs).
+  - name: certerror
+    verdict: keep
+    shown: hidden
+    network: on click (support links)
+    why: The only explanation of a bad certificate and the only way to add an exception. Mozilla's interception check (mitmdetection) was already cut.
+  - name: httpsonlyerror
+    verdict: keep
+    shown: hidden
+    network: on click (Continue to the plain-HTTP site; support links)
+    why: HTTPS-Only is on in Gorilla; this is the only way to understand and override a failed upgrade.
+  - name: tabcrashed
+    verdict: keep
+    shown: hidden
+    network: none
+    why: The only page that restores a crashed tab. Its crash-report form is dormant (no crash reporter is built).
+  - name: framecrashed
+    verdict: keep
+    shown: hidden
+    network: none
+    why: A crash icon inside a page whose embedded frame died. No script, no network; removing it only leaves a blank hole.
+  - name: reader
+    verdict: keep
+    shown: hidden
+    network: automatic (the images and media the article names, from any host; a re-fetch of the article with its cookies when it is not cached)
+    why: Reader View. It contacts what the article itself points to; nothing of Mozilla's.
+  - name: sessionrestore
+    verdict: keep
+    shown: hidden
+    network: on click (restored tabs load)
+    why: The "restore session?" page after a crash; without it the crashed session is lost.
+  - name: restartrequired
+    verdict: keep
+    shown: hidden
+    network: none
+    why: Shown when a new build is installed over a running one (every Gorilla install); one Restart button.
+  - name: opentabs
+    verdict: keep
+    shown: hidden
+    network: none
+    why: Split View's "choose a tab" pane. Local tab list only.
+  - name: welcomeback
+    verdict: keep
+    shown: hidden
+    network: on click (support link; restored tabs load)
+    why: The page after "Refresh Gorilla" that gives your old tabs back.
+  - name: devtools-toolbox
+    verdict: keep
+    shown: hidden
+    network: when used (the inspected site and its source maps)
+    why: The document DevTools (F12) runs in. Removing it removes DevTools.
+  - name: cache-entry
+    verdict: keep
+    shown: hidden
+    network: on click (the cached address)
+    why: The detail view behind every entry link of about:cache (an admin page kept for network admins). Shows cached headers and bodies, locally.
+
+  # ---------------------------------------------------------------------------------------------------------------
+  # Hidden pages removed on 2026-10-08 (D-157-40)
+  # ---------------------------------------------------------------------------------------------------------------
+  - name: fingerprintingprotection
+    verdict: remove
+    shown: gone
+    was: hidden
+    decision: D-157-40
+    network: none from the page; it fed Mozilla's user-characteristics ping
+    why: The hidden measuring page of Mozilla's fingerprinting study, loaded in an invisible browser. Collection cut at source, prefs locked, its files not packaged.
+  - name: asrouter
+    verdict: remove
+    shown: gone
+    was: hidden
+    decision: D-157-40
+    network: on click (Mozilla's Remote Settings and documentation; message images from Mozilla's CDN)
+    why: The console of Mozilla's in-browser messaging (pop-ups, spotlights, onboarding). Its switch is locked off, its files are not packaged, and its commands are refused from every page.
+  - name: messagepreview
+    verdict: remove
+    shown: gone
+    was: hidden
+    decision: D-157-40
+    network: conditional (message images from Mozilla's CDN; message buttons run privileged actions)
+    why: Mozilla's marketing preview tool; a link carrying a message staged it on the real surface. Not built.
+  - name: referrals
+    verdict: remove
+    shown: gone
+    was: hidden
+    decision: D-157-40
+    network: conditional (www.firefox.com/invite with a per-profile referral code)
+    why: A redirect to Firefox's referral programme. browser.referrals.enabled is locked off.
+  - name: blocked
+    verdict: remove
+    shown: gone
+    was: hidden
+    decision: D-157-40
+    network: on click (Google and Mozilla report links carrying the blocked address)
+    why: Safe Browsing's warning page; Safe Browsing is locked off and its lists are never fetched, so it could not appear. Its files are not packaged.
+  - name: restricted
+    verdict: remove
+    shown: gone
+    was: hidden
+    decision: D-157-40
+    network: none
+    why: Parental controls' "Restricted Content" page; Gorilla is built without parental controls. Nothing enforces them now (also fixes a crash path); its files are not packaged.
+  - name: crashparent
+    verdict: remove
+    shown: gone
+    was: hidden
+    decision: D-157-40
+    network: none
+    why: Typing it crashed the whole browser. A test tool; Gorilla builds no tests and no crash reporter.
+  - name: crashcontent
+    verdict: remove
+    shown: gone
+    was: hidden
+    decision: D-157-40
+    network: none
+    why: Typing it crashed a tab's process (every tab in it). Test tool.
+  - name: crashgpu
+    verdict: remove
+    shown: gone
+    was: hidden
+    decision: D-157-40
+    network: none
+    why: Typing it crashed the GPU process. Test tool.
+  - name: crashextensions
+    verdict: remove
+    shown: gone
+    was: hidden
+    decision: D-157-40
+    network: none
+    why: Typing it killed every add-on process, uBlock Origin included. Test tool.
+  - name: crashcontentjava
+    verdict: remove
+    shown: gone
+    decision: D-157-40
+    network: none
+    why: Android's crash test page (never built for Gorilla); removed with the others.
+  - name: settings
+    verdict: remove
+    shown: gone
+    was: hidden
+    decision: D-157-40
+    network: as about:preferences
+    why: A second name for about:preferences. One page, one name.
+  - name: performance
+    verdict: remove
+    shown: gone
+    was: hidden
+    decision: D-157-40
+    network: none
+    why: A leftover second name for about:processes.
+  - name: profilemanager
+    verdict: remove
+    shown: gone
+    was: hidden
+    decision: D-157-40
+    network: none in Gorilla (blank page)
+    why: The new profile switcher, off in Gorilla; it opened blank. It no longer opens at start-up, and a profiles.ini from upstream Firefox no longer forces it on. about:profiles stays.
+  - name: newprofile
+    verdict: remove
+    shown: gone
+    was: hidden
+    decision: D-157-40
+    network: none in Gorilla; in Firefox a tour loaded Mozilla CDN images and themes came from addons.mozilla.org
+    why: First page of a new profile in the switcher; opened blank in Gorilla.
+  - name: editprofile
+    verdict: remove
+    shown: gone
+    was: hidden
+    decision: D-157-40
+    network: none in Gorilla; in Firefox the theme picker used addons.mozilla.org
+    why: The switcher's profile editor; opened blank in Gorilla.
+  - name: deleteprofile
+    verdict: remove
+    shown: gone
+    was: hidden
+    decision: D-157-40
+    network: none
+    why: The switcher's delete page; opened blank in Gorilla. about:profiles still deletes profiles.
+  - name: inference
+    verdict: remove
+    shown: gone
+    decision: D-157-40
+    network: n/a
+    why: The machine-learning engine page (the ml component is excised); a Nightly-only line still named it and is gone too.
+
+  # ---------------------------------------------------------------------------------------------------------------
+  # Removed earlier
+  # ---------------------------------------------------------------------------------------------------------------
+  - {name: glean, verdict: remove, shown: gone, decision: D-157-36, network: none (Glean never starts), why: "Test bench of Mozilla's telemetry library."}
+  - {name: logging, verdict: remove, shown: gone, decision: D-157-36, network: "on click (profiler.firefox.com; upload)", why: "Handed captured logs to Mozilla's hosted profiler."}
+  - {name: profiling, verdict: remove, shown: gone, decision: D-157-36, network: "on click (profiler.firefox.com)", why: "Ended a recording by opening Mozilla's hosted profile viewer."}
+  - {name: windows-messages, verdict: remove, shown: gone, decision: D-157-36, network: none, why: "Recorded window messages all the time just for this page."}
+  - {name: logo, verdict: remove, shown: gone, decision: D-157-35, network: none, why: "Only showed the master logo, upscaled."}
+  - {name: translations, verdict: remove, shown: gone, decision: D-157-03, network: "automatic (translation models from Mozilla)", why: "Translations are excised."}
+  - {name: aichatcontent, verdict: remove, shown: gone, decision: D-157-00, network: n/a, why: "AI window excised."}
+  - {name: aitab, verdict: remove, shown: gone, decision: D-157-00, network: n/a, why: "AI window excised."}
+  - {name: smartformfillreview, verdict: remove, shown: gone, decision: D-157-00, network: n/a, why: "AI window excised."}
+  - {name: smartwindowtasks, verdict: remove, shown: gone, decision: D-157-00, network: n/a, why: "AI window excised."}
+
+  # ---------------------------------------------------------------------------------------------------------------
+  # Pages about:about lists (reviewed page by page in docs/ABOUT-PAGES.md of the public repo)
+  # ---------------------------------------------------------------------------------------------------------------
+  - {name: about, verdict: keep, shown: listed, why: "The list of pages itself."}
+  - {name: addons, verdict: keep, shown: listed, why: "Add-ons manager."}
+  - {name: buildconfig, verdict: keep, shown: listed, why: "How this build was configured; local."}
+  - {name: cache, verdict: keep, shown: listed, why: "HTTP cache inspector for network admins."}
+  - {name: certificate, verdict: keep, shown: listed, why: "Certificate viewer; local."}
+  - {name: checkerboard, verdict: keep, shown: listed, why: "Scrolling-glitch recorder; local."}
+  - {name: compat, verdict: keep, shown: listed, why: "Site fixes shipped inside the browser; local."}
+  - {name: config, verdict: keep, shown: listed, why: "Every preference."}
+  - {name: credits, verdict: keep, shown: listed, decision: D-157-00, why: "Shows the local licence page (no mozilla.org request)."}
+  - {name: debugging, verdict: keep, shown: listed, why: "DevTools for workers, add-ons and tabs."}
+  - {name: downloads, verdict: keep, shown: listed, why: "Downloads list."}
+  - {name: firefoxview, verdict: keep, shown: listed, why: "Recent tabs and history view."}
+  - {name: home, verdict: keep, shown: listed, why: "The home page (the new tab page's twin)."}
+  - {name: keyboard, verdict: keep, shown: listed, why: "Keyboard shortcut editor."}
+  - {name: license, verdict: keep, shown: listed, why: "Licences."}
+  - {name: logins, verdict: keep, shown: listed, why: "Saved passwords; local."}
+  - {name: loginsimportreport, verdict: keep, shown: listed, why: "Report after importing passwords."}
+  - {name: memory, verdict: keep, shown: listed, why: "Memory reports; local."}
+  - {name: mozilla, verdict: keep, shown: listed, why: "The Book of Mozilla easter egg; local."}
+  - {name: networking, verdict: keep, shown: listed, decision: D-157-36, why: "Connections, DNS, sockets; its Logging tab is gone."}
+  - {name: newtab, verdict: keep, shown: listed, why: "The new tab page."}
+  - {name: pdf, verdict: keep, shown: listed, why: "The built-in PDF viewer."}
+  - {name: policies, verdict: keep, shown: listed, why: "Active enterprise policies."}
+  - {name: preferences, verdict: keep, shown: listed, why: "Settings."}
+  - {name: privatebrowsing, verdict: keep, shown: listed, why: "The private window's start page."}
+  - {name: processes, verdict: keep, shown: listed, decision: D-157-36, why: "Task manager; no profiler buttons."}
+  - {name: profiles, verdict: keep, shown: listed, why: "The classic profile manager."}
+  - {name: protections, verdict: keep, shown: listed, why: "Tracker-blocking report; local."}
+  - {name: rights, verdict: keep, shown: listed, decision: D-157-00, why: "Shows the local licence page (no mozilla.org request)."}
+  - {name: robots, verdict: keep, shown: listed, why: "Easter egg; local."}
+  - {name: serviceworkers, verdict: keep, shown: listed, why: "Registered service workers."}
+  - {name: studies, verdict: keep, shown: listed, decision: D-157-31, why: "Says no studies run; Nimbus and Normandy never start."}
+  - {name: support, verdict: keep, shown: listed, why: "Troubleshooting information; local."}
+  - {name: sync-log, verdict: keep, shown: listed, why: "Sync logs (Sync is off)."}
+  - {name: telemetry, verdict: keep, shown: listed, why: "Shows that nothing is collected or sent."}
+  - {name: third-party, verdict: keep, shown: listed, only: windows, why: "Third-party modules loaded into the browser (Windows builds)."}
+  - {name: unloads, verdict: keep, shown: listed, why: "Tab unloading under memory pressure."}
+  - {name: url-classifier, verdict: keep, shown: listed, why: "Tracker and block-list state."}
+  - {name: webrtc, verdict: keep, shown: listed, decision: D-157-36, why: "Call diagnostics; no logging button."}
+  - {name: welcome, verdict: keep, shown: listed, why: "First-run page."}
+
+  # ---------------------------------------------------------------------------------------------------------------
+  # In the source, not built for Gorilla's platforms or configuration
+  # ---------------------------------------------------------------------------------------------------------------
+  - {name: crashes, verdict: keep, shown: not built, why: "Needs the crash reporter; Gorilla is built --disable-crashreporter."}
+  - {name: webauthn, verdict: keep, shown: listed, only: linux, why: "Security-key page (Linux builds; on Windows, Windows itself handles security keys)."}
