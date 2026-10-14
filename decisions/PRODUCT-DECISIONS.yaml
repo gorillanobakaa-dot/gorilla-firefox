@@ -938,3 +938,25 @@ decisions:
       only), D-157-04 (one theme), D-157-30 (closed doors win), D-157-31 (no remote configuration) and D-158-01.
     verify:
       - fieldkit_test: tests/test_migrate_default_deny.py
+  - id: D-158-04
+    title: "Two Linux build paths, one tuning: the owner's build is native to the Sony VAIO, and recreate.sh lets anyone compile it natively for their own machine"
+    decided: 2026-10-15
+    by: maintainer
+    provenance: 'chat 2026-10-15 (owner, translated): for Linux, which we build for this Sony VAIO, we work with every setting and every tweak that makes Firefox fit the VAIO perfectly and run natively; for everyone else we had the recreate-the-success script that teaches people to compile it themselves. The harness must know these, and the Firefox naming, the crisp icons, the installation and the packaging, so they are never forgotten.'
+    status: enforced
+    platforms: [linux]
+    why: >
+      The Linux build is compiled for the machine it runs on. The owner's build runs on the Sony VAIO (Ivy Bridge, Intel
+      HD 4000), with the tuned mozconfig: -O3 -march=native -mtune=native, Rust target-cpu=native, ThinLTO, lld, sccache,
+      the tuned jemalloc. Other people use recreate.sh ("recreate the success"): the same mozconfig on their own machine,
+      so their build is native to their CPU. Both paths ship the same things: the Gorilla name and branding
+      (--with-branding=browser/branding/gorilla, D-157-24, D-157-34), one large crisp master icon (D-157-35), the
+      desktop entry and the Microsoft fonts inside the .deb, and the .deb built by scripts/build_deb.sh. recreate.sh
+      must clone the stable release the patch set is for (stable only, never Nightly). The harness checks it before every
+      Linux build: preflight vaio-tuning, recreate-current and deb-packaging (fieldkit/build/firefox_preflight.py).
+    verify:
+      - mozconfig_has: {file: gorilla-patchset/mozconfig, text: 'ac_add_options --enable-optimize="-O3 -march=native -mtune=native"'}
+      - mozconfig_has: {file: gorilla-patchset/mozconfig, text: "ac_add_options --with-ccache=sccache"}
+      - mozconfig_has: {file: gorilla-patchset/mozconfig, text: "ac_add_options --enable-lto=thin"}
+      - mozconfig_has: {file: gorilla-patchset/mozconfig, text: "ac_add_options --with-branding=browser/branding/gorilla"}
+      - fieldkit_test: tests/test_firefox_preflight.py
