@@ -1,6 +1,6 @@
 # Version: 1.0.0 · updated 26-10-14-18-38
 # ONE register for Linux and Windows, like the one patch set (SETTLED 2026-10-14). Both harnesses read it:
-#   /home/gorilla/.local/bin/fieldkit build-harness decisions TASK
+#   Linux: ~/.local/bin/fieldkit build-harness decisions TASK    Windows: fieldkit build-harness decisions TASK
 # D-157-00..42 come from the Windows owner repo (Gorilla.firefox, last changed 2026-10-09, commit 6f2d835),
 # copied on 2026-10-14. Since then only platform tags and Linux twin checks were added (D-157-01, D-157-22).
 # D-158-* were added on Linux. A whole entry may say `platforms: [linux]` or `[windows]`, a single check
