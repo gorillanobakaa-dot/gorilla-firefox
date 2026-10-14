@@ -568,6 +568,8 @@ decisions:
       - tree_contains: {path: browser/locales/en-US/browser/preferences/preferences.ftl, text: "Account Gorilla settings are unavailable."}
       - tree_contains: {path: browser/locales/en-US/browser/browser.ftl, text: "Import Gorilla bookmarks from another Gorilla browser"}
       - tree_contains: {path: browser/locales/en-US/browser/firefoxView.ftl, text: "Import Gorilla history from another Gorilla browser"}
+      - tree_contains: {path: browser/locales/en-US/browser/browser.ftl, text: "Search with Gorilla or enter address you Apple Moron"}
+      - tree_contains: {path: browser/locales/en-US/browser/newtab/newtab.ftl, text: "Search with Gorilla or enter address you Apple Moron"}
   - id: D-157-35
     title: One master Gorilla logo for every large picture, and no Gorilla drawn small anywhere in the browser
     decided: 2026-10-07
