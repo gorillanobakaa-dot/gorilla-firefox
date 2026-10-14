@@ -1,0 +1,129 @@
+<!-- Version: 1.0.0 · updated 26-08-27-16-01 -->
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>WebRTC self-test</title>
+<style>
+  :root { color-scheme: dark; }
+  body { background:#000; color:#00FFFF; font:14px/1.5 monospace; margin:0; padding:24px; }
+  h1 { font-size:20px; margin:0 0 4px; }
+  .sub { color:#008B8B; margin-bottom:20px; }
+  button { background:#000; color:#00FFFF; border:1px solid #00FFFF; padding:10px 20px;
+           font:inherit; cursor:pointer; border-radius:4px; }
+  button:hover { background:#003333; }
+  button[disabled] { opacity:.4; cursor:default; }
+  .test { border:1px solid #005555; border-radius:4px; padding:14px; margin:16px 0; }
+  .test h2 { font-size:15px; margin:0 0 8px; color:#00FFFF; }
+  .why { color:#008B8B; margin-bottom:10px; }
+  table { border-collapse:collapse; margin:8px 0; }
+  td { padding:2px 16px 2px 0; }
+  .n { text-align:right; font-weight:bold; min-width:3em; }
+  .good { color:#54ffbd; } .bad { color:#FF6B6B; } .warn { color:#ffd166; }
+  .verdict { font-size:16px; font-weight:bold; padding:12px; margin-top:12px;
+             border-radius:4px; border:1px solid currentColor; }
+  pre { color:#008B8B; max-height:180px; overflow:auto; margin:8px 0 0;
+        border-top:1px solid #005555; padding-top:8px; white-space:pre-wrap; }
+</style>
+
+<h1>WebRTC self-test</h1>
+<div class="sub">
+  What Skype's Echo Service did, minus the second human. Gathers ICE candidates and
+  reports which kinds come back. Needs no account, no camera, no microphone,
+  and nobody on the other end.
+</div>
+
+<button id="run">Run the test</button>
+
+<div id="out"></div>
+
+<script>
+// Public STUN only. No TURN: a TURN server needs credentials, and the question
+// here is simply "can this browser reach the outside world for ICE at all".
+const STUN = [
+  "stun:stun.l.google.com:19302",
+  "stun:stun1.l.google.com:19302",
+  "stun:stun.cloudflare.com:3478",
+];
+
+const TESTS = [
+  { name: "A. No ICE servers (baseline)", servers: [],
+    why: "With nothing configured, only host candidates are possible. This proves the " +
+         "test itself works and shows your local addresses.",
+    expect: c => c.host > 0,
+    pass: "Baseline fine: the browser gathers local candidates.",
+    fail: "Not even host candidates. ICE gathering is broken before the network is involved." },
+  { name: "B. With public STUN", servers: STUN.map(u => ({ urls: u })),
+    why: "STUN tells you your public address, producing a 'srflx' (server reflexive) " +
+         "candidate. Behind NAT, a call CANNOT connect without srflx or relay.",
+    expect: c => c.srflx > 0,
+    pass: "srflx present. The browser can reach STUN and discover its public address.",
+    fail: "NO srflx. The browser cannot reach any STUN server, so a peer behind NAT " +
+          "can never find a path to you. This is the failure, reproduced without a call." },
+];
+
+function gather(servers, ms = 8000) {
+  return new Promise(resolve => {
+    const counts = { host: 0, srflx: 0, relay: 0, prflx: 0 };
+    const lines = [];
+    let pc, done = false;
+    const finish = err => {
+      if (done) return; done = true;
+      try { pc && pc.close(); } catch (e) {}
+      resolve({ counts, lines, err });
+    };
+    try {
+      pc = new RTCPeerConnection({ iceServers: servers });
+    } catch (e) { return finish(e.message); }
+    pc.createDataChannel("probe");
+    pc.onicecandidate = e => {
+      if (!e.candidate) return finish(null);          // gathering complete
+      const c = e.candidate.candidate;
+      lines.push(c);
+      const m = /typ (\w+)/.exec(c);
+      if (m && m[1] in counts) counts[m[1]]++;
+    };
+    pc.onicecandidateerror = e => {
+      lines.push(`!! ICE error ${e.errorCode} ${e.errorText || ""} (${e.url || "?"})`);
+    };
+    pc.createOffer().then(o => pc.setLocalDescription(o)).catch(e => finish(e.message));
+    setTimeout(() => finish("timed out after " + (ms / 1000) + "s"), ms);
+  });
+}
+
+document.getElementById("run").onclick = async ev => {
+  const btn = ev.target, out = document.getElementById("out");
+  btn.disabled = true; btn.textContent = "Running..."; out.textContent = "";
+  const results = [];
+  for (const t of TESTS) {
+    const box = document.createElement("div");
+    box.className = "test";
+    box.innerHTML = `<h2>${t.name}</h2><div class="why">${t.why}</div><div>gathering...</div>`;
+    out.appendChild(box);
+    const r = await gather(t.servers);
+    const okay = t.expect(r.counts);
+    results.push({ t, r, okay });
+    const rows = Object.entries(r.counts)
+      .map(([k, v]) => `<tr><td class="n ${v ? "good" : ""}">${v}</td><td>${k}</td></tr>`).join("");
+    box.innerHTML =
+      `<h2>${t.name}</h2><div class="why">${t.why}</div>` +
+      `<table>${rows}</table>` +
+      (r.err ? `<div class="warn">note: ${r.err}</div>` : "") +
+      `<div class="verdict ${okay ? "good" : "bad"}">${okay ? "PASS " + t.pass : "FAIL " + t.fail}</div>` +
+      (r.lines.length ? `<pre>${r.lines.join("\n")}</pre>` : "");
+  }
+  const summary = document.createElement("div");
+  summary.className = "test";
+  const b = results[1];
+  summary.innerHTML = "<h2>What this means</h2>" + (
+    !results[0].okay
+      ? `<div class="verdict bad">ICE is broken inside the browser. Not a network problem.</div>`
+      : b.okay
+        ? `<div class="verdict good">Candidate gathering is healthy. If calls still fail, the fault is
+           past ICE gathering: signalling, TURN credentials, codecs, or the far end.</div>`
+        : `<div class="verdict bad">Host candidates only, no srflx. Reproduced without a call.
+           Either this build cannot reach STUN, or something is blocking outbound UDP.
+           Next step is to compare against a stock browser on this same machine: if stock
+           gets srflx and this build does not, the build is the cause.</div>`);
+  out.appendChild(summary);
+  btn.disabled = false; btn.textContent = "Run again";
+};
+</script>
