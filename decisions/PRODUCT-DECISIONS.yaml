@@ -126,10 +126,40 @@ decisions:
       Extensions are the biggest privacy side door in a browser. uBlock Origin stays because it removes ads and
       trackers and its filter-list updates are its own. Cost: no other add-ons, and uBlock itself updates only with a
       new Gorilla build.
+    not_a_bug: >
+      2026-10-15 (owner): "We are the cause of the incompatibility. This is a DESIGN security measure, part of the
+      hardening. Do NOT mess around with them." A failed add-on or theme install (any message, including Mozilla's
+      "not compatible with Gorilla Unleashed 158.0") is this decision working. Never diagnose it as a bug, never
+      loosen a lock to make an install work. Add-ons run code their makers change remotely and widen the attack
+      surface. The only allowed change is the refusal's wording (gorilla-addon-install-refused). Every lock is
+      checked above; removing one turns this entry VIOLATED.
     verify:
       - pref: {name: devtools.chrome.enabled, value: false, locked: true}
       - pref: {name: devtools.debugger.remote-enabled, value: false, locked: true}
       - tree_contains: {path: toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs, text: "GORILLA UNLEASHED - PHYSICAL LOCK: no temporary add-ons"}
+      - tree_contains: {path: toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs, text: "GORILLA UNLEASHED - PHYSICAL LOCK: no sideloaded add-ons"}
+      - tree_contains: {path: toolkit/mozapps/extensions/internal/XPIProvider.sys.mjs, text: "GORILLA UNLEASHED - PHYSICAL LOCK: no sideloaded add-ons"}
+      - tree_contains: {path: toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs, text: "[GORILLA] Add-on installation rejected"}
+      - tree_contains: {path: toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs, text: "[GORILLA] Theme installation rejected"}
+      - tree_contains: {path: toolkit/mozapps/extensions/AddonManager.sys.mjs, text: "Block AMO-based theme/extension installation flow"}
+      - tree_contains: {path: toolkit/mozapps/extensions/AddonManager.sys.mjs, text: "Block web-initiated add-on/theme installation flow"}
+      - tree_contains: {path: browser/base/content/browser-addons.js, text: "GORILLA UNLEASHED - ADD-ON REFUSAL MESSAGE (D-157-05)"}
+      - tree_contains: {path: browser/locales/en-US/browser/addonNotifications.ftl, text: "gorilla-addon-install-refused = Blocked on purpose"}
+      - pref: {name: extensions.webapi.enabled, value: false, locked: true}
+      - pref: {name: privacy.resistFingerprinting.block_mozAddonManager, value: true, locked: true}
+      - pref: {name: xpinstall.enabled, value: false, locked: true}
+      - pref: {name: extensions.InstallTrigger.enabled, value: false, locked: true}
+      - pref: {name: extensions.htmlaboutaddons.recommendations.enabled, value: false, locked: true}
+      - pref: {name: extensions.getAddons.link.url, value: "", locked: true}
+      - pref: {name: extensions.getAddons.search.browseURL, value: "", locked: true}
+      - pref: {name: browser.taskbarTabs.enabled, value: false, locked: true}
+      - tree_contains: {path: toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs, text: "GORILLA UNLEASHED - NO TEST BYPASS"}
+      - tree_contains: {path: toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs, text: "GORILLA UNLEASHED - NO TEST BYPASS"}
+      - tree_contains: {path: toolkit/mozapps/extensions/internal/XPIProvider.sys.mjs, text: "GORILLA UNLEASHED - NO TEST BYPASS"}
+      - tree_contains: {path: toolkit/mozapps/extensions/content/aboutaddons-utils.mjs, text: "GORILLA UNLEASHED - NO ADD-ON OFFERS (D-157-05)"}
+      - tree_contains: {path: toolkit/mozapps/extensions/content/components/addon-list.mjs, text: "gorilla-addons-none-installable"}
+      - tree_contains: {path: devtools/client/aboutdebugging/src/modules/debug-target-support.js, text: "runtimeType === RUNTIMES.THIS_FIREFOX && false"}
+      - tree_contains: {path: browser/base/content/nsContextMenu.sys.mjs, text: "dictionaries are not downloaded; the item is never shown"}
 
   - id: D-157-06
     title: "Fingerprinting: the light protection on and locked; the Tor-style mode off and NOT locked; local time kept"

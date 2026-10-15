@@ -6,7 +6,24 @@
   "groups": {
     "01.MEDIA": {
       "status": "enabled",
-      "reason": "VA-API / VDPAU / PulseAudio: the Linux media group. Disabled on Windows (DXVA2/WASAPI), it is the reason this build exists on Linux: hardware H.264 only, the 6-layer codec gate (GOLDEN_RULES)."
+      "reason": "VA-API / VDPAU / PulseAudio: the Linux media group. Disabled on Windows (DXVA2/WASAPI), it is the reason this build exists on Linux: hardware H.264 only, the 6-layer codec gate (GOLDEN_RULES).",
+      "platforms": [
+        "linux"
+      ],
+      "platforms_why": "Recorded in this group's reason and in commit 57bad03 (the Windows policy, never published, had it disabled): Windows decodes through DXVA2/WASAPI. The harness reads this field on every platform (fieldkit firefox.for_platform), so the Windows port no longer needs its own policy file.",
+      "exclude": [
+        "dom_media_AudioStream.h.patch",
+        "dom_media_ipc_RemoteVideoDecoder.cpp.patch",
+        "dom_media_platforms_PDMFactory.cpp.patch",
+        "dom_media_webrtc_jsapi_DefaultCodecPreferences.cpp.patch"
+      ],
+      "superseded_158": [
+        "dom_media_AudioStream.h.patch",
+        "dom_media_ipc_RemoteVideoDecoder.cpp.patch",
+        "dom_media_platforms_PDMFactory.cpp.patch",
+        "dom_media_webrtc_jsapi_DefaultCodecPreferences.cpp.patch"
+      ],
+      "exclude_reason_158": "Superseded for Firefox 158: does not apply to pristine 158; the file's 158 form is in 23.REBASE.158 (rebase-set). Kept on disk as history."
     },
     "02.GPU": {
       "status": "enabled",
@@ -14,7 +31,14 @@
     },
     "03.NETWORKING": {
       "status": "enabled",
-      "reason": "C++ patches in netwerk/. nsSocketTransport2.cpp was excluded on Windows; on Linux it is applied and must be verified against 158 (first port)."
+      "reason": "C++ patches in netwerk/. nsSocketTransport2.cpp was excluded on Windows; on Linux it is applied and must be verified against 158 (first port).",
+      "exclude": [
+        "netwerk_dns_nsHostResolver.cpp.patch"
+      ],
+      "superseded_158": [
+        "netwerk_dns_nsHostResolver.cpp.patch"
+      ],
+      "exclude_reason_158": "Superseded for Firefox 158: does not apply to pristine 158; the file's 158 form is in 23.REBASE.158 (rebase-set). Kept on disk as history."
     },
     "04.PERFORMANCE": {
       "status": "enabled",
@@ -22,7 +46,16 @@
     },
     "05.PREFS": {
       "status": "enabled",
-      "reason": "Baked-in prefs. NEW_FILES carries a mozconfig that is NOT used: the Linux build uses the repository's mozconfig (clang-21, lld, sccache, Wayland)."
+      "reason": "Baked-in prefs. NEW_FILES carries a mozconfig that is NOT used: the Linux build uses the repository's mozconfig (clang-21, lld, sccache, Wayland).",
+      "exclude": [
+        "browser_app_profile_firefox.js.patch",
+        "modules_libpref_init_StaticPrefList.yaml.patch"
+      ],
+      "superseded_158": [
+        "browser_app_profile_firefox.js.patch",
+        "modules_libpref_init_StaticPrefList.yaml.patch"
+      ],
+      "exclude_reason_158": "Superseded for Firefox 158: does not apply to pristine 158; the file's 158 form is in 23.REBASE.158 (rebase-set). Kept on disk as history."
     },
     "06.QUOTA": {
       "status": "enabled",
@@ -30,15 +63,84 @@
     },
     "07.TOOLKIT": {
       "status": "enabled",
-      "reason": "AI feature removal, cross-platform JS/C++."
+      "reason": "AI feature removal, cross-platform JS/C++.",
+      "exclude": [
+        "browser_base_content_nsContextMenu.sys.mjs.patch",
+        "services_settings_dumps_main_search-config-v2.json.patch",
+        "toolkit_components_nimbus_ExperimentAPI.sys.mjs.patch"
+      ],
+      "superseded_158": [
+        "browser_base_content_nsContextMenu.sys.mjs.patch",
+        "services_settings_dumps_main_search-config-v2.json.patch",
+        "toolkit_components_nimbus_ExperimentAPI.sys.mjs.patch"
+      ],
+      "exclude_reason_158": "Superseded for Firefox 158: does not apply to pristine 158; the file's 158 form is in 23.REBASE.158 (rebase-set). Kept on disk as history."
     },
     "08.Look": {
       "status": "enabled",
-      "reason": "Locale patches and the browser/branding/gorilla tree. Windows installer assets inside it are inert on Linux; the .deb takes its icon from deb_template."
+      "reason": "Locale patches and the browser/branding/gorilla tree. Windows installer assets inside it are inert on Linux; the .deb takes its icon from deb_template.",
+      "exclude": [
+        "browser_locales_en-US_browser_aboutPrivateBrowsing.ftl.patch",
+        "browser_locales_en-US_browser_aboutRestartRequired.ftl.patch",
+        "browser_locales_en-US_browser_appmenu.ftl.patch",
+        "browser_locales_en-US_browser_backupSettings.ftl.patch",
+        "browser_locales_en-US_browser_browser.ftl.patch",
+        "browser_locales_en-US_browser_genai.ftl.patch",
+        "browser_locales_en-US_browser_migrationWizard.ftl.patch",
+        "browser_locales_en-US_browser_newtab_newtab.ftl.patch",
+        "browser_locales_en-US_browser_places.ftl.patch",
+        "browser_locales_en-US_browser_preferences_preferences.ftl.patch",
+        "browser_locales_en-US_browser_translations.ftl.patch",
+        "browser_locales_en-US_chrome_browser_customizableui_customizableWidgets.properties.patch",
+        "browser_themes_shared_browser-shared.css.patch",
+        "toolkit_locales_en-US_chrome_global_resetProfile.properties.patch",
+        "toolkit_locales_en-US_toolkit_about_aboutAddons.ftl.patch",
+        "toolkit_locales_en-US_toolkit_about_aboutLogging.ftl.patch",
+        "toolkit_locales_en-US_toolkit_contentanalysis_contentanalysis.ftl.patch",
+        "toolkit_locales_en-US_toolkit_global_contextual-identity.ftl.patch",
+        "toolkit_locales_en-US_toolkit_global_extensions.ftl.patch",
+        "toolkit_locales_en-US_toolkit_global_processTypes.ftl.patch",
+        "toolkit_locales_en-US_toolkit_neterror_netError.ftl.patch",
+        "toolkit_locales_en-US_toolkit_payments_payments.ftl.patch"
+      ],
+      "superseded_158": [
+        "browser_locales_en-US_browser_aboutPrivateBrowsing.ftl.patch",
+        "browser_locales_en-US_browser_aboutRestartRequired.ftl.patch",
+        "browser_locales_en-US_browser_appmenu.ftl.patch",
+        "browser_locales_en-US_browser_backupSettings.ftl.patch",
+        "browser_locales_en-US_browser_browser.ftl.patch",
+        "browser_locales_en-US_browser_genai.ftl.patch",
+        "browser_locales_en-US_browser_migrationWizard.ftl.patch",
+        "browser_locales_en-US_browser_newtab_newtab.ftl.patch",
+        "browser_locales_en-US_browser_places.ftl.patch",
+        "browser_locales_en-US_browser_preferences_preferences.ftl.patch",
+        "browser_locales_en-US_browser_translations.ftl.patch",
+        "browser_locales_en-US_chrome_browser_customizableui_customizableWidgets.properties.patch",
+        "browser_themes_shared_browser-shared.css.patch",
+        "toolkit_locales_en-US_chrome_global_resetProfile.properties.patch",
+        "toolkit_locales_en-US_toolkit_about_aboutAddons.ftl.patch",
+        "toolkit_locales_en-US_toolkit_about_aboutLogging.ftl.patch",
+        "toolkit_locales_en-US_toolkit_contentanalysis_contentanalysis.ftl.patch",
+        "toolkit_locales_en-US_toolkit_global_contextual-identity.ftl.patch",
+        "toolkit_locales_en-US_toolkit_global_extensions.ftl.patch",
+        "toolkit_locales_en-US_toolkit_global_processTypes.ftl.patch",
+        "toolkit_locales_en-US_toolkit_neterror_netError.ftl.patch",
+        "toolkit_locales_en-US_toolkit_payments_payments.ftl.patch"
+      ],
+      "exclude_reason_158": "Superseded for Firefox 158: does not apply to pristine 158; the file's 158 form is in 23.REBASE.158 (rebase-set). Kept on disk as history."
     },
     "09.REMOTE": {
       "status": "enabled",
-      "reason": "Marionette / CDP / WebDriver lockout, cross-platform."
+      "reason": "Marionette / CDP / WebDriver lockout, cross-platform.",
+      "exclude": [
+        "remote_components_Marionette.sys.mjs.patch",
+        "remote_components_RemoteAgent.sys.mjs.patch"
+      ],
+      "superseded_158": [
+        "remote_components_Marionette.sys.mjs.patch",
+        "remote_components_RemoteAgent.sys.mjs.patch"
+      ],
+      "exclude_reason_158": "Superseded for Firefox 158: does not apply to pristine 158; the file's 158 form is in 23.REBASE.158 (rebase-set). Kept on disk as history."
     },
     "10.OVERRIDES": {
       "status": "enabled",
@@ -54,7 +156,14 @@
     },
     "13.TELEMETRY.KILL": {
       "status": "enabled",
-      "reason": "GLEAN_DISABLED injection plus policies.json, cross-platform."
+      "reason": "GLEAN_DISABLED injection plus policies.json, cross-platform.",
+      "exclude": [
+        "third_party_rust_glean-core_.cargo-checksum.json.patch"
+      ],
+      "superseded_158": [
+        "third_party_rust_glean-core_.cargo-checksum.json.patch"
+      ],
+      "exclude_reason_158": "Superseded for Firefox 158: does not apply to pristine 158; the file's 158 form is in 23.REBASE.158 (rebase-set). Kept on disk as history."
     },
     "14.EGRESS.LOCKDOWN": {
       "status": "enabled",
@@ -64,28 +173,228 @@
       "status": "enabled",
       "reason": "The 2026-08-12 completeness sweep from the LINUX build tree: one patch per changed file. The generated activity-stream bundle stays excluded (generated output, regenerate instead); the dom/media patches Windows excluded are Linux media and are included.",
       "exclude": [
+        "browser_components_DesktopActorRegistry.sys.mjs.patch",
+        "browser_components_customizableui_CustomizeMode.sys.mjs.patch",
+        "browser_components_sessionstore_SessionStore.sys.mjs.patch",
+        "browser_components_sessionstore_session.schema.json.patch",
+        "browser_components_sidebar_browser-sidebar.js.patch",
+        "browser_components_sidebar_sidebar-main.mjs.patch",
+        "browser_components_tabbrowser_content_tab-context-menu.js.patch",
+        "browser_components_tabbrowser_content_tabgroup-menu.js.patch",
+        "browser_components_uitour_UITour.sys.mjs.patch",
         "browser_extensions_newtab_data_content_activity-stream.bundle.js.patch",
+        "browser_themes_addons_jar.mn.patch",
+        "browser_themes_shared_privatebrowsing_aboutPrivateBrowsing.css.patch",
         "toolkit_themes_shared_design-system_dist_tokens-brand.css.patch",
         "toolkit_themes_shared_design-system_dist_tokens-platform.css.patch",
-        "toolkit_themes_shared_design-system_dist_tokens-shared.css.patch"
+        "toolkit_themes_shared_design-system_dist_tokens-shared.css.patch",
+        "toolkit_themes_shared_global-shared.css.patch",
+        "toolkit_themes_shared_in-content_common-shared.css.patch"
       ],
-      "exclude_reason_tokens": "2026-10-14: the three design-token patches are 155-era copies. Fable, patch 21.PORT.FIXES.157/078: 'For a later Firefox: drop the three 16.SNAPSHOT tokens-*.css patches and this one; keep step 2.' The token files stay pristine; 079 lays the Gorilla dark look on top."
+      "exclude_reason_tokens": "2026-10-14: the three design-token patches are 155-era copies. Fable, patch 21.PORT.FIXES.157/078: 'For a later Firefox: drop the three 16.SNAPSHOT tokens-*.css patches and this one; keep step 2.' The token files stay pristine; 079 lays the Gorilla dark look on top.",
+      "superseded_158": [
+        "browser_components_DesktopActorRegistry.sys.mjs.patch",
+        "browser_components_customizableui_CustomizeMode.sys.mjs.patch",
+        "browser_components_sessionstore_SessionStore.sys.mjs.patch",
+        "browser_components_sessionstore_session.schema.json.patch",
+        "browser_components_sidebar_browser-sidebar.js.patch",
+        "browser_components_sidebar_sidebar-main.mjs.patch",
+        "browser_components_tabbrowser_content_tab-context-menu.js.patch",
+        "browser_components_tabbrowser_content_tabgroup-menu.js.patch",
+        "browser_components_uitour_UITour.sys.mjs.patch",
+        "browser_themes_addons_jar.mn.patch",
+        "browser_themes_shared_privatebrowsing_aboutPrivateBrowsing.css.patch",
+        "toolkit_themes_shared_global-shared.css.patch",
+        "toolkit_themes_shared_in-content_common-shared.css.patch"
+      ],
+      "exclude_reason_158": "Superseded for Firefox 158: does not apply to pristine 158; the file's 158 form is in 23.REBASE.158 (rebase-set). Kept on disk as history."
     },
     "20.SNAPSHOT.DELTA.155.0.1": {
       "status": "enabled",
-      "reason": "The 155.0.1 snapshot delta the 157 port started from: bundled uBlock Origin, the AIWindow stub, built-in extensions. Platform-neutral."
+      "reason": "The 155.0.1 snapshot delta the 157 port started from: bundled uBlock Origin, the AIWindow stub, built-in extensions. Platform-neutral.",
+      "exclude": [
+        "browser_extensions_newtab_content-src_styles_activity-stream.scss.patch"
+      ],
+      "superseded_158": [
+        "browser_extensions_newtab_content-src_styles_activity-stream.scss.patch"
+      ],
+      "exclude_reason_158": "Superseded for Firefox 158: does not apply to pristine 158; the file's 158 form is in 23.REBASE.158 (rebase-set). Kept on disk as history."
     },
     "21.PORT.FIXES.157": {
       "status": "enabled",
       "reason": "The 157 port's repairs, exported by the harness on Windows: excision creep, a misplaced hunk, a broken override. Cross-platform source.",
       "exclude": [
+        "038-d-157-24-visual-rasters-rebuilt-from-the-master-full-ico-lad.patch",
+        "039-d-157-30-network-stage-0-upstream-dns-resolver-thread-pool-r.patch",
+        "048-p-014-08-look-i-d10de1e603-157-renamed-the-address-bar-searc.patch",
+        "066-gorilla-address-bar-wording-search-with-gorilla-or-enter-add.patch",
         "078-theme-fix-step-1-of-2-2026-10-07-the-design-token-files-go-b.patch"
       ],
-      "exclude_reason": "078 put the token files back to pristine 157; on any later Firefox they are pristine already. Its own header: 'drop the three 16.SNAPSHOT tokens-*.css patches and this one; keep step 2' (079)."
+      "exclude_reason": "078 put the token files back to pristine 157; on any later Firefox they are pristine already. Its own header: 'drop the three 16.SNAPSHOT tokens-*.css patches and this one; keep step 2' (079).",
+      "superseded_158": [
+        "038-d-157-24-visual-rasters-rebuilt-from-the-master-full-ico-lad.patch",
+        "039-d-157-30-network-stage-0-upstream-dns-resolver-thread-pool-r.patch",
+        "048-p-014-08-look-i-d10de1e603-157-renamed-the-address-bar-searc.patch",
+        "066-gorilla-address-bar-wording-search-with-gorilla-or-enter-add.patch"
+      ],
+      "exclude_reason_158": "Superseded for Firefox 158: does not apply to pristine 158; the file's 158 form is in 23.REBASE.158 (rebase-set). Kept on disk as history."
     },
     "22.EGRESS.LOCKDOWN.157": {
       "status": "enabled",
-      "reason": "Every privacy cut made in source for 157 (telemetry, Remote Settings, Normandy, hidden about: pages). Cross-platform; 80 patches, 57 files touched by more than one patch: a stacked series, apply in order only."
+      "reason": "Every privacy cut made in source for 157 (telemetry, Remote Settings, Normandy, hidden about: pages). Cross-platform; 80 patches, 57 files touched by more than one patch: a stacked series, apply in order only.",
+      "exclude": [
+        "006-the-ported-excision-hunk-left-a-half-removed-aitab-block-syn.patch",
+        "009-157-references-to-excised-ai-modules-that-fired-at-startup-w.patch",
+        "010-157-keeps-toolkit-components-ml-for-ipc-utilityprocess-hwinf.patch",
+        "011-mozbuild-refuses-a-jar-mn-that-exists-without-jar-manifests-.patch",
+        "012-egress-lockdown-the-browser-s-own-nshttp-log-showed-155-0-1-.patch",
+        "013-egress-lockdown-source-only-pref-decisions-are-recorded-sepa.patch",
+        "017-privacy-at-source-canary-telemetry-ids-and-no-datareporting-.patch",
+        "024-d-157-04-one-theme-light-dark-alpenglow-removed-from-builtin.patch",
+        "027-d-157-00-21-this-browser-never-calls-home-pref-block-maintai.patch",
+        "032-d-157-03-english-only-firefox-translations-removed-at-source.patch",
+        "033-d-157-00-21-this-browser-never-calls-home-pref-block-maintai.patch",
+        "036-d-157-00-s1-intake-about-aitab-family-unregistered-push-comm.patch",
+        "041-d-157-00-21-this-browser-never-calls-home-pref-block-maintai.patch",
+        "043-p-009-ext-02-d-157-05-sideloaded-add-ons-profile-extensions-.patch",
+        "045-p-011-ai-02-d-157-00-ai-leftovers-removed-where-every-import.patch",
+        "046-p-011-the-smart-window-themes-notice-module-becomes-an-empty.patch",
+        "049-agents-md-edit-in-place-57-prefs-moved-onto-their-existing-l.patch",
+        "052-crispness-visual-run-20261003-165007-about-logo-svg-raster-r.patch",
+        "054-d-157-31-techniques-t-157-31-a-b-c-annotated-at-every-place-.patch",
+        "058-d-157-33-satellite-mode-near-instant-at-5-kb-s-maintainer-20.patch",
+        "059-d-157-33-satellite-mode-near-instant-at-5-kb-s-maintainer-20.patch",
+        "060-satellite-toolbar-menu-fixes-maintainer-screenshot-2026-10-0.patch",
+        "061-d-157-00-settings-no-longer-imports-the-unpackaged-aifeature.patch",
+        "063-satellite-menu-colours-use-the-theme-s-cyan-token-toolbar-te.patch",
+        "067-line-endings-restored-to-the-pristine-style-lf-text-mode-wri.patch",
+        "068-d-157-30-satellite-levels-disk-cache-on-bench-b1-f7.patch",
+        "069-d-157-30-satellite-levels-disk-cache-on-bench-b1-f7.patch",
+        "070-one-pass-fix-of-every-visual-check-failure-2026-10-04-gorill.patch",
+        "071-d-157-00-21-this-browser-never-calls-home-pref-block-maintai.patch",
+        "075-build-28-privacy-batch-gorilla-agreed-2026-10-07-d-157-14-ea.patch",
+        "076-d-157-00-21-this-browser-never-calls-home-pref-block-maintai.patch",
+        "080-d-157-35-2026-10-07-one-master-gorilla-logo-browser-branding.patch",
+        "081-d-157-35-part-2-2026-10-08-no-gorilla-drawn-small-anywhere-i.patch",
+        "084-d-157-35-part-4-2026-10-08-the-image-viewer-is-solid-black-n.patch",
+        "085-d-157-36-2026-10-08-no-about-glean-about-logging-about-profi.patch",
+        "086-about-pages-sweep-2026-10-08-about-studies-answers-at-the-wa.patch",
+        "091-d-157-39-2026-10-08-build-28-item-2-satellite-mode-leaves-ca.patch",
+        "093-d-157-40-hidden-about-pages-16-removed-fingerprintingprotect.patch",
+        "094-d-157-40-round-2-the-profile-switcher-is-never-forced-on-sto.patch"
+      ],
+      "superseded_158": [
+        "006-the-ported-excision-hunk-left-a-half-removed-aitab-block-syn.patch",
+        "009-157-references-to-excised-ai-modules-that-fired-at-startup-w.patch",
+        "010-157-keeps-toolkit-components-ml-for-ipc-utilityprocess-hwinf.patch",
+        "011-mozbuild-refuses-a-jar-mn-that-exists-without-jar-manifests-.patch",
+        "012-egress-lockdown-the-browser-s-own-nshttp-log-showed-155-0-1-.patch",
+        "013-egress-lockdown-source-only-pref-decisions-are-recorded-sepa.patch",
+        "017-privacy-at-source-canary-telemetry-ids-and-no-datareporting-.patch",
+        "024-d-157-04-one-theme-light-dark-alpenglow-removed-from-builtin.patch",
+        "027-d-157-00-21-this-browser-never-calls-home-pref-block-maintai.patch",
+        "032-d-157-03-english-only-firefox-translations-removed-at-source.patch",
+        "033-d-157-00-21-this-browser-never-calls-home-pref-block-maintai.patch",
+        "036-d-157-00-s1-intake-about-aitab-family-unregistered-push-comm.patch",
+        "041-d-157-00-21-this-browser-never-calls-home-pref-block-maintai.patch",
+        "043-p-009-ext-02-d-157-05-sideloaded-add-ons-profile-extensions-.patch",
+        "045-p-011-ai-02-d-157-00-ai-leftovers-removed-where-every-import.patch",
+        "046-p-011-the-smart-window-themes-notice-module-becomes-an-empty.patch",
+        "049-agents-md-edit-in-place-57-prefs-moved-onto-their-existing-l.patch",
+        "052-crispness-visual-run-20261003-165007-about-logo-svg-raster-r.patch",
+        "054-d-157-31-techniques-t-157-31-a-b-c-annotated-at-every-place-.patch",
+        "058-d-157-33-satellite-mode-near-instant-at-5-kb-s-maintainer-20.patch",
+        "059-d-157-33-satellite-mode-near-instant-at-5-kb-s-maintainer-20.patch",
+        "060-satellite-toolbar-menu-fixes-maintainer-screenshot-2026-10-0.patch",
+        "061-d-157-00-settings-no-longer-imports-the-unpackaged-aifeature.patch",
+        "063-satellite-menu-colours-use-the-theme-s-cyan-token-toolbar-te.patch",
+        "067-line-endings-restored-to-the-pristine-style-lf-text-mode-wri.patch",
+        "068-d-157-30-satellite-levels-disk-cache-on-bench-b1-f7.patch",
+        "069-d-157-30-satellite-levels-disk-cache-on-bench-b1-f7.patch",
+        "070-one-pass-fix-of-every-visual-check-failure-2026-10-04-gorill.patch",
+        "071-d-157-00-21-this-browser-never-calls-home-pref-block-maintai.patch",
+        "075-build-28-privacy-batch-gorilla-agreed-2026-10-07-d-157-14-ea.patch",
+        "076-d-157-00-21-this-browser-never-calls-home-pref-block-maintai.patch",
+        "080-d-157-35-2026-10-07-one-master-gorilla-logo-browser-branding.patch",
+        "081-d-157-35-part-2-2026-10-08-no-gorilla-drawn-small-anywhere-i.patch",
+        "084-d-157-35-part-4-2026-10-08-the-image-viewer-is-solid-black-n.patch",
+        "085-d-157-36-2026-10-08-no-about-glean-about-logging-about-profi.patch",
+        "086-about-pages-sweep-2026-10-08-about-studies-answers-at-the-wa.patch",
+        "091-d-157-39-2026-10-08-build-28-item-2-satellite-mode-leaves-ca.patch",
+        "093-d-157-40-hidden-about-pages-16-removed-fingerprintingprotect.patch",
+        "094-d-157-40-round-2-the-profile-switcher-is-never-forced-on-sto.patch"
+      ],
+      "exclude_reason_158": "Superseded for Firefox 158: does not apply to pristine 158; the file's 158 form is in 23.REBASE.158 (rebase-set). Kept on disk as history."
+    },
+    "21.PORT.FIXES.158": {
+      "status": "enabled",
+      "reason": "The 158 port's repairs and Gorilla changes made on the Linux 158 tree (2026-10-14/15), exported by build-harness export-hand: build fixes for 158 API moves, the GPU blocklist unlock carried from 155, About stamp, Settings layout, the single search engine. Cross-platform source unless a patch names its platform.",
+      "exclude_on": {
+        "windows": [
+          "009-build-fix-browser-fonts-moz-build-wires-the-7-microsoft-font.patch",
+          "010-gpu-widget-gtk-gfxinfo-cpp-blocklist-short-circuit-for-intel.patch"
+        ]
+      },
+      "exclude_on_why": "Windows excluded browser/fonts/moz.build (the Linux Microsoft-font listing) and widget/gtk/GfxInfo.cpp (GTK only) in its own policy (commit 57bad03). The shared GPU unlock (GfxInfoBase.cpp, GfxDriverInfo.cpp) applies on both (must_keep, D-158-06).",
+      "exclude": [
+        "001-five-plural-messages-in-places-ftl-delete-folder-page-bookma.patch",
+        "002-newtab-stocks-menu-learn-more-restored-from-pristine-158-pat.patch",
+        "003-search-config-v2-json-was-not-valid-json-the-07-toolkit-hunk.patch",
+        "011-d-158-09-the-recommended-stories-feed-discoverystream-enable.patch",
+        "016-mark-001-about-addons-watermark-back-to-450px-decided-2026-0.patch",
+        "018-d-158-12-segoe-ui-is-the-default-text-font-sans-serif-defaul.patch",
+        "019-d-157-20-backup-section-gone-in-158-archive-restore-prefs-lo.patch",
+        "024-app-menu-26em-so-gorilla-extensions-and-gorilla-themes-fits-.patch",
+        "025-d-158-13-google-google-com-is-the-only-built-in-search-engin.patch"
+      ],
+      "superseded_158": [
+        "001-five-plural-messages-in-places-ftl-delete-folder-page-bookma.patch",
+        "002-newtab-stocks-menu-learn-more-restored-from-pristine-158-pat.patch",
+        "003-search-config-v2-json-was-not-valid-json-the-07-toolkit-hunk.patch",
+        "011-d-158-09-the-recommended-stories-feed-discoverystream-enable.patch",
+        "016-mark-001-about-addons-watermark-back-to-450px-decided-2026-0.patch",
+        "018-d-158-12-segoe-ui-is-the-default-text-font-sans-serif-defaul.patch",
+        "019-d-157-20-backup-section-gone-in-158-archive-restore-prefs-lo.patch",
+        "024-app-menu-26em-so-gorilla-extensions-and-gorilla-themes-fits-.patch",
+        "025-d-158-13-google-google-com-is-the-only-built-in-search-engin.patch"
+      ],
+      "exclude_reason_158": "Superseded for Firefox 158: does not apply to pristine 158; the file's 158 form is in 23.REBASE.158 (rebase-set). Kept on disk as history."
+    },
+    "22.EGRESS.LOCKDOWN.158": {
+      "status": "enabled",
+      "reason": "Privacy cuts and lockdowns made on the 158 tree (2026-10-14/15): AI features excised (D-158-08), Smart Window removed, GenAI startup hook, Sync promo, add-on refusal message (D-157-05). Deleted files are listed in DELETED_FILES.manifest.txt. Cross-platform; apply in order.",
+      "exclude": [
+        "005-about-smartpage-unregistered-d-157-00-158-renamed-about-aita.patch",
+        "012-d-158-08-ai-texts-and-the-ai-sidebar-stylesheet-are-neither-.patch",
+        "013-d-158-08-smart-window-group-tabs-and-monitor-stylesheets-nei.patch",
+        "017-d-157-32-satellite-menu-open-settings-opens-privacy-netsetti.patch",
+        "020-no-sync-sign-in-promo-in-the-app-menu-158-s-own-dismissed-pr.patch",
+        "026-d-158-15-webcodecs-software-vp8-whatsapp-web-calls-is-a-buil.patch",
+        "029-d-157-05-d-157-04-d-157-03-install-surface-closed-gorilla-20.patch",
+        "030-rebase-set-review-2026-10-15-superseded-157-patches-whose-lo.patch"
+      ],
+      "superseded_158": [
+        "005-about-smartpage-unregistered-d-157-00-158-renamed-about-aita.patch",
+        "012-d-158-08-ai-texts-and-the-ai-sidebar-stylesheet-are-neither-.patch",
+        "013-d-158-08-smart-window-group-tabs-and-monitor-stylesheets-nei.patch",
+        "017-d-157-32-satellite-menu-open-settings-opens-privacy-netsetti.patch",
+        "020-no-sync-sign-in-promo-in-the-app-menu-158-s-own-dismissed-pr.patch",
+        "026-d-158-15-webcodecs-software-vp8-whatsapp-web-calls-is-a-buil.patch",
+        "029-d-157-05-d-157-04-d-157-03-install-surface-closed-gorilla-20.patch",
+        "030-rebase-set-review-2026-10-15-superseded-157-patches-whose-lo.patch"
+      ],
+      "exclude_reason_158": "Superseded for Firefox 158: does not apply to pristine 158; the file's 158 form is in 23.REBASE.158 (rebase-set). Kept on disk as history."
+    },
+    "23.REBASE.158": {
+      "status": "enabled",
+      "reason": "Generated by build-harness rebase-set: the step from the rest of the set to the tree built for Firefox 158, for every platform. Applied after every hand-made group. Proven by replay (same git tree hash)."
+    },
+    "23.REBASE.158.linux": {
+      "status": "enabled",
+      "platforms": [
+        "linux"
+      ],
+      "reason": "Generated by build-harness rebase-set on linux: the files a linux-only part of the set touches. Applied last, on linux only."
     }
   },
   "must_keep": {
