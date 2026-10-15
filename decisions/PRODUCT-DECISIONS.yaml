@@ -704,8 +704,14 @@ decisions:
       the harness reports. The build number is the branding pref gorilla.build.number, raised once per release
       candidate. The owner's build pins the BuildID when the compile starts, no longer when an attempt starts (an
       attempt halted before compiling had left "built 10:34" on a 12:51 compile).
+    correction: >
+      2026-10-15, owner, looking at "158.0 (64-bit) build 1, built 26:10:15:17:30:14": "what kind of freking date is
+      that? it was supposed to be something simple like ... 2026-10-15-2050hrs (seconds being optional) ... hard to
+      tell". The stamp now reads "built YYYY-MM-DD-HHMMhrs" (e.g. "built 2026-10-15-2050hrs"), no seconds. The colon
+      form above was accepted on 2026-10-09 and is kept here as history.
     verify:
       - tree_contains: {path: browser/base/content/aboutDialog.js, text: "GORILLA D-157-38 (2026-10-08): every version line also says when this build was made"}
+      - tree_contains: {path: browser/base/content/aboutDialog.js, text: '${buildStamp.slice(8, 10)}${buildStamp.slice(10, 12)}hrs'}
       - tree_contains: {path: browser/locales/en-US/browser/aboutDialog.ftl, text: "aboutDialog-version-gorilla = { $version } ({ $bits }-bit) build { $build }, built { $built }"}
       - tree_contains: {path: browser/locales/en-US/browser/aboutDialog.ftl, text: "aboutDialog-buildid-gorilla = Build ID { $buildid }"}
       - tree_contains: {path: browser/base/content/aboutDialog.xhtml, text: '<label id="gorilla-buildid" class="text-blurb" hidden="true"/>'}
