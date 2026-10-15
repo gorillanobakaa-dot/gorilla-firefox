@@ -3,7 +3,7 @@
 # exclude_reason_158); this patch carries the file from the remaining set to the built tree.
 
 diff --git a/toolkit/locales/en-US/toolkit/about/aboutAddons.ftl b/toolkit/locales/en-US/toolkit/about/aboutAddons.ftl
-index a1d4ced9dc57fc7112ce64777266b9cf260f302c..1956beca8323bf141e7bfff010897a0a7d207c01 100644
+index a1d4ced9dc57fc7112ce64777266b9cf260f302c..8bcb94744b0775e5a05bdc5712b0ff006dc5ec0b 100644
 --- a/toolkit/locales/en-US/toolkit/about/aboutAddons.ftl
 +++ b/toolkit/locales/en-US/toolkit/about/aboutAddons.ftl
 @@ -1,27 +1,24 @@
@@ -270,6 +270,34 @@ index a1d4ced9dc57fc7112ce64777266b9cf260f302c..1956beca8323bf141e7bfff010897a0a
      }
  
  shortcuts-card-collapse-button = Show Less
+@@ -325,23 +314,23 @@ header-back-button =
+ # We hard code "Firefox" because we do not want to imply that a Firefox fork is
+ # making this recommendation.
+ discopane-intro3 =
+-    Extensions and themes let you customize { -brand-product-name }. They can boost privacy,
++    Gorilla Extensions and Gorilla themes let you customize { -brand-product-name }. They can boost privacy,
+     enhance productivity, improve media, change the way { -brand-product-name } looks, and
+     so much more. These small software programs are often developed by a third party. Here’s
+-    a selection Firefox <a data-l10n-name="learn-more-trigger">recommends</a> for
++    a selection Gorilla Unleashed <a data-l10n-name="learn-more-trigger">recommends</a> for
+     exceptional security, performance, and functionality.
+ 
+ # Notice to make user aware that the recommendations are personalized.
+ discopane-notice-recommendations2 =
+     .message =
+         Some of these recommendations are personalized. They are based on other
+-        extensions you’ve installed, profile preferences, and usage statistics.
++        Gorilla extensions you’ve installed, Gorilla profile preferences, and usage statistics.
+ discopane-notice-learn-more = Learn more
+ 
+ # Notice to make user aware that themes are not applied in forced colors mode.
+ # This notice is only visible on Windows.
+ forced-colors-theme-notice =
+-    .message = Your Windows contrast settings are overriding { -brand-short-name } themes. Turn off these settings to use themes in { -brand-short-name }.
++    .message = Your Gorilla Windows contrast Gorilla settings are overriding { -brand-short-name } Gorilla themes. Turn off these Gorilla settings to use Gorilla themes in { -brand-short-name }.
+ 
+ privacy-policy = Privacy Policy
+ 
 @@ -354,12 +343,12 @@ created-by-author = by <a data-l10n-name="author">{ $author }</a>
  #   $dailyUsers (number) - The number of daily users.
  user-count = Users: { $dailyUsers }

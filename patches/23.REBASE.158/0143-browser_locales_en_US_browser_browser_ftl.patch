@@ -3,7 +3,7 @@
 # exclude_reason_158); this patch carries the file from the remaining set to the built tree.
 
 diff --git a/browser/locales/en-US/browser/browser.ftl b/browser/locales/en-US/browser/browser.ftl
-index 065b99ecdd77777fa1b85528f0fd861474a60fac..a96d1978b2115284acc1508309ef38d444b3af81 100644
+index 065b99ecdd77777fa1b85528f0fd861474a60fac..71d6454f989bc0db3feb6099fd34d25c98c6bd49 100644
 --- a/browser/locales/en-US/browser/browser.ftl
 +++ b/browser/locales/en-US/browser/browser.ftl
 @@ -1,17 +1,17 @@
@@ -706,6 +706,17 @@ index 065b99ecdd77777fa1b85528f0fd861474a60fac..a96d1978b2115284acc1508309ef38d4
  urlbar-searchmode-actions4 = Actions
  urlbar-searchmode-exit-button2 =
      .title = Close
+@@ -894,8 +887,8 @@ urlbar-searchmode-popup-one-off-header = This time search with:
+ # Label shown on the top of Searchmode Switcher popup when the search engine won't automatically
+ # reset after submitting.
+ urlbar-searchmode-popup-header = Search with:
+-urlbar-searchmode-popup-search-settings2 = Search Settings
+-urlbar-searchmode-popup-settings2 = Settings
++urlbar-searchmode-popup-search-settings2 = Search Gorilla Settings
++urlbar-searchmode-popup-settings2 = Gorilla Settings
+ 
+ # Label prompting user to search with a particular search engine.
+ #  $engine (String): the name of a search engine that searches a specific site
 @@ -915,10 +908,9 @@ urlbar-result-search-with-engine-keywords = {$keywords} - Search with { $engine
  ## Action text shown in urlbar results, usually appended after the search
  ## string or the url, like "result value - action text".

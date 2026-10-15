@@ -3,7 +3,7 @@
 # exclude_reason_158); this patch carries the file from the remaining set to the built tree.
 
 diff --git a/browser/locales/en-US/browser/migrationWizard.ftl b/browser/locales/en-US/browser/migrationWizard.ftl
-index d27c77501a658c75a177150e7a2df4ceda4387ae..7580638ddcc4ea717c97aa4da6a723775b7a7ad1 100644
+index d27c77501a658c75a177150e7a2df4ceda4387ae..b4f87d8de891548dd7c94fe5a789be8a507f4406 100644
 --- a/browser/locales/en-US/browser/migrationWizard.ftl
 +++ b/browser/locales/en-US/browser/migrationWizard.ftl
 @@ -1,8 +1,7 @@
@@ -16,6 +16,23 @@ index d27c77501a658c75a177150e7a2df4ceda4387ae..7580638ddcc4ea717c97aa4da6a72377
  migration-wizard-selection-list = Select the data you’d like to import.
  
  # Shown in the new migration wizard's dropdown selector for choosing the browser
+@@ -32,13 +31,13 @@ migration-wizard-migrator-display-name-chrome = Chrome
+ migration-wizard-migrator-display-name-chrome-beta = Chrome Beta
+ migration-wizard-migrator-display-name-chrome-dev = Chrome Dev
+ migration-wizard-migrator-display-name-chromium = Chromium
+-migration-wizard-migrator-display-name-chromium-360se = 360 Secure Browser
++migration-wizard-migrator-display-name-chromium-360se = 360 Secure Gorilla Browser
+ migration-wizard-migrator-display-name-chromium-edge = Microsoft Edge
+ migration-wizard-migrator-display-name-chromium-edge-beta = Microsoft Edge Beta
+ migration-wizard-migrator-display-name-edge-legacy = Microsoft Edge Legacy
+ migration-wizard-migrator-display-name-self = { -brand-product-name }
+-migration-wizard-migrator-display-name-file-password-csv = Passwords from CSV file
+-migration-wizard-migrator-display-name-file-bookmarks = Bookmarks from HTML file
++migration-wizard-migrator-display-name-file-password-csv = Passwords from CSV Gorilla file
++migration-wizard-migrator-display-name-file-bookmarks = Bookmarks from HTML Gorilla file
+ migration-wizard-migrator-display-name-ie = Microsoft Internet Explorer
+ migration-wizard-migrator-display-name-opera = Opera
+ migration-wizard-migrator-display-name-opera-gx = Opera GX
 @@ -55,10 +54,9 @@ migration-imported-edge-reading-list = Reading List (From Edge)
  ## These strings are shown if the selected browser data directory is unreadable.
  ## In practice, this tends to only occur on Linux when Firefox

@@ -3,7 +3,7 @@
 # exclude_reason_158); this patch carries the file from the remaining set to the built tree.
 
 diff --git a/browser/components/sessionstore/SessionStore.sys.mjs b/browser/components/sessionstore/SessionStore.sys.mjs
-index 7dfe2a31ca7545d1966e4fe6f3b6f1ae0aa5c8be..23205334b8d03dc9bba4f728c88f747ac253a83d 100644
+index 7dfe2a31ca7545d1966e4fe6f3b6f1ae0aa5c8be..684951c2a868973fe9992433eaac24b02f468bd3 100644
 --- a/browser/components/sessionstore/SessionStore.sys.mjs
 +++ b/browser/components/sessionstore/SessionStore.sys.mjs
 @@ -245,8 +245,8 @@ import { GlobalState } from "moz-src:///browser/components/sessionstore/GlobalSt
@@ -63,3 +63,38 @@ index 7dfe2a31ca7545d1966e4fe6f3b6f1ae0aa5c8be..23205334b8d03dc9bba4f728c88f747a
    }
  
    /**
+@@ -6764,31 +6751,9 @@ class _SessionStore {
+    *        Options for the restoration
+    */
+   #restoreWindowFeatures(aWindow, aWinData, aOptions = {}) {
+-    // A restored window keeps its saved type: Classic stays Classic and Smart
+-    // stays Smart, for both automatic (startup.page=3 / crash) and manual
+-    // "Restore previous session" restores.
+-    // The only exception is the new startup window when Smart Window is the user's
+-    // default and we are NOT auto-restoring a session.
+-    // aOptions.firstWindow is set only for the initial startup window (manual
+-    // restores don't set it), and willRestore() is true only for automatic
+-    // restore / crash recovery — so this forces Smart for a genuinely new
+-    // default startup window, never for a window restored from a saved session.
+-    const isNewDefaultStartupWindow =
+-      aOptions.firstWindow &&
+-      !lazy.SessionStartup.willRestore() &&
+-      lazy.AIWindow.shouldOpenAsSmartWindow();
+-    const shouldBeAIWindow =
+-      isNewDefaultStartupWindow ||
+-      (!!aWinData.isAIWindow && lazy.AIWindow.isAIWindowEnabled());
+-
+-    const trigger = aOptions.trigger ?? "open_browser";
+-
+-    if (lazy.AIWindow.isAIWindowActive(aWindow) !== shouldBeAIWindow) {
+-      lazy.AIWindow.toggleAIWindow(aWindow, shouldBeAIWindow, trigger);
+-    } else if (shouldBeAIWindow) {
+-      lazy.AIWindow.recordOpenWindowTelemetry(trigger);
+-    }
+-
++    // GORILLA UNLEASHED (16.SNAPSHOT, carried to 158 by the rebase-set review 2026-10-15): no Smart Window toggle at
++    // restore. AIWindowStub has none of shouldOpenAsSmartWindow / isAIWindowEnabled / toggleAIWindow, so this threw
++    // on a non-resumed startup with pinned tabs (D-158-08, AI excised).
+     let promiseParts = Promise.withResolvers();
+     const wasMinimized = aWindow.windowState == aWindow.STATE_MINIMIZED;
+     aWindow.setTimeout(() => {
