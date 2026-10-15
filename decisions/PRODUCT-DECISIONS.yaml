@@ -1242,6 +1242,10 @@ decisions:
       (HD 4000 has no VP8 hardware; <video>, MSE and WebRTC stay hardware-only). The VP8 switch lived only in the
       owner's user.js until 2026-10-15, so a fresh profile would have had broken video calls. Not checked here yet:
       a live call (the publish gate's recorded real call on the same build).
+    platform_2026_10_16: >
+      Linux only (owner 2026-10-16: "on Windows WhatsApp installs as a desktop app; on Linux we were forced to use
+      WebRTC because there is NO desktop app for Linux"). Its patches live in 01.MEDIA, which the policy marks
+      platforms [linux]; the Windows port does not apply them, by design.
     verify:
       - pref: {name: media.peerconnection.dtls.version.max, value: 771}
       - pref: {name: dom.workers.maxPerDomain, value: 512}
