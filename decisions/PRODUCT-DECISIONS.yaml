@@ -1193,6 +1193,12 @@ decisions:
       in every region). The other 130 engine records of Mozilla's built-in list are removed from
       services/settings/dumps/main/search-config-v2.json, so they are neither listed nor switched on. A person can still
       add an engine by hand ("Add search engine"). No partner code is sent (D-157-23).
+    correction_2026_10_15: >
+      Correction, owner 2026-10-15 (the line above stays as the earlier state): "one search engine remains, Google.
+      We close the manual add as well; we do not trust sites that offer functions like this." No engine can be added
+      at all: not offered by a page (OpenSearch), not from a form field ("Add Search Engine"), not in Settings ("Add",
+      "Find more search engines"), not by a policy, and an engine saved by an earlier profile is not loaded.
+      SearchService.#addEngineToStore keeps only the application's own engines.
     verify:
       - tree_contains: {path: services/settings/dumps/main/search-config-v2.json, text: '"identifier": "google"'}
       - tree_contains: {path: services/settings/dumps/main/search-config-v2.json, text: 'https://www.google.com/search'}
@@ -1201,6 +1207,11 @@ decisions:
       - tree_lacks: {path: services/settings/dumps/main/search-config-v2.json, text: '"identifier": "wikipedia"'}
       - tree_lacks: {path: services/settings/dumps/main/search-config-v2.json, text: '"identifier": "perplexity"'}
       - tree_lacks: {path: services/settings/dumps/main/search-config-v2.json, text: '"identifier": "ebay"'}
+      - tree_contains: {path: toolkit/components/search/SearchService.sys.mjs, text: "GORILLA UNLEASHED - PHYSICAL LOCK: one search engine"}
+      - tree_contains: {path: toolkit/components/search/SearchService.sys.mjs, text: "if (!(engine instanceof lazy.AppProvidedConfigEngine)) {"}
+      - tree_contains: {path: browser/components/search/OpenSearchManager.sys.mjs, text: "no page offers a search engine (D-158-13, Google only)"}
+      - tree_contains: {path: browser/base/content/nsContextMenu.sys.mjs, text: 'this.showItem("context-add-engine", false);'}
+      - tree_contains: {path: browser/components/preferences/search.inc.xhtml, text: '<hbox id="addEnginesBox" pack="start" hidden="true">'}
 
   - id: D-158-14
     title: "The Windows Fable's appended dark layer in tokens-shared.css (patch 078) stays: an accepted exception to THEME-001"
@@ -1257,3 +1268,38 @@ decisions:
       - tree_contains: {path: dom/media/AudioStream.cpp, text: 'GORILLA PATCH 2026-08-10: envelope loudness compressor'}
       - tree_contains: {path: dom/media/AudioStream.cpp, text: 'FastTanh'}
       - tree_contains: {path: dom/media/webaudio/DynamicsCompressorNode.cpp, text: 'GORILLA PATCH removed 2026-08-10: the hardware-only bypass'}
+
+  - id: D-158-17
+    title: "Only Gorilla's own policies: no /etc/firefox/policies, no Windows registry (GPO), no alternate path"
+    decided: 2026-10-15
+    by: maintainer
+    provenance: 'chat 2026-10-15: audit found /etc/firefox/policies/policies.json is read FIRST on Linux (app name firefox, MOZ_SYSTEM_POLICIES) and replaces the Gorilla file, and its Preferences policy can unlock locked prefs; owner: "close this avenue, record the decision, turn it into a patch and make it a deterministic tool"'
+    status: enforced
+    why: >
+      Anything that can write a system policies file (a distro Firefox package, an installer, malware with root or
+      administrator rights) would reconfigure the browser without the person knowing, and could undo Gorilla's locks.
+      The browser reads distribution/policies.json in its own install folder and nothing else. On Windows the same
+      door is the registry (GPO), which Mozilla ranks above the file: closed the same way. Cost: an organisation
+      cannot manage Gorilla with system policies; Gorilla is not built for managed fleets.
+    verify:
+      - tree_contains: {path: toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs, text: "GORILLA UNLEASHED - PHYSICAL LOCK: only Gorilla's own policies (D-158-17"}
+      - tree_contains: {path: toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs, text: "if (AppConstants.MOZ_SYSTEM_POLICIES && provider === null) {"}
+      - tree_contains: {path: toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs, text: "this === null"}
+      - tree_contains: {path: toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs, text: "let perUserPath = false;"}
+      - installed_present: [distribution/policies.json]
+
+  - id: D-158-18
+    title: "No PKCS#11 module is ever loaded (Settings > Security Devices > Load is gone and refused in code)"
+    decided: 2026-10-15
+    by: maintainer
+    provenance: 'chat 2026-10-15, install-surface audit; owner: "if you cut it, create a patch for it, add it to the list of patches, update the source code as well as the harness"'
+    status: enforced
+    why: >
+      A PKCS#11 module is a native library (.so on Linux, .dll on Windows), a smart-card or crypto-token driver, that
+      runs inside the browser process with all of its rights. The Load button, an add-on's pkcs11 API or a policy
+      could load one, and a person can be talked into it. PKCS11ModuleDB::DoAddModule refuses every load, whichever
+      route. Mozilla's own built-in modules (the root certificates, the OS client-certificate module) are part of the
+      browser and unaffected. Cost: no smart cards or hardware tokens for client certificates.
+    verify:
+      - tree_contains: {path: security/manager/ssl/PKCS11ModuleDB.cpp, text: "GORILLA UNLEASHED - PHYSICAL LOCK: no PKCS#11 module is loaded (D-158-18"}
+      - tree_contains: {path: security/manager/pki/resources/content/device_manager.xhtml, text: 'data-l10n-id="devmgr-button-load" hidden="true"'}
