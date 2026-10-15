@@ -960,3 +960,169 @@ decisions:
       - mozconfig_has: {file: gorilla-patchset/mozconfig, text: "ac_add_options --enable-lto=thin"}
       - mozconfig_has: {file: gorilla-patchset/mozconfig, text: "ac_add_options --with-branding=browser/branding/gorilla"}
       - fieldkit_test: tests/test_firefox_preflight.py
+
+  - id: D-158-05
+    title: "The browser is named \"Gorilla Unleashed\" followed by its version (Gorilla Unleashed 158) wherever a person sees or searches for it"
+    decided: 2026-10-15
+    by: maintainer
+    provenance: 'chat 2026-10-15 (owner): "Gorilla Unleashed followed by the version name. the name should appear when you hover your mouse over the icon, should appear in task manager and in all the places where the browser will appear in a search"'
+    status: enforced
+    platforms: [linux]
+    why: >
+      One name, with the version, so a person always knows which browser and which release they are opening. The name
+      is formed, never typed: the branding's MOZ_APP_DISPLAYNAME ("Gorilla Unleashed") plus the major version of the
+      build (application.ini Version, 158). scripts/build_deb.sh stamps it into the desktop entry: Name= and
+      X-GNOME-FullName= (menus, the app grid, the dock), Comment= (the hover tooltip on docks that show it) and
+      Keywords= (desktop search). The template's hand-typed "Gorilla Unleashed 154" survived 155 and the first 158
+      package for exactly this reason. The Fieldkit pipeline refuses a package (verify_deb) and an install
+      (verify_install) whose names differ. The task manager shows the process name, which is the executable's file
+      name ("firefox", at most 15 characters in Linux process names): that part is NOT done yet and waits for the
+      owner's choice (see the chat of 2026-10-15).
+    verify:
+      - fieldkit_test: tests/test_build_deb_check.py
+
+  - id: D-158-06
+    title: "Old GPUs are never blocklisted, on every platform: the GPU blocklist is short-circuited IN CODE for Intel, AMD and NVIDIA, so 15-year-old laptops (Linux and Windows) keep hardware video decoding and WebRender"
+    decided: 2026-10-15
+    by: maintainer
+    provenance: 'chat 2026-10-15 (owner): "That file matters most not only for my vaio or for me, BUT FOR MILLIONS OF KIDS in Africa, South America, South East asia where people are living on $20 per month at best and the only laptops around are 15 years old laptops which Mozilla ... has put them on the banned list even though the cards are working perfectly still." Earlier rulings: GORILLA comments in widget/GfxDriverInfo.cpp (2026-08-02 "owner ruling, fleet unlock is TOTAL"), 02.GPU since Firefox 153.'
+    status: enforced
+    covers: ["widget/gtk/GfxInfo.cpp", "widget/GfxInfoBase.cpp", "widget/GfxDriverInfo.cpp"]
+    why: >
+      NON-NEGOTIABLE, the point of the project (owner 2026-10-15): "unlock the ASIC and the graphic cards for everyone,
+      for all the kids and make sure they hardware decode not via .prefs but via actual code changes ... keep an old
+      laptop cool so it does not fry up software decoding overloading the processors so a poor kid can still access
+      internet". A pref can be reset, overridden by policy or lost in a profile; the code path cannot. Prefs may help,
+      never carry it.
+      Who this is for: people on old, cheap laptops (Sandy Bridge, Ivy Bridge and their AMD and NVIDIA peers) who
+      cannot buy new ones. Upstream Firefox blocklists these GPUs, which turns off WebRender and hardware video decode
+      and pushes all video onto a 2012 CPU, so working silicon becomes unusable for video. Gorilla removes that
+      refusal at all three layers: the GTK platform test (widget/gtk/GfxInfo.cpp), the static blocklist engine
+      (widget/GfxInfoBase.cpp) and the device-family lists (widget/GfxDriverInfo.cpp).
+      Evidence (stated in input, measured on the Sony VAIO, Intel HD 4000 0x0166): Gorilla 153 audit
+      (SECOND.BRAIN RECOVERED_HISTORY.xml, "Cross-layer architectural audit report"): YouTube 1080p25 avc1, top about
+      0% CPU, intel_gpu_top Render 0% and Video about 8%, 0 of 1422 frames dropped. 154 media log
+      (patches/01.MEDIA/MASTER_PROJECT_LOG_FIREFOX_154_MEDIA_PATCHES.md): 1080p60 H.264 keeps the video engine about
+      1.5% busy (a frame in about 200 microseconds); its saturation table is estimates (16 simultaneous 1080p60 streams
+      about 24%, memory bandwidth the limit). Owner, 2026-10-15: saturating the ASIC would take about 200 simultaneous
+      1080p YouTube videos (owner's statement; the table above is the recorded estimate).
+      Windows (read from the 158 code, not yet proven by a Windows 158 build): widget/windows/GfxInfo.cpp
+      GetFeatureStatusImpl refuses before the shared code only an unknown, VM or Microsoft Basic adapter and a missing
+      or unparseable driver version; a real Intel/AMD/NVIDIA adapter reaches GfxInfoBase, where the short-circuit
+      returns FEATURE_STATUS_OK. Owner: the last GitHub build hardware-decodes on a ThinkPad L15 (owner's statement,
+      tested on that machine only). The Windows harness proves it on its own build before a release.
+      Lesson of 2026-10-15: the 157 patch set (exported from Windows) lacked the GTK layer; the first Linux 158 build
+      shipped without it until fieldkit build-harness archive-gap listed it. This entry's checks now refuse that.
+    verify:
+      - tree_contains: {path: widget/gtk/GfxInfo.cpp, text: "GORILLA OVERRIDE: Short-circuit blocklist and platform tests for", platform: linux}
+      - tree_contains: {path: widget/GfxInfoBase.cpp, text: "GORILLA OVERRIDE: Short-circuit blocklist for Intel/AMD/NVIDIA"}
+      - tree_contains: {path: widget/GfxDriverInfo.cpp, text: "GORILLA: Ivy Bridge un-blocklisted"}
+      - tree_contains: {path: widget/GfxDriverInfo.cpp, text: "GORILLA: Sandy Bridge un-blocklisted"}
+
+  - id: D-158-07
+    title: "Hardware-decoded video stays zero-copy on old chips: cool CPU first, at the price of about one dropped frame in five at 60 fps on Ivy Bridge"
+    decided: 2026-10-15
+    by: maintainer
+    provenance: 'chat 2026-10-15 (owner, translated from Romanian): "on old chips like this I would keep it ... one frame in five is almost invisible to the human eye". Earlier design: the 2026-07-05 hardware-only policy and the RemoteVideoDecoder zero-copy enforcement (01.MEDIA log): all video work on the ASIC, no double decoding, no CPU read-back.'
+    status: enforced
+    platforms: [linux]
+    covers: ["gfx/thebes/gfxPlatformGtk.cpp", "dom/media/ipc/RemoteVideoDecoder.cpp"]
+    why: >
+      Measured on the Sony VAIO (Intel HD 4000, i965, GNOME Wayland, 59.95 Hz panel), local 1080p H.264 clip, machine
+      isolated (fieldkit decode-test). Gorilla 158 forces hardware-decoded video zero-copy (gfxPlatformGtk
+      UserForceEnable under media.gorilla.hardware_only_mode): the frame goes from the video engine to the compositor
+      with no CPU copy. Cost and benefit, stated in input from the 2026-10-15 runs:
+      at 30 fps Gorilla drops under 1% (stock Firefox 158 about 2-3%); at 60 fps Gorilla drops 20-23% where stock
+      158 drops 8-14%; stock 158 with zero-copy forced drops 18.5%, so most of the gap is zero-copy itself on this
+      driver (the renderer waits on the video engine per frame). Gorilla uses about 43% of one core for 60 fps video,
+      stock about 72%: the CPU stays cool, which is the project's point (D-158-06). Network was not the cause: the
+      owner's YouTube 1080p60 run kept about 30 s of buffer at 46-50 Mb/s. Decoding is never doubled: 2392 frames
+      decoded once in RDD, all on VA-API. A remaining gap of about 4 points against stock-with-zero-copy is inside the
+      run-to-run wobble until confirmed by repeated runs (fieldkit pref-bisect confirm rule).
+      Revisit only with new measurements, never by argument: a change here must show the cooler CPU is kept.
+    verify:
+      - tree_contains: {path: gfx/thebes/gfxPlatformGtk.cpp, text: 'featureZeroCopy.UserForceEnable("Forced by Gorilla hardware-only policy");'}
+      - tree_contains: {path: dom/media/ipc/RemoteVideoDecoder.cpp, text: "GORILLA PATCH: Zero-copy IPC enforcement"}
+
+  - id: D-158-08
+    title: "No AI in the browser, on every platform: the AI window, AI tab groups, the AI sidebar and the Smartbar are removed from the code; the classic address bar only"
+    decided: 2026-10-15
+    by: maintainer
+    provenance: 'chat 2026-10-15 (owner, translated from Romanian): "I do not want anything related to AI in the code. I do not even know what the smartbar does, I do not want it; no AI-suggested groups; I want a classic bar ... All of these eat processor cycles and offer nothing constructive, they overload the processor and keep it in a loop even when the features are not used. I do not want the sidebar." Extends D-158-03.'
+    status: enforced
+    covers: ["browser/components/aiwindow/**", "browser/components/urlbar/**", "browser/modules/AIWindowStub.sys.mjs", "browser/locales/en-US/browser/aiWindow*.ftl", "browser/locales-preview/*.ftl", "browser/themes/shared/aiWindowSidebar.css"]
+    why: >
+      Code that is loaded costs CPU even when its feature is never used: parsing, observers, timers, network
+      checks. The rule: removed from the build, not hidden behind a pref. How it is done (stable across Firefox
+      versions, shared by Linux and Windows): the aiwindow component is taken out of browser/components/moz.build;
+      browser/modules/AIWindowStub.sys.mjs answers every leftover caller with "no" so upstream code cannot throw;
+      the Smartbar's SmartbarInput.mjs is deleted, so the classic bar is the only bar; the AI texts and the AI sidebar
+      stylesheet are neither shipped nor loaded by any window; the ML engine, smart tab groups and semantic history
+      are switched off and locked. Each Firefox version: re-check these with the register, adapt, never re-argue.
+    verify:
+      - tree_absent: [browser/components/urlbar/content/SmartbarInput.mjs]
+      - tree_present: [browser/modules/AIWindowStub.sys.mjs]
+      - tree_lacks: {path: browser/themes/shared/browser-shared.css, text: 'aiWindowSidebar.css'}
+      - tree_lacks: {path: browser/base/content/browser.xhtml, text: 'href="browser/aiWindow.ftl"'}
+      - tree_lacks: {path: browser/base/content/browser.xhtml, text: 'href="preview/smartTabGroups.ftl"'}
+      - pref: {name: browser.tabs.groups.smart.enabled, value: false, locked: true}
+      - pref: {name: browser.ml.enable, value: false, locked: true}
+      - pref: {name: browser.ml.chat.enabled, value: false, locked: true}
+      - pref: {name: places.semanticHistory.featureGate, value: false, locked: true}
+
+  - id: D-158-09
+    title: "The new-tab page is the Gorilla logo and a search box, permanently: no Top Sites, no sponsored shortcuts, no promotional tiles, no recommended-stories feed"
+    decided: 2026-10-15
+    by: maintainer
+    provenance: 'chat 2026-10-15 (owner, translated from Romanian): "the decision is and will remain permanent ... nothing from top sites, sponsored shortcuts and promotional tiles"; the recommended-stories feed "must be adapted on 158 and on any future version ... an open door that eats processor cycles and bandwidth and does not fit our philosophy of minimalism, efficiency and pragmatism. We do not need the extra bandwidth drain, processor use and open doors, and the telemetry that comes with them." Extends D-157-31.'
+    status: enforced
+    covers: ["browser/extensions/newtab/**", "browser/components/newtab/**"]
+    why: >
+      Every feed on the new-tab page fetches, renders and reports. Off is not enough: an enterprise policy, an
+      experiment or a stray pref change could turn a feed back on, so each is off AND locked, on both platforms. The
+      code that draws them is cut where it can be adapted per version (TopSites, Base, DiscoveryStreamBase); the
+      locks are the guarantee that holds even before that adaptation lands.
+    verify:
+      - pref: {name: browser.newtabpage.activity-stream.feeds.topsites, value: false, locked: true}
+      - pref: {name: browser.newtabpage.activity-stream.showSponsoredTopSites, value: false, locked: true}
+      - pref: {name: browser.newtabpage.activity-stream.showSponsored, value: false, locked: true}
+      - pref: {name: browser.newtabpage.activity-stream.feeds.section.topstories, value: false, locked: true}
+      - pref: {name: browser.newtabpage.activity-stream.feeds.system.topstories, value: false, locked: true}
+      - pref: {name: browser.newtabpage.activity-stream.discoverystream.enabled, value: false, locked: true}
+
+  - id: D-158-10
+    title: "The look is static: the Gorilla dark theme as it is, with no transitions, animations or effects that make the CPU or the GPU redraw"
+    decided: 2026-10-15
+    by: maintainer
+    provenance: 'chat 2026-10-15 (owner, translated from Romanian): "the colours and borders for tabs you see are the intended ones. We do not want transitions, changing colours, graphics-intensive things. The rule of thumb: everything that makes the processor kick in and the GPU ASIC redraw is a big no-no. We want the classic boring one look we have now; it is designed to keep Gorilla Firefox running on super old processors and laptops ... whatever Fable did from the Windows laptop seems to be working, so leave it if it is not broken." Extends D-157-04.'
+    status: enforced
+    covers: ["browser/themes/**", "toolkit/themes/**"]
+    why: >
+      An animation or a transition repaints the window many times a second; on a 2012 laptop that is CPU and GPU
+      time taken from the page. The current look (pink tabs, cyan borders, black; the Windows-built theme of 157,
+      ported to 158) is the reference and is not reworked. The design-system token files
+      (toolkit/themes/shared/design-system/dist/tokens-*.css) are generated upstream and are not patched: the Gorilla
+      colours come from the theme, which is how 157 and 158 already look right. A visual change must show it adds no
+      repaint.
+    verify:
+      - pref: {name: ui.prefersReducedMotion, value: 1}
+
+  - id: D-158-11
+    title: "The working build is unpacked (no omni.ja) so styles, scripts and texts can be changed without recompiling; only the release uploaded to GitHub is packed"
+    decided: 2026-08-02
+    by: maintainer
+    provenance: 'Brain lesson Unpackaged_Dev_Build_Inject_Dont_Full_Compile (2026-08-02, verified then: no omni.ja in obj*/dist/bin); recorded in the register 2026-10-15 at the owner''s request (translated from Romanian): "on Linux we had a convention that when we compile, omni.ja and the rest are not compressed and archived, especially because we need to modify CSS styles and everything ... this saves us from recompiling during fine tweaking and troubleshooting. Only the binary uploaded to GitHub comes with a zipped omni.ja and the rest. Is the decision still enforced or noted somewhere? If not, this needs to be part of the harness."'
+    status: enforced
+    platforms: [linux]
+    why: >
+      A full build of Firefox on the VAIO takes about 90 minutes (C++ compile and libxul link); a change to a .css,
+      .mjs, .ftl or a pref needs none of that. The dev build keeps those as loose files in dist/bin and the local .deb
+      copies them as they are, so a style tweak is `./mach build faster` (minutes) or a direct edit in dist/bin
+      (seconds). The Fieldkit build stage decides by itself (firefox_linux.build_mode): it compares the tree with the
+      commit of the last successful build (obj-*/.gorilla-built-commit) and runs the full build only when a compiled
+      source changed (C/C++, Rust, WebIDL, IPDL, moz.build, jar.mn, StaticPrefList.yaml, mozconfig). The release for
+      GitHub is the one packed build (omni.ja); that packing step belongs to the release stage (S9), never to the
+      working build.
+    verify:
+      - installed_absent: [omni.ja, browser/omni.ja]
+      - fieldkit_test: tests/test_build_mode.py

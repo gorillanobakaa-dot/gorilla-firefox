@@ -87,5 +87,34 @@
       "status": "enabled",
       "reason": "Every privacy cut made in source for 157 (telemetry, Remote Settings, Normandy, hidden about: pages). Cross-platform; 80 patches, 57 files touched by more than one patch: a stacked series, apply in order only."
     }
+  },
+  "must_keep": {
+    "_why": "Files the shared patch set must always carry, whichever platform regenerates it. 2026-10-03 (commit 1070063) the set was rebuilt from the Windows 157 tree and 83 patch files vanished, among them the Linux GPU unlock and the font listing, while the prose above still promised them. Checked before every build by the Fieldkit preflight row must-keep (the patch exists in patches/ and the tree changes the file).",
+    "files": [
+      {
+        "file": "widget/gtk/GfxInfo.cpp",
+        "platform": "linux",
+        "decision": "D-158-06",
+        "why": "GPU blocklist unlock, GTK layer: old Intel/AMD/NVIDIA keep hardware video decode and WebRender"
+      },
+      {
+        "file": "widget/GfxInfoBase.cpp",
+        "platform": "all",
+        "decision": "D-158-06",
+        "why": "GPU blocklist short-circuit, shared layer (Linux and Windows)"
+      },
+      {
+        "file": "widget/GfxDriverInfo.cpp",
+        "platform": "all",
+        "decision": "D-158-06",
+        "why": "Sandy/Ivy Bridge device families taken off the blocklist (Linux and Windows)"
+      },
+      {
+        "file": "browser/fonts/moz.build",
+        "platform": "linux",
+        "decision": "settled 2026-08-03",
+        "why": "the Microsoft fonts are listed so they ship inside the .deb"
+      }
+    ]
   }
 }

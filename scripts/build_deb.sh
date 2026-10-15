@@ -157,6 +157,51 @@ else
   echo "WARN: magick missing — 1024 app-grid icon left as raw non-square master (renders small)" >&2
 fi
 
+# NAME = BRANDING + VERSION (D-158-05, owner 2026-10-15: "Gorilla Unleashed followed by the version", on hover, in
+# the task manager and wherever the browser appears in a search). The template said "Gorilla Unleashed 154" through
+# 155 and 158 because nobody stamped it. Stamped here from the branding's MOZ_APP_DISPLAYNAME and the built
+# application.ini's major version, into every name a desktop shows or searches: Name, X-GNOME-FullName, Comment
+# (the hover tooltip on many docks), Keywords. Checked by the Fieldkit pipeline (package stage, verify_deb).
+DISPLAYNAME=$(sed -n 's/^MOZ_APP_DISPLAYNAME="\{0,1\}\([^"]*\)"\{0,1\}$/\1/p' "$BR/configure.sh" 2>/dev/null | head -1)
+MAJOR=$(sed -n 's/^Version=\([0-9]*\).*/\1/p' "$DIST_BIN/application.ini" | head -1)
+if [ -n "$DISPLAYNAME" ] && [ -n "$MAJOR" ]; then
+  APPNAME="$DISPLAYNAME $MAJOR"
+  python3 - "$STAGE/usr/share/applications/gorilla-unleashed.desktop" "$APPNAME" <<'PY'
+import sys, re
+path, name = sys.argv[1:3]
+s = open(path).read()
+head, sep, rest = s.partition("\n[Desktop Action")
+def put(text, key, value):
+    if re.search(rf"(?m)^{key}=", text):
+        return re.sub(rf"(?m)^{key}=.*$", f"{key}={value}", text, count=1)
+    return text.rstrip("\n") + f"\n{key}={value}\n"
+head = put(head, "Name", name)
+head = put(head, "X-GNOME-FullName", name)
+head = put(head, "Comment", f"{name} web browser")
+words = name.split()
+kw = re.search(r"(?m)^Keywords=(.*)$", head)
+have = [k for k in (kw.group(1).split(";") if kw else []) if k]
+head = put(head, "Keywords", ";".join(dict.fromkeys(words + have)) + ";")
+open(path, "w").write(head + sep + rest)
+PY
+  echo "   name: $APPNAME (branding $BR/configure.sh + application.ini)"
+else
+  echo "FATAL: cannot name the package: MOZ_APP_DISPLAYNAME='$DISPLAYNAME' major version='$MAJOR'" >&2; exit 1
+fi
+
+# PROGRAM NAME AND WINDOW IDENTITY (D-158-05, owner 2026-10-15: yes to renaming the program file).
+# - RemotingName in application.ini is read at start-up and becomes the Wayland app_id / X11 WM_CLASS of any window
+#   started without --name. It was "firefox-default", so a link opened from another app, or any plain launch, showed
+#   in the dock as "firefox-default" with a generic icon. Now gorilla-unleashed, matching StartupWMClass.
+# - The program is shipped as gorilla-unleashed beside firefox (kept for existing scripts): the task manager shows
+#   the file name, cut by Linux to 15 characters ("gorilla-unleash"). The menu entry starts the new name.
+APPDIR="$STAGE/usr/lib/gorilla-unleashed"
+sed -i 's/^RemotingName=.*/RemotingName=gorilla-unleashed/' "$APPDIR/application.ini"
+cp -p "$APPDIR/firefox" "$APPDIR/gorilla-unleashed"
+sed -i 's#/usr/lib/gorilla-unleashed/firefox #/usr/lib/gorilla-unleashed/gorilla-unleashed #g' \
+  "$STAGE/usr/share/applications/gorilla-unleashed.desktop"
+echo "   program: gorilla-unleashed (RemotingName gorilla-unleashed)"
+
 # 4. DEBIAN/control — bump version, compute Installed-Size (KB), keep the rest
 INSTALLED_KB=$(du -sk "$STAGE" | cut -f1)
 CTRL="$STAGE/DEBIAN/control"

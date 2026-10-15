@@ -2,3 +2,5 @@
 set -e
 echo "🔄 Updating system icon cache..."
 gtk-update-icon-cache -f -t /usr/share/icons/hicolor || true
+echo "Updating the desktop menu database..."
+update-desktop-database -q /usr/share/applications || true
