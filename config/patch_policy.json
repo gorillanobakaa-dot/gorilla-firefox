@@ -371,7 +371,8 @@
         "020-no-sync-sign-in-promo-in-the-app-menu-158-s-own-dismissed-pr.patch",
         "026-d-158-15-webcodecs-software-vp8-whatsapp-web-calls-is-a-buil.patch",
         "029-d-157-05-d-157-04-d-157-03-install-surface-closed-gorilla-20.patch",
-        "030-rebase-set-review-2026-10-15-superseded-157-patches-whose-lo.patch"
+        "030-rebase-set-review-2026-10-15-superseded-157-patches-whose-lo.patch",
+        "031-rebase-set-review-2026-10-15-list-a-sessionstore-restore-no-.patch"
       ],
       "superseded_158": [
         "005-about-smartpage-unregistered-d-157-00-158-renamed-about-aita.patch",
@@ -381,7 +382,8 @@
         "020-no-sync-sign-in-promo-in-the-app-menu-158-s-own-dismissed-pr.patch",
         "026-d-158-15-webcodecs-software-vp8-whatsapp-web-calls-is-a-buil.patch",
         "029-d-157-05-d-157-04-d-157-03-install-surface-closed-gorilla-20.patch",
-        "030-rebase-set-review-2026-10-15-superseded-157-patches-whose-lo.patch"
+        "030-rebase-set-review-2026-10-15-superseded-157-patches-whose-lo.patch",
+        "031-rebase-set-review-2026-10-15-list-a-sessionstore-restore-no-.patch"
       ],
       "exclude_reason_158": "Superseded for Firefox 158: does not apply to pristine 158; the file's 158 form is in 23.REBASE.158 (rebase-set). Kept on disk as history."
     },
