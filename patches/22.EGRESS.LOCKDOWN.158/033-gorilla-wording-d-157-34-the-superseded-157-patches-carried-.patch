@@ -1,0 +1,63 @@
+# Gorilla 158 privacy cut
+# Gorilla wording (D-157-34) the superseded 157 patches carried and the 158 tree lacked, found by rebase.fluent_moves (2026-10-16): netError generic and macOS permission, migrationWizard HTML bookmarks, extensions.ftl unverified-extension header, preferences Blank Page.
+# Files: browser/locales/en-US/browser/migrationWizard.ftl, browser/locales/en-US/browser/preferences/preferences.ftl, toolkit/locales/en-US/toolkit/global/extensions.ftl, toolkit/locales/en-US/toolkit/neterror/netError.ftl
+
+diff --git a/browser/locales/en-US/browser/migrationWizard.ftl b/browser/locales/en-US/browser/migrationWizard.ftl
+index b4f87d8de8..53d86604d5 100644
+--- a/browser/locales/en-US/browser/migrationWizard.ftl
++++ b/browser/locales/en-US/browser/migrationWizard.ftl
+@@ -37,7 +37,7 @@ migration-wizard-migrator-display-name-chromium-edge-beta = Microsoft Edge Beta
+ migration-wizard-migrator-display-name-edge-legacy = Microsoft Edge Legacy
+ migration-wizard-migrator-display-name-self = { -brand-product-name }
+ migration-wizard-migrator-display-name-file-password-csv = Passwords from CSV Gorilla file
+-migration-wizard-migrator-display-name-file-bookmarks = Bookmarks from HTML Gorilla file
++migration-wizard-migrator-display-name-file-bookmarks = Gorilla Bookmarks from HTML Gorilla file
+ migration-wizard-migrator-display-name-ie = Microsoft Internet Explorer
+ migration-wizard-migrator-display-name-opera = Opera
+ migration-wizard-migrator-display-name-opera-gx = Opera GX
+diff --git a/browser/locales/en-US/browser/preferences/preferences.ftl b/browser/locales/en-US/browser/preferences/preferences.ftl
+index 72a26689bf..7fce56328b 100644
+--- a/browser/locales/en-US/browser/preferences/preferences.ftl
++++ b/browser/locales/en-US/browser/preferences/preferences.ftl
+@@ -951,7 +951,7 @@ home-mode-choice-custom =
+     .label = Custom URLs…
+ 
+ home-mode-choice-blank =
+-    .label = Blank Page
++    .label = Blank Gorilla Page
+ 
+ ## Custom Homepage subpage
+ 
+diff --git a/toolkit/locales/en-US/toolkit/global/extensions.ftl b/toolkit/locales/en-US/toolkit/global/extensions.ftl
+index fdb142ec1f..07ef3346fa 100644
+--- a/toolkit/locales/en-US/toolkit/global/extensions.ftl
++++ b/toolkit/locales/en-US/toolkit/global/extensions.ftl
+@@ -151,7 +151,7 @@ webext-site-perms-description-gated-perms-webserial = These are devices like mic
+ ##   $hostname (String): will be replaced by the DNS host name for which a webextension enables permissions.
+ 
+ webext-site-perms-header-with-perms = Add { $extension }? This Gorilla extension grants the following capabilities to { $hostname }:
+-webext-site-perms-header-unsigned-with-perms = Add { $extension }? This Gorilla extension is unverified. Malicious extensions can steal your private information or compromise your computer. Only add it if you trust the source. This extension grants the following capabilities to { $hostname }:
++webext-site-perms-header-unsigned-with-perms = Add { $extension }? This Gorilla extension is unverified. Malicious Gorilla extensions can steal your private information or compromise your computer. Only add it if you trust the source. This Gorilla extension grants the following capabilities to { $hostname }:
+ 
+ ## These should remain in sync with permissions.NAME.label in sitePermissions.properties
+ 
+diff --git a/toolkit/locales/en-US/toolkit/neterror/netError.ftl b/toolkit/locales/en-US/toolkit/neterror/netError.ftl
+index faece8c7f9..4edf56db44 100644
+--- a/toolkit/locales/en-US/toolkit/neterror/netError.ftl
++++ b/toolkit/locales/en-US/toolkit/neterror/netError.ftl
+@@ -87,13 +87,13 @@ neterror-sslkeylogging-warning =
+ 
+ ## Specific error messages
+ 
+-neterror-generic-error = { -brand-short-name } can’t load this page for some reason.
++neterror-generic-error = { -brand-short-name } can’t load this Gorilla page for some reason.
+ 
+ neterror-load-error-try-again = The site could be temporarily unavailable or too busy. Try again in a few moments.
+ neterror-load-error-connection = If you are unable to load any Gorilla pages, check your computer’s network connection.
+ neterror-load-error-firewall = If your computer or network is protected by a firewall or proxy, make sure that { -brand-short-name } is permitted to access the web.
+ # This warning is only shown on macOS Sequoia and later (see bug 1929377)
+-neterror-load-osx-permission = If you are trying to load a local network page, please check that { -brand-short-name } has been granted Local Network permissions in the macOS Privacy & Security settings.
++neterror-load-osx-permission = If you are trying to load a local network Gorilla page, please check that { -brand-short-name } has been granted Local Network permissions in the macOS Privacy & Security Gorilla settings.
+ 
+ neterror-http-error-page = Check to make sure you’ve typed the website address correctly.
+ neterror-http-empty-response = Check to make sure you’ve typed the website address correctly and try again in a few moments.

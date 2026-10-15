@@ -3,7 +3,7 @@
 # exclude_reason_158); this patch carries the file from the remaining set to the built tree.
 
 diff --git a/browser/locales/en-US/browser/migrationWizard.ftl b/browser/locales/en-US/browser/migrationWizard.ftl
-index d27c77501a658c75a177150e7a2df4ceda4387ae..b4f87d8de891548dd7c94fe5a789be8a507f4406 100644
+index d27c77501a658c75a177150e7a2df4ceda4387ae..53d86604d5983fe379db915eefd0781063d665d6 100644
 --- a/browser/locales/en-US/browser/migrationWizard.ftl
 +++ b/browser/locales/en-US/browser/migrationWizard.ftl
 @@ -1,8 +1,7 @@
@@ -29,7 +29,7 @@ index d27c77501a658c75a177150e7a2df4ceda4387ae..b4f87d8de891548dd7c94fe5a789be8a
 -migration-wizard-migrator-display-name-file-password-csv = Passwords from CSV file
 -migration-wizard-migrator-display-name-file-bookmarks = Bookmarks from HTML file
 +migration-wizard-migrator-display-name-file-password-csv = Passwords from CSV Gorilla file
-+migration-wizard-migrator-display-name-file-bookmarks = Bookmarks from HTML Gorilla file
++migration-wizard-migrator-display-name-file-bookmarks = Gorilla Bookmarks from HTML Gorilla file
  migration-wizard-migrator-display-name-ie = Microsoft Internet Explorer
  migration-wizard-migrator-display-name-opera = Opera
  migration-wizard-migrator-display-name-opera-gx = Opera GX

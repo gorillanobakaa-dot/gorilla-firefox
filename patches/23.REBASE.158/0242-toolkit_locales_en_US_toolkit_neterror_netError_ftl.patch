@@ -3,7 +3,7 @@
 # exclude_reason_158); this patch carries the file from the remaining set to the built tree.
 
 diff --git a/toolkit/locales/en-US/toolkit/neterror/netError.ftl b/toolkit/locales/en-US/toolkit/neterror/netError.ftl
-index 6159e363d1c750fa8a49f1dfc0f69ca495abf290..faece8c7f9a98046e728c13f77709adb0b700102 100644
+index 6159e363d1c750fa8a49f1dfc0f69ca495abf290..4edf56db446ca774f7891f96b6e9049b49702cf3 100644
 --- a/toolkit/locales/en-US/toolkit/neterror/netError.ftl
 +++ b/toolkit/locales/en-US/toolkit/neterror/netError.ftl
 @@ -1,13 +1,11 @@
@@ -41,15 +41,23 @@ index 6159e363d1c750fa8a49f1dfc0f69ca495abf290..faece8c7f9a98046e728c13f77709adb
  neterror-view-certificate-link = View Certificate
  
  ## Search call-to-action shown on the online dnsNotFound error page when
-@@ -92,7 +90,7 @@ neterror-sslkeylogging-warning =
- neterror-generic-error = { -brand-short-name } can’t load this page for some reason.
+@@ -89,13 +87,13 @@ neterror-sslkeylogging-warning =
+ 
+ ## Specific error messages
+ 
+-neterror-generic-error = { -brand-short-name } can’t load this page for some reason.
++neterror-generic-error = { -brand-short-name } can’t load this Gorilla page for some reason.
  
  neterror-load-error-try-again = The site could be temporarily unavailable or too busy. Try again in a few moments.
 -neterror-load-error-connection = If you are unable to load any pages, check your computer’s network connection.
 +neterror-load-error-connection = If you are unable to load any Gorilla pages, check your computer’s network connection.
  neterror-load-error-firewall = If your computer or network is protected by a firewall or proxy, make sure that { -brand-short-name } is permitted to access the web.
  # This warning is only shown on macOS Sequoia and later (see bug 1929377)
- neterror-load-osx-permission = If you are trying to load a local network page, please check that { -brand-short-name } has been granted Local Network permissions in the macOS Privacy & Security settings.
+-neterror-load-osx-permission = If you are trying to load a local network page, please check that { -brand-short-name } has been granted Local Network permissions in the macOS Privacy & Security settings.
++neterror-load-osx-permission = If you are trying to load a local network Gorilla page, please check that { -brand-short-name } has been granted Local Network permissions in the macOS Privacy & Security Gorilla settings.
+ 
+ neterror-http-error-page = Check to make sure you’ve typed the website address correctly.
+ neterror-http-empty-response = Check to make sure you’ve typed the website address correctly and try again in a few moments.
 @@ -120,7 +118,6 @@ neterror-dns-not-found-offline-hint-reconnect = Disconnect and reconnect to Wi-F
  ## Variables:
  ##   $hostname (String) - Hostname of the website to which the user was trying to connect.

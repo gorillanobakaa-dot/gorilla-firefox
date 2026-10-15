@@ -3,7 +3,7 @@
 # exclude_reason_158); this patch carries the file from the remaining set to the built tree.
 
 diff --git a/browser/locales/en-US/browser/preferences/preferences.ftl b/browser/locales/en-US/browser/preferences/preferences.ftl
-index 1e4acae2ef882311f8cf167fe866e228ed4f8242..72a26689bf0fe9aed161a3afd0c5e34357c8c92c 100644
+index 1e4acae2ef882311f8cf167fe866e228ed4f8242..7fce56328b99e759d7f286e8f1d2e667d2e8aa21 100644
 --- a/browser/locales/en-US/browser/preferences/preferences.ftl
 +++ b/browser/locales/en-US/browser/preferences/preferences.ftl
 @@ -1,7 +1,6 @@
@@ -756,6 +756,15 @@ index 1e4acae2ef882311f8cf167fe866e228ed4f8242..72a26689bf0fe9aed161a3afd0c5e343
  
  is-not-default-browser-2 =
      .message = Psst, { -brand-short-name } isn’t your default.
+@@ -962,7 +951,7 @@ home-mode-choice-custom =
+     .label = Custom URLs…
+ 
+ home-mode-choice-blank =
+-    .label = Blank Page
++    .label = Blank Gorilla Page
+ 
+ ## Custom Homepage subpage
+ 
 @@ -1032,14 +1021,14 @@ search-default-engine =
  # With this option enabled, while on a SERP, the URL normally displayed in the
  # address bar will be replaced with the search term used to generate that SERP.
