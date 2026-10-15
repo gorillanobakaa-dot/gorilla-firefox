@@ -120,18 +120,14 @@ for bin in firefox glxtest vaapitest plugin-container updater pingsender; do
   f="$STAGE/usr/lib/gorilla-unleashed/$bin"; [ -f "$f" ] && strip -s "$f" 2>/dev/null || true
 done
 
-# 3. branding: about-logo — ONE artwork, PROPER-SIZED (one-PNG doctrine + Crisp_Logo lesson).
-#    about-logo.svg (embeds a 1200px raster) is the newtab/PB artwork via master-redirect. The
-#    PNGs are only for about:dialog: 500px + 1000px @2x, Lanczos-DOWNSAMPLED from the master.
-#    NEVER copy the ~8MB 2598px master verbatim — that duplicated ~15MB of dead pixels.
+# 3. branding: about-logo is shipped AS BUILT (D-157-35, one master). Until 2026-10-15 this step regenerated it here:
+#    a 500px about-logo.png over the build's 1400px master and an extra 1000px about-logo@2x.png, written for the
+#    154/155 one-PNG doctrine. D-157-35 (2026-10-07) made ONE 1400px master, linked by every page and decoded once,
+#    and retired the @2x copy; this step undid that in every .deb (the blurry 500px gorilla of the first 158 install,
+#    and the register's omni_absent FAIL on about-logo@2x.png). The picture now comes only from the tree, checked by
+#    fieldkit preflight `binary-patches` and the package check `about-logo is the tree's master`.
+# the branding folder of the tree that was built (hicolor icons below, the display name further down)
 BR="${5:-$(cd "$DIST_BIN/../../.." 2>/dev/null && pwd)/browser/branding/gorilla}"
-ALOGO="$STAGE/usr/lib/gorilla-unleashed/browser/chrome/browser/content/branding"
-if [ -d "$ALOGO" ] && [ -f "$ICON_MASTER" ] && command -v magick >/dev/null; then
-  magick "$ICON_MASTER" -fuzz 5% -trim -filter Lanczos -resize 500x500 \
-    -background none -gravity center -extent 500x500 "$ALOGO/about-logo.png"
-  magick "$ICON_MASTER" -fuzz 5% -trim -filter Lanczos -resize 1000x1000 \
-    -background none -gravity center -extent 1000x1000 "$ALOGO/about-logo@2x.png"
-fi
 # hicolor app icon sizes from the branding set (for the .desktop Icon= entry)
 for sz in 16 22 24 32 48 64 128 256; do
   src="$BR/default${sz}.png"
