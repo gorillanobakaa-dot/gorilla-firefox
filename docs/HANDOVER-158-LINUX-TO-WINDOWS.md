@@ -79,7 +79,8 @@ Filed this session: D-158-08 excision order; dialog cut by a 0.01 ms transition;
 rule); rsync code 23 / stale .deb; pipeline pristine src; icon shadows / stale GNOME shell; CI silent commit identity;
 export missed direct commits + Windows-only owner script; patch set never carried onto 158 (rebase-set); no OS
 selection in the policy; add-on refusal is the design (register first). Port-and-teach lessons: 12 recorded lines,
-7 distinct (the duplicates were written twice by the porting runs; kept, all ruled in lessonrules.py).
+8 distinct (4 were written twice by the porting runs; kept, never deleted; all 8 ruled in lessonrules.py). The
+brain lessons of this session were checked for duplicates by query: one entry each.
 
 ## 5. State of the repositories
 
