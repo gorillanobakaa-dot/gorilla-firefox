@@ -116,5 +116,11 @@
         "why": "the Microsoft fonts are listed so they ship inside the .deb"
       }
     ]
-  }
+  },
+  "binary_exempt": {
+    "browser/branding/gorilla/wizHeader.bmp": "Windows NSIS installer bitmap, not used by the Linux build. The set's delta payload is corrupt: `git apply --check` says 'corrupt binary patch' (2026-10-15, binary-patches audit). The Windows harness must re-export it from its tree; on Windows this exemption does not apply.",
+    "browser/branding/gorilla/wizHeaderRTL.bmp": "Windows NSIS installer bitmap, not used by the Linux build. The set's delta payload is corrupt: `git apply --check` says 'corrupt binary patch' (2026-10-15, binary-patches audit). The Windows harness must re-export it from its tree; on Windows this exemption does not apply.",
+    "browser/branding/gorilla/wizWatermark.bmp": "Windows NSIS installer bitmap, not used by the Linux build. The set's delta payload is corrupt: `git apply --check` says 'corrupt binary patch' (2026-10-15, binary-patches audit). The Windows harness must re-export it from its tree; on Windows this exemption does not apply."
+  },
+  "_binary_exempt_note": "binary_exempt {path: reason}: a GIT binary patch section a person decided this platform does without. Read by fieldkit build-harness binary-patches and the preflight row binary-patches (BLOCKER otherwise)."
 }

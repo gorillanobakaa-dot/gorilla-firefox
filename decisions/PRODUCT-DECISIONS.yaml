@@ -390,6 +390,10 @@ decisions:
     why: >
       The policy file re-locks Normandy, experiments and other doors at runtime even if a pref were somehow changed.
       It was in the tree but missing from the 155.0.1 and 157 installs. Invisible to users.
+    correction: >
+      2026-10-15, owner: NOT invisible. Settings shows "Your Gorilla browser is being managed by your organization"
+      on every page because of this file. That banner is intentional, part of Gorilla's charm and branding: keep it,
+      never report it as a defect, never hide it.
     verify:
       - installed_present: [distribution/policies.json]
 
@@ -1126,3 +1130,53 @@ decisions:
     verify:
       - installed_absent: [omni.ja, browser/omni.ja]
       - fieldkit_test: tests/test_build_mode.py
+
+  - id: D-158-12
+    title: "Segoe UI is the default text font on every machine (the clearest on small screens); not locked"
+    decided: 2026-10-15
+    by: maintainer
+    provenance: 'chat 2026-10-15, screenshot of Settings > Accessibility > Fonts showing "Inter": "you need to look at the fonts for settings as normally in the previous ones we set the best font for clarity and that was set by default ... the segoe fonts are the clearest one especially for smaller screen"'
+    status: enforced
+    why: >
+      Firefox's default family is serif, and serif is whatever the machine's fontconfig names (Inter on the VAIO, where
+      sans-serif happened to be Segoe UI Variable), so the text font changed from machine to machine. The Segoe fonts
+      ship inside the package (11.FONT.SYSTEM), so the build names them: default family sans-serif, sans-serif = Segoe UI.
+      Not locked, so a person who needs another font for reading can still choose it.
+    verify:
+      - pref: {name: font.default.x-western, value: sans-serif, locked: false}
+      - pref: {name: font.name.sans-serif.x-western, value: Segoe UI, locked: false}
+
+  - id: D-158-13
+    title: "Google (google.com) is the only built-in search engine"
+    decided: 2026-10-15
+    by: maintainer
+    provenance: 'chat 2026-10-15, after the screenshot of Settings > Search showing Google, Bing, DuckDuckGo, eBay, Perplexity and Wikipedia all switched on ("it still brings in a lot of other search engines and they are enabled by default"); asked which to keep: "just google. american . dot.com"'
+    status: enforced
+    why: >
+      One engine, the one the owner chose, at its .com address (the google record searches https://www.google.com/search
+      in every region). The other 130 engine records of Mozilla's built-in list are removed from
+      services/settings/dumps/main/search-config-v2.json, so they are neither listed nor switched on. A person can still
+      add an engine by hand ("Add search engine"). No partner code is sent (D-157-23).
+    verify:
+      - tree_contains: {path: services/settings/dumps/main/search-config-v2.json, text: '"identifier": "google"'}
+      - tree_contains: {path: services/settings/dumps/main/search-config-v2.json, text: 'https://www.google.com/search'}
+      - tree_lacks: {path: services/settings/dumps/main/search-config-v2.json, text: '"identifier": "bing"'}
+      - tree_lacks: {path: services/settings/dumps/main/search-config-v2.json, text: '"identifier": "ddg"'}
+      - tree_lacks: {path: services/settings/dumps/main/search-config-v2.json, text: '"identifier": "wikipedia"'}
+      - tree_lacks: {path: services/settings/dumps/main/search-config-v2.json, text: '"identifier": "perplexity"'}
+      - tree_lacks: {path: services/settings/dumps/main/search-config-v2.json, text: '"identifier": "ebay"'}
+
+  - id: D-158-14
+    title: "The Windows Fable's appended dark layer in tokens-shared.css (patch 078) stays: an accepted exception to THEME-001"
+    decided: 2026-10-15
+    by: maintainer
+    provenance: 'chat 2026-10-15, asked whether THEME-001 (theme colours only in master-redirect.css, 2026-08-27) or patch 078 (2026-10-07) wins: "the fable work seems to be fine... it was fine work no? everything worked so we keep the fable work"'
+    status: enforced
+    why: >
+      Patch 078 appends one layered block to toolkit/themes/shared/design-system/dist/tokens-shared.css (two grays set to
+      pure black in the last foundation layer) and leaves the rest of the file as upstream's own, so a later Firefox
+      needs no merge. It worked on Windows. The August gate THEME-001 forbade any change to the generated token files;
+      it now accepts this file when the divergence is exactly that appended GORILLA block, and still fails on anything
+      else.
+    verify:
+      - tree_contains: {path: toolkit/themes/shared/design-system/dist/tokens-shared.css, text: 'GORILLA (2026-10-07): the Gorilla dark look on top of upstream'}
