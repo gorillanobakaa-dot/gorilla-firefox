@@ -1,0 +1,118 @@
+# Gorilla 158 privacy cut
+# Rebase-set review 2026-10-15 (superseded 157 patches whose logic was not in 158): DNS negative cache 3 s (03.NETWORKING nsHostResolver; 158 turned the constant into network.dnsNegativeCacheExpiration); Gorilla wording carried to the 158 ids of browser.ftl search-mode chips, preferences.ftl (5 labels), appmenu Save Page As, netError, extensions.ftl site-permission headers (08.Look).
+# Files: browser/app/profile/firefox.js, browser/locales/en-US/browser/appmenu.ftl, browser/locales/en-US/browser/browser.ftl, browser/locales/en-US/browser/preferences/preferences.ftl, toolkit/locales/en-US/toolkit/global/extensions.ftl, toolkit/locales/en-US/toolkit/neterror/netError.ftl
+
+diff --git a/browser/app/profile/firefox.js b/browser/app/profile/firefox.js
+index eb1aebcbbb..0e224c736b 100644
+--- a/browser/app/profile/firefox.js
++++ b/browser/app/profile/firefox.js
+@@ -4050,6 +4050,10 @@ pref("network.buffer.cache.count",                  128);
+ pref("network.buffer.cache.size",                   524288);
+ pref("network.dns.disablePrefetch", true, locked);
+ pref("network.dns.disablePrefetchFromHTTPS", true, locked);
++// GORILLA (03.NETWORKING nsHostResolver, carried to 158 by rebase-set review 2026-10-15): a failed DNS lookup is
++// remembered 3 s, not 60, so a call's signalling host that changed address is reached again quickly. 158 replaced
++// the NEGATIVE_RECORD_LIFETIME constant the 157 patch edited with this pref.
++pref("network.dnsNegativeCacheExpiration", 3);
+ pref("network.http.connection-timeout",             10);
+ pref("network.http.http2.enabled",                  true);
+ pref("network.http.http2.send-buffer-size", 0);
+diff --git a/browser/locales/en-US/browser/appmenu.ftl b/browser/locales/en-US/browser/appmenu.ftl
+index 28f8defff4..b1444799f7 100644
+--- a/browser/locales/en-US/browser/appmenu.ftl
++++ b/browser/locales/en-US/browser/appmenu.ftl
+@@ -200,7 +200,7 @@ appmenu-fxa-sign-in-promo-dismiss-button =
+ appmenu-fxa-setup-sync =
+     .label = Turn On Syncing…
+ appmenuitem-save-page =
+-    .label = Save Page As…
++    .label = Save Gorilla Page As…
+ 
+ ## The Firefox Profiler – The popup is the UI to turn on the profiler, and record
+ ## performance profiles. To enable it go to profiler.firefox.com and click
+diff --git a/browser/locales/en-US/browser/browser.ftl b/browser/locales/en-US/browser/browser.ftl
+index 228e8c2f70..a96d1978b2 100644
+--- a/browser/locales/en-US/browser/browser.ftl
++++ b/browser/locales/en-US/browser/browser.ftl
+@@ -866,9 +866,9 @@ urlbar-searchmode-no-keyword2 =
+ 
+ urlbar-searchmode-dropmarker2 =
+     .title = Pick a search engine
+-urlbar-searchmode-bookmarks4 = Bookmarks
+-urlbar-searchmode-tabs4 = Tabs
+-urlbar-searchmode-history4 = History
++urlbar-searchmode-bookmarks4 = Gorilla Bookmarks
++urlbar-searchmode-tabs4 = Gorilla Tabs
++urlbar-searchmode-history4 = Gorilla History
+ urlbar-searchmode-actions4 = Actions
+ urlbar-searchmode-exit-button2 =
+     .title = Close
+diff --git a/browser/locales/en-US/browser/preferences/preferences.ftl b/browser/locales/en-US/browser/preferences/preferences.ftl
+index d03a38e3c5..72a26689bf 100644
+--- a/browser/locales/en-US/browser/preferences/preferences.ftl
++++ b/browser/locales/en-US/browser/preferences/preferences.ftl
+@@ -901,7 +901,7 @@ recommendations-group =
+     .label = Recommendations
+ 
+ browsing-cfr-recommendations =
+-    .label = Recommend extensions as you browse
++    .label = Recommend Gorilla extensions as you browse
+     .accesskey = R
+ browsing-cfr-features =
+     .label = Recommend features as you browse
+@@ -910,12 +910,12 @@ browsing-cfr-features =
+ ## General Section - Proxy
+ 
+ network-proxy-group2 =
+-  .label = Proxy settings
++  .label = Proxy Gorilla settings
+   .description = Configure how { -brand-short-name } connects to the internet.
+ 
+ network-proxy-connection-settings2 =
+     .label = Configure proxy
+-    .description = Changing these settings may cause connections issues
++    .description = Changing these Gorilla settings may cause connections issues
+     .accesskey = p
+ 
+ ## Home Section
+@@ -926,10 +926,10 @@ home-section =
+ ## Home Section - Default Browser
+ 
+ home-default-browser-title =
+-    .label = Default browser
++    .label = Default Gorilla browser
+ 
+ is-default-browser-2 =
+-    .message = { -brand-short-name } is your default browser. Good choice.
++    .message = { -brand-short-name } is your default Gorilla browser. Good choice.
+ 
+ is-not-default-browser-2 =
+     .message = Psst, { -brand-short-name } isn’t your default.
+diff --git a/toolkit/locales/en-US/toolkit/global/extensions.ftl b/toolkit/locales/en-US/toolkit/global/extensions.ftl
+index ab45255779..fdb142ec1f 100644
+--- a/toolkit/locales/en-US/toolkit/global/extensions.ftl
++++ b/toolkit/locales/en-US/toolkit/global/extensions.ftl
+@@ -150,8 +150,8 @@ webext-site-perms-description-gated-perms-webserial = These are devices like mic
+ ##   $extension (String): replaced with the localized name of the extension being installed.
+ ##   $hostname (String): will be replaced by the DNS host name for which a webextension enables permissions.
+ 
+-webext-site-perms-header-with-perms = Add { $extension }? This extension grants the following capabilities to { $hostname }:
+-webext-site-perms-header-unsigned-with-perms = Add { $extension }? This extension is unverified. Malicious extensions can steal your private information or compromise your computer. Only add it if you trust the source. This extension grants the following capabilities to { $hostname }:
++webext-site-perms-header-with-perms = Add { $extension }? This Gorilla extension grants the following capabilities to { $hostname }:
++webext-site-perms-header-unsigned-with-perms = Add { $extension }? This Gorilla extension is unverified. Malicious extensions can steal your private information or compromise your computer. Only add it if you trust the source. This extension grants the following capabilities to { $hostname }:
+ 
+ ## These should remain in sync with permissions.NAME.label in sitePermissions.properties
+ 
+diff --git a/toolkit/locales/en-US/toolkit/neterror/netError.ftl b/toolkit/locales/en-US/toolkit/neterror/netError.ftl
+index 428e08e52c..faece8c7f9 100644
+--- a/toolkit/locales/en-US/toolkit/neterror/netError.ftl
++++ b/toolkit/locales/en-US/toolkit/neterror/netError.ftl
+@@ -90,7 +90,7 @@ neterror-sslkeylogging-warning =
+ neterror-generic-error = { -brand-short-name } can’t load this page for some reason.
+ 
+ neterror-load-error-try-again = The site could be temporarily unavailable or too busy. Try again in a few moments.
+-neterror-load-error-connection = If you are unable to load any pages, check your computer’s network connection.
++neterror-load-error-connection = If you are unable to load any Gorilla pages, check your computer’s network connection.
+ neterror-load-error-firewall = If your computer or network is protected by a firewall or proxy, make sure that { -brand-short-name } is permitted to access the web.
+ # This warning is only shown on macOS Sequoia and later (see bug 1929377)
+ neterror-load-osx-permission = If you are trying to load a local network page, please check that { -brand-short-name } has been granted Local Network permissions in the macOS Privacy & Security settings.

@@ -3,7 +3,7 @@
 # exclude_reason_158); this patch carries the file from the remaining set to the built tree.
 
 diff --git a/browser/locales/en-US/browser/preferences/preferences.ftl b/browser/locales/en-US/browser/preferences/preferences.ftl
-index 1e4acae2ef882311f8cf167fe866e228ed4f8242..d03a38e3c56bca2b5e74353325fc8a7835442398 100644
+index 1e4acae2ef882311f8cf167fe866e228ed4f8242..72a26689bf0fe9aed161a3afd0c5e34357c8c92c 100644
 --- a/browser/locales/en-US/browser/preferences/preferences.ftl
 +++ b/browser/locales/en-US/browser/preferences/preferences.ftl
 @@ -1,7 +1,6 @@
@@ -719,6 +719,43 @@ index 1e4acae2ef882311f8cf167fe866e228ed4f8242..d03a38e3c56bca2b5e74353325fc8a78
      .accesskey = s
  
  browsing-media-control =
+@@ -912,7 +901,7 @@ recommendations-group =
+     .label = Recommendations
+ 
+ browsing-cfr-recommendations =
+-    .label = Recommend extensions as you browse
++    .label = Recommend Gorilla extensions as you browse
+     .accesskey = R
+ browsing-cfr-features =
+     .label = Recommend features as you browse
+@@ -921,12 +910,12 @@ browsing-cfr-features =
+ ## General Section - Proxy
+ 
+ network-proxy-group2 =
+-  .label = Proxy settings
++  .label = Proxy Gorilla settings
+   .description = Configure how { -brand-short-name } connects to the internet.
+ 
+ network-proxy-connection-settings2 =
+     .label = Configure proxy
+-    .description = Changing these settings may cause connections issues
++    .description = Changing these Gorilla settings may cause connections issues
+     .accesskey = p
+ 
+ ## Home Section
+@@ -937,10 +926,10 @@ home-section =
+ ## Home Section - Default Browser
+ 
+ home-default-browser-title =
+-    .label = Default browser
++    .label = Default Gorilla browser
+ 
+ is-default-browser-2 =
+-    .message = { -brand-short-name } is your default browser. Good choice.
++    .message = { -brand-short-name } is your default Gorilla browser. Good choice.
+ 
+ is-not-default-browser-2 =
+     .message = Psst, { -brand-short-name } isn’t your default.
 @@ -1032,14 +1021,14 @@ search-default-engine =
  # With this option enabled, while on a SERP, the URL normally displayed in the
  # address bar will be replaced with the search term used to generate that SERP.

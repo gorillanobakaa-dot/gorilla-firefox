@@ -3,7 +3,7 @@
 # exclude_reason_158); this patch carries the file from the remaining set to the built tree.
 
 diff --git a/browser/locales/en-US/browser/appmenu.ftl b/browser/locales/en-US/browser/appmenu.ftl
-index e24def3df8982f835b0c09635d13f892c96cda19..28f8defff46cd54797c60fda7fe609ba3a64c49f 100644
+index e24def3df8982f835b0c09635d13f892c96cda19..b1444799f76646a9da8c2e4433535a3a03e98a33 100644
 --- a/browser/locales/en-US/browser/appmenu.ftl
 +++ b/browser/locales/en-US/browser/appmenu.ftl
 @@ -1,17 +1,15 @@
@@ -170,6 +170,15 @@ index e24def3df8982f835b0c09635d13f892c96cda19..28f8defff46cd54797c60fda7fe609ba
  appmenu-fxa-signed-in-label = Sign In
  
  # Sign-in promo shown in the app menu when signed out and no menu message or
+@@ -203,7 +200,7 @@ appmenu-fxa-sign-in-promo-dismiss-button =
+ appmenu-fxa-setup-sync =
+     .label = Turn On Syncing…
+ appmenuitem-save-page =
+-    .label = Save Page As…
++    .label = Save Gorilla Page As…
+ 
+ ## The Firefox Profiler – The popup is the UI to turn on the profiler, and record
+ ## performance profiles. To enable it go to profiler.firefox.com and click
 @@ -215,15 +212,15 @@ profiler-button-dropmarker =
  
  profiler-popup-button-idle =

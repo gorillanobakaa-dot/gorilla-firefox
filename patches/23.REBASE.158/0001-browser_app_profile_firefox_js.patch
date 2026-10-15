@@ -3,7 +3,7 @@
 # exclude_reason_158); this patch carries the file from the remaining set to the built tree.
 
 diff --git a/browser/app/profile/firefox.js b/browser/app/profile/firefox.js
-index e3e12782d0e5dba405198447400a47833787395b..eb1aebcbbb2a6da6390f3d52a9057a1ee564e34f 100644
+index e3e12782d0e5dba405198447400a47833787395b..0e224c736baa4117cd1e1619989f036068eda3b2 100644
 --- a/browser/app/profile/firefox.js
 +++ b/browser/app/profile/firefox.js
 @@ -36,11 +36,11 @@ pref("extensions.webextOptionalPermissionPrompts", true);
@@ -1056,7 +1056,7 @@ index e3e12782d0e5dba405198447400a47833787395b..eb1aebcbbb2a6da6390f3d52a9057a1e
  
  // Forward Rust component logs to the JS console (comma separate list of crate names)
  // The empty string defaults to forwarding error-level messages.
-@@ -3813,17 +3870,412 @@ pref("widget.support-xdg-config", true, locked);
+@@ -3813,17 +3870,416 @@ pref("widget.support-xdg-config", true, locked);
  pref("browser.contentsharing.enabled", false);
  
  // Preferences for the Firefox Referral program #2051647).
@@ -1243,6 +1243,10 @@ index e3e12782d0e5dba405198447400a47833787395b..eb1aebcbbb2a6da6390f3d52a9057a1e
 +pref("network.buffer.cache.size",                   524288);
 +pref("network.dns.disablePrefetch", true, locked);
 +pref("network.dns.disablePrefetchFromHTTPS", true, locked);
++// GORILLA (03.NETWORKING nsHostResolver, carried to 158 by rebase-set review 2026-10-15): a failed DNS lookup is
++// remembered 3 s, not 60, so a call's signalling host that changed address is reached again quickly. 158 replaced
++// the NEGATIVE_RECORD_LIFETIME constant the 157 patch edited with this pref.
++pref("network.dnsNegativeCacheExpiration", 3);
 +pref("network.http.connection-timeout",             10);
 +pref("network.http.http2.enabled",                  true);
 +pref("network.http.http2.send-buffer-size", 0);

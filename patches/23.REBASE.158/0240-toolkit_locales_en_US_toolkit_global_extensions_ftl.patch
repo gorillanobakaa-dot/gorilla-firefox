@@ -3,7 +3,7 @@
 # exclude_reason_158); this patch carries the file from the remaining set to the built tree.
 
 diff --git a/toolkit/locales/en-US/toolkit/global/extensions.ftl b/toolkit/locales/en-US/toolkit/global/extensions.ftl
-index 4ed920c971cbebd887f7f08023386376a8ff303f..ab45255779d4d3c26d5960f89d35d6aac7d1304a 100644
+index 4ed920c971cbebd887f7f08023386376a8ff303f..fdb142ec1f1503c5679b95cbd0470737450f7ca2 100644
 --- a/toolkit/locales/en-US/toolkit/global/extensions.ftl
 +++ b/toolkit/locales/en-US/toolkit/global/extensions.ftl
 @@ -1,23 +1,20 @@
@@ -137,4 +137,15 @@ index 4ed920c971cbebd887f7f08023386376a8ff303f..ab45255779d4d3c26d5960f89d35d6aa
 +webext-site-perms-description-gated-perms-webserial = These are devices like microcontrollers, 3D printers, and other devices that connect via USB, serial ports, or Bluetooth.
  
      You will be able to choose which devices the website can access.
+ 
+@@ -159,8 +150,8 @@ webext-site-perms-description-gated-perms-webserial =
+ ##   $extension (String): replaced with the localized name of the extension being installed.
+ ##   $hostname (String): will be replaced by the DNS host name for which a webextension enables permissions.
+ 
+-webext-site-perms-header-with-perms = Add { $extension }? This extension grants the following capabilities to { $hostname }:
+-webext-site-perms-header-unsigned-with-perms = Add { $extension }? This extension is unverified. Malicious extensions can steal your private information or compromise your computer. Only add it if you trust the source. This extension grants the following capabilities to { $hostname }:
++webext-site-perms-header-with-perms = Add { $extension }? This Gorilla extension grants the following capabilities to { $hostname }:
++webext-site-perms-header-unsigned-with-perms = Add { $extension }? This Gorilla extension is unverified. Malicious extensions can steal your private information or compromise your computer. Only add it if you trust the source. This extension grants the following capabilities to { $hostname }:
+ 
+ ## These should remain in sync with permissions.NAME.label in sitePermissions.properties
  
