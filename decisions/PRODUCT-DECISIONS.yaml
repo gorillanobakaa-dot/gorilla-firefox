@@ -1266,6 +1266,9 @@ decisions:
       loudness sink (installed on the VAIO as loudness-sink.service); with both, either alone suffices, so a machine
       running the sink turns the browser one off (media.gorilla.loudness_compressor.enabled false) to avoid two
       compressors in series. The GORILLA bypass in DynamicsCompressorNode that made YouTube whisper-quiet stays removed.
+    platform_2026_10_16: >
+      Linux only (owner 2026-10-16: "audio works well on Windows as it is"). The "every machine" above means every
+      Linux machine; its patches live in 01.MEDIA, which the policy marks platforms [linux].
     verify:
       # its default is compiled in (StaticPrefList.yaml), not in the shipped .js prefs, so it is checked at its source
       - tree_contains: {path: modules/libpref/init/StaticPrefList.yaml, text: "- name: media.gorilla.loudness_compressor.enabled\n  type: RelaxedAtomicBool\n  value: true"}
