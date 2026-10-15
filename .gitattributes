@@ -1,0 +1,4 @@
+# Patches are applied byte for byte: never convert their line endings (Git for Windows checks text out as CRLF by
+# default, and a CRLF patch no longer applies to the LF Firefox tree). 2026-10-16.
+patches/** -text
+*.patch -text
