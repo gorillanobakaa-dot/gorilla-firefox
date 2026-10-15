@@ -7,50 +7,50 @@ ALREADY-UPSTREAM 1, CARRIED 36, FILE-GONE 1, MISSING 1, PARTLY 71
 CARRIED: all of it is in the tree. ALREADY-UPSTREAM: Mozilla made the same change. PARTLY / MISSING: read the lines below: either ported in a different form (fine, say so in the patch's intent) or LOST (port it, `build-harness record`, then rebase-set again). FILE-GONE: the file is not in the tree.
 
 - **PARTLY** `01.MEDIA/dom_media_ipc_RemoteVideoDecoder.cpp.patch` (drift: does not apply to pristine; added 15/22 in, removed 27/28 gone)
-    - dom/media/ipc/RemoteVideoDecoder.cpp: + YUVColorSpace = data->mYUVColorSpace;
-    - dom/media/ipc/RemoteVideoDecoder.cpp: + YUVColorSpace YUVColorSpace = gfx::YUVColorSpace::BT709;
-    - dom/media/ipc/RemoteVideoDecoder.cpp: + transferFunction = data->mTransferFunction;
-    - dom/media/ipc/RemoteVideoDecoder.cpp: + colorRange = data->mColorRange;
-    - dom/media/ipc/RemoteVideoDecoder.cpp: + if (auto* image = video->mImage->AsPlanarYCbCrImage()) {
+    - dom/media/ipc/RemoteVideoDecoder.cpp: + colorPrimaries = data->mColorPrimaries;
     - dom/media/ipc/RemoteVideoDecoder.cpp: + if (auto* data = image->GetData()) {
+    - dom/media/ipc/RemoteVideoDecoder.cpp: + YUVColorSpace = data->mYUVColorSpace;
+    - dom/media/ipc/RemoteVideoDecoder.cpp: + if (auto* image = video->mImage->AsPlanarYCbCrImage()) {
+    - dom/media/ipc/RemoteVideoDecoder.cpp: + transferFunction = data->mTransferFunction;
+    - dom/media/ipc/RemoteVideoDecoder.cpp: + YUVColorSpace YUVColorSpace = gfx::YUVColorSpace::BT709;
 - **PARTLY** `01.MEDIA/dom_media_platforms_PDMFactory.cpp.patch` (drift: does not apply to pristine; added 82/82 in, removed 14/29 gone)
-    - dom/media/platforms/PDMFactory.cpp: - if (StaticPrefs::media_gpu_process_decoder()) { (still there)
     - dom/media/platforms/PDMFactory.cpp: - FFVPXRuntimeLinker::Init(); (still there)
     - dom/media/platforms/PDMFactory.cpp: - if (StaticPrefs::media_gpu_process_decoder()) { (still there)
     - dom/media/platforms/PDMFactory.cpp: - StartupPDM(FFVPXRuntimeLinker::CreateDecoder()); (still there)
-    - dom/media/platforms/PDMFactory.cpp: - PDM_INIT_LOG("{}: {}", i++, pdm->Name()); (still there)
+    - dom/media/platforms/PDMFactory.cpp: - if (StaticPrefs::media_gpu_process_decoder()) { (still there)
+    - dom/media/platforms/PDMFactory.cpp: - StartupPDM(AgnosticDecoderModule::Create(), (still there)
     - dom/media/platforms/PDMFactory.cpp: - StaticPrefs::media_prefer_non_ffvpx()); (still there)
 - **PARTLY** `03.NETWORKING/netwerk_dns_nsHostResolver.cpp.patch` (drift: does not apply to pristine; added 0/9 in, removed 1/3 gone)
-    - netwerk/dns/nsHostResolver.cpp: + // GORILLA v2: NEGATIVE_RECORD_LIFETIME is lowered to 3s. For dynamic WebRTC
-    - netwerk/dns/nsHostResolver.cpp: + static const unsigned int NEGATIVE_RECORD_LIFETIME = 3;
     - netwerk/dns/nsHostResolver.cpp: + // reconnection recovery.
+    - netwerk/dns/nsHostResolver.cpp: + // GORILLA v2: NEGATIVE_RECORD_LIFETIME is lowered to 3s. For dynamic WebRTC
     - netwerk/dns/nsHostResolver.cpp: + // signalling hosts that change IPs frequently, this accelerates stale-DNS
-    - netwerk/dns/nsHostResolver.cpp: + // GORILLA v2: Raise thread pool limits for high-concurrency workloads.
-    - netwerk/dns/nsHostResolver.cpp: + MOZ_ALWAYS_SUCCEEDS(threadPool->SetThreadLimit(16));
+    - netwerk/dns/nsHostResolver.cpp: + static const unsigned int NEGATIVE_RECORD_LIFETIME = 3;
+    - netwerk/dns/nsHostResolver.cpp: + // WebRTC sessions + many tabs without thrashing thread create/destroy.
+    - netwerk/dns/nsHostResolver.cpp: + // Hardcoding 16 threads / 12 idle handles peak burst from simultaneous
 - **PARTLY** `05.PREFS/browser_app_profile_firefox.js.patch` (drift: does not apply to pristine; added 369/384 in, removed 104/110 gone)
     - browser/app/profile/firefox.js: - #ifdef NIGHTLY_BUILD (still there)
     - browser/app/profile/firefox.js: + pref("browser.topsites.contile.endpoint", "https://0.0.0.0/v1/tiles", locked);
     - browser/app/profile/firefox.js: - pref("browser.topsites.contile.endpoint", "https://contile.services.mozilla.com/v1/tiles"); (still there)
     - browser/app/profile/firefox.js: + pref("browser.newtabpage.activity-stream.discoverystream.enabled", false);
-    - browser/app/profile/firefox.js: + pref("intl.multilingual.downloadEnabled", false);
     - browser/app/profile/firefox.js: + pref("intl.multilingual.enabled", false);
+    - browser/app/profile/firefox.js: + pref("intl.multilingual.downloadEnabled", false);
 - **PARTLY** `05.PREFS/modules_libpref_init_StaticPrefList.yaml.patch` (drift: does not apply to pristine; added 62/62 in, removed 7/27 gone)
     - modules/libpref/init/StaticPrefList.yaml: - value: @IS_NIGHTLY_BUILD@ (still there)
     - modules/libpref/init/StaticPrefList.yaml: - value: false (still there)
-    - modules/libpref/init/StaticPrefList.yaml: - #else (still there)
     - modules/libpref/init/StaticPrefList.yaml: - value: true (still there)
     - modules/libpref/init/StaticPrefList.yaml: - #endif (still there)
+    - modules/libpref/init/StaticPrefList.yaml: - #else (still there)
     - modules/libpref/init/StaticPrefList.yaml: - value: true (still there)
 - **PARTLY** `07.TOOLKIT/browser_base_content_nsContextMenu.sys.mjs.patch` (drift: does not apply to pristine; added 6/6 in, removed 15/17 gone)
     - browser/base/content/nsContextMenu.sys.mjs: - this.showItem( (still there)
     - browser/base/content/nsContextMenu.sys.mjs: - browser: this.browser, (still there)
 - **PARTLY** `07.TOOLKIT/services_settings_dumps_main_search-config-v2.json.patch` (drift: does not apply to pristine; added 1/1 in, removed 378/435 gone)
-    - services/settings/dumps/main/search-config-v2.json: - "allRegionsAndLocales": true (still there)
-    - services/settings/dumps/main/search-config-v2.json: - "ca", (still there)
-    - services/settings/dumps/main/search-config-v2.json: - "params": [ (still there)
-    - services/settings/dumps/main/search-config-v2.json: - "value": "{partnerCode}" (still there)
-    - services/settings/dumps/main/search-config-v2.json: - "environment": { (still there)
-    - services/settings/dumps/main/search-config-v2.json: - "mint-001" (still there)
+    - services/settings/dumps/main/search-config-v2.json: - "excludedRegions": [ (still there)
+    - services/settings/dumps/main/search-config-v2.json: - "recordType": "engine", (still there)
+    - services/settings/dumps/main/search-config-v2.json: - "classification": "general", (still there)
+    - services/settings/dumps/main/search-config-v2.json: - "be", (still there)
+    - services/settings/dumps/main/search-config-v2.json: - "fr", (still there)
+    - services/settings/dumps/main/search-config-v2.json: - "nb-NO", (still there)
 - **PARTLY** `07.TOOLKIT/toolkit_components_nimbus_ExperimentAPI.sys.mjs.patch` (drift: does not apply to pristine; added 12/12 in, removed 51/52 gone)
     - toolkit/components/nimbus/ExperimentAPI.sys.mjs: - return true; (still there)
 - **PARTLY** `08.Look/browser_locales_en-US_browser_aboutRestartRequired.ftl.patch` (drift: does not apply to pristine; added 0/1 in, removed 1/1 gone)
@@ -62,66 +62,66 @@ CARRIED: all of it is in the tree. ALREADY-UPSTREAM: Mozilla made the same chang
     - browser/locales/en-US/browser/backupSettings.ftl: - turn-on-scheduled-backups-location-choose-folder = (still there)
     - browser/locales/en-US/browser/backupSettings.ftl: - turn-on-scheduled-backups-error-default-dir-denied = We couldn’t access your backup folder. Try picking a new  (still there)
 - **PARTLY** `08.Look/browser_locales_en-US_browser_browser.ftl.patch` (drift: does not apply to pristine; added 341/356 in, removed 185/202 gone)
-    - browser/locales/en-US/browser/browser.ftl: - urlbar-result-menu-learn-more2 = Learn more (still there)
-    - browser/locales/en-US/browser/browser.ftl: - urlbar-result-menu-report-inaccurate-location2 = Report inaccurate location (still there)
-    - browser/locales/en-US/browser/browser.ftl: - urlbar-result-menu-tip-get-help2 = Get help (still there)
-    - browser/locales/en-US/browser/browser.ftl: - urlbar-result-menu-dismiss-suggestion2 = Dismiss this suggestion (still there)
-    - browser/locales/en-US/browser/browser.ftl: - urlbar-result-menu-dont-show-weather-suggestions2 = Don’t show weather suggestions (still there)
     - browser/locales/en-US/browser/browser.ftl: - urlbar-result-menu-manage-firefox-suggest2 = Manage { -firefox-suggest-brand-name } (still there)
+    - browser/locales/en-US/browser/browser.ftl: - urlbar-result-menu-dont-show-weather-suggestions2 = Don’t show weather suggestions (still there)
+    - browser/locales/en-US/browser/browser.ftl: - urlbar-result-menu-report-inaccurate-location2 = Report inaccurate location (still there)
+    - browser/locales/en-US/browser/browser.ftl: - urlbar-result-menu-learn-more2 = Learn more (still there)
+    - browser/locales/en-US/browser/browser.ftl: - urlbar-result-menu-dismiss-suggestion2 = Dismiss this suggestion (still there)
+    - browser/locales/en-US/browser/browser.ftl: - urlbar-result-menu-tip-get-help2 = Get help (still there)
 - **PARTLY** `08.Look/browser_locales_en-US_browser_migrationWizard.ftl.patch` (drift: does not apply to pristine; added 63/65 in, removed 48/48 gone)
-    - browser/locales/en-US/browser/migrationWizard.ftl: + migration-wizard-migrator-display-name-file-bookmarks = Gorilla Bookmarks from HTML Gorilla file
     - browser/locales/en-US/browser/migrationWizard.ftl: + migration-wizard-migrator-display-name-firefox = Gorilla Unleashed
+    - browser/locales/en-US/browser/migrationWizard.ftl: + migration-wizard-migrator-display-name-file-bookmarks = Gorilla Bookmarks from HTML Gorilla file
 - **PARTLY** `08.Look/browser_locales_en-US_browser_newtab_newtab.ftl.patch` (drift: does not apply to pristine; added 66/71 in, removed 36/54 gone)
-    - browser/locales/en-US/browser/newtab/newtab.ftl: - .aria-label = Lists options (still there)
     - browser/locales/en-US/browser/newtab/newtab.ftl: - newtab-widget-lists-menu-button = (still there)
+    - browser/locales/en-US/browser/newtab/newtab.ftl: - .aria-label = Lists options (still there)
     - browser/locales/en-US/browser/newtab/newtab.ftl: - newtab-sports-widget-message-survey-cta = (still there)
-    - browser/locales/en-US/browser/newtab/newtab.ftl: - newtab-sports-widget-message-survey-title = Help us make widgets better (still there)
     - browser/locales/en-US/browser/newtab/newtab.ftl: - newtab-sports-widget-message-survey-widget-body = Share your feedback to help us improve future widgets. Then, (still there)
-    - browser/locales/en-US/browser/newtab/newtab.ftl: - .label = Take survey (still there)
+    - browser/locales/en-US/browser/newtab/newtab.ftl: - newtab-sports-widget-message-survey-widget-title = How was the World Cup widget? (still there)
+    - browser/locales/en-US/browser/newtab/newtab.ftl: - newtab-sports-widget-message-survey-title = Help us make widgets better (still there)
 - **PARTLY** `08.Look/browser_locales_en-US_browser_preferences_preferences.ftl.patch` (drift: does not apply to pristine; added 286/297 in, removed 210/225 gone)
     - browser/locales/en-US/browser/preferences/preferences.ftl: - preferences-colors-manage-button2 = (still there)
     - browser/locales/en-US/browser/preferences/preferences.ftl: - .label = Manage colors (still there)
-    - browser/locales/en-US/browser/preferences/preferences.ftl: - .label = Keyboard shortcuts (still there)
+    - browser/locales/en-US/browser/preferences/preferences.ftl: - settings-keyboard-shortcuts-group = (still there)
     - browser/locales/en-US/browser/preferences/preferences.ftl: - .description = Control how you move around and interact with { -brand-short-name }. (still there)
-    - browser/locales/en-US/browser/preferences/preferences.ftl: - settings-keyboard-shortcuts-customkeys-link = (still there)
     - browser/locales/en-US/browser/preferences/preferences.ftl: - .label = Customize keyboard shortcuts (still there)
+    - browser/locales/en-US/browser/preferences/preferences.ftl: - .label = Keyboard shortcuts (still there)
 - **PARTLY** `08.Look/browser_locales_en-US_chrome_browser_customizableui_customizableWidgets.properties.patch` (drift: does not apply to pristine; added 0/28 in, removed 6/28 gone)
-    - browser/locales/en-US/chrome/browser/customizableui/customizableWidgets.properties: + toolbarseparator.label =  Separator
-    - browser/locales/en-US/chrome/browser/customizableui/customizableWidgets.properties: + sidebar-button.label =  Sidebars
-    - browser/locales/en-US/chrome/browser/customizableui/customizableWidgets.properties: + developer-button.label =  Developer
     - browser/locales/en-US/chrome/browser/customizableui/customizableWidgets.properties: + developer-button.tooltiptext2 =  Open Gorilla Web Developer Tools (%S)
-    - browser/locales/en-US/chrome/browser/customizableui/customizableWidgets.properties: + sidebar-button.tooltiptext2 =  Show sidebars
-    - browser/locales/en-US/chrome/browser/customizableui/customizableWidgets.properties: + copy-button.label =  Copy
+    - browser/locales/en-US/chrome/browser/customizableui/customizableWidgets.properties: + paste-button.label =  Paste
+    - browser/locales/en-US/chrome/browser/customizableui/customizableWidgets.properties: + history-panelmenu.label =  Gorilla History
+    - browser/locales/en-US/chrome/browser/customizableui/customizableWidgets.properties: + find-button.label =  Find
+    - browser/locales/en-US/chrome/browser/customizableui/customizableWidgets.properties: + panic-button.tooltiptext =  Forget about some browsing Gorilla history
+    - browser/locales/en-US/chrome/browser/customizableui/customizableWidgets.properties: + cut-button.label =  Cut
 - **PARTLY** `08.Look/browser_themes_shared_browser-shared.css.patch` (drift: does not apply to pristine; added 53/60 in, removed 24/43 gone)
     - browser/themes/shared/browser-shared.css: - @import url("chrome://browser/skin/tabbrowser/tabs-navbar.tokens.css"); (still there)
-    - browser/themes/shared/browser-shared.css: - &[lwtheme] { (still there)
-    - browser/themes/shared/browser-shared.css: - --toolbox-background-image: none; (still there)
     - browser/themes/shared/browser-shared.css: - @media -moz-pref("browser.nova.enabled") { (still there)
+    - browser/themes/shared/browser-shared.css: - --toolbox-background-image: none; (still there)
+    - browser/themes/shared/browser-shared.css: - &[lwtheme] { (still there)
     - browser/themes/shared/browser-shared.css: - /* stylelint-disable-next-line stylelint-plugin-mozilla/use-design-tokens */ (still there)
-    - browser/themes/shared/browser-shared.css: + background: radial-gradient(circle farthest-side at top right, var(--short-notification-gradient), var(--short
+    - browser/themes/shared/browser-shared.css: + width: unset;
 - **FILE-GONE** `08.Look/toolkit_locales_en-US_chrome_global_resetProfile.properties.patch` (drift: does not apply to pristine; added 0/0 in, removed 0/0 gone)
 - **PARTLY** `08.Look/toolkit_locales_en-US_toolkit_about_aboutAddons.ftl.patch` (drift: does not apply to pristine; added 90/94 in, removed 82/82 gone)
-    - toolkit/locales/en-US/toolkit/about/aboutAddons.ftl: + colorway-removal-notice-button = Get updated colorways Gorilla themes
-    - toolkit/locales/en-US/toolkit/about/aboutAddons.ftl: + .heading =
     - toolkit/locales/en-US/toolkit/about/aboutAddons.ftl: + the old version(s) from your “Saved Gorilla Themes” list. Get new versions on
+    - toolkit/locales/en-US/toolkit/about/aboutAddons.ftl: + .heading =
+    - toolkit/locales/en-US/toolkit/about/aboutAddons.ftl: + colorway-removal-notice-button = Get updated colorways Gorilla themes
     - toolkit/locales/en-US/toolkit/about/aboutAddons.ftl: + Your colorway Gorilla theme(s) were removed.
 - **PARTLY** `08.Look/toolkit_locales_en-US_toolkit_global_contextual-identity.ftl.patch` (drift: does not apply to pristine; added 4/4 in, removed 1/4 gone)
     - toolkit/locales/en-US/toolkit/global/contextual-identity.ftl: - user-context-add-container = (still there)
-    - toolkit/locales/en-US/toolkit/global/contextual-identity.ftl: - .label = Add new container (still there)
     - toolkit/locales/en-US/toolkit/global/contextual-identity.ftl: - .accesskey = A (still there)
+    - toolkit/locales/en-US/toolkit/global/contextual-identity.ftl: - .label = Add new container (still there)
 - **PARTLY** `08.Look/toolkit_locales_en-US_toolkit_global_extensions.ftl.patch` (drift: does not apply to pristine; added 17/19 in, removed 20/20 gone)
     - toolkit/locales/en-US/toolkit/global/extensions.ftl: + webext-colorway-theme-migration-notification-message = <b>Your colorway Gorilla theme was removed.</b> { -bran
     - toolkit/locales/en-US/toolkit/global/extensions.ftl: + webext-site-perms-header-unsigned-with-perms = Add { $extension }? This Gorilla extension is unverified. Malic
 - **PARTLY** `08.Look/toolkit_locales_en-US_toolkit_neterror_netError.ftl.patch` (drift: does not apply to pristine; added 22/25 in, removed 23/25 gone)
-    - toolkit/locales/en-US/toolkit/neterror/netError.ftl: + neterror-http-empty-response-description = { $hostname } sent back an empty Gorilla page.
-    - toolkit/locales/en-US/toolkit/neterror/netError.ftl: + neterror-load-osx-permission = If you are trying to load a local network Gorilla page, please check that { -br
     - toolkit/locales/en-US/toolkit/neterror/netError.ftl: + neterror-generic-error = { -brand-short-name } can’t load this Gorilla page for some reason.
-    - toolkit/locales/en-US/toolkit/neterror/netError.ftl: - neterror-generic-error = { -brand-short-name } can’t load this page for some reason. (still there)
+    - toolkit/locales/en-US/toolkit/neterror/netError.ftl: + neterror-load-osx-permission = If you are trying to load a local network Gorilla page, please check that { -br
+    - toolkit/locales/en-US/toolkit/neterror/netError.ftl: + neterror-http-empty-response-description = { $hostname } sent back an empty Gorilla page.
     - toolkit/locales/en-US/toolkit/neterror/netError.ftl: - neterror-load-osx-permission = If you are trying to load a local network page, please check that { -brand-shor (still there)
+    - toolkit/locales/en-US/toolkit/neterror/netError.ftl: - neterror-generic-error = { -brand-short-name } can’t load this page for some reason. (still there)
 - **MISSING** `08.Look/toolkit_locales_en-US_toolkit_payments_payments.ftl.patch` (drift: does not apply to pristine; added 0/1 in, removed 0/2 gone)
     - toolkit/locales/en-US/toolkit/payments/payments.ftl: + credit-card-label-number-name-expiration-2 = { $number }, { $name }, { credit-card-expiration }
-    - toolkit/locales/en-US/toolkit/payments/payments.ftl: - { $number }, { $name }, { credit-card-expiration } (still there)
     - toolkit/locales/en-US/toolkit/payments/payments.ftl: - credit-card-label-number-name-expiration-2 = (still there)
+    - toolkit/locales/en-US/toolkit/payments/payments.ftl: - { $number }, { $name }, { credit-card-expiration } (still there)
 - **PARTLY** `09.REMOTE/remote_components_Marionette.sys.mjs.patch` (drift: does not apply to pristine; added 12/12 in, removed 8/9 gone)
     - remote/components/Marionette.sys.mjs: - return; (still there)
 - **PARTLY** `09.REMOTE/remote_components_RemoteAgent.sys.mjs.patch` (drift: does not apply to pristine; added 18/18 in, removed 11/12 gone)
@@ -129,19 +129,19 @@ CARRIED: all of it is in the tree. ALREADY-UPSTREAM: Mozilla made the same chang
 - **PARTLY** `13.TELEMETRY.KILL/third_party_rust_glean-core_.cargo-checksum.json.patch` (drift: does not apply to pristine; added 0/1 in, removed 1/1 gone)
     - third_party/rust/glean-core/.cargo-checksum.json: + {"files":{".cargo_vcs_info.json":"469823c2a21ca1de7b5e6b4da1fdcf7b36f6360393bf636a89cd502ea40c676b","Cargo.loc
 - **PARTLY** `16.SNAPSHOT.DELTA.2026-08-12/browser_components_DesktopActorRegistry.sys.mjs.patch` (drift: does not apply to pristine; added 4/4 in, removed 50/70 gone)
+    - browser/components/DesktopActorRegistry.sys.mjs: - includeChrome: true, (still there)
+    - browser/components/DesktopActorRegistry.sys.mjs: - events: { (still there)
+    - browser/components/DesktopActorRegistry.sys.mjs: - remoteTypes: ["parent"], (still there)
     - browser/components/DesktopActorRegistry.sys.mjs: - child: { (still there)
     - browser/components/DesktopActorRegistry.sys.mjs: - allFrames: true, (still there)
-    - browser/components/DesktopActorRegistry.sys.mjs: - events: { (still there)
     - browser/components/DesktopActorRegistry.sys.mjs: - parent: { (still there)
-    - browser/components/DesktopActorRegistry.sys.mjs: - includeChrome: true, (still there)
-    - browser/components/DesktopActorRegistry.sys.mjs: - remoteTypes: ["parent"], (still there)
 - **PARTLY** `16.SNAPSHOT.DELTA.2026-08-12/browser_components_customizableui_CustomizeMode.sys.mjs.patch` (drift: does not apply to pristine; added 5/5 in, removed 3/5 gone)
-    - browser/components/customizableui/CustomizeMode.sys.mjs: - "We'll exit after we've entered" (still there)
     - browser/components/customizableui/CustomizeMode.sys.mjs: - lazy.log.debug( (still there)
+    - browser/components/customizableui/CustomizeMode.sys.mjs: - "We'll exit after we've entered" (still there)
 - **PARTLY** `16.SNAPSHOT.DELTA.2026-08-12/browser_components_sessionstore_SessionStore.sys.mjs.patch` (drift: does not apply to pristine; added 2/3 in, removed 22/25 gone)
     - browser/components/sessionstore/SessionStore.sys.mjs: + if (!windowToUse && canUseLastWindow) {
-    - browser/components/sessionstore/SessionStore.sys.mjs: - !windowToUse && (still there)
     - browser/components/sessionstore/SessionStore.sys.mjs: - canUseLastWindow && (still there)
+    - browser/components/sessionstore/SessionStore.sys.mjs: - !windowToUse && (still there)
     - browser/components/sessionstore/SessionStore.sys.mjs: - if ( (still there)
 - **PARTLY** `16.SNAPSHOT.DELTA.2026-08-12/browser_components_sessionstore_session.schema.json.patch` (drift: does not apply to pristine; added 0/0 in, removed 1/2 gone)
     - browser/components/sessionstore/session.schema.json: - "type": "boolean" (still there)
@@ -154,26 +154,26 @@ CARRIED: all of it is in the tree. ALREADY-UPSTREAM: Mozilla made the same chang
     - browser/components/tabbrowser/content/tab-context-menu.js: - if (!this._altTabContextMenu) { (still there)
     - browser/components/tabbrowser/content/tab-context-menu.js: - } else { (still there)
 - **PARTLY** `16.SNAPSHOT.DELTA.2026-08-12/browser_components_tabbrowser_content_tabgroup-menu.js.patch` (drift: does not apply to pristine; added 4/4 in, removed 53/61 gone)
-    - browser/components/tabbrowser/content/tabgroup-menu.js: - ? MozTabbrowserTabGroupMenu.AI_ICON (still there)
-    - browser/components/tabbrowser/content/tabgroup-menu.js: - this.close(); (still there)
-    - browser/components/tabbrowser/content/tabgroup-menu.js: - if (e.target.checked) { (still there)
-    - browser/components/tabbrowser/content/tabgroup-menu.js: - this.#handleMlTelemetry("cancel"); (still there)
+    - browser/components/tabbrowser/content/tabgroup-menu.js: - } else { (still there)
     - browser/components/tabbrowser/content/tabgroup-menu.js: - this.#handleMlTelemetry("save"); (still there)
+    - browser/components/tabbrowser/content/tabgroup-menu.js: - if (e.target.checked) { (still there)
+    - browser/components/tabbrowser/content/tabgroup-menu.js: - this.#suggestionsRunToken = null; (still there)
     - browser/components/tabbrowser/content/tabgroup-menu.js: - : ""; (still there)
+    - browser/components/tabbrowser/content/tabgroup-menu.js: - ? MozTabbrowserTabGroupMenu.AI_ICON (still there)
 - **PARTLY** `16.SNAPSHOT.DELTA.2026-08-12/browser_components_uitour_UITour.sys.mjs.patch` (drift: does not apply to pristine; added 0/0 in, removed 2/14 gone)
-    - browser/components/uitour/UITour.sys.mjs: - case "showFirefoxAccountsForAIWindow": { (still there)
-    - browser/components/uitour/UITour.sys.mjs: - break; (still there)
-    - browser/components/uitour/UITour.sys.mjs: - Services.prefs.setStringPref( (still there)
     - browser/components/uitour/UITour.sys.mjs: - // override Smart Window feature to "available" (still there)
-    - browser/components/uitour/UITour.sys.mjs: - if (lazy.AIWindow.isBlocked) { (still there)
-    - browser/components/uitour/UITour.sys.mjs: - lazy.AIWindow.launchWindow(browser, false, "bedrock").then(success => { (still there)
+    - browser/components/uitour/UITour.sys.mjs: - "showFirefoxAccountsForAIWindow: Failed to launch Smart Window" (still there)
+    - browser/components/uitour/UITour.sys.mjs: - Services.prefs.setStringPref( (still there)
+    - browser/components/uitour/UITour.sys.mjs: - "browser.ai.control.smartWindow", (still there)
+    - browser/components/uitour/UITour.sys.mjs: - lazy.log.warn( (still there)
+    - browser/components/uitour/UITour.sys.mjs: - if (!success) { (still there)
 - **PARTLY** `16.SNAPSHOT.DELTA.2026-08-12/browser_themes_shared_privatebrowsing_aboutPrivateBrowsing.css.patch` (drift: does not apply to pristine; added 90/91 in, removed 26/35 gone)
     - browser/themes/shared/privatebrowsing/aboutPrivateBrowsing.css: + background: url("chrome://branding/content/about-logo.svg") no-repeat center center;
-    - browser/themes/shared/privatebrowsing/aboutPrivateBrowsing.css: - display: inline-block; (still there)
     - browser/themes/shared/privatebrowsing/aboutPrivateBrowsing.css: - fill: currentColor; (still there)
+    - browser/themes/shared/privatebrowsing/aboutPrivateBrowsing.css: - display: inline-block; (still there)
     - browser/themes/shared/privatebrowsing/aboutPrivateBrowsing.css: - -moz-context-properties: fill; (still there)
-    - browser/themes/shared/privatebrowsing/aboutPrivateBrowsing.css: - padding: 20px; (still there)
     - browser/themes/shared/privatebrowsing/aboutPrivateBrowsing.css: - /* stylelint-disable-next-line stylelint-plugin-mozilla/use-design-tokens */ (still there)
+    - browser/themes/shared/privatebrowsing/aboutPrivateBrowsing.css: - letter-spacing: -0.2px; (still there)
 - **PARTLY** `16.SNAPSHOT.DELTA.2026-08-12/toolkit_themes_shared_global-shared.css.patch` (drift: does not apply to pristine; added 21/21 in, removed 11/13 gone)
     - toolkit/themes/shared/global-shared.css: - :where([hidden]) { (still there)
     - toolkit/themes/shared/global-shared.css: - display: none !important; (still there)
@@ -190,33 +190,33 @@ CARRIED: all of it is in the tree. ALREADY-UPSTREAM: Mozilla made the same chang
     - browser/branding/gorilla/content/aboutDialog.css: + background-image: image-set(url("chrome://branding/content/about-logo.png") 1x, url("chrome://branding/content
     - browser/branding/gorilla/content/aboutDialog.css: - background-image: url("chrome://branding/content/about-logo.png") !important; (still there)
 - **PARTLY** `21.PORT.FIXES.157/066-gorilla-address-bar-wording-search-with-gorilla-or-enter-add.patch` (drift: does not apply to pristine; added 2818/2843 in, removed 5/5 gone)
-    - browser/locales/en-US/browser/browser.ftl: + # verbatim from the vanilla vault file (branding flows via -brand terms).
-    - browser/locales/en-US/browser/browser.ftl: + urlbar-searchmode-tabs2 = Gorilla Tabs
     - browser/locales/en-US/browser/browser.ftl: + urlbar-searchmode-popup-search-settings-panelitem = Search Gorilla Settings
+    - browser/locales/en-US/browser/browser.ftl: + urlbar-searchmode-popup-settings-panelitem = Gorilla Settings
     - browser/locales/en-US/browser/browser.ftl: + urlbar-searchmode-history2 = Gorilla History
-    - browser/locales/en-US/browser/browser.ftl: + urlbar-searchmode-bookmarks2 = Gorilla Bookmarks
+    - browser/locales/en-US/browser/browser.ftl: + # GORILLA REPAIR 2026-07-31: messages required by FF154 code, grafted
     - browser/locales/en-US/browser/browser.ftl: + urlbar-searchmode-actions2 = Actions
+    - browser/locales/en-US/browser/browser.ftl: + urlbar-searchmode-tabs2 = Gorilla Tabs
 - **PARTLY** `21.PORT.FIXES.158/003-search-config-v2-json-was-not-valid-json-the-07-toolkit-hunk.patch` (drift: does not apply to pristine; added 0/0 in, removed 7/17 gone)
-    - services/settings/dumps/main/search-config-v2.json: - "be", (still there)
-    - services/settings/dumps/main/search-config-v2.json: - "de", (still there)
+    - services/settings/dumps/main/search-config-v2.json: - "focus-ios" (still there)
+    - services/settings/dumps/main/search-config-v2.json: - "applications": [ (still there)
+    - services/settings/dumps/main/search-config-v2.json: - "it", (still there)
     - services/settings/dumps/main/search-config-v2.json: - "nl", (still there)
     - services/settings/dumps/main/search-config-v2.json: - "firefox-ios", (still there)
-    - services/settings/dumps/main/search-config-v2.json: - "it", (still there)
-    - services/settings/dumps/main/search-config-v2.json: - "subVariants": [ (still there)
+    - services/settings/dumps/main/search-config-v2.json: - "de", (still there)
 - **PARTLY** `21.PORT.FIXES.158/025-d-158-13-google-google-com-is-the-only-built-in-search-engin.patch` (drift: does not apply to pristine; added 0/0 in, removed 1152/1295 gone)
-    - services/settings/dumps/main/search-config-v2.json: - "params": [ (still there)
-    - services/settings/dumps/main/search-config-v2.json: - "locales": [ (still there)
-    - services/settings/dumps/main/search-config-v2.json: - "environment": { (still there)
+    - services/settings/dumps/main/search-config-v2.json: - "focus-ios" (still there)
+    - services/settings/dumps/main/search-config-v2.json: - "searchTermParamName": "q" (still there)
+    - services/settings/dumps/main/search-config-v2.json: - "recordType": "engine", (still there)
     - services/settings/dumps/main/search-config-v2.json: - "search": { (still there)
-    - services/settings/dumps/main/search-config-v2.json: - "firefox-ios", (still there)
     - services/settings/dumps/main/search-config-v2.json: - "focus-android", (still there)
+    - services/settings/dumps/main/search-config-v2.json: - "suggestions": { (still there)
 - **PARTLY** `22.EGRESS.LOCKDOWN.157/006-the-ported-excision-hunk-left-a-half-removed-aitab-block-syn.patch` (drift: does not apply to pristine; added 3/3 in, removed 29/41 gone)
+    - browser/components/DesktopActorRegistry.sys.mjs: - includeChrome: true, (still there)
+    - browser/components/DesktopActorRegistry.sys.mjs: - events: { (still there)
     - browser/components/DesktopActorRegistry.sys.mjs: - child: { (still there)
     - browser/components/DesktopActorRegistry.sys.mjs: - allFrames: true, (still there)
-    - browser/components/DesktopActorRegistry.sys.mjs: - events: { (still there)
     - browser/components/DesktopActorRegistry.sys.mjs: - parent: { (still there)
-    - browser/components/DesktopActorRegistry.sys.mjs: - includeChrome: true, (still there)
-    - browser/components/DesktopActorRegistry.sys.mjs: - remoteTypes: ["privilegedabout"], (still there)
+    - browser/components/DesktopActorRegistry.sys.mjs: - esModuleURI: (still there)
 - **PARTLY** `22.EGRESS.LOCKDOWN.157/009-157-references-to-excised-ai-modules-that-fired-at-startup-w.patch` (drift: does not apply to pristine; added 7/8 in, removed 8/8 gone)
     - browser/components/BrowserComponents.manifest: + # GORILLA excised: GenAI.init (genai removed)
 - **PARTLY** `22.EGRESS.LOCKDOWN.157/010-157-keeps-toolkit-components-ml-for-ipc-utilityprocess-hwinf.patch` (drift: does not apply to pristine; added 3/5 in, removed 10/10 gone)
@@ -224,94 +224,94 @@ CARRIED: all of it is in the tree. ALREADY-UPSTREAM: Mozilla made the same chang
     - toolkit/components/ml/moz.build: + # GORILLA excised: jar.mn (the ML JavaScript stack: chrome://global/content/ml/* is not packaged; ipc/ and MLU
 - **PARTLY** `22.EGRESS.LOCKDOWN.157/012-egress-lockdown-the-browser-s-own-nshttp-log-showed-155-0-1-.patch` (cascade: built on a patch superseded in round 1; added 21/42 in, removed 8/9 gone)
     - browser/app/profile/firefox.js: + pref("extensions.update.autoUpdateDefault", false, locked);
-    - browser/app/profile/firefox.js: + pref("browser.region.update.enabled", false, locked);                            // location.services.mozilla.
+    - browser/app/profile/firefox.js: + pref("extensions.update.background.url", "", locked);
     - browser/app/profile/firefox.js: + pref("network.connectivity-service.IPv4.url", "", locked);
-    - browser/app/profile/firefox.js: + pref("network.connectivity-service.enabled", false, locked);                     // firefox-portal-detection.c
-    - browser/app/profile/firefox.js: + pref("extensions.update.enabled", false, locked);                                // versioncheck.addons.mozill
-    - browser/app/profile/firefox.js: + pref("extensions.update.url", "", locked);
+    - browser/app/profile/firefox.js: + pref("extensions.systemAddon.update.enabled", false, locked);                    // aus5.mozilla.org SystemAdd
+    - browser/app/profile/firefox.js: + // first 157 builds asked eight Mozilla hosts for things on their own. Every one is closed here (locked) and i
+    - browser/app/profile/firefox.js: + pref("browser.region.update.enabled", false, locked);                            // location.services.mozilla.
 - **PARTLY** `22.EGRESS.LOCKDOWN.157/013-egress-lockdown-source-only-pref-decisions-are-recorded-sepa.patch` (cascade: built on a patch superseded in round 1; added 5/5 in, removed 23/26 gone)
+    - browser/app/profile/firefox.js: - pref("extensions.getAddons.get.url", "", locked); (still there)
     - browser/app/profile/firefox.js: - pref("extensions.getAddons.search.browseURL", "", locked); (still there)
     - browser/app/profile/firefox.js: - pref("browser.region.network.url", "", locked); (still there)
-    - browser/app/profile/firefox.js: - pref("extensions.getAddons.get.url", "", locked); (still there)
 - **PARTLY** `22.EGRESS.LOCKDOWN.157/024-d-157-04-one-theme-light-dark-alpenglow-removed-from-builtin.patch` (drift: does not apply to pristine; added 30/34 in, removed 24/25 gone)
     - toolkit/mozapps/extensions/content/components/categories-box.mjs: - defaultHidden: false, (still there)
     - toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs: + aAddon.id !== DEFAULT_THEME_ID &&
     - toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs: + !Cu.isInAutomation
-    - toolkit/mozapps/extensions/internal/XPIProvider.sys.mjs: + lastTheme !== "default-theme@mozilla.org" &&
     - toolkit/mozapps/extensions/internal/XPIProvider.sys.mjs: + !Cu.isInAutomation
+    - toolkit/mozapps/extensions/internal/XPIProvider.sys.mjs: + lastTheme !== "default-theme@mozilla.org" &&
 - **PARTLY** `22.EGRESS.LOCKDOWN.157/027-d-157-00-21-this-browser-never-calls-home-pref-block-maintai.patch` (cascade: built on a patch superseded in round 1; added 74/75 in, removed 0/0 gone)
     - browser/app/profile/firefox.js: + pref("media.peerconnection.ice.no_host", true, locked);
 - **PARTLY** `22.EGRESS.LOCKDOWN.157/032-d-157-03-english-only-firefox-translations-removed-at-source.patch` (drift: does not apply to pristine; added 167/167 in, removed 568/646 gone)
     - browser/base/content/appmenu-viewcache.inc.xhtml: - class="subviewbutton" (still there)
     - browser/base/content/appmenu-viewcache.inc.xhtml: - class="subviewbutton" (still there)
     - browser/base/content/browser-context.js: - break; (still there)
-    - browser/base/content/browser-init.js: - return; (still there)
-    - browser/base/content/browser-init.js: - if ( (still there)
     - browser/base/content/browser-init.js: - try { (still there)
+    - browser/base/content/browser-init.js: - if ( (still there)
+    - browser/base/content/browser-init.js: - return; (still there)
 - **PARTLY** `22.EGRESS.LOCKDOWN.157/036-d-157-00-s1-intake-about-aitab-family-unregistered-push-comm.patch` (drift: does not apply to pristine; added 9/10 in, removed 13/21 gone)
     - browser/components/about/AboutRedirector.cpp: + // GORILLA UNLEASHED - PHYSICAL LOCK: no AI window (D-157-00): about:aitab removed (aiwindow is excised).
-    - browser/components/about/AboutRedirector.cpp: - nsIAboutModule::HIDE_FROM_ABOUTABOUT}, (still there)
-    - browser/components/about/AboutRedirector.cpp: - nsIAboutModule::URI_CAN_LOAD_IN_PRIVILEGEDABOUT_PROCESS | (still there)
     - browser/components/about/AboutRedirector.cpp: - nsIAboutModule::URI_MUST_LOAD_IN_CHILD | nsIAboutModule::ALLOW_SCRIPT | (still there)
-    - browser/components/about/AboutRedirector.cpp: - nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT | (still there)
+    - browser/components/about/AboutRedirector.cpp: - nsIAboutModule::URI_CAN_LOAD_IN_PRIVILEGEDABOUT_PROCESS | (still there)
     - browser/components/about/AboutRedirector.cpp: - nsIAboutModule::HIDE_FROM_ABOUTABOUT}, (still there)
+    - browser/components/about/AboutRedirector.cpp: - nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT | (still there)
+    - browser/components/about/AboutRedirector.cpp: - nsIAboutModule::URI_MUST_LOAD_IN_CHILD | nsIAboutModule::ALLOW_SCRIPT | (still there)
 - **PARTLY** `22.EGRESS.LOCKDOWN.157/041-d-157-00-21-this-browser-never-calls-home-pref-block-maintai.patch` (cascade: built on a patch superseded in round 1; added 20/22 in, removed 0/0 gone)
     - browser/app/profile/firefox.js: + pref("network.http.response.timeout",               300);
     - browser/app/profile/firefox.js: + pref("network.http.http2.send-buffer-size",         0);
 - **PARTLY** `22.EGRESS.LOCKDOWN.157/043-p-009-ext-02-d-157-05-sideloaded-add-ons-profile-extensions-.patch` (cascade: built on a patch superseded in round 1; added 18/21 in, removed 0/0 gone)
-    - toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs: + !aAddon.location.isSystem &&
     - toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs: + !Cu.isInAutomation
+    - toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs: + !aAddon.location.isSystem &&
     - toolkit/mozapps/extensions/internal/XPIProvider.sys.mjs: + if (!loc.isBuiltin && !loc.isSystem && !Cu.isInAutomation) {
 - **PARTLY** `22.EGRESS.LOCKDOWN.157/045-p-011-ai-02-d-157-00-ai-leftovers-removed-where-every-import.patch` (drift: does not apply to pristine; added 34/35 in, removed 133/158 gone)
-    - browser/base/content/navigator-toolbox.inc.xhtml: - hidden="true" (still there)
+    - browser/base/content/navigator-toolbox.inc.xhtml: - </toolbaritem> (still there)
     - browser/base/content/navigator-toolbox.inc.xhtml: - class="toolbarbutton-1" (still there)
+    - browser/base/content/navigator-toolbox.inc.xhtml: - aria-expanded="false" (still there)
+    - browser/base/content/navigator-toolbox.inc.xhtml: - hidden="true" (still there)
     - browser/base/content/navigator-toolbox.inc.xhtml: - </toolbarbutton> (still there)
     - browser/base/content/navigator-toolbox.inc.xhtml: - removable="false"> (still there)
-    - browser/base/content/navigator-toolbox.inc.xhtml: - overflows="false" (still there)
-    - browser/base/content/navigator-toolbox.inc.xhtml: - aria-expanded="false" (still there)
 - **PARTLY** `22.EGRESS.LOCKDOWN.157/049-agents-md-edit-in-place-57-prefs-moved-onto-their-existing-l.patch` (drift: does not apply to pristine; added 64/65 in, removed 65/97 gone)
-    - browser/app/profile/firefox.js: - pref("intl.multilingual.enabled", false, locked); (still there)
+    - browser/app/profile/firefox.js: - pref("ui.systemUsesDarkTheme", 1, locked); (still there)
     - browser/app/profile/firefox.js: - pref("browser.theme.content-theme", 0, locked); (still there)
     - browser/app/profile/firefox.js: - pref("intl.multilingual.downloadEnabled", false, locked); (still there)
-    - browser/app/profile/firefox.js: - pref("ui.systemUsesDarkTheme", 1, locked); (still there)
-    - browser/app/profile/firefox.js: - pref("browser.urlbar.speculativeConnect.enabled", false, locked); (still there)
-    - browser/app/profile/firefox.js: - pref("browser.places.speculativeConnect.enabled", false, locked); (still there)
+    - browser/app/profile/firefox.js: - pref("intl.multilingual.enabled", false, locked); (still there)
+    - browser/app/profile/firefox.js: - pref("security.certerrors.mitm.priming.enabled", false, locked); (still there)
+    - browser/app/profile/firefox.js: - pref("network.prefetch-next", false, locked); (still there)
 - **PARTLY** `22.EGRESS.LOCKDOWN.157/052-crispness-visual-run-20261003-165007-about-logo-svg-raster-r.patch` (drift: does not apply to pristine; added 0/4 in, removed 3/3 gone)
     - browser/branding/gorilla/content/jar.mn: + content/branding/about.svg
     - docshell/base/nsAboutRedirector.cpp: + {"logo", "chrome://branding/content/about.svg",
     - toolkit/components/aboutpdf/content/aboutPDF.html: + src="chrome://branding/content/icon64.png"
     - toolkit/themes/shared/in-content/common-shared.css: + background: url("chrome://branding/content/about-logo.svg") no-repeat fixed right calc(10% - 39px) bottom 50px
 - **PARTLY** `22.EGRESS.LOCKDOWN.157/058-d-157-33-satellite-mode-near-instant-at-5-kb-s-maintainer-20.patch` (cascade: built on a patch superseded in round 1; added 134/159 in, removed 15/15 gone)
-    - browser/locales/en-US/browser/gorillaSatellite.ftl: + .description = Everything in Satellite, plus no pictures, no web fonts, lighter pages, and pages you already h
     - browser/locales/en-US/browser/gorillaSatellite.ftl: + .title = For very slow or very expensive links, down to 5 KB per second. Everything in Satellite, plus: pictur
-    - browser/modules/GorillaLinkMode.sys.mjs: + _chooseIdentity(subject) {
-    - browser/modules/GorillaLinkMode.sys.mjs: + // A site the user sent back to its desktop version: every top-level page of it, in that tab, is asked for wit
+    - browser/locales/en-US/browser/gorillaSatellite.ftl: + .description = Everything in Satellite, plus no pictures, no web fonts, lighter pages, and pages you already h
+    - browser/modules/GorillaLinkMode.sys.mjs: + this._chooseIdentity(subject);
     - browser/modules/GorillaLinkMode.sys.mjs: + // the desktop identity (header and navigator alike, through the tab's customUserAgent); any other site gets "
-    - browser/modules/GorillaLinkMode.sys.mjs: + ) == Services.perms.ALLOW_ACTION;
+    - browser/modules/GorillaLinkMode.sys.mjs: + Services.perms.testPermissionFromPrincipal(
+    - browser/modules/GorillaLinkMode.sys.mjs: + // back, which means the mobile identity of the prefs. Decided before the page is requested, so nothing is
 - **PARTLY** `22.EGRESS.LOCKDOWN.157/059-d-157-33-satellite-mode-near-instant-at-5-kb-s-maintainer-20.patch` (cascade: built on a patch superseded in round 1; added 141/148 in, removed 20/25 gone)
-    - browser/modules/GorillaLinkMode.sys.mjs: + !this.noJavascript() || this._sitePermitted(principal, JS_SITE_PERM);
     - browser/modules/GorillaLinkMode.sys.mjs: + const desktop = this._sitePermitted(principal, DESKTOP_SITE_PERM);
+    - browser/modules/GorillaLinkMode.sys.mjs: + !this.noJavascript() || this._sitePermitted(principal, JS_SITE_PERM);
     - browser/modules/GorillaLinkMode.sys.mjs: - principal, (still there)
     - browser/modules/GorillaLinkMode.sys.mjs: - const desktop = (still there)
-    - browser/modules/GorillaLinkMode.sys.mjs: + win.gBrowser.selectedBrowser.reload();
     - browser/modules/GorillaLinkMode.sys.mjs: + const principal = win.gBrowser.contentPrincipal;
+    - browser/modules/GorillaLinkMode.sys.mjs: + win.gBrowser.selectedBrowser.reload();
 - **PARTLY** `22.EGRESS.LOCKDOWN.157/060-satellite-toolbar-menu-fixes-maintainer-screenshot-2026-10-0.patch` (drift: does not apply to pristine; added 825/839 in, removed 4/4 gone)
-    - browser/modules/GorillaLinkMode.sys.mjs: + const desktop = this._sitePermitted(principal, DESKTOP_SITE_PERM);
-    - browser/modules/GorillaLinkMode.sys.mjs: + !this.noJavascript() || this._sitePermitted(principal, JS_SITE_PERM);
     - browser/modules/GorillaLinkMode.sys.mjs: + setChecked(jsSite, web && this._sitePermitted(principal, JS_SITE_PERM));
-    - browser/modules/GorillaLinkMode.sys.mjs: + web && this._sitePermitted(principal, DESKTOP_SITE_PERM)
-    - browser/modules/GorillaLinkMode.sys.mjs: + this._watchRequests(mobile || noJs);
+    - browser/modules/GorillaLinkMode.sys.mjs: + !this.noJavascript() || this._sitePermitted(principal, JS_SITE_PERM);
     - browser/modules/GorillaLinkMode.sys.mjs: + win().openPreferences("paneGeneral")
+    - browser/modules/GorillaLinkMode.sys.mjs: + this._watchRequests(mobile || noJs);
+    - browser/modules/GorillaLinkMode.sys.mjs: + const desktop = this._sitePermitted(principal, DESKTOP_SITE_PERM);
+    - browser/modules/GorillaLinkMode.sys.mjs: + web && this._sitePermitted(principal, DESKTOP_SITE_PERM)
 - **PARTLY** `22.EGRESS.LOCKDOWN.157/063-satellite-menu-colours-use-the-theme-s-cyan-token-toolbar-te.patch` (drift: does not apply to pristine; added 485/487 in, removed 6/6 gone)
     - browser/themes/shared/toolbarbuttons.css: + #smartwindow-monitor-button[aria-expanded="true"] .toolbarbutton-icon {
     - browser/themes/shared/toolbarbuttons.css: + /* Smart Window monitor button */
 - **PARTLY** `22.EGRESS.LOCKDOWN.157/067-line-endings-restored-to-the-pristine-style-lf-text-mode-wri.patch` (drift: does not apply to pristine; added 3596/3627 in, removed 0/0 gone)
-    - browser/locales/en-US/browser/browser.ftl: + # verbatim from the vanilla vault file (branding flows via -brand terms).
-    - browser/locales/en-US/browser/browser.ftl: + urlbar-searchmode-tabs2 = Gorilla Tabs
     - browser/locales/en-US/browser/browser.ftl: + urlbar-searchmode-popup-search-settings-panelitem = Search Gorilla Settings
+    - browser/locales/en-US/browser/browser.ftl: + urlbar-searchmode-popup-settings-panelitem = Gorilla Settings
     - browser/locales/en-US/browser/browser.ftl: + urlbar-searchmode-history2 = Gorilla History
-    - browser/locales/en-US/browser/browser.ftl: + urlbar-searchmode-bookmarks2 = Gorilla Bookmarks
+    - browser/locales/en-US/browser/browser.ftl: + # GORILLA REPAIR 2026-07-31: messages required by FF154 code, grafted
     - browser/locales/en-US/browser/browser.ftl: + urlbar-searchmode-actions2 = Actions
+    - browser/locales/en-US/browser/browser.ftl: + urlbar-searchmode-tabs2 = Gorilla Tabs
 - **PARTLY** `22.EGRESS.LOCKDOWN.157/070-one-pass-fix-of-every-visual-check-failure-2026-10-04-gorill.patch` (cascade: built on a patch superseded in round 1; added 41/41 in, removed 28/33 gone)
     - browser/components/search/content/contentSearchHandoffUI.mjs: - } else { (still there)
     - browser/components/search/content/contentSearchHandoffUI.mjs: - // a default. xref https://bugzilla.mozilla.org/show_bug.cgi?id=1449338#c19 (still there)
@@ -338,40 +338,40 @@ CARRIED: all of it is in the tree. ALREADY-UPSTREAM: Mozilla made the same chang
 - **PARTLY** `22.EGRESS.LOCKDOWN.157/085-d-157-36-2026-10-08-no-about-glean-about-logging-about-profi.patch` (drift: does not apply to pristine; added 32/32 in, removed 16/21 gone)
     - browser/components/about/AboutRedirector.cpp: - nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::IS_SECURE_CHROME_UI}, (still there)
     - docshell/base/nsAboutRedirector.cpp: - nsIAboutModule::ALLOW_SCRIPT}, (still there)
-    - docshell/base/nsAboutRedirector.cpp: - nsIAboutModule::ALLOW_SCRIPT}, (still there)
     - docshell/base/nsAboutRedirector.cpp: - nsIAboutModule::HIDE_FROM_ABOUTABOUT | (still there)
+    - docshell/base/nsAboutRedirector.cpp: - nsIAboutModule::ALLOW_SCRIPT}, (still there)
     - docshell/base/nsAboutRedirector.cpp: - #endif (still there)
 - **PARTLY** `22.EGRESS.LOCKDOWN.157/086-about-pages-sweep-2026-10-08-about-studies-answers-at-the-wa.patch` (drift: does not apply to pristine; added 36/36 in, removed 10/27 gone)
     - browser/locales/en-US/browser/browser.ftl: - urlbar-result-explanation-last-visited-absolute-2 = Last visited { $date } (still there)
-    - browser/locales/en-US/browser/browser.ftl: - # The date will be formatted as an absolute date like: "11 May", "11 May 2026" (still there)
-    - browser/locales/en-US/browser/browser.ftl: - # This explanation is used when the last-visited date is further in the past. (still there)
-    - browser/locales/en-US/browser/browser.ftl: - urlbar-result-explanation-last-visited-relative-2 = Last visited { $date } (still there)
-    - browser/locales/en-US/browser/browser.ftl: - # Variables: (still there)
     - browser/locales/en-US/browser/browser.ftl: - #   $date (string) - A localized absolute date string (still there)
+    - browser/locales/en-US/browser/browser.ftl: - # This explanation is used when the last-visited date is further in the past. (still there)
+    - browser/locales/en-US/browser/browser.ftl: - # The date will be formatted as an absolute date like: "11 May", "11 May 2026" (still there)
+    - browser/locales/en-US/browser/browser.ftl: - # Variables: (still there)
+    - browser/locales/en-US/browser/browser.ftl: - urlbar-result-explanation-last-visited-relative-2 = Last visited { $date } (still there)
 - **PARTLY** `22.EGRESS.LOCKDOWN.157/093-d-157-40-hidden-about-pages-16-removed-fingerprintingprotect.patch` (drift: does not apply to pristine; added 58/61 in, removed 114/160 gone)
-    - browser/components/about/AboutRedirector.cpp: - nsIAboutModule::HIDE_FROM_ABOUTABOUT}, (still there)
-    - browser/components/about/AboutRedirector.cpp: - nsIAboutModule::URI_CAN_LOAD_IN_CHILD | nsIAboutModule::ALLOW_SCRIPT | (still there)
-    - browser/components/about/AboutRedirector.cpp: - nsIAboutModule::URI_CAN_LOAD_IN_PRIVILEGEDABOUT_PROCESS | (still there)
     - browser/components/about/AboutRedirector.cpp: - nsIAboutModule::URI_MUST_LOAD_IN_CHILD | nsIAboutModule::ALLOW_SCRIPT | (still there)
-    - browser/components/about/AboutRedirector.cpp: - nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT | (still there)
     - browser/components/about/AboutRedirector.cpp: - nsIAboutModule::URI_CAN_LOAD_IN_PRIVILEGEDABOUT_PROCESS | (still there)
+    - browser/components/about/AboutRedirector.cpp: - nsIAboutModule::URI_CAN_LOAD_IN_CHILD | nsIAboutModule::ALLOW_SCRIPT | (still there)
+    - browser/components/about/AboutRedirector.cpp: - nsIAboutModule::HIDE_FROM_ABOUTABOUT}, (still there)
+    - browser/components/about/AboutRedirector.cpp: - nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT | (still there)
+    - browser/components/about/AboutRedirector.cpp: - nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::HIDE_FROM_ABOUTABOUT}, (still there)
 - **PARTLY** `22.EGRESS.LOCKDOWN.157/094-d-157-40-round-2-the-profile-switcher-is-never-forced-on-sto.patch` (drift: does not apply to pristine; added 41/41 in, removed 30/36 gone)
-    - browser/components/DesktopActorRegistry.sys.mjs: - DOMDocElementInserted: { capture: true }, (still there)
     - browser/components/DesktopActorRegistry.sys.mjs: - child: { (still there)
-    - browser/components/DesktopActorRegistry.sys.mjs: - events: { (still there)
     - browser/components/DesktopActorRegistry.sys.mjs: - parent: { (still there)
+    - browser/components/DesktopActorRegistry.sys.mjs: - DOMDocElementInserted: { capture: true }, (still there)
+    - browser/components/DesktopActorRegistry.sys.mjs: - events: { (still there)
     - browser/components/DesktopActorRegistry.sys.mjs: - remoteTypes: ["privilegedabout"], (still there)
     - browser/components/profiles/SelectableProfileService.sys.mjs: - return true; (still there)
 - **PARTLY** `22.EGRESS.LOCKDOWN.158/012-d-158-08-ai-texts-and-the-ai-sidebar-stylesheet-are-neither-.patch` (drift: does not apply to pristine; added 60/60 in, removed 213/293 gone)
-    - browser/base/content/appmenu-viewcache.inc.xhtml: - </hbox> (still there)
-    - browser/base/content/appmenu-viewcache.inc.xhtml: - class="subviewbutton" (still there)
-    - browser/base/content/appmenu-viewcache.inc.xhtml: - </vbox> (still there)
     - browser/base/content/appmenu-viewcache.inc.xhtml: - hidden="true" (still there)
-    - browser/base/content/appmenu-viewcache.inc.xhtml: - </panelview> (still there)
+    - browser/base/content/appmenu-viewcache.inc.xhtml: - </vbox> (still there)
     - browser/base/content/appmenu-viewcache.inc.xhtml: - </toolbarbutton> (still there)
+    - browser/base/content/appmenu-viewcache.inc.xhtml: - <vbox class="panel-subview-body"> (still there)
+    - browser/base/content/appmenu-viewcache.inc.xhtml: - class="subviewbutton" (still there)
+    - browser/base/content/appmenu-viewcache.inc.xhtml: - <vbox> (still there)
 - **PARTLY** `22.EGRESS.LOCKDOWN.158/013-d-158-08-smart-window-group-tabs-and-monitor-stylesheets-nei.patch` (cascade: built on a patch superseded in round 1; added 6/6 in, removed 21/24 gone)
-    - browser/base/content/browser.js: - ChromeUtils.importESModule( (still there)
     - browser/base/content/browser.js: - { global: "current" } (still there)
+    - browser/base/content/browser.js: - ChromeUtils.importESModule( (still there)
     - browser/components/customizableui/CustomizableUI.sys.mjs: - "alltabs-button", (still there)
 - **CARRIED** `01.MEDIA/dom_media_AudioStream.h.patch` (drift: does not apply to pristine; added 5/5 in, removed 0/0 gone)
 - **CARRIED** `01.MEDIA/dom_media_webrtc_jsapi_DefaultCodecPreferences.cpp.patch` (drift: does not apply to pristine; added 2/2 in, removed 5/5 gone)

@@ -1,0 +1,204 @@
+# Gorilla 158 privacy cut
+# Gorilla 2026-10-15, install surface: D-158-13 correction, Google is the only search engine and none can be added (SearchService.#addEngineToStore keeps only app engines; add APIs throw; no page offer, no form Add Search Engine, no Settings Add or Find more); D-158-17 only Gorilla's own distribution/policies.json (no /etc/firefox/policies, no Windows GPO, no per-user or alternate path); D-158-18 no PKCS#11 module is loaded (PKCS11ModuleDB::DoAddModule refuses; Security Devices Load hidden).
+# Files: browser/base/content/nsContextMenu.sys.mjs, browser/components/preferences/search.inc.xhtml, browser/components/search/OpenSearchManager.sys.mjs, security/manager/pki/resources/content/device_manager.xhtml, security/manager/ssl/PKCS11ModuleDB.cpp, toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs, toolkit/components/search/SearchService.sys.mjs
+
+diff --git a/browser/base/content/nsContextMenu.sys.mjs b/browser/base/content/nsContextMenu.sys.mjs
+index 31960d8443..290ba8a053 100644
+--- a/browser/base/content/nsContextMenu.sys.mjs
++++ b/browser/base/content/nsContextMenu.sys.mjs
+@@ -898,7 +898,8 @@ export class nsContextMenu {
+         !this.onMozExtLink) ||
+         this.onPlainTextLink
+     );
+-    this.showItem("context-add-engine", this.shouldShowAddEngine());
++    // GORILLA UNLEASHED (D-158-13): no "Add Search Engine" on a form field; Google is the only engine.
++    this.showItem("context-add-engine", false);
+     this.showItem("frame", this.inFrame);
+ 
+     if (this.inFrame) {
+diff --git a/browser/components/preferences/search.inc.xhtml b/browser/components/preferences/search.inc.xhtml
+index 3468a71368..0efdbe0ac5 100644
+--- a/browser/components/preferences/search.inc.xhtml
++++ b/browser/components/preferences/search.inc.xhtml
+@@ -42,7 +42,9 @@
+                 data-l10n-id="search-restore-default"
+                 />
+         <spacer flex="1"/>
++        <!-- GORILLA UNLEASHED (D-158-13): no Add button, Google is the only search engine -->
+         <button id="addEngineButton"
++                hidden="true"
+                 is="highlightable-button"
+                 class="searchEngineAction"
+                 data-l10n-id="search-add-engine"
+@@ -68,7 +70,7 @@
+                 />
+ 
+       </hbox>
+-      <hbox id="addEnginesBox" pack="start">
++      <hbox id="addEnginesBox" pack="start" hidden="true">
+         <label id="addEngines" data-l10n-id="search-find-more-link" is="text-link"></label>
+       </hbox>
+     </groupbox>
+diff --git a/browser/components/search/OpenSearchManager.sys.mjs b/browser/components/search/OpenSearchManager.sys.mjs
+index 9cef0f93c0..e94df1c4ca 100644
+--- a/browser/components/search/OpenSearchManager.sys.mjs
++++ b/browser/components/search/OpenSearchManager.sys.mjs
+@@ -234,6 +234,10 @@ class _OpenSearchManager {
+    *   The installable open search engines.
+    */
+   getInstallableEngines(browser) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no page offers a search engine (D-158-13, Google only).
++    if (browser) {
++      return [];
++    }
+     if (!Services.policies.isAllowed("installSearchEngine")) {
+       return [];
+     }
+diff --git a/security/manager/pki/resources/content/device_manager.xhtml b/security/manager/pki/resources/content/device_manager.xhtml
+index 30bcdfb5f1..51792bd9b1 100644
+--- a/security/manager/pki/resources/content/device_manager.xhtml
++++ b/security/manager/pki/resources/content/device_manager.xhtml
+@@ -87,7 +87,7 @@
+           data-l10n-id="devmgr-button-changepw"
+           disabled="true"
+         />
+-        <button id="load_button" data-l10n-id="devmgr-button-load" />
++        <button id="load_button" data-l10n-id="devmgr-button-load" hidden="true" /><!-- GORILLA UNLEASHED (D-158-18): no PKCS#11 module is loaded -->
+         <button
+           id="unload_button"
+           data-l10n-id="devmgr-button-unload"
+diff --git a/security/manager/ssl/PKCS11ModuleDB.cpp b/security/manager/ssl/PKCS11ModuleDB.cpp
+index 9f73c1e270..f9a5cd6fb5 100644
+--- a/security/manager/ssl/PKCS11ModuleDB.cpp
++++ b/security/manager/ssl/PKCS11ModuleDB.cpp
+@@ -279,6 +279,13 @@ nsresult PKCS11ModuleDB::DoAddModule(const nsCString& moduleName,
+                                      const nsCString& libraryPath,
+                                      uint32_t mechanismFlags,
+                                      uint32_t cipherFlags) {
++  // GORILLA UNLEASHED - PHYSICAL LOCK: no PKCS#11 module is loaded (D-158-18, owner 2026-10-15). A module is a
++  // native library (.so / .dll) that runs inside the browser with all its rights; Settings > Security Devices >
++  // Load, an add-on (pkcs11 API) or a policy could load one, and a person can be talked into it. Every route
++  // (main process and the socket-process IPC) ends here.
++  if (!moduleName.IsEmpty() || moduleName.IsEmpty()) {
++    return NS_ERROR_NOT_AVAILABLE;
++  }
+   if (!NSS_IsInitialized()) {
+     return NS_ERROR_NOT_AVAILABLE;
+   }
+diff --git a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
+index 2d3be89304..f2600fa491 100644
+--- a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
++++ b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
+@@ -61,7 +61,8 @@ ChromeUtils.defineLazyGetter(lazy, "log", () => {
+ // On Nightly in automation, ignore real system/user policies so a developer's
+ // local policies.json or registry entries don't leak into tests.
+ function shouldIgnoreLocalPolicies() {
+-  return AppConstants.NIGHTLY_BUILD && Cu.isInAutomation;
++  // GORILLA UNLEASHED (D-158-17): Gorilla's own policies are never ignored.
++  return false;
+ }
+ 
+ // We're only testing for empty objects, not
+@@ -187,7 +188,12 @@ EnterprisePoliciesManager.prototype = {
+     lazy.log.debug("Adding JSON provider.");
+     provider.push(new JSONPoliciesProvider());
+ 
+-    if (AppConstants.MOZ_SYSTEM_POLICIES) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: only Gorilla's own policies (D-158-17, owner 2026-10-15). The browser reads
++    // policies from distribution/policies.json in its install folder and from nowhere else: not
++    // /etc/firefox/policies/policies.json (Linux, read FIRST and replacing Gorilla's file, able to unlock locked prefs),
++    // not the Windows registry (GPO, higher precedence than the file), not a test or alternate path. Anything that
++    // can write there (a package, an installer, malware with admin rights) would reconfigure the browser unseen.
++    if (AppConstants.MOZ_SYSTEM_POLICIES && provider === null) {
+       if (AppConstants.platform == "win") {
+         lazy.log.debug("Adding Windows GPO platform provider.");
+         provider.push(new WindowsGPOPoliciesProvider());
+@@ -758,7 +764,16 @@ class JSONPoliciesProvider extends PoliciesProvider {
+       return null;
+     }
+ 
+-    if (AppConstants.platform == "linux" && AppConstants.MOZ_SYSTEM_POLICIES) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: only Gorilla's own policies (D-158-17, owner 2026-10-15). The browser reads
++    // policies from distribution/policies.json in its install folder and from nowhere else: not
++    // /etc/firefox/policies/policies.json (Linux, read FIRST and replacing Gorilla's file, able to unlock locked prefs),
++    // not the Windows registry (GPO, higher precedence than the file), not a test or alternate path. Anything that
++    // can write there (a package, an installer, malware with admin rights) would reconfigure the browser unseen.
++    if (
++      AppConstants.platform == "linux" &&
++      AppConstants.MOZ_SYSTEM_POLICIES &&
++      this === null
++    ) {
+       let systemConfigFile = Services.dirsvc.get("SysConfD", Ci.nsIFile);
+       systemConfigFile.append("policies");
+       systemConfigFile.append(POLICIES_FILENAME);
+@@ -769,9 +784,8 @@ class JSONPoliciesProvider extends PoliciesProvider {
+ 
+     try {
+       let configFile;
+-      let perUserPath =
+-        Cu.isInAutomation &&
+-        Services.prefs.getBoolPref(PREF_PER_USER_DIR, false);
++      // GORILLA UNLEASHED (D-158-17): never a per-user policies file.
++      let perUserPath = false;
+       if (perUserPath) {
+         configFile = Services.dirsvc.get("XREUserRunTimeDir", Ci.nsIFile);
+       } else {
+@@ -797,9 +811,10 @@ class JSONPoliciesProvider extends PoliciesProvider {
+     // testing purposes), but the Background Update Agent will be unable to
+     // detect the alternate policy file so the DisableAppUpdate policy may not
+     // work as expected.
++    // GORILLA UNLEASHED (D-158-17): no alternate policies path, in tests or Nightly either.
+     if (
+       alternatePath &&
+-      (Cu.isInAutomation || AppConstants.NIGHTLY_BUILD) &&
++      alternatePath === null &&
+       (!configFile || !configFile.exists())
+     ) {
+       if (alternatePath.startsWith(MAGIC_TEST_ROOT_PREFIX)) {
+diff --git a/toolkit/components/search/SearchService.sys.mjs b/toolkit/components/search/SearchService.sys.mjs
+index c50e4aa304..8ddfded38b 100644
+--- a/toolkit/components/search/SearchService.sys.mjs
++++ b/toolkit/components/search/SearchService.sys.mjs
+@@ -747,6 +747,9 @@ export const SearchService = new (class SearchService {
+    *   The generated search engine object.
+    */
+   async addUserEngine(formInfo) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: one search engine (D-158-13).
++    throw new Error("[GORILLA] Search engines cannot be added: Google is the only search engine");
++    // eslint-disable-next-line no-unreachable
+     await this.init();
+ 
+     let newEngine = new lazy.UserSearchEngine({ formInfo });
+@@ -762,6 +765,9 @@ export const SearchService = new (class SearchService {
+    *   An engine configuration definition.
+    */
+   async addSearchEngine(engine) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: one search engine (D-158-13).
++    throw new Error("[GORILLA] Search engines cannot be added: Google is the only search engine");
++    // eslint-disable-next-line no-unreachable
+     await this.init();
+     this.#addEngineToStore(engine);
+   }
+@@ -827,6 +833,9 @@ export const SearchService = new (class SearchService {
+    *   If the description file cannot be successfully loaded.
+    */
+   async addOpenSearchEngine(engineURL, iconURL, originAttributes) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: one search engine (D-158-13).
++    throw new Error("[GORILLA] Search engines cannot be added: Google is the only search engine");
++    // eslint-disable-next-line no-unreachable
+     lazy.logConsole.debug("addOpenSearchEngine: Adding", engineURL);
+     await this.init();
+     let engineData = await lazy.loadAndParseOpenSearchEngine(
+@@ -2598,6 +2607,12 @@ export const SearchService = new (class SearchService {
+    *   True to override engines with the same name.
+    */
+   #addEngineToStore(engine, skipDuplicateCheck = false) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: one search engine. Google (the built-in configuration, D-158-13) is the only search engine; no engine is added from a site, a form, a policy or by hand (owner 2026-10-15: "we do not trust sites that offer functions like this"). Every add, and every
++    // engine an earlier profile saved, passes here: only the application's own engines are stored.
++    if (!(engine instanceof lazy.AppProvidedConfigEngine)) {
++      lazy.logConsole.warn("[GORILLA] search engine refused (Google only):", engine.name);
++      return;
++    }
+     if (this.#engineMatchesIgnoreLists(engine)) {
+       return;
+     }

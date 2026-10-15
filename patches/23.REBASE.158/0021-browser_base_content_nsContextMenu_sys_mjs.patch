@@ -3,7 +3,7 @@
 # exclude_reason_158); this patch carries the file from the remaining set to the built tree.
 
 diff --git a/browser/base/content/nsContextMenu.sys.mjs b/browser/base/content/nsContextMenu.sys.mjs
-index 51bf7b7fc514f29864cfe044bfb601b4bee33502..31960d84439fe68e8be01e91ed0d96d8dcdbb1d4 100644
+index 584a8a68067dc204ee6b5938d27c80c3dc8887ce..290ba8a053312269e4441b5ea4ae06107a946506 100644
 --- a/browser/base/content/nsContextMenu.sys.mjs
 +++ b/browser/base/content/nsContextMenu.sys.mjs
 @@ -5,8 +5,6 @@
@@ -87,7 +87,7 @@ index 51bf7b7fc514f29864cfe044bfb601b4bee33502..31960d84439fe68e8be01e91ed0d96d8
      let isHiddenTab = !!window.gBrowser?.getTabForBrowser(this.browser)?.hidden;
      let isPinnedTab = !!window.gBrowser?.getTabForBrowser(this.browser)?.pinned;
      this.showItem(
-@@ -932,19 +910,9 @@ export class nsContextMenu {
+@@ -933,19 +911,9 @@ export class nsContextMenu {
      }
  
      this.showAndFormatSearchContextItem();
@@ -110,7 +110,7 @@ index 51bf7b7fc514f29864cfe044bfb601b4bee33502..31960d84439fe68e8be01e91ed0d96d8
  
      // srcdoc cannot be opened separately due to concerns about web
      // content with about:srcdoc in location bar masquerading as trusted
-@@ -1021,7 +989,8 @@ export class nsContextMenu {
+@@ -1022,7 +990,8 @@ export class nsContextMenu {
        // when there is no spellchecker but we might be able to spellcheck
        // add the add to dictionaries item. This will ensure that people
        // with no dictionaries will be able to download them
@@ -120,7 +120,7 @@ index 51bf7b7fc514f29864cfe044bfb601b4bee33502..31960d84439fe68e8be01e91ed0d96d8
      } else {
        this.showItem("spell-add-dictionaries-main", false);
      }
-@@ -1581,15 +1550,7 @@ export class nsContextMenu {
+@@ -1582,15 +1551,7 @@ export class nsContextMenu {
      );
    }
  
@@ -137,7 +137,7 @@ index 51bf7b7fc514f29864cfe044bfb601b4bee33502..31960d84439fe68e8be01e91ed0d96d8
  
    // Open linked-to URL in a new tab.
    openLinkInTab(event) {
-@@ -2345,10 +2306,8 @@ export class nsContextMenu {
+@@ -2346,10 +2307,8 @@ export class nsContextMenu {
      );
    }
  
@@ -150,7 +150,7 @@ index 51bf7b7fc514f29864cfe044bfb601b4bee33502..31960d84439fe68e8be01e91ed0d96d8
    }
  
    /**
-@@ -2680,147 +2639,11 @@ export class nsContextMenu {
+@@ -2681,147 +2640,11 @@ export class nsContextMenu {
      this.window.openTrustedLinkIn(drmInfoURL, dest);
    }
  
