@@ -1,0 +1,16 @@
+# Gorilla 158 rebase: browser/components/preferences/config/downloads.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/preferences/config/downloads.mjs b/browser/components/preferences/config/downloads.mjs
+index 3082cc311142ae742ecdab41092637b4d35f6b5e..028c6bfb1c24211d6fda78d39406dc5cc63b664d 100644
+--- a/browser/components/preferences/config/downloads.mjs
++++ b/browser/components/preferences/config/downloads.mjs
+@@ -1109,7 +1109,6 @@ export class ApplicationListItem {
+     if (this._isInternalMenuItem(handlerInfo)) {
+       internalMenuItem = this._buildActionsMenuOption({
+         l10nId: "applications-open-inapp",
+-        iconSrc: "chrome://branding/content/icon32.png",
+         handlerActionId: Ci.nsIHandlerInfo.handleInternally,
+       });
+ 

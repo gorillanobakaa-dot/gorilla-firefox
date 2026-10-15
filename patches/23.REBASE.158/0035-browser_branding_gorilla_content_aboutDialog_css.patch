@@ -1,0 +1,16 @@
+# Gorilla 158 rebase: browser/branding/gorilla/content/aboutDialog.css as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/branding/gorilla/content/aboutDialog.css b/browser/branding/gorilla/content/aboutDialog.css
+index 97aab3e1248e6d34ebfd68e2cfdc7f4efbac53a0..498da9925fce7e577a2bc40c8058c3089c3a66dd 100644
+--- a/browser/branding/gorilla/content/aboutDialog.css
++++ b/browser/branding/gorilla/content/aboutDialog.css
+@@ -21,6 +21,7 @@
+ }
+ 
+ #leftBox {
++  /* GORILLA 157 (D-157-35): the one 1400 px master, 2.8x the 500 px box: crisp at 200% too. */
+   background-image: url("chrome://branding/content/about-logo.png") !important;
+   background-repeat: no-repeat !important;
+   background-size: 500px 500px !important;

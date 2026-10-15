@@ -1,0 +1,20 @@
+# Gorilla 158 rebase: browser/extensions/newtab/prerendered/activity-stream.html as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/extensions/newtab/prerendered/activity-stream.html b/browser/extensions/newtab/prerendered/activity-stream.html
+index f015547ad670b0b2da779301c4d9ba6368e79ac9..40644a0c619013bc09fd51614fdb6340b61ccae1 100644
+--- a/browser/extensions/newtab/prerendered/activity-stream.html
++++ b/browser/extensions/newtab/prerendered/activity-stream.html
+@@ -15,11 +15,6 @@
+     <meta name="color-scheme" content="light dark" />
+     <meta name="viewport" content="width=device-width, initial-scale=1" />
+     <title data-l10n-id="newtab-page-title"></title>
+-    <link
+-      rel="icon"
+-      type="image/png"
+-      href="chrome://branding/content/icon32.png"
+-    />
+     <link rel="localization" href="branding/brand.ftl" />
+     <link rel="localization" href="toolkit/branding/brandings.ftl" />
+     <link rel="localization" href="browser/newtab/newtab.ftl" />

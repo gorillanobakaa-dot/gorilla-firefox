@@ -1,0 +1,19 @@
+# Gorilla 158 rebase: browser/components/asrouter/content-src/lib/multistage-utils.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/asrouter/content-src/lib/multistage-utils.mjs b/browser/components/asrouter/content-src/lib/multistage-utils.mjs
+index 42b9a7b9ec455b6eda37e7fec0de333c4a7732ed..3c345f22fc01391b41a03785b0a634c06e07e5ef 100644
+--- a/browser/components/asrouter/content-src/lib/multistage-utils.mjs
++++ b/browser/components/asrouter/content-src/lib/multistage-utils.mjs
+@@ -64,6 +64,10 @@ export const MultiStageUtils = {
+     }
+   },
+   async fetchFlowParams(metricsFlowUri) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no Firefox Accounts metrics-flow request
++    if (true) {
++      return {};
++    }
+     let flowParams;
+     try {
+       const response = await fetch(metricsFlowUri, {

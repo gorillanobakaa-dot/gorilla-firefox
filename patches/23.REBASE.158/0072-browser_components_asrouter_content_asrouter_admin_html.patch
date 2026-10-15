@@ -1,0 +1,20 @@
+# Gorilla 158 rebase: browser/components/asrouter/content/asrouter-admin.html as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/asrouter/content/asrouter-admin.html b/browser/components/asrouter/content/asrouter-admin.html
+index 032159c5e29c33c97bf173f305469daa9fde6d14..1e3f597bc95b4eeb103ec20785960ebca786d154 100644
+--- a/browser/components/asrouter/content/asrouter-admin.html
++++ b/browser/components/asrouter/content/asrouter-admin.html
+@@ -12,11 +12,6 @@
+     />
+     <meta name="color-scheme" content="light dark" />
+     <title>ASRouter Admin</title>
+-    <link
+-      rel="icon"
+-      type="image/png"
+-      href="chrome://branding/content/icon32.png"
+-    />
+     <link rel="localization" href="branding/brand.ftl" />
+     <link rel="localization" href="toolkit/branding/brandings.ftl" />
+     <link

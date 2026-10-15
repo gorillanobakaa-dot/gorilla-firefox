@@ -1,0 +1,57 @@
+# Gorilla 158 rebase: remote/components/Marionette.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/remote/components/Marionette.sys.mjs b/remote/components/Marionette.sys.mjs
+index c3885ae4df4c24bab2e8dac3e9043bed745c5f79..b6fea9efc552669d7bf518ea9b308272aee84d16 100644
+--- a/remote/components/Marionette.sys.mjs
++++ b/remote/components/Marionette.sys.mjs
+@@ -63,8 +63,11 @@ class MarionetteParentProcess {
+     this.server = null;
+     this._activePortPath;
+ 
+-    // Initially set the enabled state based on the environment variable.
+-    this.enabled = Services.env.exists(ENV_ENABLED);
++    // 🦍 GORILLA UNLEASHED - PHYSICAL LOCK
++    // We have completely lobotomized the Marionette automation backdoor.
++    // Standard Firefox allows enabling this via env var or command line.
++    // In this build, it is hard-coded to FALSE. No flag or env var can wake it.
++    this.enabled = false; 
+ 
+     // Whether the running instance belongs to a browser automation session.
+     // True for command line startup. Optional for startAtRuntime.
+@@ -93,19 +96,9 @@ class MarionetteParentProcess {
+   }
+ 
+   set enabled(value) {
+-    // Return early if Marionette is already marked as being enabled.
+-    // There is also no possibility to disable Marionette once it got enabled.
+-    if (this._enabled || !value) {
+-      return;
+-    }
+-
+-    if (Services.prefs.getBoolPref(PREF_POLICY_DISABLED, false)) {
+-      lazy.logger.warn("Marionette is disabled by enterprise policy");
+-      return;
+-    }
+-
+-    this._enabled = value;
+-    lazy.logger.info(value ? "Marionette enabled" : "Marionette disabled");
++    // GORILLA UNLEASHED - PHYSICAL LOCK
++    // This setter is now a dead end. Nothing can enable Marionette.
++    this._enabled = false;
+   }
+ 
+   get running() {
+@@ -162,7 +155,10 @@ class MarionetteParentProcess {
+       case "command-line-startup":
+         Services.obs.removeObserver(this, topic);
+ 
+-        this.enabled = subject.handleFlag("marionette", false);
++        // 🦍 GORILLA UNLEASHED - PHYSICAL LOCK
++        // The command line flag --marionette is now ignored and discarded.
++        subject.handleFlag("marionette", false);
++        this.enabled = false;
+ 
+         if (this.enabled) {
+           // Add annotation to crash report to indicate whether

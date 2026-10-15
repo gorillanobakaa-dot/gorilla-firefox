@@ -1,0 +1,20 @@
+# Gorilla 158 rebase: toolkit/modules/Region.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/modules/Region.sys.mjs b/toolkit/modules/Region.sys.mjs
+index 77308ba9f4d784302853ea81365008bc33b5630f..88577d0ef581213fe38f245179f40e94a5623381 100644
+--- a/toolkit/modules/Region.sys.mjs
++++ b/toolkit/modules/Region.sys.mjs
+@@ -223,6 +223,11 @@ class RegionDetector {
+    * Triggers fetching of the users current region. Exposed for tests.
+    */
+   async _fetchRegion() {
++    // GORILLA UNLEASHED - PHYSICAL LOCK (egress): no region lookup at location.services.mozilla.com, ever.
++    // The region stays whatever the profile already holds (or empty); nothing here needs a network answer.
++    if (true) {
++      return;
++    }
+     if (this._retryCount >= MAX_RETRIES) {
+       return;
+     }

@@ -1,0 +1,42 @@
+# Gorilla 158 rebase: browser/themes/BuiltInThemeConfig.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/themes/BuiltInThemeConfig.sys.mjs b/browser/themes/BuiltInThemeConfig.sys.mjs
+index 39d16addcfab0178757743407a48273aefa19d9b..755b04e55f7157fa99418e6cb22d6fa572e5ecdb 100644
+--- a/browser/themes/BuiltInThemeConfig.sys.mjs
++++ b/browser/themes/BuiltInThemeConfig.sys.mjs
+@@ -20,28 +20,8 @@
+  *   non-native appearance. See Document.forceNonNativeTheme and the
+  *   (-moz-native-theme) media query.
+  */
+-export const BuiltInThemeConfig = new Map([
+-  [
+-    "firefox-compact-light@mozilla.org",
+-    {
+-      version: "1.3.4",
+-      path: "resource://builtin-themes/light/",
+-      inApp: true,
+-    },
+-  ],
+-  [
+-    "firefox-compact-dark@mozilla.org",
+-    {
+-      version: "1.3.4",
+-      path: "resource://builtin-themes/dark/",
+-      inApp: true,
+-    },
+-  ],
+-  [
+-    "firefox-alpenglow@mozilla.org",
+-    {
+-      version: "1.5.3",
+-      path: "resource://builtin-themes/alpenglow/",
+-    },
+-  ],
+-]);
++// GORILLA UNLEASHED - PHYSICAL LOCK: one theme
++// Decision D-157-04. Mozilla's light, dark and alpenglow themes are not built in any more (their files are no longer
++// packaged, see browser/themes/addons/jar.mn). The map stays, empty, so every importer (BuiltInThemes,
++// LightweightThemeConsumer, about:addons) keeps working; the only theme is the default one, styled by Gorilla's CSS.
++export const BuiltInThemeConfig = new Map([]);

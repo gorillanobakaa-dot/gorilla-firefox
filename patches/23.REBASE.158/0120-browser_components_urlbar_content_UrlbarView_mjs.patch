@@ -1,0 +1,17 @@
+# Gorilla 158 rebase: browser/components/urlbar/content/UrlbarView.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/urlbar/content/UrlbarView.mjs b/browser/components/urlbar/content/UrlbarView.mjs
+index de42301aacdd1e849df51d2570fe99b19c5b473b..79c21625f606a8129bdddcdd0a552c498d2a8d75 100644
+--- a/browser/components/urlbar/content/UrlbarView.mjs
++++ b/browser/components/urlbar/content/UrlbarView.mjs
+@@ -627,7 +627,7 @@ export class UrlbarView {
+         type: "dismissalAcknowledgment",
+         titleL10n,
+         buttons: [{ l10n: { id: "urlbar-search-tips-confirm-short" } }],
+-        icon: "chrome://branding/content/icon32.png",
++        icon: "chrome://global/skin/icons/info.svg", // GORILLA D-157-35: neutral, not a 16 px Gorilla
+       },
+       rowLabel: !result.hideRowLabel && this.#rowLabel(row),
+       hideRowLabel: result.hideRowLabel,

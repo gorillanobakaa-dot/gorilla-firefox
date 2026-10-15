@@ -1,0 +1,21 @@
+# Gorilla 158 rebase: toolkit/components/ml/components.conf as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/components/ml/components.conf b/toolkit/components/ml/components.conf
+index c71e099e62af99dc919d217d9cc2a1490cdc195a..349d67f6ae37eddbb100cad10d66cad23a7244b6 100644
+--- a/toolkit/components/ml/components.conf
++++ b/toolkit/components/ml/components.conf
+@@ -6,11 +6,5 @@ Classes = [
+         'type': 'mozilla::ml::MLUtils',
+         'headers': ['mozilla/ml/MLUtils.h'],
+     },
+-    {
+-        'name': 'MLModelHub',
+-        'cid': '{e381b167-cb68-429c-9d57-35acf9054505}',
+-        'contract_ids': ['@mozilla.org/ml-modelhub;1'],
+-        'esModule': 'moz-src:///toolkit/components/ml/MLModelHubService.sys.mjs',
+-        'constructor': 'MLModelHubService',
+-    },
++    # GORILLA excised: MLModelHub (ML JavaScript stack removed)
+ ]

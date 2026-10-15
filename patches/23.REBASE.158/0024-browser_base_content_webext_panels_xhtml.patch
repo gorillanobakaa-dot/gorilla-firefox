@@ -1,0 +1,20 @@
+# Gorilla 158 rebase: browser/base/content/webext-panels.xhtml as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/base/content/webext-panels.xhtml b/browser/base/content/webext-panels.xhtml
+index 127b74d6bb4ed738619c380d2d5e5fc1e8958bb9..8597adddcc0d44ab1cf20fba39c6703426c3e6de 100644
+--- a/browser/base/content/webext-panels.xhtml
++++ b/browser/base/content/webext-panels.xhtml
+@@ -30,9 +30,8 @@
+     <html:link rel="localization" href="toolkit/global/textActions.ftl"/>
+     <html:link rel="localization" href="browser/browserContext.ftl"/>
+     <html:link rel="localization" href="preview/miniWindow.ftl"/>
+-    <html:link rel="localization" href="browser/aiWindow.ftl"/>
+-    <html:link rel="localization" href="preview/aiWindow.ftl"/>
+-    <html:link rel="localization" href="browser/translations.ftl"/>
++    <!-- GORILLA excised 2026-10-15 (158, D-158-08): AI window texts (aiWindow) not linked -->
++    <!-- GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): translations.ftl not linked -->
+     <html:link rel="localization" href="browser/sidebar.ftl"/>
+   </linkset>
+ 

@@ -1,0 +1,20 @@
+# Gorilla 158 rebase: toolkit/components/aboutprocesses/content/aboutProcesses.js as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/components/aboutprocesses/content/aboutProcesses.js b/toolkit/components/aboutprocesses/content/aboutProcesses.js
+index 8307825e53a850f72bdc9b55f48653e32921ccca..1df342307e76b068bd5b44d634cd82739a72af1c 100644
+--- a/toolkit/components/aboutprocesses/content/aboutProcesses.js
++++ b/toolkit/components/aboutprocesses/content/aboutProcesses.js
+@@ -609,10 +609,7 @@ var View = {
+ 
+     let image;
+     switch (data.type) {
+-      case "browser":
+-      case "privilegedabout":
+-        image = "chrome://branding/content/icon32.png";
+-        break;
++      // GORILLA D-157-35: browser and privileged-about rows no longer draw a 16 px Gorilla; they take the default
+       case "extension":
+         image = "chrome://mozapps/skin/extensions/extension.svg";
+         break;

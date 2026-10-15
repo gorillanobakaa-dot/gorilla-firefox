@@ -1,0 +1,38 @@
+# Gorilla 158 rebase: browser/components/asrouter/modules/ASRouter.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/asrouter/modules/ASRouter.sys.mjs b/browser/components/asrouter/modules/ASRouter.sys.mjs
+index d02818e311e93e890a85ec7c1e201ab29e861e2d..cae4917dd4fa415c9371ca25d6872da91668e22d 100644
+--- a/browser/components/asrouter/modules/ASRouter.sys.mjs
++++ b/browser/components/asrouter/modules/ASRouter.sys.mjs
+@@ -48,8 +48,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
+   RemoteSettings: "resource://services-settings/remote-settings.sys.mjs",
+   SidebarChatBotPromo:
+     "resource:///modules/asrouter/SidebarChatBotPromo.sys.mjs",
+-  SmartWindowNewTabPromo:
+-    "resource:///modules/asrouter/SmartWindowNewTabPromo.sys.mjs",
++  // GORILLA UNLEASHED - PHYSICAL LOCK: SmartWindowNewTabPromo excised (no Smart Window promotion).
+   SpecialMessageActions:
+     "resource://messaging-system/lib/SpecialMessageActions.sys.mjs",
+   TargetingContext: "resource://messaging-system/targeting/Targeting.sys.mjs",
+@@ -222,6 +221,10 @@ export const MessageLoaderUtils = {
+    * @returns {Promise} resolves with an array of messages, or an empty array if none could be fetched
+    */
+   async _remoteLoader(provider, options) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no remote message provider is ever fetched
++    if (true) {
++      return [];
++    }
+     let remoteMessages = [];
+     if (provider.url) {
+       const allCached = await MessageLoaderUtils._remoteLoaderCache(
+@@ -1765,7 +1768,7 @@ export class _ASRouter {
+         lazy.SidebarChatBotPromo.showPromo(browser, message, force);
+         break;
+       case "smart_window_newtab_promo":
+-        lazy.SmartWindowNewTabPromo.showPromo(browser, message, trigger, force);
++        // GORILLA UNLEASHED - PHYSICAL LOCK: no Smart Window promotion (module excised).
+         break;
+       case "newtab_message": {
+         let targetBrowser = force ? null : browser;

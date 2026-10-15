@@ -1,0 +1,17 @@
+# Gorilla 158 rebase: browser/base/content/macWindow.inc.xhtml as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/base/content/macWindow.inc.xhtml b/browser/base/content/macWindow.inc.xhtml
+index bf9c45905a8cf21d53326e996b181412e6801aa2..5bdb10c39433da03f00becbbb85a7ae11cfea222 100644
+--- a/browser/base/content/macWindow.inc.xhtml
++++ b/browser/base/content/macWindow.inc.xhtml
+@@ -15,7 +15,7 @@
+   <html:link rel="localization" href="browser/menubar.ftl"/>
+   <html:link rel="localization" href="browser/reportBrokenSite.ftl"/>
+   <html:link rel="localization" href="browser/screenshots.ftl"/>
+-  <html:link rel="localization" href="browser/aiWindow.ftl"/>
++  <!-- GORILLA excised 2026-08-27 (155): <html:link rel="localization" href="browser/aiWindow.ftl"/> -->
+   <html:link rel="localization" href="toolkit/branding/brandings.ftl"/>
+   <html:link rel="localization" href="toolkit/global/textActions.ftl"/>
+ </linkset>

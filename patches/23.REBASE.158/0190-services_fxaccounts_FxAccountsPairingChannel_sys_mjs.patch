@@ -1,0 +1,19 @@
+# Gorilla 158 rebase: services/fxaccounts/FxAccountsPairingChannel.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/services/fxaccounts/FxAccountsPairingChannel.sys.mjs b/services/fxaccounts/FxAccountsPairingChannel.sys.mjs
+index 3ce6d6f0f17845a1d6dda1c9790ce24e4057d33e..4265b1b938c3872c23a5379c4cc955c04c538cb6 100644
+--- a/services/fxaccounts/FxAccountsPairingChannel.sys.mjs
++++ b/services/fxaccounts/FxAccountsPairingChannel.sys.mjs
+@@ -3504,6 +3504,10 @@ class src_PairingChannel extends EventTarget {
+   }
+ 
+   static _makePairingChannel(wsUri, ConnectionClass, psk) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no pairing WebSocket
++    if (true) {
++      throw new Error("GORILLA: device pairing is disabled in this build");
++    }
+     const socket = new WebSocket(wsUri);
+     return new Promise((resolve, reject) => {
+       // eslint-disable-next-line prefer-const

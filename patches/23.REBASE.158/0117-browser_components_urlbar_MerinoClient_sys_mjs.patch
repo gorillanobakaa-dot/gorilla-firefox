@@ -1,0 +1,30 @@
+# Gorilla 158 rebase: browser/components/urlbar/MerinoClient.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/urlbar/MerinoClient.sys.mjs b/browser/components/urlbar/MerinoClient.sys.mjs
+index a2a49093bed73d9cc9b831b58a1d6d76c4376acb..675da931e0ffb27e061bda518a1ebf27240e69be 100644
+--- a/browser/components/urlbar/MerinoClient.sys.mjs
++++ b/browser/components/urlbar/MerinoClient.sys.mjs
+@@ -180,6 +180,10 @@ export class MerinoClient {
+     otherParams = {},
+     endpointUrl = lazy.UrlbarPrefs.get("merinoEndpointURL"),
+   }) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no Merino request (suggestions, weather, sports, stocks), whatever the endpoint pref says
++    if (true) {
++      return [];
++    }
+     this.#lazy.logger.debug("Fetch start", { query });
+ 
+     // If endpointUrl is explicitly provided, use it as-is
+@@ -434,6 +438,10 @@ export class MerinoClient {
+    *   response.
+    */
+   async autoCompleteWeatherLocation({ source, query, timeoutMs = undefined }) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no Merino weather lookup
++    if (true) {
++      return null;
++    }
+     let response = await this.fetch({
+       providers: ["accuweather"],
+       query: query || "",

@@ -1,0 +1,26 @@
+# Gorilla 158 rebase: browser/components/preferences/preferences.xhtml as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/preferences/preferences.xhtml b/browser/components/preferences/preferences.xhtml
+index 516adae0a00518c835e684ab2a7bd845a2a68475..229c9b90c5e8f2f9133baed3e17a1b9f71a86a58 100644
+--- a/browser/components/preferences/preferences.xhtml
++++ b/browser/components/preferences/preferences.xhtml
+@@ -52,7 +52,7 @@
+   <link rel="localization" href="toolkit/global/mozPageHeader.ftl"/>
+ 
+   <!-- Temporary until localization is done -->
+-  <link rel="localization" href="preview/smartTabGroups.ftl"/>
++  <!-- GORILLA excised 2026-08-27 (155): <link rel="localization" href="preview/smartTabGroups.ftl"/> -->
+   <link rel="localization" href="preview/privacyPreferences.ftl"/>
+   <link rel="localization" href="browser/ipProtection.ftl"/>
+   <link rel="localization" href="browser/aiFeatures.ftl"/>
+@@ -60,7 +60,7 @@
+   <!-- Links below are only used for search-l10n-ids into subdialogs -->
+   <link rel="localization" href="browser/aboutDialog.ftl"/>
+   <link rel="localization" href="browser/backupSettings.ftl"/>
+-  <link rel="localization" href="browser/genai.ftl"/>
++  <!-- GORILLA excised 2026-08-27 (155): <link rel="localization" href="browser/genai.ftl"/> -->
+   <link rel="localization" href="browser/search.ftl"/>
+   <link rel="localization" href="browser/preferences/browserIcon.ftl"/>
+   <link rel="localization" href="browser/preferences/clearSiteData.ftl"/>

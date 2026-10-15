@@ -1,0 +1,17 @@
+# Gorilla 158 rebase: browser/components/urlbar/content/UrlbarInputBase.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/urlbar/content/UrlbarInputBase.mjs b/browser/components/urlbar/content/UrlbarInputBase.mjs
+index 9093501ce7d288a51ba4822637e58a67c3faa273..aa7d3346dd57ed52a6fe5cddf51cb0a6042eb312 100644
+--- a/browser/components/urlbar/content/UrlbarInputBase.mjs
++++ b/browser/components/urlbar/content/UrlbarInputBase.mjs
+@@ -51,7 +51,7 @@ if (lazy) {
+   );
+   ChromeUtils.defineESModuleGetters(lazy, {
+     AIWindow:
+-      "moz-src:///browser/components/aiwindow/ui/modules/AIWindow.sys.mjs",
++      "resource:///modules/AIWindowStub.sys.mjs", // GORILLA: aiwindow excised, stub answers
+     BrowserUIUtils: "resource:///modules/BrowserUIUtils.sys.mjs",
+     CustomizableUI:
+       "moz-src:///browser/components/customizableui/CustomizableUI.sys.mjs",

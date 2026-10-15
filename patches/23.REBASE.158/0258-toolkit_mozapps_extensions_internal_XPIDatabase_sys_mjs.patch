@@ -1,0 +1,37 @@
+# Gorilla 158 rebase: toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs b/toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs
+index e9bab9dccfd5d9b85ca89057fdbd16fdcc40ba4a..a93b9679b5986cd63098b2e4345e24f5464bbeac 100644
+--- a/toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs
++++ b/toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs
+@@ -2670,6 +2670,28 @@ export const XPIDatabase = {
+    *        True if the add-on should not be appDisabled
+    */
+   isUsableAddon(aAddon) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: one theme
++    // Decision D-157-04. Only the default theme may be enabled: any other theme is app-disabled, so enabling it
++    // (about:addons, the profile editor, onboarding, an earlier profile's choice) leaves the default theme active.
++    if (
++      // // GORILLA UNLEASHED - NO TEST BYPASS (2026-10-15): Cu.isInAutomation is true when MOZ_DISABLE_NONLOCAL_CONNECTIONS=1 and the pref security.turn_off_all_security_so_that_viruses_can_take_over_this_computer are set, which a user can be talked into. Tests are not built, so the lock holds unconditionally.
++      aAddon.type === "theme" &&
++      aAddon.id !== DEFAULT_THEME_ID
++    ) {
++      logger.warn(`[GORILLA] Theme ${aAddon.id} refused: one theme only`);
++      return false;
++    }
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no sideloaded add-ons
++    // Decision D-157-05 (uBlock Origin only). An add-on that is not in a built-in or system location (the profile's
++    // extensions folder, a global directory, the registry, a temporary install) is app-disabled: it cannot be enabled.
++    if (
++      aAddon.location &&
++      !aAddon.location.isBuiltin &&
++      !aAddon.location.isSystem
++    ) {
++      logger.warn(`[GORILLA] Add-on ${aAddon.id} refused: add-ons are built in only`);
++      return false;
++    }
+     if (this.mustSign(aAddon.type) && !aAddon.isCorrectlySigned) {
+       logger.warn(`Add-on ${aAddon.id} is not correctly signed.`);
+       if (Services.prefs.getBoolPref(PREF_XPI_SIGNATURES_DEV_ROOT, false)) {

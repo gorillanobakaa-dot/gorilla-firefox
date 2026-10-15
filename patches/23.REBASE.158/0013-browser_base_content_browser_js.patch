@@ -1,0 +1,118 @@
+# Gorilla 158 rebase: browser/base/content/browser.js as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/base/content/browser.js b/browser/base/content/browser.js
+index 9de2d66ac83acf0cc6b293f6728c81bc507844f7..926aa023d9c31211fde50130e70685338e648788 100644
+--- a/browser/base/content/browser.js
++++ b/browser/base/content/browser.js
+@@ -109,7 +109,7 @@ ChromeUtils.defineESModuleGetters(this, {
+   ToolbarDropHandler:
+     "moz-src:///browser/components/customizableui/ToolbarDropHandler.sys.mjs",
+   ToolbarIconColor: "moz-src:///browser/themes/ToolbarIconColor.sys.mjs",
+-  TranslationsParent: "resource://gre/actors/TranslationsParent.sys.mjs",
++  // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): TranslationsParent getter removed
+   UIDensityTelemetry: "moz-src:///browser/modules/UIDensityTelemetry.sys.mjs",
+   UITour: "moz-src:///browser/components/uitour/UITour.sys.mjs",
+   UpdateUtils: "resource://gre/modules/UpdateUtils.sys.mjs",
+@@ -214,16 +214,8 @@ XPCOMUtils.defineLazyScriptGetter(
+   "gPermissionPanel",
+   "chrome://browser/content/browser-sitePermissionPanel.js"
+ );
+-XPCOMUtils.defineLazyScriptGetter(
+-  this,
+-  "SelectTranslationsPanel",
+-  "chrome://browser/content/translations/selectTranslationsPanel.js"
+-);
+-XPCOMUtils.defineLazyScriptGetter(
+-  this,
+-  "FullPageTranslationsPanel",
+-  "chrome://browser/content/translations/fullPageTranslationsPanel.js"
+-);
++// GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): no SelectTranslationsPanel or
++// FullPageTranslationsPanel lazy script getters (chrome://browser/content/translations/ is not packaged).
+ XPCOMUtils.defineLazyScriptGetter(
+   this,
+   "gProtectionsHandler",
+@@ -658,28 +650,7 @@ customElements.setElementCreationCallback(
+   }
+ );
+ 
+-// The "Tasks" panel (Smart Window) renders its content with this custom
+-// element, which pulls in agent-monitor-item for the create form.
+-customElements.setElementCreationCallback("agent-monitor-panel", () => {
+-  ChromeUtils.importESModule(
+-    "chrome://browser/content/aiwindow/components/agent-monitor-panel.mjs",
+-    { global: "current" }
+-  );
+-});
+-
+-// The "Group my tabs" panel and flyout (Smart Window) render their content with
+-// these light-DOM custom elements; both live in one module.
+-for (const smartwindowGroupTabsTag of [
+-  "smartwindow-group-tabs-card",
+-  "smartwindow-group-tabs-flyout",
+-]) {
+-  customElements.setElementCreationCallback(smartwindowGroupTabsTag, () => {
+-    ChromeUtils.importESModule(
+-      "chrome://browser/content/aiwindow/components/smartwindow-group-tabs.mjs",
+-      { global: "current" }
+-    );
+-  });
+-}
++// GORILLA excised 2026-10-15 (158, D-158-08): no Smart Window Tasks panel or Group my tabs elements to define.
+ 
+ var gBrowser;
+ var gContextMenu = null; // nsContextMenu instance
+@@ -770,10 +741,7 @@ async function gLazyFindCommand(cmd, ...args) {
+ }
+ 
+ var gPageIcons = {
+-  "about:home": "chrome://branding/content/icon32.png",
+-  "about:newtab": "chrome://branding/content/icon32.png",
+-  "about:opentabs": "chrome://branding/content/icon32.png",
+-  "about:welcome": "chrome://branding/content/icon32.png",
++  // GORILLA D-157-35: no 16 px Gorilla as the tab icon of New Tab, Home, Open Tabs or Welcome
+   "about:privatebrowsing": "chrome://browser/skin/privatebrowsing/favicon.svg",
+ };
+ 
+@@ -2002,17 +1970,8 @@ var XULBrowserWindow = {
+       "repair-text-encoding"
+     ));
+   },
+-  get _menuItemForTranslations() {
+-    delete this._menuItemForTranslations;
+-    return (this._menuItemForTranslations =
+-      document.getElementById("cmd_translate"));
+-  },
+-  get _moreToolsTranslateMenuItem() {
+-    delete this._moreToolsTranslateMenuItem;
+-    return (this._moreToolsTranslateMenuItem = document.getElementById(
+-      "cmd_openAboutTranslations"
+-    ));
+-  },
++  // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): no cmd_translate / cmd_openAboutTranslations
++  // menu item getters (the commands are gone).
+ 
+   setDefaultStatus(status) {
+     this.defaultStatus = status;
+@@ -2450,18 +2409,7 @@ var XULBrowserWindow = {
+       }
+     }
+ 
+-    if (TranslationsParent.isFullPageTranslationsRestrictedForPage(gBrowser)) {
+-      this._menuItemForTranslations.setAttribute("disabled", "true");
+-    } else {
+-      this._menuItemForTranslations.removeAttribute("disabled");
+-    }
+-
+-    const shouldShowTranslationsMenuItems =
+-      TranslationsParent.AIFeature.isEnabled &&
+-      TranslationsParent.getIsTranslationsEngineSupported();
+-
+-    this._menuItemForTranslations.hidden = !shouldShowTranslationsMenuItems;
+-    this._moreToolsTranslateMenuItem.hidden = !shouldShowTranslationsMenuItems;
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): no translate menu items to enable or show.
+   },
+ 
+   /**

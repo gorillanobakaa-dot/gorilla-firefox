@@ -1,0 +1,18 @@
+# Gorilla 158 rebase: browser/extensions/newtab/lib/AdsFeed.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/extensions/newtab/lib/AdsFeed.sys.mjs b/browser/extensions/newtab/lib/AdsFeed.sys.mjs
+index 6a32e0a240c19cde81539ac6a08728eb5de069c5..8292fecb692cb87a4e4be7395821337d036c62a1 100644
+--- a/browser/extensions/newtab/lib/AdsFeed.sys.mjs
++++ b/browser/extensions/newtab/lib/AdsFeed.sys.mjs
+@@ -168,7 +168,8 @@ export class AdsFeed {
+    * automated tests that simulate responses from this fetch.
+    */
+   fetch(...args) {
+-    return fetch(...args);
++    // GORILLA UNLEASHED - PHYSICAL LOCK (egress): this feed fetches nothing from the network.
++    return Promise.reject(new Error("GORILLA: network fetch disabled"));
+   }
+ 
+   /**

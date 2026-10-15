@@ -1,0 +1,20 @@
+# Gorilla 158 rebase: toolkit/mozapps/extensions/content/aboutaddons.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/mozapps/extensions/content/aboutaddons.mjs b/toolkit/mozapps/extensions/content/aboutaddons.mjs
+index e979fef53f9c2812d617fd815a8693bba567f293..20831f6a415cf90a285323966dc52370d2ae49b6 100644
+--- a/toolkit/mozapps/extensions/content/aboutaddons.mjs
++++ b/toolkit/mozapps/extensions/content/aboutaddons.mjs
+@@ -76,10 +76,7 @@ gViewController.defineView("list", async type => {
+     const forcedColorsNotice = document.createElement("forced-colors-notice");
+     frag.appendChild(forcedColorsNotice);
+ 
+-    const smartWindowNotice = document.createElement(
+-      "smartwindow-themes-notice"
+-    );
+-    frag.appendChild(smartWindowNotice);
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no Smart Window themes notice (aiwindow excised).
+   }
+ 
+   list.setSections(sections);

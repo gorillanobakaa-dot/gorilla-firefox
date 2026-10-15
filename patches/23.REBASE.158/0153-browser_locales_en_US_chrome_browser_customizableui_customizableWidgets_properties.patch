@@ -1,0 +1,39 @@
+# Gorilla 158 rebase: browser/locales/en-US/chrome/browser/customizableui/customizableWidgets.properties as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/locales/en-US/chrome/browser/customizableui/customizableWidgets.properties b/browser/locales/en-US/chrome/browser/customizableui/customizableWidgets.properties
+index 1ed916c3713960dd5445297c344a52a252351983..55d413664d3d63b311dac37d96c0501148730a6a 100644
+--- a/browser/locales/en-US/chrome/browser/customizableui/customizableWidgets.properties
++++ b/browser/locales/en-US/chrome/browser/customizableui/customizableWidgets.properties
+@@ -2,17 +2,17 @@
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ 
+-history-panelmenu.label = History
++history-panelmenu.label = Gorilla History
+ # LOCALIZATION NOTE(history-panelmenu.tooltiptext2): %S is the keyboard shortcut
+-history-panelmenu.tooltiptext2 = Show your history (%S)
++history-panelmenu.tooltiptext2 = Show your Gorilla history (%S)
+ 
+ find-button.label = Find
+ # LOCALIZATION NOTE(find-button.tooltiptext3): %S is the keyboard shortcut.
+-find-button.tooltiptext3 = Find in this page (%S)
++find-button.tooltiptext3 = Find in this Gorilla page (%S)
+ 
+ developer-button.label = Developer
+ # LOCALIZATION NOTE(developer-button.tooltiptext): %S is the keyboard shortcut
+-developer-button.tooltiptext2 = Open Web developer tools (%S)
++developer-button.tooltiptext2 = Open Gorilla Web Developer Tools (%S)
+ 
+ sidebar-button.label = Sidebars
+ sidebar-button.tooltiptext2 = Show sidebars
+@@ -47,7 +47,7 @@ paste-button.label = Paste
+ paste-button.tooltiptext2 = Paste (%S)
+ 
+ panic-button.label = Forget
+-panic-button.tooltiptext = Forget about some browsing history
++panic-button.tooltiptext = Forget about some browsing Gorilla history
+ 
+ toolbarspring.label = Flexible Space
+ toolbarseparator.label = Separator

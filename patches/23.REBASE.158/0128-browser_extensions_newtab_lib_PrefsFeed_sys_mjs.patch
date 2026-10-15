@@ -1,0 +1,20 @@
+# Gorilla 158 rebase: browser/extensions/newtab/lib/PrefsFeed.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/extensions/newtab/lib/PrefsFeed.sys.mjs b/browser/extensions/newtab/lib/PrefsFeed.sys.mjs
+index 92246d06afa444841fe371fe589ed6c97f6b8bac..06dac93a3aede8d0190e96f01a96d81ea4a692f2 100644
+--- a/browser/extensions/newtab/lib/PrefsFeed.sys.mjs
++++ b/browser/extensions/newtab/lib/PrefsFeed.sys.mjs
+@@ -292,6 +292,11 @@ export class PrefsFeed {
+    */
+   _getTrainhopConfig() {
+     // GORILLA UNLEASHED - PHYSICAL LOCK (D-157-31): nothing sent by Mozilla reconfigures the new tab.
++    // GORILLA TECHNIQUE T-157-31-B: trainhopConfig is the payload of newtabTrainhop Nimbus enrollments. Feeds
++    //   read it to change section order, ad placement (adsClient, spocsOnDemand), page layout variants and
++    //   widgets, and this function writes some of it to the DEFAULT pref branch (weather.display, widget size):
++    //   a remote pref flip. It is always empty here. Keep it empty in any later Firefox, under whatever name
++    //   the remote new-tab configuration has then. Registry: Fieldkit fieldkit/buildh/techniques.py, `fieldkit build-harness techniques <task>`
+     if (true) {
+       this._trainhopConfig = {};
+       return {};

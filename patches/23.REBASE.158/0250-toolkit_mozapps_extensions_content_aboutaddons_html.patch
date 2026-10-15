@@ -1,0 +1,30 @@
+# Gorilla 158 rebase: toolkit/mozapps/extensions/content/aboutaddons.html as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/mozapps/extensions/content/aboutaddons.html b/toolkit/mozapps/extensions/content/aboutaddons.html
+index 8d572bcb16b01403d8e7cd49b9eb589bfa0e7015..a747744f00b8ce5a88ec31de5591ceb7db4bff3a 100644
+--- a/toolkit/mozapps/extensions/content/aboutaddons.html
++++ b/toolkit/mozapps/extensions/content/aboutaddons.html
+@@ -35,10 +35,6 @@
+     <link rel="localization" href="branding/brand.ftl" />
+     <link rel="localization" href="toolkit/about/aboutAddons.ftl" />
+     <link rel="localization" href="toolkit/global/extensionPermissions.ftl" />
+-    <link
+-      rel="localization"
+-      href="locales-preview/smartWindow-aboutAddons.ftl"
+-    />
+ 
+     <!-- Shared Reusable Components -->
+     <script
+@@ -200,10 +196,6 @@
+       type="module"
+       src="chrome://mozapps/content/extensions/components/search-addons.mjs"
+     ></script>
+-    <script
+-      type="module"
+-      src="chrome://mozapps/content/extensions/components/smartwindow-themes-notice.mjs"
+-    ></script>
+     <script
+       type="module"
+       src="chrome://mozapps/content/extensions/components/taar-notice.mjs"

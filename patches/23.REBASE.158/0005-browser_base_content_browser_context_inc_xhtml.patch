@@ -1,0 +1,46 @@
+# Gorilla 158 rebase: browser/base/content/browser-context.inc.xhtml as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/base/content/browser-context.inc.xhtml b/browser/base/content/browser-context.inc.xhtml
+index 90d93c8827d275dd11917bfd19540bdf2c7b311f..3037ec1179477b15d2ac0f5f35488232c6d26a4a 100644
+--- a/browser/base/content/browser-context.inc.xhtml
++++ b/browser/base/content/browser-context.inc.xhtml
+@@ -104,10 +104,13 @@
+                 class="context-menu-open-link"
+                 data-l10n-id="main-context-menu-open-link-new-private-window"
+                 />
++      <!-- GORILLA excised 2026-08-27 (155): AI row. Its l10n strings were removed with the AI stack, so it rendered as a BLANK line in the right-click menu.
++           context > Open Link in New Smart Window
+       <menuitem id="context-openlinksmartwindow"
+                 class="context-menu-open-link"
+                 data-l10n-id="main-context-menu-open-link-new-smart-window"
+                 />
++      -->
+       <menuitem id="context-previewlink"
+                 data-l10n-id="main-context-menu-preview-link"
+                 />
+@@ -369,12 +372,9 @@
+                 data-l10n-id="main-context-menu-add-engine"/>
+       <menuitem id="context-searchselect"/>
+       <menuitem id="context-searchselect-private"/>
+-      <menuitem id="context-translate-selection"
+-                data-l10n-id="main-context-menu-translate-selection"/>
++      <!-- GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): no "Translate selection" item -->
+       <menu id="context-ask-chat"/>
+-      <menuitem id="context-create-aitab"
+-                data-l10n-id="main-context-menu-create-aitab"
+-                hidden="true"/>
++      <!-- GORILLA excised 2026-10-15 (158, D-158-08): no "Create AI tab" item; its text lived in the AI strings, which are no longer shipped. -->
+ 
+       <menuseparator id="frame-sep"/>
+       <menu id="frame" data-l10n-id="main-context-menu-frame">
+@@ -430,7 +430,7 @@
+             data-l10n-id="text-action-spell-dictionaries">
+           <menupopup id="spell-dictionaries-menu" accesskey-conflicts-bug="2073901">
+               <menuseparator id="spell-language-separator"/>
+-              <menuitem id="spell-add-dictionaries"
++              <menuitem id="spell-add-dictionaries" hidden="true"
+                         data-l10n-id="text-action-spell-add-dictionaries"
+                         />
+           </menupopup>

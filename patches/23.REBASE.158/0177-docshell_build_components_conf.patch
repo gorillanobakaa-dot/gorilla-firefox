@@ -1,0 +1,63 @@
+# Gorilla 158 rebase: docshell/build/components.conf as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/docshell/build/components.conf b/docshell/build/components.conf
+index 1f86eca9205d5d46be94d6d85a893d152bca6d86..0862b24569a0152637624d9353d1bee870a6e228 100644
+--- a/docshell/build/components.conf
++++ b/docshell/build/components.conf
+@@ -8,23 +8,19 @@ about_pages = [
+     'certificate',
+     'checkerboard',
+     'config',
+-    'crashcontent',
+-    'crashparent',
+-    'crashgpu',
+-    'crashextensions',
++    # GORILLA D-157-40: no about:crashcontent, crashparent, crashgpu, crashextensions
+     'credits',
+-    'fingerprintingprotection',
++    # GORILLA D-157-40: no about:fingerprintingprotection
+     'httpsonlyerror',
+     'license',
+-    'logging',
+-    'logo',
++    # GORILLA D-157-36: no about:logging
+     'memory',
+     'mozilla',
+     'neterror',
+     'networking',
+-    'performance',
++    # GORILLA D-157-40: no about:performance (alias of about:processes)
+     'processes',
+-    'restricted',
++    # GORILLA D-157-40: no about:restricted
+     'serviceworkers',
+     'srcdoc',
+     'support',
+@@ -42,19 +38,18 @@ if buildconfig.substs['MOZ_WIDGET_TOOLKIT'] != 'android':
+     about_pages.append('profiles')
+ if buildconfig.substs['MOZ_WIDGET_TOOLKIT'] != 'android':
+     about_pages.append('pdf')
+-    about_pages.append('translations')
++    # GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): about:translations removed
+ if buildconfig.substs['MOZ_WIDGET_TOOLKIT'] == 'android':
+-    about_pages.append('crashcontentjava')
++    # GORILLA D-157-40: no about:crashcontentjava
+     about_pages.append('home')
+ if buildconfig.substs['MOZ_WIDGET_TOOLKIT'] == 'windows':
+     about_pages.append('third-party')
+-    about_pages.append('windows-messages')
+-if not defined('MOZ_GLEAN_ANDROID'):
+-    about_pages.append('glean')
++    # GORILLA D-157-36: no about:windows-messages
++# GORILLA D-157-36: no about:glean
+ if buildconfig.substs['MOZ_WIDGET_TOOLKIT'] != 'android' and buildconfig.substs['MOZ_WIDGET_TOOLKIT'] != 'windows':
+     about_pages.append('webauthn')
+-if defined('NIGHTLY_BUILD'):
+-    about_pages.append('inference')
++# GORILLA D-157-40: about:inference is excised (nsAboutRedirector.cpp); the Nightly-only append that still named it
++# is gone too.
+ 
+ Headers = ['/docshell/build/nsDocShellModule.h']
+ 

@@ -1,0 +1,25 @@
+# Gorilla 158 rebase: browser/base/content/browser.js.globals as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/base/content/browser.js.globals b/browser/base/content/browser.js.globals
+index 3ed052e49e782ccfb05bc337210405f4792f5fa4..b34aff3bb203fbec12fd48f0dfc1a54d36cb8e24 100644
+--- a/browser/base/content/browser.js.globals
++++ b/browser/base/content/browser.js.globals
+@@ -137,7 +137,6 @@
+   "TabsSetupFlowManager",
+   "TaskbarTabsChrome",
+   "TelemetryEnvironment",
+-  "TranslationsParent",
+   "UIDensityTelemetry",
+   "UITour",
+   "UpdateUtils",
+@@ -173,8 +172,6 @@
+   "FullScreen",
+   "gIdentityHandler",
+   "gPermissionPanel",
+-  "SelectTranslationsPanel",
+-  "FullPageTranslationsPanel",
+   "gProtectionsHandler",
+   "gGestureSupport",
+   "gHistorySwipeAnimation",

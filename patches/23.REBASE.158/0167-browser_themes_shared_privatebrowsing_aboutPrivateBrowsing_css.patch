@@ -1,0 +1,247 @@
+# Gorilla 158 rebase: browser/themes/shared/privatebrowsing/aboutPrivateBrowsing.css as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/themes/shared/privatebrowsing/aboutPrivateBrowsing.css b/browser/themes/shared/privatebrowsing/aboutPrivateBrowsing.css
+index 7086bc256333e402d5f5556fa78243798eebdeff..e1788c0664634deac93cd1ccb9f2682579291911 100644
+--- a/browser/themes/shared/privatebrowsing/aboutPrivateBrowsing.css
++++ b/browser/themes/shared/privatebrowsing/aboutPrivateBrowsing.css
+@@ -6,14 +6,14 @@
+ 
+ @media not (prefers-contrast) {
+   html.private {
+-    --background-color-canvas: #25003e;
++    --background-color-canvas: #000000;
+     --link-color: white;
+     --link-color-hover: white;
+     --link-color-active: white;
+-    --in-content-banner-background: #f9f9fe;
+-    --in-content-banner-text-color: #0c0c0d;
+-    --button-background-color-hover: rgba(12, 12, 13, 0.1);
+-    --button-background-color-active: rgba(12, 12, 13, 0.15);
++    --in-content-banner-background: #1c1c1f;
++    --in-content-banner-text-color: #ffffff;
++    --button-background-color-hover: rgba(255, 255, 255, 0.1);
++    --button-background-color-active: rgba(255, 255, 255, 0.15);
+ 
+     color-scheme: dark;
+   }
+@@ -63,32 +63,41 @@ p {
+ }
+ 
+ .logo {
+-  background: image-set(url("chrome://branding/content/about-logo-private.png"), url("chrome://branding/content/about-logo-private@2x.png") 2x) no-repeat center
+-    center;
+-  background-size: var(--size-image-xxlarge);
++  /* GORILLA OVERRIDE 2026-07-31: align with the newtab logo — ONE artwork
++     everywhere (one-PNG doctrine) and NO raster upscaling (lesson
++     Crisp_Logo_Never_Upscale_Raster). about-logo.svg wraps a 1200px raster,
++     so a 600px box DOWNsamples = crisp; the old about-logo-private.png
++     (a byte-identical duplicate of about-logo.png) drew 500px 1:1 and went
++     soft the moment anything scaled. Values mirror nova-activity-stream.css
++     .logo-and-wordmark. */
+   display: inline-block;
+-  height: var(--size-image-xxlarge);
+-  width: var(--size-image-xxlarge);
++  height: 600px;
++  width: 600px;
++  max-width: 95vw;
++  max-height: 70vh;
++  background: url("chrome://branding/content/about-logo.png") no-repeat center center;
++  background-size: contain;
+ }
+ 
+ .wordmark {
+-  display: inline-block;
+-  background: url("chrome://branding/content/firefox-wordmark.svg") no-repeat center center;
+-  background-size: 172px;
+-  margin-inline-start: 15px;
+-  -moz-context-properties: fill;
+-  fill: currentColor;
+-  height: 96px;
+-  width: 172px;
++  display: none !important;
+ }
+ 
+ .search-inner-wrapper {
+   display: flex;
+-  height: 52px;
+-  padding: 0;
++  height: var(--size-item-xlarge);
++  padding: 0 22px;
+   min-width: 70vw;
+ }
+ 
++/* stylelint-disable-next-line media-query-no-invalid */
++@media -moz-pref("browser.privatebrowsing.felt-privacy-v1") {
++  .search-inner-wrapper {
++    height: 52px;
++    padding: 0;
++  }
++}
++
+ .promo-image-large {
+   margin-inline-end: 6px;
+   min-width: 160px;
+@@ -153,16 +162,27 @@ p {
+ }
+ 
+ content-search-handoff-ui {
+-  --content-search-handoff-ui-background-color: #321c64;
+-  --content-search-handoff-ui-color: #fbfbfe;
+-  --content-search-handoff-ui-fill: rgb(251, 251, 254);
+-  --content-search-handoff-ui-caret-color: #fbfbfe;
+-  --content-search-handoff-ui-border-width: 3px;
+-  --content-search-handoff-ui-unfocused-border-color: rgb(149, 43, 185);
+-  --content-search-handoff-ui-fakefocus-border-color: #0060df;
+-  --content-search-handoff-ui-fakefocus-box-shadow-inner: #0060df;
+-  --content-search-handoff-ui-fakefocus-box-shadow-outer: rgba(0, 96, 223, 0.3);
+-  --content-search-handoff-ui-engine-icon: url(chrome://global/skin/icons/search-glass.svg);
++  --content-search-handoff-ui-background-color: #121214;
++  --content-search-handoff-ui-color: #ffffff;
++  --content-search-handoff-ui-fill: rgba(255, 255, 255, 0.4);
++  --content-search-handoff-ui-caret-color: #ffffff;
++  --content-search-handoff-ui-fakefocus-border-color: #0080ff;
++  --content-search-handoff-ui-fakefocus-box-shadow-inner: #0080ff;
++  --content-search-handoff-ui-fakefocus-box-shadow-outer: rgba(0, 128, 255, 0.3);
++
++  /* stylelint-disable-next-line media-query-no-invalid */
++  @media -moz-pref("browser.privatebrowsing.felt-privacy-v1") {
++    --content-search-handoff-ui-background-color: #121214;
++    --content-search-handoff-ui-color: #ffffff;
++    --content-search-handoff-ui-fill: rgb(251, 251, 254);
++    --content-search-handoff-ui-caret-color: #ffffff;
++    --content-search-handoff-ui-border-width: 1px;
++    --content-search-handoff-ui-unfocused-border-color: #2b2b2e;
++    --content-search-handoff-ui-fakefocus-border-color: #0080ff;
++    --content-search-handoff-ui-fakefocus-box-shadow-inner: #0080ff;
++    --content-search-handoff-ui-fakefocus-box-shadow-outer: rgba(0, 128, 255, 0.3);
++    --content-search-handoff-ui-engine-icon: url(chrome://global/skin/icons/search-glass.svg);
++  }
+ 
+   @media (forced-colors) {
+     --content-search-handoff-ui-background-color: ButtonFace;
+@@ -209,6 +229,25 @@ content-search-handoff-ui {
+   margin: 4px 0;
+ }
+ 
++.info {
++  margin-top: 64px;
++  /* stylelint-disable-next-line stylelint-plugin-mozilla/use-design-tokens */
++  background-color: var(--color-black-alpha-20);
++  background-image: url("chrome://global/skin/icons/indicator-private-browsing.svg");
++  background-position: left 32px top 20px;
++  background-repeat: no-repeat;
++  background-size: 32px;
++  border: 1px solid transparent;
++  border-radius: var(--border-radius-small);
++  letter-spacing: -0.2px;
++  padding: 20px;
++  padding-inline-start: 76px;
++}
++
++.info:dir(rtl) {
++  background-position-x: right 32px;
++}
++
+ .info h1,
+ .promo h1 {
+   font-size: 18px;
+@@ -221,42 +260,43 @@ content-search-handoff-ui {
+   line-height: 1.67;
+ }
+ 
+-.info-border {
+-  border-radius: var(--border-radius-medium);
+-  margin-top: 64px;
+-  padding: 17px;
+-
+-  @media not (prefers-contrast) {
+-    box-shadow: 0 2px 6px 0 rgba(58, 57, 68, 0.2);
+-    background: rgba(149, 43, 185, 0.5);
+-  }
++.info #info-title:not([hidden]) + p {
++  margin-top: 15px;
+ }
+ 
+-.info {
+-  /* stylelint-disable-next-line stylelint-plugin-mozilla/use-design-tokens */
+-  background-color: var(--color-black-alpha-20);
+-  background-image: none;
+-  border: 1px solid transparent;
+-  border-radius: var(--border-radius-small);
+-  font-size: 0.93em;
+-  letter-spacing: -0.2px;
+-  margin: 0;
+-  padding: 20px;
+-  padding-block-end: 25px;
++/* stylelint-disable-next-line media-query-no-invalid */
++@media -moz-pref("browser.privatebrowsing.felt-privacy-v1") {
++  .info-border {
++    border-radius: var(--border-radius-medium);
++    margin-top: 64px;
++    padding: 0 !important;
++    background: none !important;
++    box-shadow: none !important;
++    border: none !important;
++  }
++
++  .info {
++    background-image: none;
++    border-radius: var(--border-radius-small);
++    font-size: 0.93em;
++    margin: 0;
++    padding-inline-start: 20px;
++    padding-block-end: 25px;
+ 
+-  @media not (prefers-contrast) {
+-    background-color: #321c64;
+-    box-shadow: 0 2px 6px 0 rgba(58, 57, 68, 0.2);
++    @media not (prefers-contrast) {
++      background-color: #121214;
++      box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.5);
++    }
+   }
+-}
+ 
+-#info-title:not([hidden]) + #info-body {
+-  margin-block: 0;
+-}
++  #info-title:not([hidden]) + #info-body {
++    margin-block: 0;
++  }
+ 
+-#info-title {
+-  font-size: 1em;
+-  margin-block: 0;
++  #info-title {
++    font-size: 1em;
++    margin-block: 0;
++  }
+ }
+ 
+ .search-banner-close-button {
+@@ -735,3 +775,23 @@ content-search-handoff-ui {
+     }
+   }
+ }
++
++
++/* ==========================================================
++ * GORILLA OVERRIDES
++ * Appended rather than patched in place: these are additive
++ * overrides, and the cascade already gives later rules
++ * priority. Upstream can restructure this file freely.
++ * ========================================================== */
++
++@media -moz-pref("browser.privatebrowsing.felt-privacy-v1") {
++  .promo.below-search.promo-visible {
++    margin-block: 0 25px;
++}
++}
++
++  @media not (prefers-contrast) {
++    html.private {
++      background: #000000 !important;
++}
++}

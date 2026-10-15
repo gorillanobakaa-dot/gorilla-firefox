@@ -1,0 +1,35 @@
+# Gorilla 158 rebase: browser/modules/AboutNewTab.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/modules/AboutNewTab.sys.mjs b/browser/modules/AboutNewTab.sys.mjs
+index b60d95c9ad182ec1599948603547ce00eed2140d..1ecdfbeb984e1b753cfd42e248cf9ee6a4c22d44 100644
+--- a/browser/modules/AboutNewTab.sys.mjs
++++ b/browser/modules/AboutNewTab.sys.mjs
+@@ -198,9 +198,23 @@ export const AboutNewTab = {
+     // the addon has finished registering its resources, and that the
+     // trainhopConfig value computed in PrefsFeed is ready to be read.
+ 
+-    // GORILLA UNLEASHED - PHYSICAL LOCK (D-157-31): the new tab never waits for Nimbus. Nimbus is never
+-    // started in Gorilla (Normandy is cut), so its ready() never resolved and the
+-    // page stayed blank; and train-hop (its only use here) is cut below.
++    // GORILLA UNLEASHED - PHYSICAL LOCK (D-157-31): the new tab never waits for Nimbus.
++    // GORILLA TECHNIQUE T-157-31-A "no page waits on the experiment system" (registry: Fieldkit fieldkit/buildh/techniques.py, `fieldkit build-harness techniques <task>`)
++    //   What upstream does: Promise.all([profile age, NimbusFeatures.newtabTrainhop.ready(), built-in addon])
++    //     and only then `new ActivityStream()`, the code that draws the new tab and the start page.
++    //   Why that breaks Gorilla: Normandy is cut (its init returns at once, see Normandy.sys.mjs), and in
++    //     Firefox 157 Normandy's init is the only caller of ExperimentAPI.init(). The Nimbus store is never
++    //     opened, ready() never resolves, the page is never built: a black new tab and start page (build 19,
++    //     2026-10-03; it measured 34 elements and no picture).
++    //   Why we remove the wait instead of answering it: the maintainer's rule D-157-31 is that nothing may
++    //     reconfigure the browser after it ships. The only thing this wait was for is train-hop (Mozilla
++    //     replacing or reconfiguring this page remotely), which is cut in AboutNewTabResourceMapping and
++    //     PrefsFeed. Opening the Nimbus store just to say "nothing new" was tested and works, but keeps the
++    //     experiment system alive; removing the question keeps it dead.
++    //   If a later Firefox moves this: find EVERY await on NimbusFeatures.<x>.ready(), ExperimentAPI.ready()
++    //     or ExperimentAPI.init() on a path that draws a page or starts a feature, and remove the wait (not the
++    //     feature). `fieldkit build-harness techniques` lists them. The visual check's RT-CONTENT rule fails
++    //     a build whose new tab does not show the Gorilla logo and the search box.
+ 
+     let redirector = Cc[
+       "@mozilla.org/network/protocol/about;1?what=newtab"

@@ -1,0 +1,34 @@
+# Gorilla 158 rebase: toolkit/components/telemetry/app/ClientID.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/components/telemetry/app/ClientID.sys.mjs b/toolkit/components/telemetry/app/ClientID.sys.mjs
+index 99b65edba70a0b1eb9a68010a416ec36a0dac56d..4e602d851a0132ff947ad1e5ee436706fd34890b 100644
+--- a/toolkit/components/telemetry/app/ClientID.sys.mjs
++++ b/toolkit/components/telemetry/app/ClientID.sys.mjs
+@@ -268,6 +268,14 @@ var ClientIDImpl = {
+    * we generate a new one.
+    */
+   async _doLoadDataReportingState() {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no unique identifier is generated; every profile carries Mozilla's own canary IDs, and nothing is read from or written to datareporting/state.json
++    if (true) {
++      this._clientID = CANARY_CLIENT_ID;
++      this._profileGroupID = CANARY_PROFILE_GROUP_ID;
++      this._usageProfileID = CANARY_USAGE_PROFILE_ID;
++      this._usageProfileGroupID = CANARY_USAGE_PROFILE_GROUP_ID;
++      return { clientID: this._clientID, profileGroupID: this._profileGroupID, usageProfileID: this._usageProfileID, usageProfileGroupID: this._usageProfileGroupID };
++    }
+     this._log.trace(`_doLoadDataReportingState`);
+     // If there's a removal in progress, let's wait for it
+     await this._resetIdentifiersTask;
+@@ -405,6 +413,10 @@ var ClientIDImpl = {
+    * @return {Promise} A promise resolved when the DRS state file is saved to disk.
+    */
+   async _saveDataReportingState() {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: the data-reporting state file is never written
++    if (true) {
++      return;
++    }
+     try {
+       this._log.trace(`_saveDataReportingState`);
+       let obj = {

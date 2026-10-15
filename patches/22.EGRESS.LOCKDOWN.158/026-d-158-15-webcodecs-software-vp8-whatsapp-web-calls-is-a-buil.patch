@@ -1,0 +1,19 @@
+# Gorilla 158 privacy cut
+# D-158-15: WebCodecs software VP8 (WhatsApp Web calls) is a build default, not a profile line
+# Files: browser/app/profile/firefox.js
+
+diff --git a/browser/app/profile/firefox.js b/browser/app/profile/firefox.js
+index 982c4d117c..1b99c98d96 100644
+--- a/browser/app/profile/firefox.js
++++ b/browser/app/profile/firefox.js
+@@ -3984,6 +3984,10 @@ pref("dom.timeout.throttling_delay",                15000);
+ // 512 is upstream's value (all.js: "effectively infinite, while preventing
+ // abuse"). Proven by a logged real call. Preflight check call-prefs guards it.
+ pref("dom.workers.maxPerDomain",                    512);
++// GORILLA D-158-15 (2026-10-15): WhatsApp Web calls run VP8 through WebCodecs; the HD 4000 has no VP8 hardware, so
++// WebCodecs (and only WebCodecs: <video>, MSE and WebRTC stay hardware-only) may decode VP8 in software. Until today
++// this lived only in one profile's user.js, so a fresh profile had broken WhatsApp video calls (PREF-001 class).
++pref("media.gorilla.webcodecs_software_vp8", true);
+ pref("extensions.getAddons.showPane",               false);
+ pref("extensions.htmlaboutaddons.recommendations.enabled", false);
+ pref("extensions.pocket.enabled", false, locked);

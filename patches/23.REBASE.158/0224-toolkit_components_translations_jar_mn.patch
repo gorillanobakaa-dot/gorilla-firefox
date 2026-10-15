@@ -1,0 +1,32 @@
+# Gorilla 158 rebase: toolkit/components/translations/jar.mn as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/components/translations/jar.mn b/toolkit/components/translations/jar.mn
+index ed20ce2b52df51540f5133278a3456261fbff7d1..bdd6766bfbd8d41f35558a5a1b7f1b25eb1639c1 100644
+--- a/toolkit/components/translations/jar.mn
++++ b/toolkit/components/translations/jar.mn
+@@ -2,18 +2,8 @@
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ 
+-toolkit.jar:
+-    content/global/translations/about-translations.html       (content/about-translations.html)
+-    content/global/translations/about-translations.css        (content/about-translations.css)
+-    content/global/translations/about-translations.mjs        (content/about-translations.mjs)
+-    content/global/translations/bergamot-translator.js        (bergamot-translator/bergamot-translator.js)
+-    content/global/translations/translations-document.sys.mjs (content/translations-document.sys.mjs)
+-    content/global/translations/translations-engine.sys.mjs   (content/translations-engine.sys.mjs)
+-    content/global/translations/translations-engine.worker.js (content/translations-engine.worker.js)
+-    content/global/translations/Translator.mjs                (content/Translator.mjs)
+-    content/global/translations/TranslationsTelemetry.sys.mjs (TranslationsTelemetry.sys.mjs)
+-    content/global/translations/TranslationsFeature.sys.mjs   (TranslationsFeature.sys.mjs)
+-    content/global/translations/TranslationsUtils.mjs         (TranslationsUtils.mjs)
+-
+-    # Uncomment the following line to test a local build of Bergamot. It will automatically be loaded in.
+-    # content/global/translations/bergamot-translator.wasm.zst   (bergamot-translator/thirdparty/translations/inference/build-wasm/bergamot-translator.wasm.zst)
++# GORILLA UNLEASHED - PHYSICAL LOCK: no translations
++# Decision D-157-03 (English only): every chrome://global/content/translations/ entry is gone (about:translations,
++# the Bergamot engine and its worker, Translator, TranslationsFeature, TranslationsTelemetry, TranslationsUtils).
++# The language detector stays: it is packaged by moz.build as resource://gre/modules/translations/ (EXTRA_JS_MODULES).
++# The file stays because mozbuild refuses a jar.mn that exists without a JAR_MANIFESTS declaration.

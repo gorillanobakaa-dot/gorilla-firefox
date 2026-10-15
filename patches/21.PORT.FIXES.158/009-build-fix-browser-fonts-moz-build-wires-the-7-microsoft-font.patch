@@ -1,0 +1,23 @@
+# Gorilla 158 port fix
+# Build fix: browser/fonts/moz.build wires the 7 Microsoft fonts (Linux-only, from patchset-155.0b4/11.FONT.SYSTEM; the 157 set came from Windows, which excludes it)
+# Files: browser/fonts/moz.build
+
+diff --git a/browser/fonts/moz.build b/browser/fonts/moz.build
+index 0ebf2de60f..ee3d290f45 100644
+--- a/browser/fonts/moz.build
++++ b/browser/fonts/moz.build
+@@ -4,4 +4,13 @@
+ 
+ if CONFIG["MOZ_WIDGET_TOOLKIT"] in ("windows", "gtk"):
+     DIST_SUBDIR = ""
+-    FINAL_TARGET_FILES.fonts += ["TwemojiMozilla.ttf"]
++    FINAL_TARGET_FILES.fonts += [
++        "consola.ttf",
++        "segoeui.ttf",
++        "segoeuib.ttf",
++        "seguisb.ttf",
++        "SegUIVar.ttf",
++        "TwemojiMozilla.ttf",
++        "YuGothB.ttc",
++        "YuGothR.ttc",
++    ]

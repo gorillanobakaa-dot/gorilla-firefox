@@ -1,0 +1,18 @@
+# Gorilla 158 privacy cut
+# D-157-04: novaThemesPickerEnabled locked off
+# Files: browser/app/profile/firefox.js
+
+diff --git a/browser/app/profile/firefox.js b/browser/app/profile/firefox.js
+index 2d207a3998..982c4d117c 100644
+--- a/browser/app/profile/firefox.js
++++ b/browser/app/profile/firefox.js
+@@ -83,7 +83,8 @@ pref("browser.dictionaries.download.url", "", locked);
+ // Whether the Nova Themes picker should be enabled in the about:addons page.
+ // (needs also browser.nova.enabled for the Nova Themes picker to be shown
+ // in the about:addons page).
+-pref("browser.aboutaddons.novaThemesPickerEnabled", true);
++// GORILLA D-157-04 (2026-10-15): one theme only; the Nova list installs themes from Mozilla's add-ons site
++pref("browser.aboutaddons.novaThemesPickerEnabled", false, locked);
+ 
+ // At startup, should we check to see if the installation
+ // date is older than some threshold

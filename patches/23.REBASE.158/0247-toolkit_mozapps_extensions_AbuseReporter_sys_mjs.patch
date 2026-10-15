@@ -1,0 +1,19 @@
+# Gorilla 158 rebase: toolkit/mozapps/extensions/AbuseReporter.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/mozapps/extensions/AbuseReporter.sys.mjs b/toolkit/mozapps/extensions/AbuseReporter.sys.mjs
+index bb7df75e3dcef04991b1004803289c579862d1d9..7137b5372322f132f750365e156b1045ff824989 100644
+--- a/toolkit/mozapps/extensions/AbuseReporter.sys.mjs
++++ b/toolkit/mozapps/extensions/AbuseReporter.sys.mjs
+@@ -99,6 +99,10 @@ export const AbuseReporter = {
+    *          API response (or an error when something went wrong).
+    */
+   async sendAbuseReport(addonId, data, options = {}) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no abuse report to AMO
++    if (true) {
++      throw new Error("GORILLA: add-on abuse reports are not sent from this build");
++    }
+     const rejectReportError = async (errorType, { response } = {}) => {
+       // Leave errorInfo empty if there is no response or fails to be converted
+       // into an error info object.

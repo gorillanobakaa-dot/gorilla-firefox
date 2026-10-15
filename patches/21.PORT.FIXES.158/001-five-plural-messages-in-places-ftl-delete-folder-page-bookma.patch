@@ -1,0 +1,70 @@
+# Gorilla 158 port fix
+# Five plural messages in places.ftl (delete folder/page/bookmark, create bookmark, items count) had lost their whole value: the 08.Look patch, exported on Windows, put a whitespace-only line after '.label =' and indented .accesskey as part of the text, and the Fluent port stopped at the blank line. Rebuilt from 158's own structure with the patch's Gorilla words. lesson: the Fluent port must keep a multi-line pattern across whitespace-only lines and must never leave an attribute with an empty value; a port that leaves one is refused by the step check, not found at final-checks
+# Files: browser/locales/en-US/browser/places.ftl
+
+diff --git a/browser/locales/en-US/browser/places.ftl b/browser/locales/en-US/browser/places.ftl
+index 9f77b0be61..76906f976d 100644
+--- a/browser/locales/en-US/browser/places.ftl
++++ b/browser/locales/en-US/browser/places.ftl
+@@ -85,11 +85,21 @@ places-edit-folder2 =
+ # Variables
+ #   $count (number) - Number of folders to delete
+ places-delete-folder =
+-  .label = 
++  .label =
++      { $count ->
++          [1] Delete Folder
++         *[other] Delete Folders
++      }
++  .accesskey = D
+ # Variables:
+ #   $count (number) - The number of pages selected for removal.
+ places-delete-page =
+-  .label = 
++  .label =
++      { $count ->
++          [1] Delete Gorilla Page
++         *[other] Delete Gorilla Pages
++      }
++  .accesskey = D
+ 
+ # Managed bookmarks are created by enterprise policy and cannot be changed by the user.
+ managed-bookmarks =
+@@ -109,12 +119,22 @@ places-show-in-folder =
+ # Variables:
+ # $count (number) - The number of elements being selected for removal.
+ places-delete-bookmark =
+-  .label = 
++  .label =
++      { $count ->
++          [1] Delete Gorilla Bookmark
++         *[other] Delete Gorilla Bookmarks
++      }
++  .accesskey = D
+ 
+ # Variables:
+ #   $count (number) - The number of bookmarks being added.
+ places-create-bookmark =
+-  .label = 
++  .label =
++      { $count ->
++          [1] Gorilla Bookmark Gorilla Page…
++         *[other] Gorilla Bookmark Gorilla Pages…
++      }
++  .accesskey = B
+ 
+ places-untag-bookmark =
+   .label = Remove Tag
+@@ -252,7 +272,11 @@ places-details-pane-no-items =
+ # Variables:
+ #   $count (Number): number of items
+ places-details-pane-items-count =
+-  .value = 
++  .value =
++      { $count ->
++          [one] One item
++         *[other] { $count } items
++      }
+ 
+ ## Strings used as a placeholder in the Library search field. For example,
+ ## "Search History" stands for "Search through the browser's history".

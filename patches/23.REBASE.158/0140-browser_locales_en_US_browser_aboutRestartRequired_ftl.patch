@@ -1,0 +1,17 @@
+# Gorilla 158 rebase: browser/locales/en-US/browser/aboutRestartRequired.ftl as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/locales/en-US/browser/aboutRestartRequired.ftl b/browser/locales/en-US/browser/aboutRestartRequired.ftl
+index 592c6ad9a2257b37ca2ebcf469722a9eba55dd84..01832690165cd1f2f6e8feabf690446be0285959 100644
+--- a/browser/locales/en-US/browser/aboutRestartRequired.ftl
++++ b/browser/locales/en-US/browser/aboutRestartRequired.ftl
+@@ -6,7 +6,7 @@ restart-required-title = Restart Required
+ 
+ restart-required-heading2 = Sorry, { -brand-short-name } needs a quick restart
+ restart-required-intro2 = { -brand-short-name } needs to finish an update. Restart to keep things secure and smooth.
+-window-restoration-info2 = We’ll reopen all windows and tabs except private ones.
++window-restoration-info2 = Your Gorilla windows and Gorilla tabs will be quickly restored, but private ones will not.
+ restart-required-why-now-question = Why now?
+ restart-required-why-now-answer = This can happen when another { -brand-short-name } profile or instance updates, or when an update can’t wait until your next restart.
+ 

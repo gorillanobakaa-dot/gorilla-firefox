@@ -1,0 +1,16 @@
+# Gorilla 158 rebase: toolkit/mozapps/extensions/content/components/addon-page-options.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/mozapps/extensions/content/components/addon-page-options.mjs b/toolkit/mozapps/extensions/content/components/addon-page-options.mjs
+index e8c7d6de67b3eaab16a54118958b878c7813ee37..2f6d0be8a82adb3c90fb211edcabd05ce9f9e860 100644
+--- a/toolkit/mozapps/extensions/content/components/addon-page-options.mjs
++++ b/toolkit/mozapps/extensions/content/components/addon-page-options.mjs
+@@ -55,6 +55,7 @@ class AddonPageOptions extends AboutAddonsHTMLElement {
+             action="debug-addons"
+             data-l10n-id="addon-open-about-debugging"
+             data-l10n-attrs="accesskey"
++            hidden
+           ></panel-item>
+           <hr />
+           <panel-item

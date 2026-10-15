@@ -1,0 +1,17 @@
+# Gorilla 158 rebase: browser/locales/en-US/browser/ipProtection.ftl as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/locales/en-US/browser/ipProtection.ftl b/browser/locales/en-US/browser/ipProtection.ftl
+index 4f8d82752b77ef3f75cb1c44f10b6b55b2e48930..1d163c8e3acd99494982d5051c3aece34b45daa3 100644
+--- a/browser/locales/en-US/browser/ipProtection.ftl
++++ b/browser/locales/en-US/browser/ipProtection.ftl
+@@ -390,8 +390,3 @@ vpn-error-alert-body = Try again later.
+ 
+ ##
+ 
+-# GORILLA REPAIR: messages required by this Firefox version,
+-# grafted verbatim from the vanilla vault (branding flows via -brand terms).
+-ipprotection-locations-unavailable-label-1 = Unavailable
+-  .aria-label = Unavailable, disabled
+-

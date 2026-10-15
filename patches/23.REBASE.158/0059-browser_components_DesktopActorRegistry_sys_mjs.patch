@@ -1,0 +1,309 @@
+# Gorilla 158 rebase: browser/components/DesktopActorRegistry.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/DesktopActorRegistry.sys.mjs b/browser/components/DesktopActorRegistry.sys.mjs
+index 4ceb32d5517d39074842e78c4f48b06c48e0881d..b82be1f8e506566d1f64cf1731b1b285b343d8aa 100644
+--- a/browser/components/DesktopActorRegistry.sys.mjs
++++ b/browser/components/DesktopActorRegistry.sys.mjs
+@@ -130,21 +130,7 @@ let JSWINDOWACTORS = {
+     remoteTypes: ["privilegedabout"],
+   },
+ 
+-  AboutMessagePreview: {
+-    parent: {
+-      esModuleURI: "resource:///actors/AboutMessagePreviewParent.sys.mjs",
+-    },
+-    child: {
+-      esModuleURI: "resource:///actors/AboutMessagePreviewChild.sys.mjs",
+-      events: {
+-        DOMDocElementInserted: { capture: true },
+-      },
+-    },
+-    matches: ["about:messagepreview", "about:messagepreview?*"],
+-    remoteTypes: ["privilegedabout"],
+-    enablePreference:
+-      "browser.newtabpage.activity-stream.asrouter.devtoolsEnabled",
+-  },
++  // GORILLA D-157-40: no AboutMessagePreview actor (about:messagepreview is not built).
+ 
+   AboutPrivateBrowsing: {
+     parent: {
+@@ -231,96 +217,13 @@ let JSWINDOWACTORS = {
+     enablePreference: "browser.aboutwelcome.enabled",
+   },
+ 
+-  AIChatContent: {
+-    parent: {
+-      esModuleURI:
+-        "moz-src:///browser/components/aiwindow/ui/actors/AIChatContentParent.sys.mjs",
+-    },
+-    child: {
+-      esModuleURI:
+-        "moz-src:///browser/components/aiwindow/ui/actors/AIChatContentChild.sys.mjs",
+-      events: {
+-        "AIChatContent:DispatchFollowUp": { wantUntrusted: true },
+-        "AIChatContent:Ready": { wantUntrusted: true },
+-        "AIChatContent:DispatchAction": { wantUntrusted: true },
+-        "AIChatContent:OpenLink": { wantUntrusted: true },
+-        "AIChatContent:DispatchNewChat": { wantUntrusted: true },
+-        "AIChatContent:AccountSignIn": { wantUntrusted: true },
+-        "AIChatContent:ToolUIUpdate": { wantUntrusted: true },
+-        "AIChatContent:RequestAssets": { wantUntrusted: true },
+-        "AIChatContent:HistoryGridRender": { wantUntrusted: true },
+-        "AIChatContent:HistoryGridItemClick": { wantUntrusted: true },
+-        "AIChatContent:ClientError": { wantUntrusted: true },
+-      },
+-    },
+-    allFrames: true,
+-    matches: ["about:aichatcontent"],
+-    remoteTypes: ["privilegedabout"],
+-    enablePreference: "browser.smartwindow.enabled",
+-  },
++  // GORILLA excised: AIChatContent actor (aiwindow removed).
+ 
+-  AISmartBar: {
+-    parent: {
+-      esModuleURI:
+-        "moz-src:///browser/components/aiwindow/ui/actors/AISmartBarParent.sys.mjs",
+-    },
+-    child: {
+-      esModuleURI:
+-        "moz-src:///browser/components/aiwindow/ui/actors/AISmartBarChild.sys.mjs",
+-    },
+-    matches: ["chrome://browser/content/aiwindow/aiWindow.html"],
+-    includeChrome: true,
+-    allFrames: true,
+-    enablePreference: "browser.smartwindow.enabled",
+-    remoteTypes: ["parent"],
+-  },
++  // GORILLA excised: AISmartBar actor (aiwindow removed).
+ 
+-  AITab: {
+-    parent: {
+-      esModuleURI:
+-        "moz-src:///browser/components/aiwindow/ui/actors/AITabParent.sys.mjs",
+-    },
+-    child: {
+-      esModuleURI:
+-        "moz-src:///browser/components/aiwindow/ui/actors/AITabChild.sys.mjs",
+-      events: {
+-        "AITab:GetPage": { wantUntrusted: true },
+-        "AITab:DeletePage": { wantUntrusted: true },
+-        "AITab:OpenLink": { wantUntrusted: true },
+-      },
+-    },
+-    matches: ["about:smartpage", "about:smartpage?*"],
+-    remoteTypes: ["privilegedabout"],
+-    enablePreference: "browser.smartwindow.aitab.enabled",
+-  },
++  // GORILLA excised: AITab actor (aiwindow removed; new upstream in 157).
+ 
+-  SmartWindowTasks: {
+-    parent: {
+-      esModuleURI:
+-        "moz-src:///browser/components/aiwindow/ui/actors/SmartWindowTasksParent.sys.mjs",
+-    },
+-    child: {
+-      esModuleURI:
+-        "moz-src:///browser/components/aiwindow/ui/actors/SmartWindowTasksChild.sys.mjs",
+-      events: {
+-        "SmartWindowTasks:RequestListMonitors": { wantUntrusted: true },
+-        "SmartWindowTasks:RequestCreateMonitor": { wantUntrusted: true },
+-        "SmartWindowTasks:RequestDeleteMonitor": { wantUntrusted: true },
+-        "SmartWindowTasks:RequestUpdateMonitor": { wantUntrusted: true },
+-        "SmartWindowTasks:RequestRunMonitor": { wantUntrusted: true },
+-        "SmartWindowTasks:RequestPauseMonitor": { wantUntrusted: true },
+-        "SmartWindowTasks:RequestConstants": { wantUntrusted: true },
+-        "SmartWindowTasks:RequestOpenUrl": { wantUntrusted: true },
+-      },
+-    },
+-    allFrames: true,
+-    // TODO: Remove chrome:// URL and "parent" remoteType before landing
+-    // These are only for development while about:smartwindowtasks registration lands
+-    matches: ["about:smartwindowtasks"],
+-    includeChrome: true,
+-    remoteTypes: ["privilegedabout"],
+-    enablePreference: "browser.smartwindow.enabled",
+-  },
++  // GORILLA excised: SmartWindowTasks actor (aiwindow removed).
+ 
+   BackupUI: {
+     parent: {
+@@ -596,62 +499,8 @@ let JSWINDOWACTORS = {
+     safeForUntrustedWebProcess: true,
+   },
+ 
+-  GenAI: {
+-    parent: {
+-      esModuleURI: "moz-src:///browser/components/genai/GenAIParent.sys.mjs",
+-    },
+-    child: {
+-      esModuleURI: "moz-src:///browser/components/genai/GenAIChild.sys.mjs",
+-      events: {
+-        mousedown: {},
+-        mouseup: {},
+-      },
+-    },
+-    allFrames: true,
+-    onAddActor(register, unregister) {
+-      let isRegistered = false;
+-
+-      // Register the actor if an external chat provider is set, page summarization is enabled, shortcuts are enabled, or the selection menu is enabled.
+-      const maybeRegister = () => {
+-        if (
+-          Services.prefs.getCharPref("browser.ml.chat.provider", "") ||
+-          Services.prefs.getBoolPref("browser.ml.chat.page") ||
+-          Services.prefs.getBoolPref("browser.ml.chat.shortcuts") ||
+-          Services.prefs.getBoolPref("browser.ml.chat.shortcuts.smartwindow") ||
+-          (Services.prefs.getBoolPref(
+-            "browser.highlightToSearch.featureGate"
+-          ) &&
+-            Services.prefs.getBoolPref("browser.highlightToSearch.enabled"))
+-        ) {
+-          if (!isRegistered) {
+-            register();
+-            isRegistered = true;
+-          }
+-        } else if (isRegistered) {
+-          unregister();
+-          isRegistered = false;
+-        }
+-      };
+-
+-      Services.prefs.addObserver("browser.ml.chat.page", maybeRegister);
+-      Services.prefs.addObserver("browser.ml.chat.provider", maybeRegister);
+-      Services.prefs.addObserver("browser.ml.chat.shortcuts", maybeRegister);
+-      Services.prefs.addObserver(
+-        "browser.ml.chat.shortcuts.smartwindow",
+-        maybeRegister
+-      );
+-      Services.prefs.addObserver(
+-        "browser.highlightToSearch.featureGate",
+-        maybeRegister
+-      );
+-      Services.prefs.addObserver(
+-        "browser.highlightToSearch.enabled",
+-        maybeRegister
+-      );
+-      maybeRegister();
+-    },
+-    safeForUntrustedWebProcess: true,
+-  },
++  // GORILLA UNLEASHED - PHYSICAL LOCK: GenAI actor excised (genai removed, D-157-00). Its modules are not
++  // packaged, so the actor only failed to load on every mousedown/mouseup when a chat shortcut pref was on.
+ 
+   LightweightTheme: {
+     child: {
+@@ -676,13 +525,11 @@ let JSWINDOWACTORS = {
+       "chrome://browser/content/sidebar/sidebar-customize.html",
+       "chrome://browser/content/sidebar/sidebar-syncedtabs.html",
+       "chrome://browser/content/sidebar/sidebar-opentabs.html",
+-      "chrome://browser/content/genai/chat.html",
+       "about:firefoxview",
+       "about:editprofile",
+       "about:deleteprofile",
+       "about:newprofile",
+       "about:opentabs",
+-      "about:aichatcontent",
+     ],
+     remoteTypes: ["parent", "privilegedabout"],
+   },
+@@ -708,20 +555,6 @@ let JSWINDOWACTORS = {
+     safeForUntrustedWebProcess: true,
+   },
+ 
+-  LinkPreview: {
+-    parent: {
+-      esModuleURI:
+-        "moz-src:///browser/components/genai/LinkPreviewParent.sys.mjs",
+-    },
+-    child: {
+-      esModuleURI:
+-        "moz-src:///browser/components/genai/LinkPreviewChild.sys.mjs",
+-    },
+-    includeChrome: true,
+-    enablePreference: "browser.ml.linkPreview.enabled",
+-    safeForUntrustedWebProcess: true,
+-  },
+-
+   PageAssist: {
+     parent: {
+       esModuleURI:
+@@ -944,74 +777,9 @@ let JSWINDOWACTORS = {
+     safeForUntrustedWebProcess: true,
+   },
+ 
+-  SmartFormFill: {
+-    parent: {
+-      esModuleURI:
+-        "moz-src:///browser/components/aiwindow/ui/actors/SmartFormFillParent.sys.mjs",
+-    },
+-    child: {
+-      esModuleURI:
+-        "moz-src:///browser/components/aiwindow/ui/actors/SmartFormFillChild.sys.mjs",
+-      events: {
+-        DOMContentLoaded: {},
+-      },
+-    },
+-    safeForUntrustedWebProcess: true,
+-
+-    // SmartFormFill should only work on HTTPS urls
+-    matches: ["https://*/*"],
+-    messageManagerGroups: ["browsers"],
+-
+-    onAddActor(register, unregister) {
+-      let isRegistered = false;
+-
+-      const maybeRegister = () => {
+-        if (
+-          Services.prefs.getBoolPref("browser.smartwindow.enabled") &&
+-          Services.prefs.getBoolPref(
+-            "browser.smartwindow.smartformfill.enabled",
+-            false
+-          )
+-        ) {
+-          if (!isRegistered) {
+-            register();
+-            isRegistered = true;
+-          }
+-        } else if (isRegistered) {
+-          unregister();
+-          isRegistered = false;
+-        }
+-      };
++  // GORILLA excised: SmartFormFill actor (aiwindow removed).
+ 
+-      Services.prefs.addObserver("browser.smartwindow.enabled", maybeRegister);
+-      Services.prefs.addObserver(
+-        "browser.smartwindow.smartformfill.enabled",
+-        maybeRegister
+-      );
+-      maybeRegister();
+-    },
+-  },
+-
+-  SmartFormFillReview: {
+-    parent: {
+-      esModuleURI:
+-        "moz-src:///browser/components/aiwindow/ui/actors/SmartFormFillReviewParent.sys.mjs",
+-    },
+-    child: {
+-      esModuleURI:
+-        "moz-src:///browser/components/aiwindow/ui/actors/SmartFormFillReviewChild.sys.mjs",
+-      events: {
+-        "SmartFormFillReview:Ready": { wantUntrusted: true },
+-        "fill-form": { wantUntrusted: true },
+-        cancel: { wantUntrusted: true },
+-        stop: { wantUntrusted: true },
+-        close: { wantUntrusted: true },
+-      },
+-    },
+-    matches: ["about:smartformfillreview"],
+-    remoteTypes: ["privilegedabout"],
+-    enablePreference: "browser.smartwindow.smartformfill.enabled",
+-  },
++  // GORILLA excised: SmartFormFillReview actor (aiwindow removed; new upstream in 157).
+ 
+   SpeechDispatcher: {
+     parent: {

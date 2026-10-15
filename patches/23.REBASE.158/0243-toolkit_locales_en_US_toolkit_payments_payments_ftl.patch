@@ -1,0 +1,24 @@
+# Gorilla 158 rebase: toolkit/locales/en-US/toolkit/payments/payments.ftl as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/locales/en-US/toolkit/payments/payments.ftl b/toolkit/locales/en-US/toolkit/payments/payments.ftl
+index 561974727f4e5a780a39eb29ed95c57c01ba29f7..fdfb1bd9f5feb7eb7048190f28e2a497bca9690d 100644
+--- a/toolkit/locales/en-US/toolkit/payments/payments.ftl
++++ b/toolkit/locales/en-US/toolkit/payments/payments.ftl
+@@ -2,7 +2,6 @@
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ 
+-
+ # This value isn't used directly, but is defined to avoid duplication
+ # in the "credit-card-label-*" strings.
+ #
+@@ -15,7 +14,6 @@ credit-card-expiration = Expires on { $month }/{ $year }
+ ## The description must include a credit card number, and may optionally
+ ## include a cardholder name, an expiration date, or both, so we have
+ ## four variations.
+-
+ # Label for a credit card with a number only
+ #
+ # Variables:

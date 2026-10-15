@@ -1,0 +1,65 @@
+# Gorilla 158 rebase: browser/components/sessionstore/SessionStore.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/sessionstore/SessionStore.sys.mjs b/browser/components/sessionstore/SessionStore.sys.mjs
+index 7dfe2a31ca7545d1966e4fe6f3b6f1ae0aa5c8be..23205334b8d03dc9bba4f728c88f747ac253a83d 100644
+--- a/browser/components/sessionstore/SessionStore.sys.mjs
++++ b/browser/components/sessionstore/SessionStore.sys.mjs
+@@ -245,8 +245,8 @@ import { GlobalState } from "moz-src:///browser/components/sessionstore/GlobalSt
+ const lazy = XPCOMUtils.declareLazy({
+   AboutNewTab: "resource:///modules/AboutNewTab.sys.mjs",
+   NimbusFeatures: "resource://nimbus/ExperimentAPI.sys.mjs",
+-  AIWindow:
+-    "moz-src:///browser/components/aiwindow/ui/modules/AIWindow.sys.mjs",
++  // GORILLA: points at the inert stub, not the excised component.
++  AIWindow: "resource:///modules/AIWindowStub.sys.mjs",
+   AsyncShutdown: "resource://gre/modules/AsyncShutdown.sys.mjs",
+   BrowserWindowTracker: "resource:///modules/BrowserWindowTracker.sys.mjs",
+   DevToolsShim: "chrome://devtools-startup/content/DevToolsShim.sys.mjs",
+@@ -1510,10 +1510,6 @@ class _SessionStore {
+       this.#windows[aWindow.__SSi].isTaskbarTab = true;
+     }
+ 
+-    if (lazy.AIWindow.isAIWindowActiveAndEnabled(aWindow)) {
+-      this.#windows[aWindow.__SSi].isAIWindow = true;
+-    }
+-
+     if (aWindow.document.documentElement.hasAttribute(ARG_CHROMELESS_WINDOW)) {
+       this.#windows[aWindow.__SSi].args[ARG_CHROMELESS_WINDOW] = true;
+     }
+@@ -5167,14 +5163,9 @@ class _SessionStore {
+       // the state we're trying to restore and then fallback to the last selected
+       // window.
+       let windowToUse = windows[lastSessionWindowID];
+-      let lastWindowIsAIWindow =
+-        lastWindow && lazy.AIWindow.isAIWindowActive(lastWindow);
+-      let thisWindowIsAIWindow =
+-        !!winState.isAIWindow && lazy.AIWindow.isAIWindowEnabled();
+       if (
+         !windowToUse &&
+         canUseLastWindow &&
+-        lastWindowIsAIWindow == thisWindowIsAIWindow &&
+         this.#canRestoreIntoExistingWindow(lastWindow, winState)
+       ) {
+         windowToUse = lastWindow;
+@@ -5488,9 +5479,7 @@ class _SessionStore {
+     if (startupPref == 1) {
+       homePages = homePages.concat(lazy.HomePage.get(aWindow).split("|"));
+     }
+-    if (lazy.AIWindow.isAIWindowActiveAndEnabled(aWindow)) {
+-      homePages.push(lazy.AIWindow.initialStartupURL);
+-    }
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no AI Window start page (aiwindow excised).
+ 
+     for (let i = tabbrowser.pinnedTabCount; i < tabbrowser.tabs.length; i++) {
+       let tab = tabbrowser.tabs[i];
+@@ -5540,8 +5529,6 @@ class _SessionStore {
+     if (workspaceID) {
+       winData.workspaceID = workspaceID;
+     }
+-
+-    winData.isAIWindow = lazy.AIWindow.isAIWindowActive(aWindow);
+   }
+ 
+   /**

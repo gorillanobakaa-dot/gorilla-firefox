@@ -1,0 +1,471 @@
+# Gorilla 158 rebase: browser/modules/GorillaLinkMode.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/modules/GorillaLinkMode.sys.mjs b/browser/modules/GorillaLinkMode.sys.mjs
+index 97007fdf1e080dbe651f843ca71de3e62761839f..9b0a11b9825d75e8f23d8b0288fb8c5b16fdcce9 100644
+--- a/browser/modules/GorillaLinkMode.sys.mjs
++++ b/browser/modules/GorillaLinkMode.sys.mjs
+@@ -7,15 +7,36 @@
+ // One pref, gorilla.linkmode: 0 = off (the shipped values), 1 = "Satellite" (fast but far: Starlink, GEO
+ // broadband), 2 = "Very slow link" (1-60 KB/s). The level's values are written to the DEFAULT branch, so a value
+ // the user set by hand always wins, and going back to 0 restores the shipped defaults exactly. Nothing here makes
+-// a connection: every value makes the browser fetch less, wait longer, or ask sites for lighter pages
+-// (D-157-00, D-157-30). Values: docs/NETWORK-AND-SATELLITE-STUDY.md sections 7.2 and 7.3.
++// a connection: every value makes the browser fetch less, wait longer, keep what it has, or ask sites for lighter
++// pages (D-157-00, D-157-30, D-157-33). Values: docs/NETWORK-AND-SATELLITE-STUDY.md sections 7.2 and 7.3.
+ 
+ const LINKMODE_PREF = "gorilla.linkmode";
++// Mobile pages (D-157-33, maintainer 2026-10-04: "combine the best of the worlds", a 13-inch tablet that asks for
++// the mobile site gets it and is extremely fast). While a level is on and this is true, sites are told the browser
++// is Firefox for Android (Mozilla's own Android values, the ones resistFingerprinting reports there), so they send
++// their phone pages. One site can be sent back to its desktop version from the toolbar button (DESKTOP_SITE_PERM).
++const MOBILE_PREF = "gorilla.linkmode.mobile_pages";
++const DESKTOP_SITE_PERM = "gorilla-desktop-site";
++// No JavaScript in Very slow link (D-157-33; real sites measured 2026-10-04 over the owner's link with pictures and
++// fonts already off: BBC News 1,175 KB -> 101 KB, CNN 11,831 KB -> 607 KB, Reuters 2,142 KB -> 315 KB, the text
++// readable on all six sites tried). Per tab (BrowsingContext.allowJavascript), decided before the page is requested;
++// a site that needs scripts (webmail, maps) is allowed from the toolbar button (JS_SITE_PERM). javascript.enabled
++// itself is never touched, so the browser's own pages keep working.
++const NO_JS_PREF = "gorilla.linkmode.no_javascript";
++const JS_SITE_PERM = "gorilla-javascript-site";
++// Call sites (D-157-39, build 28 item 2; audit C12): a web call needs its scripts and, on most services, the desktop
++// page, so the phone identity and Very slow link's no-JavaScript rule broke calls in the very mode a satellite user
++// switches on. A site is a call site when the user allowed it the camera or the microphone (remembered, or for this
++// tab only), or when it is on the local list below (a site without scripts can never ask for the microphone). It
++// gets its desktop identity and its scripts at every level. The list is local data: nothing is fetched.
++const CALL_SITES_PREF = "gorilla.linkmode.call_sites";
++const CALL_PERMISSIONS = ["camera", "microphone"];
+ 
+ const lazy = {};
+ ChromeUtils.defineESModuleGetters(lazy, {
+   CustomizableUI:
+     "moz-src:///browser/components/customizableui/CustomizableUI.sys.mjs",
++  SitePermissions: "resource:///modules/SitePermissions.sys.mjs",
+ });
+ 
+ // The toolbar switch (maintainer, 2026-10-04: "easy to find and quite prominent", in the empty space between the
+@@ -35,6 +56,11 @@ function strings() {
+     const ids = [
+       "gorilla-satellite-button",
+       "gorilla-satellite-button-settings",
++      "gorilla-satellite-button-desktop-site",
++      "gorilla-satellite-mobile-pages",
++      "gorilla-satellite-no-javascript",
++      "gorilla-satellite-button-javascript-site",
++      "gorilla-satellite-button-call-site",
+       ...LEVEL_NAMES.map(n => `gorilla-satellite-mode-${n}`),
+       ...LEVEL_NAMES.map(n => `gorilla-satellite-button-${n}`),
+     ];
+@@ -66,6 +92,15 @@ const SATELLITE = {
+   "browser.cache.disk.enable": true, // F7: keep pages across restarts on slow links
+   "browser.cache.disk.smart_size.enabled": false,
+   "browser.cache.disk.capacity": 262144, // 256 MiB
++  // D-157-33 (bench 2026-10-04: a restart still took 40.9 s at 5 KB/s, as long as a first visit): Gorilla empties
++  // the cache at every shutdown, so F7's disk cache never survived a restart. Kept while a level is on; history,
++  // form data and downloads are still wiped at shutdown.
++  "privacy.clearOnShutdown.cache": false,
++  "privacy.clearOnShutdown_v2.cache": false,
++  // D-157-33 (bench 2026-10-04, build 24: a restart still re-fetched all 16 requests): Gorilla ships
++  // browser.cache.disk_cache_ssl false, so nothing that arrives over HTTPS was ever written to disk, and almost
++  // the whole web is HTTPS. Kept on disk while a level is on, like everything else above.
++  "browser.cache.disk_cache_ssl": true,
+ };
+ 
+ // Level 2 "Very slow link": level 1 with GEO timeouts, plus S6, S7, S11.
+@@ -76,10 +111,36 @@ const VERY_SLOW = {
+   "gorilla.network.save_data": true, // S7: "Save-Data: on" (nsHttpChannel::SetSaveData)
+   "network.http.max-persistent-connections-per-server": 6, // S11
+   "permissions.default.image": 2, // S5: no pictures (per site: Page Info > Permissions > Load Images)
++  // D-157-33 (bench 2026-10-04: the same page again took 21.5 s, its 103 KB HTML downloaded again every time):
++  // a page in the cache is shown without asking the site whether it changed. Reload still fetches a fresh copy.
++  "browser.cache.check_doc_frequency": 2,
+ };
+ 
+ const LEVELS = [{}, SATELLITE, VERY_SLOW];
+ 
++// Firefox for Android's identity: the same strings toolkit/components/resistfingerprinting/nsRFPService.h
++// reports on Android, so a mobile-mode Gorilla looks like the many real Firefox phones, not like something new.
++function mobileIdentity() {
++  const v = `${parseInt(Services.appinfo.version)}.0`;
++  return {
++    "general.useragent.override": `Mozilla/5.0 (Android 10; Mobile; rv:${v}) Gecko/${v} Firefox/${v}`,
++    "general.appversion.override": "5.0 (Android 10)",
++    "general.oscpu.override": "Linux armv81",
++    "general.platform.override": "Linux armv81",
++  };
++}
++const MOBILE_KEYS = Object.keys(mobileIdentity());
++const ALL_KEYS = [...Object.keys(VERY_SLOW), ...MOBILE_KEYS];
++
++// XUL menu checkboxes read checked="true"
++function setChecked(item, on) {
++  if (on) {
++    item.setAttribute("checked", "true");
++  } else {
++    item.removeAttribute("checked");
++  }
++}
++
+ function getDefault(branch, name) {
+   switch (branch.getPrefType(name)) {
+     case Ci.nsIPrefBranch.PREF_INT:
+@@ -104,7 +165,9 @@ function setDefault(branch, name, value) {
+ 
+ export const GorillaLinkMode = {
+   _shipped: null,
+-  _applied: 0,
++  _applied: "",
++  _desktopUA: "",
++  _watchingRequests: false,
+ 
+   init() {
+     if (this._shipped) {
+@@ -112,10 +175,16 @@ export const GorillaLinkMode = {
+     }
+     const branch = Services.prefs.getDefaultBranch("");
+     this._shipped = {};
+-    for (const name of Object.keys(VERY_SLOW)) {
++    for (const name of ALL_KEYS) {
+       this._shipped[name] = getDefault(branch, name);
+     }
++    // The desktop identity, read before any level can override it: what a site switched back to desktop gets.
++    this._desktopUA = Cc["@mozilla.org/network/protocol;1?name=http"].getService(
++      Ci.nsIHttpProtocolHandler
++    ).userAgent;
+     Services.prefs.addObserver(LINKMODE_PREF, this);
++    Services.prefs.addObserver(MOBILE_PREF, this);
++    Services.prefs.addObserver(NO_JS_PREF, this);
+     Services.obs.addObserver(this, "browser-window-before-show");
+     this.apply();
+   },
+@@ -131,10 +200,140 @@ export const GorillaLinkMode = {
+       }
+       return;
+     }
++    if (topic == "http-on-modify-request") {
++      this._choosePerSite(subject);
++      return;
++    }
+     this.apply();
+     this._showLevelOnButtons();
+   },
+ 
++  mobilePages() {
++    return this.level() > 0 && Services.prefs.getBoolPref(MOBILE_PREF, true);
++  },
++
++  noJavascript() {
++    return this.level() == 2 && Services.prefs.getBoolPref(NO_JS_PREF, true);
++  },
++
++  _sitePermitted(principal, type) {
++    return (
++      Services.perms.testPermissionFromPrincipal(principal, type) ==
++      Services.perms.ALLOW_ACTION
++    );
++  },
++
++  // A call site (D-157-39): camera or microphone allowed (remembered, or for this tab only: SitePermissions reads both,
++  // given the tab's browser), or a host on the local list.
++  _callSite(principal, browser) {
++    try {
++      const host = principal.host.toLowerCase();
++      const listed = Services.prefs
++        .getStringPref(CALL_SITES_PREF, "")
++        .split(",")
++        .map(h => h.trim().toLowerCase())
++        .filter(Boolean);
++      if (listed.includes(host)) {
++        return true;
++      }
++      return CALL_PERMISSIONS.some(
++        id =>
++          lazy.SitePermissions.getForPrincipal(principal, id, browser).state ==
++          lazy.SitePermissions.ALLOW
++      );
++    } catch (e) {
++      return false;
++    }
++  },
++
++  // Per site, for every top-level page, decided before the page is requested so nothing is downloaded twice:
++  // - identity: a site the user sent back to its desktop version gets the desktop identity in that tab (header and
++  //   navigator alike, through the tab's customUserAgent); any other site gets "", the mobile identity of the prefs;
++  // - JavaScript: off in the tab unless the user allowed the site.
++  _choosePerSite(subject) {
++    try {
++      const channel = subject.QueryInterface(Ci.nsIHttpChannel);
++      const info = channel.loadInfo;
++      if (
++        info.externalContentPolicyType != Ci.nsIContentPolicy.TYPE_DOCUMENT
++      ) {
++        return;
++      }
++      const bc = info.targetBrowsingContext || info.browsingContext;
++      if (!bc || bc.parent) {
++        return;
++      }
++      const principal = Services.scriptSecurityManager.createContentPrincipal(
++        channel.URI,
++        {}
++      );
++      const call =
++        (this.mobilePages() || this.noJavascript()) &&
++        this._callSite(principal, bc.embedderElement);
++      if (this.mobilePages()) {
++        const desktop =
++          call || this._sitePermitted(principal, DESKTOP_SITE_PERM);
++        const ua = desktop ? this._desktopUA : "";
++        if (bc.customUserAgent != ua) {
++          bc.customUserAgent = ua;
++        }
++        if (desktop) {
++          channel.setRequestHeader("User-Agent", this._desktopUA, false);
++        }
++      }
++      const js =
++        !this.noJavascript() ||
++        call ||
++        this._sitePermitted(principal, JS_SITE_PERM);
++      if (bc.allowJavascript != js) {
++        bc.allowJavascript = js;
++      }
++      // Very slow link: a page already in the cache opens from it, without asking the site (D-157-33 B). Pages
++      // that say "private, max-age=0, must-revalidate" (most news front pages, and the bench page) were downloaded
++      // in full on every visit (21.5 s for 103 KB at 5 KB/s); browser.cache.check_doc_frequency cannot override
++      // must-revalidate, VALIDATE_NEVER can (nsHttp::ValidationRequired; only no-store still forces a fetch).
++      // Reload sets VALIDATE_ALWAYS or LOAD_BYPASS_CACHE and is left alone, so Reload still fetches a fresh copy.
++      const reload =
++        channel.loadFlags &
++        (Ci.nsIRequest.VALIDATE_ALWAYS | Ci.nsIRequest.LOAD_BYPASS_CACHE);
++      if (this.level() == 2 && !reload) {
++        channel.loadFlags |= Ci.nsIRequest.VALIDATE_NEVER;
++      }
++    } catch (e) {
++      console.error("GorillaLinkMode: per-site choice", e);
++    }
++  },
++
++  // Leaving mobile pages or no-JavaScript: tabs that are already open drop the per-tab choices they were given.
++  _resetTabs(mobile, noJs) {
++    for (const win of Services.wm.getEnumerator("navigator:browser")) {
++      for (const browser of win.gBrowser?.browsers || []) {
++        const bc = browser.browsingContext;
++        if (!bc) {
++          continue;
++        }
++        if (!mobile && bc.customUserAgent) {
++          bc.customUserAgent = "";
++        }
++        if (!noJs && !bc.allowJavascript) {
++          bc.allowJavascript = true;
++        }
++      }
++    }
++  },
++
++  _watchRequests(on) {
++    if (on == this._watchingRequests) {
++      return;
++    }
++    if (on) {
++      Services.obs.addObserver(this, "http-on-modify-request");
++    } else {
++      Services.obs.removeObserver(this, "http-on-modify-request");
++    }
++    this._watchingRequests = on;
++  },
++
+   _createButton() {
+     const { CustomizableUI } = lazy;
+     CustomizableUI.createWidget({
+@@ -159,6 +358,9 @@ export const GorillaLinkMode = {
+ 
+   _buildButton(doc) {
+     const s = strings();
++    // ownerDocument.defaultView, not ownerGlobal: this 157 tree's WebIDL has no Node.ownerGlobal, so it is undefined
++    // (2026-10-04, build 23: the menu showed every item and its commands threw)
++    const win = () => button.ownerDocument.defaultView;
+     const button = doc.createXULElement("toolbarbutton");
+     button.id = BUTTON_ID;
+     button.className = "toolbarbutton-1 chromeclass-toolbar-additional";
+@@ -183,10 +385,89 @@ export const GorillaLinkMode = {
+       popup.appendChild(item);
+     });
+     popup.appendChild(doc.createXULElement("menuseparator"));
++    const mobile = doc.createXULElement("menuitem");
++    mobile.setAttribute("type", "checkbox");
++    mobile.setAttribute("gorilla-item", "mobile-pages");
++    mobile.setAttribute("label", s["gorilla-satellite-mobile-pages"].label);
++    mobile.setAttribute("tooltiptext", s["gorilla-satellite-mobile-pages"].title);
++    mobile.addEventListener("command", () =>
++      Services.prefs.setBoolPref(
++        MOBILE_PREF,
++        !Services.prefs.getBoolPref(MOBILE_PREF, true)
++      )
++    );
++    popup.appendChild(mobile);
++    const desktopSite = doc.createXULElement("menuitem");
++    desktopSite.setAttribute("type", "checkbox");
++    desktopSite.setAttribute("gorilla-item", "desktop-site");
++    desktopSite.setAttribute(
++      "label",
++      s["gorilla-satellite-button-desktop-site"].label
++    );
++    desktopSite.setAttribute(
++      "tooltiptext",
++      s["gorilla-satellite-button-desktop-site"].tooltiptext
++    );
++    desktopSite.addEventListener("command", () => {
++      const principal = win().gBrowser.contentPrincipal;
++      if (desktopSite.getAttribute("checked") == "true") {
++        Services.perms.addFromPrincipal(
++          principal,
++          DESKTOP_SITE_PERM,
++          Services.perms.ALLOW_ACTION
++        );
++      } else {
++        Services.perms.removeFromPrincipal(principal, DESKTOP_SITE_PERM);
++      }
++      win().gBrowser.selectedBrowser.reload();
++    });
++    popup.appendChild(desktopSite);
++    const noJs = doc.createXULElement("menuitem");
++    noJs.setAttribute("type", "checkbox");
++    noJs.setAttribute("gorilla-item", "no-javascript");
++    noJs.setAttribute("label", s["gorilla-satellite-no-javascript"].label);
++    noJs.setAttribute("tooltiptext", s["gorilla-satellite-no-javascript"].title);
++    noJs.addEventListener("command", () =>
++      Services.prefs.setBoolPref(
++        NO_JS_PREF,
++        !Services.prefs.getBoolPref(NO_JS_PREF, true)
++      )
++    );
++    popup.appendChild(noJs);
++    const jsSite = doc.createXULElement("menuitem");
++    jsSite.setAttribute("type", "checkbox");
++    jsSite.setAttribute("gorilla-item", "javascript-site");
++    jsSite.setAttribute(
++      "label",
++      s["gorilla-satellite-button-javascript-site"].label
++    );
++    jsSite.setAttribute(
++      "tooltiptext",
++      s["gorilla-satellite-button-javascript-site"].tooltiptext
++    );
++    jsSite.addEventListener("command", () => {
++      const principal = win().gBrowser.contentPrincipal;
++      if (jsSite.getAttribute("checked") == "true") {
++        Services.perms.addFromPrincipal(
++          principal,
++          JS_SITE_PERM,
++          Services.perms.ALLOW_ACTION
++        );
++      } else {
++        Services.perms.removeFromPrincipal(principal, JS_SITE_PERM);
++      }
++      win().gBrowser.selectedBrowser.reload();
++    });
++    popup.appendChild(jsSite);
++    popup.appendChild(doc.createXULElement("menuseparator"));
+     const settings = doc.createXULElement("menuitem");
+     settings.setAttribute("label", s["gorilla-satellite-button-settings"].label);
++    // GORILLA 2026-10-15 (D-157-32): open the page that HOLDS the switch, scrolled to it. 158 moved the network group
++    // (connectionLink, subcategory netsettings, where the switch lives) from General to Privacy & security, and
++    // "paneGeneral" left the user on Account and sync with no satellite in sight (owner's screenshot, 18:26).
++    // Proven by the post-install probe satellite-settings-link, which clicks this item and reads where it landed.
+     settings.addEventListener("command", () =>
+-      doc.ownerGlobal.openPreferences("paneGeneral")
++      win().openPreferences("privacy-netsettings")
+     );
+     popup.appendChild(settings);
+     popup.addEventListener("popupshowing", () => {
+@@ -198,6 +479,43 @@ export const GorillaLinkMode = {
+           item.removeAttribute("checked");
+         }
+       }
++      if (Services.prefs.getBoolPref(MOBILE_PREF, true)) {
++        mobile.setAttribute("checked", "true");
++      } else {
++        mobile.removeAttribute("checked");
++      }
++      // The desktop-version switch only means something while mobile pages are asked for, on a web page.
++      const principal = win().gBrowser.contentPrincipal;
++      const web = principal.schemeIs("http") || principal.schemeIs("https");
++      // a call site always has both (D-157-39): shown ticked and greyed, with the reason on hover
++      const call =
++        web && this._callSite(principal, win().gBrowser.selectedBrowser);
++      const why = call
++        ? s["gorilla-satellite-button-call-site"].tooltiptext
++        : null;
++      desktopSite.hidden = !this.mobilePages() || !web;
++      setChecked(
++        desktopSite,
++        call || (web && this._sitePermitted(principal, DESKTOP_SITE_PERM))
++      );
++      desktopSite.disabled = call;
++      desktopSite.setAttribute(
++        "tooltiptext",
++        why || s["gorilla-satellite-button-desktop-site"].tooltiptext
++      );
++      // the JavaScript switches belong to Very slow link only
++      noJs.hidden = this.level() != 2;
++      setChecked(noJs, Services.prefs.getBoolPref(NO_JS_PREF, true));
++      jsSite.hidden = !this.noJavascript() || !web;
++      setChecked(
++        jsSite,
++        call || (web && this._sitePermitted(principal, JS_SITE_PERM))
++      );
++      jsSite.disabled = call;
++      jsSite.setAttribute(
++        "tooltiptext",
++        why || s["gorilla-satellite-button-javascript-site"].tooltiptext
++      );
+     });
+     button.appendChild(popup);
+     this._showLevel(button);
+@@ -234,13 +552,16 @@ export const GorillaLinkMode = {
+   },
+ 
+   apply() {
+-    const want = this.level();
+-    if (want === this._applied) {
++    const level = this.level();
++    const mobile = this.mobilePages();
++    const noJs = this.noJavascript();
++    const key = `${level}/${mobile}/${noJs}`;
++    if (key === this._applied) {
+       return;
+     }
+     const branch = Services.prefs.getDefaultBranch("");
+-    const values = LEVELS[want];
+-    for (const name of Object.keys(VERY_SLOW)) {
++    const values = { ...LEVELS[level], ...(mobile ? mobileIdentity() : {}) };
++    for (const name of ALL_KEYS) {
+       let value = name in values ? values[name] : this._shipped[name];
+       if (value === undefined) {
+         // Not defined in the shipped build and not part of this level.
+@@ -248,6 +569,12 @@ export const GorillaLinkMode = {
+           value = false;
+         } else if (name === "permissions.default.image") {
+           value = 1; // pictures on: Off must never leave them blocked
++        } else if (MOBILE_KEYS.includes(name)) {
++          // An override that exists, even empty, replaces the identity: it has to be gone, not "".
++          if (branch.getPrefType(name) != Ci.nsIPrefBranch.PREF_INVALID) {
++            branch.deleteBranch(name);
++          }
++          continue;
+         } else {
+           continue;
+         }
+@@ -259,6 +586,8 @@ export const GorillaLinkMode = {
+         console.error(`GorillaLinkMode: ${name}`, e);
+       }
+     }
+-    this._applied = want;
++    this._watchRequests(mobile || noJs || level == 2);
++    this._resetTabs(mobile, noJs);
++    this._applied = key;
+   },
+ };

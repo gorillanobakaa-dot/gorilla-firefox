@@ -1,0 +1,76 @@
+# Gorilla 158 port fix
+# D-157-38 part 2 on 158 (Help > About: '158.0 (64-bit) build 1, built YY:MM:DD:HH:MM:SS' and under it 'Build ID <14 digits>'). Made by Fable on Windows 2026-10-09 and never exported to the shared patch set; rebuilt from the register's checks and the harness's build-stamp probe, applied by fieldkit.buildh.buildstamp.apply_source(tree, number), which now holds the code and the places. Build number 1: the first Linux 158 candidate. lesson: a decision whose source change lives only in one machine's tree is not portable; its change must exist as harness code (apply_source) or as a patch in the shared set
+# Files: browser/base/content/aboutDialog.js, browser/base/content/aboutDialog.xhtml, browser/branding/gorilla/pref/firefox-branding.js, browser/locales/en-US/browser/aboutDialog.ftl
+
+diff --git a/browser/base/content/aboutDialog.js b/browser/base/content/aboutDialog.js
+index d9b18acf0b..e92d955812 100644
+--- a/browser/base/content/aboutDialog.js
++++ b/browser/base/content/aboutDialog.js
+@@ -96,6 +96,7 @@ function init() {
+       buildStamp.slice(12, 14),
+     ].join(":");
+     versionIdKey += "-gorilla";
++    versionAttributes.build = Services.prefs.getIntPref("gorilla.build.number", 0);
+   }
+ 
+   // Use Fluent arguments for append version and the architecture of the build
+@@ -107,6 +108,16 @@ function init() {
+     versionAttributes
+   );
+ 
++  // GORILLA D-157-38 part 2 (2026-10-09): under the version line, the build's own BuildID in full, the string
++  // the harness reports, so the owner can tell which build is installed.
++  let gorillaBuildId = document.getElementById("gorilla-buildid");
++  if (gorillaBuildId && /^\d{14}$/.test(buildStamp)) {
++    document.l10n.setAttributes(gorillaBuildId, "aboutDialog-buildid-gorilla", {
++      buildid: buildStamp,
++    });
++    gorillaBuildId.hidden = false;
++  }
++
+   // Show a release notes link if we have a URL.
+   let relNotesLink = document.getElementById("releasenotes");
+   let relNotesPrefType = Services.prefs.getPrefType(
+diff --git a/browser/base/content/aboutDialog.xhtml b/browser/base/content/aboutDialog.xhtml
+index 6effd77609..1bd96dfafc 100644
+--- a/browser/base/content/aboutDialog.xhtml
++++ b/browser/base/content/aboutDialog.xhtml
+@@ -49,6 +49,7 @@
+         <!-- This HBOX is duplicated below with class="update" -->
+         <hbox align="baseline">
+           <label id="version"/>
++          <label id="gorilla-buildid" class="text-blurb" hidden="true"/>
+           <label id="releasenotes" is="text-link" hidden="true" data-l10n-id="releaseNotes-link"/>
+         </hbox>
+ #endif
+diff --git a/browser/branding/gorilla/pref/firefox-branding.js b/browser/branding/gorilla/pref/firefox-branding.js
+index 8c95ebf608..e44577eb6c 100644
+--- a/browser/branding/gorilla/pref/firefox-branding.js
++++ b/browser/branding/gorilla/pref/firefox-branding.js
+@@ -33,3 +33,6 @@ pref("app.update.badgeWaitTime", 0);
+ // into the console is held behind the "Scam Warning" until the user types "allow pasting" once, or has typed five
+ // commands; the console then counts itself up to 5. Not locked: the console must be able to raise it.
+ pref("devtools.selfxss.count", 0);
++
++// GORILLA D-157-38 part 2 (2026-10-09): the build number Help > About shows ("build N"); raised once per release candidate.
++pref("gorilla.build.number", 1);
+diff --git a/browser/locales/en-US/browser/aboutDialog.ftl b/browser/locales/en-US/browser/aboutDialog.ftl
+index cddecd5dd7..c06e7e9254 100644
+--- a/browser/locales/en-US/browser/aboutDialog.ftl
++++ b/browser/locales/en-US/browser/aboutDialog.ftl
+@@ -93,10 +93,11 @@ aboutDialog-version = { $version } ({ $bits }-bit)
+ ## Variables:
+ ##   $built (String): when this build was made, YY:MM:DD:HH:MM:SS, e.g. 26:10:08:10:37:25
+ 
+-aboutDialog-version-gorilla = { $version } ({ $bits }-bit) built { $built }
+-aboutDialog-version-nightly-gorilla = { $version } ({ $isodate }) ({ $bits }-bit) built { $built }
+-aboutdialog-version-arch-gorilla = { $version } ({ $arch }) built { $built }
+-aboutdialog-version-arch-nightly-gorilla = { $version } ({ $isodate }) ({ $arch }) built { $built }
++aboutDialog-version-gorilla = { $version } ({ $bits }-bit) build { $build }, built { $built }
++aboutDialog-buildid-gorilla = Build ID { $buildid }
++aboutDialog-version-nightly-gorilla = { $version } ({ $isodate }) ({ $bits }-bit) build { $build }, built { $built }
++aboutdialog-version-arch-gorilla = { $version } ({ $arch }) build { $build }, built { $built }
++aboutdialog-version-arch-nightly-gorilla = { $version } ({ $isodate }) ({ $arch }) build { $build }, built { $built }
+ 
+ ##
+ 

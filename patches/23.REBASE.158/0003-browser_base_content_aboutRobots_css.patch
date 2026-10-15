@@ -1,0 +1,17 @@
+# Gorilla 158 rebase: browser/base/content/aboutRobots.css as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/base/content/aboutRobots.css b/browser/base/content/aboutRobots.css
+index 4766a74583645bf946504dbea885bcb79444718d..b9e6f53bed60ba0ae96a5a0c79fa0dda59fbf1dd 100644
+--- a/browser/base/content/aboutRobots.css
++++ b/browser/base/content/aboutRobots.css
+@@ -6,7 +6,7 @@
+   /* GORILLA 2026-07-31: brand gorilla instead of the stock robot; sized 400px
+      per author ("make it bigger... say 400x"). Heading clears the image via
+      padding; min-height keeps the box tall enough. */
+-  background-image: url("chrome://branding/content/about-logo.svg");
++  background-image: url("chrome://branding/content/about-logo.png");
+   background-size: 400px;
+   background-position: left center;
+   background-repeat: no-repeat;

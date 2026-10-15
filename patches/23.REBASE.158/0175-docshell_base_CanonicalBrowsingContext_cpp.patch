@@ -1,0 +1,31 @@
+# Gorilla 158 rebase: docshell/base/CanonicalBrowsingContext.cpp as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/docshell/base/CanonicalBrowsingContext.cpp b/docshell/base/CanonicalBrowsingContext.cpp
+index 941d5c2533f8ed087af1153a7af7863c96df885b..18f5459d9e2cf0de1dfde2eccdd155f50405f73d 100644
+--- a/docshell/base/CanonicalBrowsingContext.cpp
++++ b/docshell/base/CanonicalBrowsingContext.cpp
+@@ -3857,19 +3857,9 @@ bool CanonicalBrowsingContext::CanOpenModalPicker() {
+ }
+ 
+ bool CanonicalBrowsingContext::ShouldEnforceParentalControls() {
+-  if (StaticPrefs::security_restrict_to_adults_always()) {
+-    return true;
+-  }
+-  if (StaticPrefs::security_restrict_to_adults_respect_platform()) {
+-    bool enabled;
+-    nsCOMPtr<nsIParentalControlsService> pcs =
+-        do_CreateInstance("@mozilla.org/parental-controls-service;1");
+-    nsresult rv = pcs->GetParentalControlsEnabled(&enabled);
+-    if (NS_FAILED(rv)) {
+-      return false;
+-    }
+-    return enabled;
+-  }
++  // GORILLA D-157-40 (2026-10-08): Gorilla is built --disable-parental-controls and has no about:restricted, so
++  // nothing is enforced. Upstream also crashed the browser here when security.restrict_to_adults.respect_platform
++  // was set: in a build without parental controls the service is null and was used unchecked.
+   return false;
+ }
+ 

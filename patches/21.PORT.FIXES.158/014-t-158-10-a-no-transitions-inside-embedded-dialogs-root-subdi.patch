@@ -1,0 +1,33 @@
+# Gorilla 158 port fix
+# T-158-10-A: no transitions inside embedded dialogs (:root[subdialog]); the 0.01 ms rule started a padding transition while SubDialog measured, cutting every alert/confirm/prompt/Leave page? message (Gorilla screenshot, web.whatsapp.com). Proved by fieldkit build-harness clip-check: control cut 2/2, fixed 0/2
+# Files: browser/themes/shared/master-redirect.css
+
+diff --git a/browser/themes/shared/master-redirect.css b/browser/themes/shared/master-redirect.css
+index 5d2350d12c..8e20304ad8 100644
+--- a/browser/themes/shared/master-redirect.css
++++ b/browser/themes/shared/master-redirect.css
+@@ -64,6 +64,7 @@
+ 
+ /* ==========================================================================
+    GORILLA UNLEASHED: QUECTOSECOND ANIMATION ANNIHILATION
++   GORILLA TECHNIQUE T-158-10-A: 0.01 ms still STARTS a transition; embedded dialogs turn them off (below).
+    ========================================================================== */
+ *, *::before, *::after {
+   animation-duration: 0.01ms !important;
+@@ -73,6 +74,16 @@
+   scroll-behavior: auto !important;
+ }
+ 
++/* GORILLA 2026-10-15 (158, D-158-10): no transitions at all inside embedded dialogs (alert, confirm, prompt,
++   "Leave page?"). The 0.01 ms rule above still STARTS a transition for every style change, and a dialog's
++   padding arrives as one (0 -> 16 px) at the very moment SubDialog.resizeVertically measures the document
++   once and fixes the frame height: the frame came out 32 px short and the message was squeezed to 8 px
++   (owner screenshot, web.whatsapp.com). transition-property: none starts nothing, so the measurement sees the
++   final layout. Proved with fieldkit build-harness clip-check. */
++:root[subdialog], :root[subdialog] *, :root[subdialog] *::before, :root[subdialog] *::after {
++  transition-property: none !important;
++}
++
+ /* ==========================================================================
+    GORILLA UNLEASHED: COLOR-VALUE CONVERGENCE (PURE BLACK / CYAN)
+    ========================================================================== */

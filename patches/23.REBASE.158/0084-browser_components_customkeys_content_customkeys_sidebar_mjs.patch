@@ -1,0 +1,20 @@
+# Gorilla 158 rebase: browser/components/customkeys/content/customkeys-sidebar.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/customkeys/content/customkeys-sidebar.mjs b/browser/components/customkeys/content/customkeys-sidebar.mjs
+index 567220ca15b78ffd2946114a1cc36aa86982fbeb..ec8effb63c9702cfd0d77a88e9e03be7d21d4b2b 100644
+--- a/browser/components/customkeys/content/customkeys-sidebar.mjs
++++ b/browser/components/customkeys/content/customkeys-sidebar.mjs
+@@ -25,11 +25,6 @@ class CustomkeysSidebar extends MozLitElement {
+         data-l10n-id="customkeys-sidebar"
+       >
+         <div class="customkeys-heading">
+-          <img
+-            class="brand-logo"
+-            alt=""
+-            src="chrome://branding/content/about-logo.png"
+-          />
+           <h1 class="customkeys-title" data-l10n-id="customkeys-title"></h1>
+         </div>
+         <p class="customkeys-description">

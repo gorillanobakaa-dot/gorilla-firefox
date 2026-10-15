@@ -1,0 +1,34 @@
+# Gorilla 158 rebase: browser/base/content/browser-context.js as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/base/content/browser-context.js b/browser/base/content/browser-context.js
+index 2e617f91b92b92651b6a94fa37ccd5f7e0db8397..93892dfc1e917cb1fd2c16b1ba3b25470f6189ba 100644
+--- a/browser/base/content/browser-context.js
++++ b/browser/base/content/browser-context.js
+@@ -52,9 +52,7 @@ document.addEventListener(
+         case "context-openlinkprivate":
+           gContextMenu.openLinkInPrivateWindow();
+           break;
+-        case "context-openlinksmartwindow":
+-          gContextMenu.openLinkInSmartWindow();
+-          break;
++        // GORILLA excised 2026-10-15 (158, D-158-08): context-openlinksmartwindow handler removed with its menu item.
+         case "context-bookmarklink":
+           gContextMenu.bookmarkLink();
+           break;
+@@ -212,12 +210,8 @@ document.addEventListener(
+           });
+           break;
+         }
+-        case "context-translate-selection":
+-          gContextMenu.openSelectTranslationsPanel(event);
+-          break;
+-        case "context-create-aitab":
+-          gContextMenu.createAITab();
+-          break;
++        // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): no context-translate-selection item.
++        // GORILLA excised 2026-10-15 (158, D-158-08): context-create-aitab handler removed with its menu item.
+         case "context-showonlythisframe":
+           gContextMenu.showOnlyThisFrame();
+           break;

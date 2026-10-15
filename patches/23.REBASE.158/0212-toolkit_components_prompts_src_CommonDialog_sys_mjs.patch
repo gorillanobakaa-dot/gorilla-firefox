@@ -1,0 +1,20 @@
+# Gorilla 158 rebase: toolkit/components/prompts/src/CommonDialog.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/components/prompts/src/CommonDialog.sys.mjs b/toolkit/components/prompts/src/CommonDialog.sys.mjs
+index 23980a60a6012727ebbce5f44daf2072cd90dac1..b34ffa2f471d4a2fe9c9ee11751526a6ce3cd264 100644
+--- a/toolkit/components/prompts/src/CommonDialog.sys.mjs
++++ b/toolkit/components/prompts/src/CommonDialog.sys.mjs
+@@ -18,9 +18,8 @@ export class CommonDialog {
+     });
+   }
+ 
+-  static DEFAULT_APP_ICON_CSS = `image-set(url("chrome://branding/content/icon16.png") 1x,
+-    url("chrome://branding/content/icon32.png") 2x,
+-    url("chrome://branding/content/icon64.png") 4x)`;
++  // GORILLA D-157-35: system dialogs show the neutral info symbol, not a 16-32 px Gorilla
++  static DEFAULT_APP_ICON_CSS = `url("chrome://global/skin/icons/info.svg")`;
+ 
+   args = null;
+   ui = null;

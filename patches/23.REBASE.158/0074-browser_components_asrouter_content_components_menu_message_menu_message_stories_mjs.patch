@@ -1,0 +1,17 @@
+# Gorilla 158 rebase: browser/components/asrouter/content/components/menu-message/menu-message.stories.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/asrouter/content/components/menu-message/menu-message.stories.mjs b/browser/components/asrouter/content/components/menu-message/menu-message.stories.mjs
+index 62eacedf0c2a9047e01f081eb1f99edb58668f34..bab17fa7ec38713c0e91d28f9413baac9a673830 100644
+--- a/browser/components/asrouter/content/components/menu-message/menu-message.stories.mjs
++++ b/browser/components/asrouter/content/components/menu-message/menu-message.stories.mjs
+@@ -72,7 +72,7 @@ const Template = ({
+ export const Default = Template.bind({});
+ Default.args = {
+   buttonText: "Sign up",
+-  logoURL: "chrome://branding/content/about-logo.svg",
++  logoURL: "chrome://branding/content/about-logo.png",
+   imageURL:
+     "chrome://browser/content/asrouter/assets/fox-with-box-on-cloud.svg",
+   primaryText: "Bounce between devices",

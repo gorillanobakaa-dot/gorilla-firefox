@@ -1,0 +1,15 @@
+# Gorilla 158 rebase: toolkit/content/aboutTelemetry.css as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/content/aboutTelemetry.css b/toolkit/content/aboutTelemetry.css
+index 073c8f3049c2c8818a511d8d4ccb2da4474a4a9e..71ef3415540a702261f977297f2355318c6eb889 100644
+--- a/toolkit/content/aboutTelemetry.css
++++ b/toolkit/content/aboutTelemetry.css
+@@ -345,5 +345,5 @@ caption {
+ /* GORILLA OVERRIDE 2026-07-31: centered watermark (author spec: "that gorilla
+    was supposed to be in the center"). */
+ body {
+-  background: #000000 url("chrome://branding/content/about-logo.svg") no-repeat fixed center bottom 10px / 450px !important; /* author 22:27: "way lower"; fixed = pinned to viewport bottom even on tall data tabs */
++  background: #000000 url("chrome://branding/content/about-logo.png") no-repeat fixed center bottom 10px / 450px !important; /* author 22:27: "way lower"; fixed = pinned to viewport bottom even on tall data tabs */
+ }

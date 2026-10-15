@@ -1,0 +1,21 @@
+# Gorilla 158 port fix
+# Settings gorilla on Tabs and browsing matches 158 (setting-pane data-category; currentview gone)
+# Files: browser/themes/shared/preferences/preferences.css
+
+diff --git a/browser/themes/shared/preferences/preferences.css b/browser/themes/shared/preferences/preferences.css
+index e7c004feb7..e02ef0777b 100644
+--- a/browser/themes/shared/preferences/preferences.css
++++ b/browser/themes/shared/preferences/preferences.css
+@@ -1683,7 +1683,11 @@ label, description, .text-link, .help-button, h1, h2 {
+ 
+ /* TABS & BROWSING SIDEBAR GORILLA DECORATION */
+ @media (min-width: 1300px) {
+-  #categories[currentview="paneTabsBrowsing"] ~ .main-content::after {
++  /* GORILLA 2026-10-15: 158 dropped the currentview attribute (#categories is a moz-page-nav that reflects nothing), so
++     the first selector never matched and Settings showed no gorilla. 158 marks the shown page as a setting-pane with
++     data-category and without [hidden]; the second selector reads that. The first stays for 157 trees. */
++  #categories[currentview="paneTabsBrowsing"] ~ .main-content::after,
++  .main-content:has(setting-pane[data-category="paneTabsBrowsing"]:not([hidden]))::after {
+     content: "" !important;
+     display: block !important;
+     position: fixed !important;

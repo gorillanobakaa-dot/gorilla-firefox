@@ -1,0 +1,26 @@
+# Gorilla 158 rebase: dom/media/webrtc/jsapi/DefaultCodecPreferences.cpp as built on Firefox 158 (linux only: a linux-only patch touches this file)
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/dom/media/webrtc/jsapi/DefaultCodecPreferences.cpp b/dom/media/webrtc/jsapi/DefaultCodecPreferences.cpp
+index 95dae38e2d794f05aeaaf7b725245902b35ff09c..74eb154f33744ecf8eb771d7091862153d642cad 100644
+--- a/dom/media/webrtc/jsapi/DefaultCodecPreferences.cpp
++++ b/dom/media/webrtc/jsapi/DefaultCodecPreferences.cpp
+@@ -119,15 +119,14 @@ void EnumerateDefaultVideoCodecs(
+   // Supported video codecs.
+   // Note: order here implies priority for building offers!
+   AutoTArray<UniquePtr<JsepCodecDescription>, 10> codecs;
+-  codecs.AppendElement(JsepVideoCodecDescription::CreateDefaultVP8(aPrefs));
+-  codecs.AppendElement(JsepVideoCodecDescription::CreateDefaultVP9(aPrefs));
++  // VP8, VP9, and AV1 removed intentionally — IVB HD 4000 has no hardware
++  // decode for these. H.264 (VAAPI) is the only supported video codec.
+   codecs.AppendElement(JsepVideoCodecDescription::CreateDefaultH264_1(aPrefs));
+   codecs.AppendElement(JsepVideoCodecDescription::CreateDefaultH264_0(aPrefs));
+   codecs.AppendElement(
+       JsepVideoCodecDescription::CreateDefaultH264Baseline_1(aPrefs));
+   codecs.AppendElement(
+       JsepVideoCodecDescription::CreateDefaultH264Baseline_0(aPrefs));
+-  codecs.AppendElement(JsepVideoCodecDescription::CreateDefaultAV1(aPrefs));
+   codecs.AppendElement(JsepVideoCodecDescription::CreateDefaultUlpFec(aPrefs));
+   codecs.AppendElement(JsepApplicationCodecDescription::CreateDefault());
+   codecs.AppendElement(JsepVideoCodecDescription::CreateDefaultRed(aPrefs));

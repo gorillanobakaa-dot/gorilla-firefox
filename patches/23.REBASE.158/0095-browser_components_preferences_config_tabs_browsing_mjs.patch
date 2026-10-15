@@ -1,0 +1,42 @@
+# Gorilla 158 rebase: browser/components/preferences/config/tabs-browsing.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/preferences/config/tabs-browsing.mjs b/browser/components/preferences/config/tabs-browsing.mjs
+index 4ddb7b5a0cfe3eb93c90fc86837cdeab51923288..a5a1fc3e7551bb4cb24ceebd4670420f8eeb8dd4 100644
+--- a/browser/components/preferences/config/tabs-browsing.mjs
++++ b/browser/components/preferences/config/tabs-browsing.mjs
+@@ -258,19 +258,8 @@ Preferences.addSetting({
+     "aiControlDefault",
+     "aiControlSmartTabGroups",
+   ],
+-  visible: ({
+-    smartTabGroups,
+-    tabGroups,
+-    aiControlDefault,
+-    aiControlSmartTabGroups,
+-  }) => {
+-    return (
+-      window.canShowAiFeature(aiControlSmartTabGroups, aiControlDefault) &&
+-      !!tabGroups.value &&
+-      !!smartTabGroups.value &&
+-      Services.locale.appLocaleAsBCP47.startsWith("en")
+-    );
+-  },
++  // GORILLA excised 2026-10-15 (158, D-158-08): tab group suggestions never show.
++  visible: () => false,
+ });
+ Preferences.addSetting({
+   id: "tabGroupDragToCreate",
+@@ -631,10 +620,7 @@ SettingGroupManager.registerGroups({
+             id: "tabPreviewShowThumbnails",
+             l10nId: "settings-tabs-show-image-in-preview",
+           },
+-          {
+-            id: "tabGroupSuggestions",
+-            l10nId: "settings-tabs-show-group-and-tab-suggestions",
+-          },
++          // GORILLA excised 2026-10-15 (158, D-158-08): no "Show tab group suggestions" checkbox.
+           {
+             id: "tabGroupDragToCreate",
+             l10nId: "settings-tabs-drag-to-create-tab-groups",

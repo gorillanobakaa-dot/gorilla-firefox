@@ -1,0 +1,17 @@
+# Gorilla 158 rebase: browser/components/preferences/config/moreFromMozilla.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/preferences/config/moreFromMozilla.mjs b/browser/components/preferences/config/moreFromMozilla.mjs
+index d9438d6454b3639e95752e7059a20da60837a5f0..70c517cd595119ddb1b0934e49f920b7b3d7cfdb 100644
+--- a/browser/components/preferences/config/moreFromMozilla.mjs
++++ b/browser/components/preferences/config/moreFromMozilla.mjs
+@@ -226,7 +226,7 @@ SettingGroupManager.registerGroups({
+         id: "promoGroup",
+         control: "moz-fieldset",
+         l10nId: "more-from-moz-firefox-mobile",
+-        iconSrc: "chrome://branding/content/about-logo.svg",
++        iconSrc: "chrome://branding/content/about-logo.png",
+         headingLevel: 2,
+         items: [
+           {

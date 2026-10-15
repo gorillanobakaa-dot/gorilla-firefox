@@ -1,0 +1,18 @@
+# Gorilla 158 rebase: toolkit/components/resistfingerprinting/nsRFPService.cpp as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/components/resistfingerprinting/nsRFPService.cpp b/toolkit/components/resistfingerprinting/nsRFPService.cpp
+index 6ce393b1122f1f4629aa981886a5327c4c9d3f09..17739a2ea5c5e8dd4c66f1fefe69df26312a26f6 100644
+--- a/toolkit/components/resistfingerprinting/nsRFPService.cpp
++++ b/toolkit/components/resistfingerprinting/nsRFPService.cpp
+@@ -472,7 +472,8 @@ nsRFPService::Observe(nsISupports* aObject, const char* aTopic,
+   }
+ 
+   if (bitsetForUserCharacteristics == 0b111) {
+-    nsUserCharacteristics::MaybeSubmitPing();
++    // GORILLA D-157-40 (2026-10-08): no user-characteristics collection. Here it started, once per wave of Mozilla's
++    // study: an invisible browser loaded about:fingerprintingprotection and measured this machine for a ping.
+     // Set 4th bit to 1 to make sure bitset is never 0b111 again.
+     // This is to ensure that we only submit the ping once.
+     bitsetForUserCharacteristics |= 1 << 3;

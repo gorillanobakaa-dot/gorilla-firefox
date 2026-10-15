@@ -1,0 +1,21 @@
+# Gorilla 158 rebase: toolkit/content/aboutProfiles.xhtml as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/content/aboutProfiles.xhtml b/toolkit/content/aboutProfiles.xhtml
+index 0bf202fc113db1913f0d21ec893a24928d31d9c4..e2c3d70fe5e7645b2457c495804b5493ac2da8c6 100644
+--- a/toolkit/content/aboutProfiles.xhtml
++++ b/toolkit/content/aboutProfiles.xhtml
+@@ -13,12 +13,6 @@
+     />
+     <meta name="color-scheme" content="light dark" />
+     <title data-l10n-id="profiles-title"></title>
+-    <link
+-      rel="icon"
+-      type="image/png"
+-      id="favicon"
+-      href="chrome://branding/content/icon32.png"
+-    />
+     <link
+       rel="stylesheet"
+       href="chrome://mozapps/skin/aboutProfiles.css"

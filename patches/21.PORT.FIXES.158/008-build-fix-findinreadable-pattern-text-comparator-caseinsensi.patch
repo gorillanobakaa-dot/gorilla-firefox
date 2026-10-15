@@ -1,0 +1,33 @@
+# Gorilla 158 port fix
+# Build fix: FindInReadable(pattern, text, comparator) -> CaseInsensitiveFindInReadable(pattern, text) (158 removed the overload)
+# Files: dom/media/DecoderTraits.cpp
+
+diff --git a/dom/media/DecoderTraits.cpp b/dom/media/DecoderTraits.cpp
+index 71a5c9a83d..e7424c3502 100644
+--- a/dom/media/DecoderTraits.cpp
++++ b/dom/media/DecoderTraits.cpp
+@@ -67,18 +67,12 @@ static CanPlayStatus CanHandleCodecsType(
+   // embedded in the MIME type string. Case-insensitive matching prevents
+   // edge-cases where codec strings are uppercased.
+   if (StaticPrefs::media_gorilla_hardware_only_mode() &&
+-      (FindInReadable("av01"_ns, aType.OriginalString(),
+-                      nsCaseInsensitiveCStringComparator) ||
+-       FindInReadable("vp09"_ns, aType.OriginalString(),
+-                      nsCaseInsensitiveCStringComparator) ||
+-       FindInReadable("vp8"_ns, aType.OriginalString(),
+-                      nsCaseInsensitiveCStringComparator) ||
+-       FindInReadable("vp9"_ns, aType.OriginalString(),
+-                      nsCaseInsensitiveCStringComparator) ||
+-       FindInReadable("hev1"_ns, aType.OriginalString(),
+-                      nsCaseInsensitiveCStringComparator) ||
+-       FindInReadable("hvc1"_ns, aType.OriginalString(),
+-                      nsCaseInsensitiveCStringComparator) ||
++      (CaseInsensitiveFindInReadable("av01"_ns, aType.OriginalString()) ||
++       CaseInsensitiveFindInReadable("vp09"_ns, aType.OriginalString()) ||
++       CaseInsensitiveFindInReadable("vp8"_ns, aType.OriginalString()) ||
++       CaseInsensitiveFindInReadable("vp9"_ns, aType.OriginalString()) ||
++       CaseInsensitiveFindInReadable("hev1"_ns, aType.OriginalString()) ||
++       CaseInsensitiveFindInReadable("hvc1"_ns, aType.OriginalString()) ||
+        mimeType.Type() == MEDIAMIMETYPE("video/webm") ||
+        mimeType.Type() == MEDIAMIMETYPE("video/x-webm") ||
+        mimeType.Type() == MEDIAMIMETYPE("video/ogg"))) {

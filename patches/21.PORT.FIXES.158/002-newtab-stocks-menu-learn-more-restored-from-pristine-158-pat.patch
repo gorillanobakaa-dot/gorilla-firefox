@@ -1,0 +1,18 @@
+# Gorilla 158 port fix
+# Newtab-stocks-menu-learn-more restored from pristine 158: patch 086 (22.EGRESS.LOCKDOWN.157) removed the second of two copies on 157, and in 158 the message exists once, so the mechanical apply deleted the only copy (the stocks widget menu would show an empty item). lesson: a hunk that removes a Fluent message must check the message still exists elsewhere in the file; removing the last copy of an upstream message is refused
+# Files: browser/locales/en-US/browser/newtab/newtab.ftl
+
+diff --git a/browser/locales/en-US/browser/newtab/newtab.ftl b/browser/locales/en-US/browser/newtab/newtab.ftl
+index 295b4a65d5..2e13e3aa71 100644
+--- a/browser/locales/en-US/browser/newtab/newtab.ftl
++++ b/browser/locales/en-US/browser/newtab/newtab.ftl
+@@ -1771,6 +1771,9 @@ newtab-stocks-list-watchlist = Watchlist
+ # Context menu item that opens the stock search (by company name or ticker symbol).
+ newtab-stocks-menu-search-stocks = Search by name or symbol
+ 
++# Context menu item linking to more information about the Stocks widget.
++newtab-stocks-menu-learn-more = Learn more
++
+ # Shown in the Stocks widget when its data could not be loaded.
+ newtab-stocks-error-not-available = Stock data is not available.
+ 

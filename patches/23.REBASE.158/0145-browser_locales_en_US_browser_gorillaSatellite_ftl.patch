@@ -1,0 +1,57 @@
+# Gorilla 158 rebase: browser/locales/en-US/browser/gorillaSatellite.ftl as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/locales/en-US/browser/gorillaSatellite.ftl b/browser/locales/en-US/browser/gorillaSatellite.ftl
+index e69817812a8b6bf0bb49432531da4b20df194413..745d78c7883fe2c8168ee3a90a894eb46fe27fad 100644
+--- a/browser/locales/en-US/browser/gorillaSatellite.ftl
++++ b/browser/locales/en-US/browser/gorillaSatellite.ftl
+@@ -8,19 +8,28 @@
+ 
+ gorilla-satellite-mode =
+     .label = Gorilla.Satellite mode
+-    .description = For slow, far-away or expensive internet: satellite, Starlink, rural mobile, down to 5 KB per second. Nothing is sent anywhere; the browser fetches less and waits longer.
++    .description = For slow, far-away or expensive internet: satellite, Starlink, rural mobile, down to 5 KB per second. Nothing is sent anywhere; the browser fetches less, asks for lighter pages and keeps what it already has.
+ gorilla-satellite-mode-off =
+     .label = Off: a normal connection
+     .description = The browser behaves as shipped.
+     .title = Use this on broadband, fibre and good mobile connections.
+ gorilla-satellite-mode-satellite =
+     .label = Satellite: fast but far away (Starlink, satellite broadband)
+-    .description = No autoplay, no video preloading, longer waits before giving up, pages kept on disk.
+-    .title = For links that are fast but have a long delay, such as Starlink or geostationary satellite. Videos never start by themselves and are not downloaded in advance; the browser waits longer for slow servers instead of failing; addresses are remembered for 10 minutes; up to 256 MB of pages are kept on disk, so after a restart a page you already visited does not download everything again.
++    .description = Mobile versions of sites, no autoplay, no video preloading, longer waits before giving up, pages kept on disk across restarts.
++    .title = For links that are fast but have a long delay, such as Starlink or geostationary satellite. Sites are asked for their mobile version, which is much smaller (see the tick-box below). Videos never start by themselves and are not downloaded in advance; the browser waits longer for slow servers instead of failing; addresses are remembered for 10 minutes; up to 256 MB of pages are kept on disk and are no longer emptied when the browser closes, so after a restart a page you already visited does not download everything again. Your history is still wiped when you close the browser.
+ gorilla-satellite-mode-very-slow =
+     .label = Very slow link: works down to 5 KB per second
+-    .description = Everything in Satellite, plus no pictures, no web fonts, and sites are asked for lighter pages.
+-    .title = For very slow or very expensive links, down to 5 KB per second. Everything in Satellite, plus: pictures are not downloaded (to see them on one site, press Ctrl+I, open Permissions and allow Load Images); websites keep their text but not their downloadable fonts; every request carries "Save-Data: on", which asks sites that support it for a lighter page; at most 6 connections per site, so they do not compete for the little bandwidth there is.
++    .description = Everything in Satellite, plus no JavaScript, no pictures, no web fonts, lighter pages, and pages you already have open at once.
++    .title = For very slow or very expensive links, down to 5 KB per second. Everything in Satellite, plus: pages run no JavaScript, which is most of what they download (to allow one site, use the Gorilla.Satellite mode button); pictures are not downloaded (to see them on one site, press Ctrl+I, open Permissions and allow Load Images); websites keep their text but not their downloadable fonts; every request carries "Save-Data: on", which asks sites that support it for a lighter page; a page you already have is shown at once from the disk without asking the site whether it changed (press Reload for a fresh copy); at most 6 connections per site, so they do not compete for the little bandwidth there is.
++gorilla-satellite-mobile-pages =
++    .label = Ask sites for their mobile version (much smaller pages)
++    .description = While Gorilla.Satellite mode is on, sites are told this is Firefox on an Android phone, so they send the light pages they make for phones.
++    .title = Most large sites make a separate, much smaller page for phones. With this ticked, and Gorilla.Satellite mode on, the browser introduces itself as Firefox for Android, so sites send that page; it fills the window as usual. If one site works badly this way, open the Gorilla.Satellite mode button next to the address bar and choose "This site: show the normal (desktop) version". Cost: a phone identity on a large screen is a rare mix that a site could notice.
++
++gorilla-satellite-no-javascript =
++    .label = Very slow link: no JavaScript (pages up to 20 times smaller)
++    .description = Pages show their text and links without running scripts. A site that needs scripts can be allowed from the Gorilla.Satellite mode button.
++    .title = Most of what a news or shopping page downloads today is JavaScript. Measured on real sites with pictures already off: BBC News 1,175 KB down to 101 KB, CNN 11,831 KB down to 607 KB, Reuters 2,142 KB down to 315 KB, and the text stayed readable. Sites that are applications (webmail, maps, some shops and logins) need scripts: open the Gorilla.Satellite mode button next to the address bar and choose "This site: allow JavaScript". Only in Very slow link.
+ 
+ ## The toolbar button: its words show the level in use; a click opens the three levels above.
+ 
+@@ -32,5 +41,14 @@ gorilla-satellite-button-satellite =
+     .label = Gorilla.Satellite mode: Satellite
+ gorilla-satellite-button-very-slow =
+     .label = Gorilla.Satellite mode: Very slow link
++gorilla-satellite-button-desktop-site =
++    .label = This site: show the normal (desktop) version
++    .tooltiptext = For a site that works badly in its mobile version. Remembered for this site only; the page reloads.
++gorilla-satellite-button-javascript-site =
++    .label = This site: allow JavaScript
++    .tooltiptext = For a site that does not work without scripts (webmail, maps, some shops and logins). Remembered for this site only; the page reloads.
++# GORILLA D-157-39: a site that makes calls keeps its normal version and its scripts at every level
++gorilla-satellite-button-call-site =
++    .tooltiptext = This site makes calls: you allowed it the camera or microphone, or it is a known call service. It always gets its normal (desktop) version and its JavaScript, so calls can work.
+ gorilla-satellite-button-settings =
+     .label = Open Settings for Gorilla.Satellite mode

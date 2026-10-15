@@ -1,0 +1,51 @@
+# Gorilla 158 rebase: browser/components/sidebar/sidebar-main.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/sidebar/sidebar-main.mjs b/browser/components/sidebar/sidebar-main.mjs
+index 315082705fcf30a62dabe9bf639d1a95f61b0bc7..c3771f3f234b310d8a112c5a0e9d692a5abc4252 100644
+--- a/browser/components/sidebar/sidebar-main.mjs
++++ b/browser/components/sidebar/sidebar-main.mjs
+@@ -55,7 +55,7 @@ export default class SidebarMain extends MozLitElement {
+   get fluentStrings() {
+     if (!this._fluentStrings) {
+       this._fluentStrings = new Localization(
+-        ["browser/sidebar.ftl", "preview/genai.ftl"],
++        ["browser/sidebar.ftl"],
+         true
+       );
+     }
+@@ -387,17 +387,7 @@ export default class SidebarMain extends MozLitElement {
+       .querySelectorAll("[customized-tool='true']")
+       .forEach(node => node.remove());
+ 
+-    const menuBuilders = {
+-      aichat: async () => {
+-        if (Services.prefs.getBoolPref("browser.ml.chat.page")) {
+-          await lazy.GenAI.buildAskChatMenu(this._contextMenu, {
+-            browser: window.gBrowser.selectedBrowser,
+-            selectionInfo: null,
+-            source: "tool",
+-          });
+-        }
+-      },
+-    };
++    const menuBuilders = {};
+ 
+     const builder = menuBuilders[toolId];
+     if (typeof builder === "function") {
+@@ -746,14 +736,6 @@ export default class SidebarMain extends MozLitElement {
+ 
+   getEntrypointValues(action) {
+     let providerInfo;
+-    if (action.view === "viewGenaiChatSidebar") {
+-      providerInfo = lazy.GenAI.currentChatProviderInfo;
+-      action.iconUrl = providerInfo.iconUrl;
+-      // Sets the tooltip text for the action based on the chatbot provider's name.
+-      // This tooltip text is also used to set the action label
+-      action.tooltiptext = providerInfo.name;
+-    }
+-
+     if (action.disabled || action.hidden) {
+       return null;
+     }

@@ -1,0 +1,18 @@
+# Gorilla 158 rebase: browser/locales/jar.mn as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/locales/jar.mn b/browser/locales/jar.mn
+index d53d8c6f4ab0c1782b31634eb64082265b06ea6d..e35ffa8fb2271107025b5965f978c4839072e0d8 100644
+--- a/browser/locales/jar.mn
++++ b/browser/locales/jar.mn
+@@ -14,8 +14,7 @@
+   preview/credentialChooser.ftl                    (../../toolkit/components/credentialmanagement/credentialChooser.ftl)
+   browser                                          (%browser/**/*.ftl)
+   preview/genai.ftl                                (../locales-preview/genai.ftl)
+-  preview/aiWindow.ftl                             (../locales-preview/aiWindow.ftl)
+-  preview/smartTabGroups.ftl                       (../locales-preview/smartTabGroups.ftl)
++# GORILLA excised 2026-10-15 (158, D-158-08): preview AI window and smart tab group texts not shipped.
+   preview/privacyPreferences.ftl                   (../locales-preview/privacyPreferences.ftl)
+   preview/autoTabGrouping.ftl                      (../locales-preview/autoTabGrouping.ftl)
+   preview/remoteControl.ftl                          (../locales-preview/remoteControl.ftl)

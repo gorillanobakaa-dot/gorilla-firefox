@@ -1,0 +1,44 @@
+# Gorilla 158 rebase: browser/components/preferences/config/privacy.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/preferences/config/privacy.mjs b/browser/components/preferences/config/privacy.mjs
+index 9111a263189eb45994020eb6b79c6793f4412754..ac0668357a4b98b0f68c580082fdbc3b6114e0ff 100644
+--- a/browser/components/preferences/config/privacy.mjs
++++ b/browser/components/preferences/config/privacy.mjs
+@@ -1513,6 +1513,18 @@ SettingGroupManager.registerGroups({
+           "search-l10n-ids": "gorilla-satellite-mode,gorilla-satellite-mode-satellite,gorilla-satellite-mode-very-slow",
+         },
+       },
++      {
++        // GORILLA UNLEASHED - SATELLITE MODE (D-157-33): mobile pages while a level is on
++        id: "gorillaMobilePages",
++        l10nId: "gorilla-satellite-mobile-pages",
++        controlAttrs: { "data-l10n-attrs": "title" },
++      },
++      {
++        // GORILLA UNLEASHED - SATELLITE MODE (D-157-33): no JavaScript in Very slow link
++        id: "gorillaNoJavascript",
++        l10nId: "gorilla-satellite-no-javascript",
++        controlAttrs: { "data-l10n-attrs": "title" },
++      },
+       {
+         id: "connectionLinkButton",
+         l10nId: "preferences-connection-link-button",
+@@ -1619,6 +1631,16 @@ SettingGroupManager.registerGroups({
+ // GORILLA UNLEASHED - SATELLITE MODE (D-157-30): Gorilla.Satellite mode in Settings, bound to gorilla.linkmode
+ // (0 off, 1 Satellite, 2 Very slow link). GorillaLinkMode.sys.mjs applies the level at once; nothing is sent.
+ Preferences.add({ id: "gorilla.linkmode", type: "int" });
++Preferences.add({ id: "gorilla.linkmode.mobile_pages", type: "bool" });
++Preferences.add({ id: "gorilla.linkmode.no_javascript", type: "bool" });
++Preferences.addSetting({
++  id: "gorillaNoJavascript",
++  pref: "gorilla.linkmode.no_javascript",
++});
++Preferences.addSetting({
++  id: "gorillaMobilePages",
++  pref: "gorilla.linkmode.mobile_pages",
++});
+ Preferences.addSetting({
+   id: "gorillaLinkMode",
+   pref: "gorilla.linkmode",

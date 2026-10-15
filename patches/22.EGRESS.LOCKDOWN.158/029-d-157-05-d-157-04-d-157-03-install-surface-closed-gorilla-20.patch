@@ -1,0 +1,223 @@
+# Gorilla 158 privacy cut
+# D-157-05/D-157-04/D-157-03 install surface closed (Gorilla 2026-10-15: close every avenue so no one can install anything remotely or trick users into installing it): locked extensions.webapi.enabled=false, block_mozAddonManager, xpinstall.enabled=false, InstallTrigger off, recommendations off, every addons.mozilla.org URL pref empty, taskbar tabs off; about:addons shows why nothing can be added instead of the AMO promo, link and search box; Debug Add-ons, Add Dictionaries and about:debugging Load Temporary Add-on are not offered; the five PHYSICAL LOCKs no longer have the Cu.isInAutomation bypass (an env var plus a pref a user can be talked into).
+# Files: browser/app/profile/firefox.js, browser/base/content/browser-context.inc.xhtml, browser/base/content/nsContextMenu.sys.mjs, devtools/client/aboutdebugging/src/modules/debug-target-support.js, toolkit/locales/en-US/toolkit/about/aboutAddons.ftl, toolkit/mozapps/extensions/content/aboutaddons-utils.mjs, toolkit/mozapps/extensions/content/components/addon-list.mjs, toolkit/mozapps/extensions/content/components/addon-page-header.mjs, toolkit/mozapps/extensions/content/components/addon-page-options.mjs, toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs, toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs, toolkit/mozapps/extensions/internal/XPIProvider.sys.mjs
+
+diff --git a/browser/app/profile/firefox.js b/browser/app/profile/firefox.js
+index 1b99c98d96..eb1aebcbbb 100644
+--- a/browser/app/profile/firefox.js
++++ b/browser/app/profile/firefox.js
+@@ -4158,6 +4158,23 @@ pref("browser.theme.toolbar-theme", 0, locked);
+ // D-157-05 uBlock only: no chrome-privileged console, no remote debugging
+ pref("devtools.chrome.enabled", false, locked);
+ pref("devtools.debugger.remote-enabled", false, locked);
++// D-157-05 (owner 2026-10-15: "close every avenue so no one can install remotely anything or trick the users into
++// installing it themselves"): no page gets the add-on install APIs, nothing is downloaded before the refusal,
++// no "Install Add-on From File", no link or search box pointing at addons.mozilla.org, no recommendations
++pref("extensions.webapi.enabled", false, locked);
++pref("privacy.resistFingerprinting.block_mozAddonManager", true, locked);
++pref("xpinstall.enabled", false, locked);
++pref("extensions.InstallTrigger.enabled", false, locked);
++pref("extensions.htmlaboutaddons.recommendations.enabled", false, locked);
++pref("extensions.getAddons.showPane", false, locked);
++pref("extensions.getAddons.search.browseURL", "", locked);
++pref("extensions.getAddons.link.url", "", locked);
++pref("extensions.getAddons.get.url", "", locked);
++pref("extensions.getAddons.discovery.api_url", "", locked);
++pref("extensions.getAddons.browserMappings.url", "", locked);
++pref("extensions.recommendations.themeRecommendationUrl", "", locked);
++// no site installed as a separate app window (Windows only in 158)
++pref("browser.taskbarTabs.enabled", false, locked);
+ 
+ // D-157-06 fingerprinting (local time, page dark mode and per-site zoom kept)
+ pref("privacy.fingerprintingProtection", true, locked);
+diff --git a/browser/base/content/browser-context.inc.xhtml b/browser/base/content/browser-context.inc.xhtml
+index 93da819820..3037ec1179 100644
+--- a/browser/base/content/browser-context.inc.xhtml
++++ b/browser/base/content/browser-context.inc.xhtml
+@@ -430,7 +430,7 @@
+             data-l10n-id="text-action-spell-dictionaries">
+           <menupopup id="spell-dictionaries-menu" accesskey-conflicts-bug="2073901">
+               <menuseparator id="spell-language-separator"/>
+-              <menuitem id="spell-add-dictionaries"
++              <menuitem id="spell-add-dictionaries" hidden="true"
+                         data-l10n-id="text-action-spell-add-dictionaries"
+                         />
+           </menupopup>
+diff --git a/browser/base/content/nsContextMenu.sys.mjs b/browser/base/content/nsContextMenu.sys.mjs
+index ad0c86c3ad..31960d8443 100644
+--- a/browser/base/content/nsContextMenu.sys.mjs
++++ b/browser/base/content/nsContextMenu.sys.mjs
+@@ -989,7 +989,8 @@ export class nsContextMenu {
+       // when there is no spellchecker but we might be able to spellcheck
+       // add the add to dictionaries item. This will ensure that people
+       // with no dictionaries will be able to download them
+-      this.showItem("spell-add-dictionaries-main", showDictionaries);
++      // GORILLA UNLEASHED (D-157-03, D-157-05): dictionaries are not downloaded; the item is never shown.
++      this.showItem("spell-add-dictionaries-main", false);
+     } else {
+       this.showItem("spell-add-dictionaries-main", false);
+     }
+diff --git a/devtools/client/aboutdebugging/src/modules/debug-target-support.js b/devtools/client/aboutdebugging/src/modules/debug-target-support.js
+index 2b8d4afa5b..ab7b2e0787 100644
+--- a/devtools/client/aboutdebugging/src/modules/debug-target-support.js
++++ b/devtools/client/aboutdebugging/src/modules/debug-target-support.js
+@@ -92,7 +92,8 @@ exports.isSupportedDebugTargetPane = isSupportedDebugTargetPane;
+  * from about:debugging (currently disallowed on non-local runtimes).
+  */
+ function supportsTemporaryExtensionInstaller(runtimeType) {
+-  return runtimeType === RUNTIMES.THIS_FIREFOX;
++  // GORILLA UNLEASHED (D-157-05): temporary add-ons are refused in XPIInstall; the button is not offered either.
++  return runtimeType === RUNTIMES.THIS_FIREFOX && false;
+ }
+ exports.supportsTemporaryExtensionInstaller =
+   supportsTemporaryExtensionInstaller;
+diff --git a/toolkit/locales/en-US/toolkit/about/aboutAddons.ftl b/toolkit/locales/en-US/toolkit/about/aboutAddons.ftl
+index 3c3a429af7..1956beca83 100644
+--- a/toolkit/locales/en-US/toolkit/about/aboutAddons.ftl
++++ b/toolkit/locales/en-US/toolkit/about/aboutAddons.ftl
+@@ -9,6 +9,9 @@ search-header =
+ 
+ ## Variables
+ ##   $domain - Domain name where add-ons are available (e.g. addons.mozilla.org)
++# GORILLA: shown in about:addons where Mozilla offered addons.mozilla.org (decision D-157-05).
++gorilla-addons-none-installable = { -brand-short-name } does not install add-ons, themes, language packs or dictionaries, on purpose: an add-on runs code that its maker can change from the internet at any time, and it opens the browser to attacks. uBlock Origin is built in.
++
+ list-empty-get-extensions-message = Get Gorilla extensions and Gorilla themes on <a data-l10n-name="get-extensions">{ $domain }</a>
+ 
+ list-empty-get-dictionaries-message = Get dictionaries on <a data-l10n-name="get-extensions">{ $domain }</a>
+diff --git a/toolkit/mozapps/extensions/content/aboutaddons-utils.mjs b/toolkit/mozapps/extensions/content/aboutaddons-utils.mjs
+index 13570a34dd..27decc73d4 100644
+--- a/toolkit/mozapps/extensions/content/aboutaddons-utils.mjs
++++ b/toolkit/mozapps/extensions/content/aboutaddons-utils.mjs
+@@ -962,6 +962,11 @@ export var DiscoveryAPI = {
+  * @param {string} [options.utmContent="aboutaddons"] UTM content parameter for tracking.
+  */
+ export function openAmoInTab(path, { utmContent = "aboutaddons" } = {}) {
++  // GORILLA UNLEASHED - NO ADD-ON OFFERS (D-157-05): every "find more / get extensions / find your first
++  // extension" button ends here; nothing can be installed, so nothing is offered.
++  if (Services.prefs.getBoolPref("extensions.webapi.enabled", false) === false) {
++    return;
++  }
+   let amoUrl = Services.urlFormatter.formatURLPref(
+     "extensions.getAddons.link.url"
+   );
+diff --git a/toolkit/mozapps/extensions/content/components/addon-list.mjs b/toolkit/mozapps/extensions/content/components/addon-list.mjs
+index d598aec837..45f018da92 100644
+--- a/toolkit/mozapps/extensions/content/components/addon-list.mjs
++++ b/toolkit/mozapps/extensions/content/components/addon-list.mjs
+@@ -218,6 +218,16 @@ export class AddonList extends HTMLElement {
+   }
+ 
+   createEmptyListMessage() {
++    // GORILLA UNLEASHED - NO ADD-ON OFFERS (D-157-05): the empty list says why nothing can be added, instead of
++    // linking to addons.mozilla.org and showing the "Find your first extension" promo.
++    let gorillaMessage = document.createElement("p");
++    gorillaMessage.id = "empty-addons-message";
++    document.l10n.setAttributes(gorillaMessage, "gorilla-addons-none-installable");
++    const gorillaFragment = document.createDocumentFragment();
++    gorillaFragment.appendChild(gorillaMessage);
++    if (Services.prefs.getBoolPref("extensions.webapi.enabled", false) === false) {
++      return gorillaFragment;
++    }
+     let emptyMessage = "list-empty-get-extensions-message";
+     let linkPref = "extensions.getAddons.link.url";
+ 
+diff --git a/toolkit/mozapps/extensions/content/components/addon-page-header.mjs b/toolkit/mozapps/extensions/content/components/addon-page-header.mjs
+index 9e5f95b6c5..2005cf6a96 100644
+--- a/toolkit/mozapps/extensions/content/components/addon-page-header.mjs
++++ b/toolkit/mozapps/extensions/content/components/addon-page-header.mjs
+@@ -10,12 +10,7 @@ class AddonPageHeader extends AboutAddonsHTMLElement {
+       <template>
+         <div class="sticky-container">
+           <div class="main-search">
+-            <label
+-              for="search-addons"
+-              class="search-label"
+-              data-l10n-id="default-heading-search-label"
+-            ></label>
+-            <search-addons></search-addons>
++            <!-- GORILLA UNLEASHED - NO ADD-ON OFFERS (D-157-05): no "Search addons.mozilla.org" box -->
+           </div>
+           <div class="main-heading">
+             <moz-button
+diff --git a/toolkit/mozapps/extensions/content/components/addon-page-options.mjs b/toolkit/mozapps/extensions/content/components/addon-page-options.mjs
+index e8c7d6de67..2f6d0be8a8 100644
+--- a/toolkit/mozapps/extensions/content/components/addon-page-options.mjs
++++ b/toolkit/mozapps/extensions/content/components/addon-page-options.mjs
+@@ -55,6 +55,7 @@ class AddonPageOptions extends AboutAddonsHTMLElement {
+             action="debug-addons"
+             data-l10n-id="addon-open-about-debugging"
+             data-l10n-attrs="accesskey"
++            hidden
+           ></panel-item>
+           <hr />
+           <panel-item
+diff --git a/toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs b/toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs
+index dfe402306d..a93b9679b5 100644
+--- a/toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs
++++ b/toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs
+@@ -2674,9 +2674,9 @@ export const XPIDatabase = {
+     // Decision D-157-04. Only the default theme may be enabled: any other theme is app-disabled, so enabling it
+     // (about:addons, the profile editor, onboarding, an earlier profile's choice) leaves the default theme active.
+     if (
++      // // GORILLA UNLEASHED - NO TEST BYPASS (2026-10-15): Cu.isInAutomation is true when MOZ_DISABLE_NONLOCAL_CONNECTIONS=1 and the pref security.turn_off_all_security_so_that_viruses_can_take_over_this_computer are set, which a user can be talked into. Tests are not built, so the lock holds unconditionally.
+       aAddon.type === "theme" &&
+-      aAddon.id !== DEFAULT_THEME_ID &&
+-      !Cu.isInAutomation
++      aAddon.id !== DEFAULT_THEME_ID
+     ) {
+       logger.warn(`[GORILLA] Theme ${aAddon.id} refused: one theme only`);
+       return false;
+@@ -2687,8 +2687,7 @@ export const XPIDatabase = {
+     if (
+       aAddon.location &&
+       !aAddon.location.isBuiltin &&
+-      !aAddon.location.isSystem &&
+-      !Cu.isInAutomation
++      !aAddon.location.isSystem
+     ) {
+       logger.warn(`[GORILLA] Add-on ${aAddon.id} refused: add-ons are built in only`);
+       return false;
+diff --git a/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs b/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs
+index c6aae4bfde..d30cd82276 100644
+--- a/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs
++++ b/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs
+@@ -4855,10 +4855,10 @@ export var XPIInstall = {
+     // protocol's installTemporaryAddon) activate an add-on through _activateAddon directly, so they bypassed the
+     // installAddon/install() refusals above. Outside automated tests this route is now refused too. The bundled
+     // uBlock Origin is installed by GorillaBuiltinExtensions and is not affected.
+-    if (!Cu.isInAutomation) {
+-      logger.error(`[GORILLA] Temporary add-on installation blocked: ${aFile.path}`);
+-      throw new Error("[GORILLA] Temporary add-ons are disabled in this build");
+-    }
++    // // GORILLA UNLEASHED - NO TEST BYPASS (2026-10-15): Cu.isInAutomation is true when MOZ_DISABLE_NONLOCAL_CONNECTIONS=1 and the pref security.turn_off_all_security_so_that_viruses_can_take_over_this_computer are set, which a user can be talked into. Tests are not built, so the lock holds unconditionally.
++    logger.error(`[GORILLA] Temporary add-on installation blocked: ${aFile.path}`);
++    throw new Error("[GORILLA] Temporary add-ons are disabled in this build");
++    // eslint-disable-next-line no-unreachable
+     let installLocation = XPIExports.XPIInternal.TemporaryInstallLocation;
+ 
+     if (XPIExports.XPIInternal.isXPI(aFile.leafName)) {
+diff --git a/toolkit/mozapps/extensions/internal/XPIProvider.sys.mjs b/toolkit/mozapps/extensions/internal/XPIProvider.sys.mjs
+index 84e877d0fe..2c34cabaa5 100644
+--- a/toolkit/mozapps/extensions/internal/XPIProvider.sys.mjs
++++ b/toolkit/mozapps/extensions/internal/XPIProvider.sys.mjs
+@@ -1641,7 +1641,8 @@ var XPIStates = {
+       // locations) are registered. An add-on dropped into the profile's extensions folder, a global extensions
+       // directory or a Windows registry key is never registered, and one registered under an earlier build is
+       // forgotten here, so the database drops it at this startup. XPIDatabase.isUsableAddon refuses it as well.
+-      if (!loc.isBuiltin && !loc.isSystem && !Cu.isInAutomation) {
++      // // GORILLA UNLEASHED - NO TEST BYPASS (2026-10-15): Cu.isInAutomation is true when MOZ_DISABLE_NONLOCAL_CONNECTIONS=1 and the pref security.turn_off_all_security_so_that_viruses_can_take_over_this_computer are set, which a user can be talked into. Tests are not built, so the lock holds unconditionally.
++      if (!loc.isBuiltin && !loc.isSystem) {
+         for (let id of Array.from(loc.keys())) {
+           logger.warn(`[GORILLA] Add-on ${id} in ${loc.name} refused: add-ons are built in only`);
+           loc.delete(id);
+@@ -2790,8 +2791,7 @@ export var XPIProvider = {
+         );
+       } else if (
+         lastTheme &&
+-        lastTheme !== "default-theme@mozilla.org" &&
+-        !Cu.isInAutomation
++        lastTheme !== "default-theme@mozilla.org"
+       ) {
+         // GORILLA UNLEASHED - PHYSICAL LOCK: one theme
+         // Decision D-157-04. A profile whose active theme is anything but the default (for example Mozilla's dark

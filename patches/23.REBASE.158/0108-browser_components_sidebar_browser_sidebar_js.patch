@@ -1,0 +1,86 @@
+# Gorilla 158 rebase: browser/components/sidebar/browser-sidebar.js as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/sidebar/browser-sidebar.js b/browser/components/sidebar/browser-sidebar.js
+index b0afb58a03ed24f3dd40d6600a7d9b69e64286c2..9ddf32936b412a950b26b88c09a4801fdba217d4 100644
+--- a/browser/components/sidebar/browser-sidebar.js
++++ b/browser/components/sidebar/browser-sidebar.js
+@@ -15,8 +15,6 @@ const { DeferredTask } = ChromeUtils.importESModule(
+ const toolsNameMap = {
+   viewOpenTabsSidebar: "opentabs",
+   viewBookmarksSidebar: "bookmarks",
+-  viewGenaiChatSidebar: "aichat",
+-  viewGenaiPageAssistSidebar: "aipageassist",
+   viewHistorySidebar: "history",
+   viewTabsSidebar: "syncedtabs",
+   viewCPMSidebar: "passwords",
+@@ -99,17 +97,12 @@ var SidebarController = {
+       () => sidebar._updateMenus?.()
+     );
+     Object.defineProperty(sidebar, "visible", {
+-      get: () =>
+-        sidebar._prefVisible && !(config.hideInAIWindow && this.isAIWindow()),
++      get: () => sidebar._prefVisible,
+       configurable: true,
+     });
+     this.promiseInitialized.then(() => sidebar._updateMenus?.());
+   },
+ 
+-  isAIWindow() {
+-    return this.AIWindow.isAIWindowActive(window);
+-  },
+-
+   get sidebars() {
+     if (this._sidebars) {
+       return this._sidebars;
+@@ -186,40 +179,6 @@ var SidebarController = {
+       ],
+     ]);
+ 
+-    this.registerPrefSidebar(
+-      "browser.ml.chat.enabled",
+-      "viewGenaiChatSidebar",
+-      {
+-        name: "aichat",
+-        elementId: "sidebar-switcher-genai-chat",
+-        url: "chrome://browser/content/genai/chat.html",
+-        keyId: "viewGenaiChatSidebarKb",
+-        menuId: "menu_genaiChatSidebar",
+-        menuL10nId: "menu-view-genai-chat",
+-        // Bug 1900915 to expose as conditional tool
+-        revampL10nId: "sidebar-menu-genai-chat-label",
+-        iconUrl: "chrome://global/skin/icons/highlights.svg",
+-        gleanClickEvent: Glean.sidebar.chatbotIconClick,
+-        toolContextMenuId: "aichat",
+-        permissions: true,
+-        hideInAIWindow: true,
+-      }
+-    );
+-
+-    this.registerPrefSidebar(
+-      "browser.ml.pageAssist.enabled",
+-      "viewGenaiPageAssistSidebar",
+-      {
+-        name: "aipageassist",
+-        elementId: "sidebar-switcher-genai-page-assist",
+-        url: "chrome://browser/content/genai/pageAssist.html",
+-        menuId: "menu_genaiPageAssistSidebar",
+-        menuL10nId: "menu-view-genai-page-assist",
+-        revampL10nId: "sidebar-menu-genai-page-assist-label",
+-        iconUrl: "chrome://browser/skin/reader-mode.svg",
+-      }
+-    );
+-
+     this.registerPrefSidebar(
+       "browser.contextual-password-manager.enabled",
+       "viewCPMSidebar",
+@@ -2837,8 +2796,6 @@ var SidebarController = {
+ };
+ 
+ ChromeUtils.defineESModuleGetters(SidebarController, {
+-  AIWindow:
+-    "moz-src:///browser/components/aiwindow/ui/modules/AIWindow.sys.mjs",
+   SidebarManager:
+     "moz-src:///browser/components/sidebar/SidebarManager.sys.mjs",
+   SidebarState: "moz-src:///browser/components/sidebar/SidebarState.sys.mjs",

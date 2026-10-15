@@ -1,0 +1,53 @@
+# Gorilla 158 rebase: browser/components/asrouter/modules/ASRouterParentProcessMessageHandler.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/asrouter/modules/ASRouterParentProcessMessageHandler.sys.mjs b/browser/components/asrouter/modules/ASRouterParentProcessMessageHandler.sys.mjs
+index d076821411c5699b2ca9b913417b785b25fa7513..81a883b5ab0e133cbc44fc491cc34496ab0a4be6 100644
+--- a/browser/components/asrouter/modules/ASRouterParentProcessMessageHandler.sys.mjs
++++ b/browser/components/asrouter/modules/ASRouterParentProcessMessageHandler.sys.mjs
+@@ -6,6 +6,32 @@ import { ASRouterPreferences } from "resource:///modules/asrouter/ASRouterPrefer
+ import { ASRouterScreenUtils } from "resource:///modules/asrouter/ASRouterScreenUtils.sys.mjs";
+ import { MESSAGE_TYPE_HASH as msg } from "resource:///modules/asrouter/ActorConstants.mjs";
+ 
++// GORILLA D-157-40 (2026-10-09): the messaging console (about:asrouter) is gone and its switch
++// (browser.newtabpage.activity-stream.asrouter.devtoolsEnabled) is locked off. Its commands are refused whoever sends
++// them: the parent never checked the sender, so about:welcome, about:newtab, about:home and about:privatebrowsing
++// could send them too (force or edit a message, unblock everything, switch message sources, force attribution).
++const CONSOLE_COMMANDS = new Set([
++  msg.ADMIN_CONNECT_STATE,
++  msg.UNBLOCK_MESSAGE_BY_ID,
++  msg.UNBLOCK_ALL,
++  msg.BLOCK_BUNDLE,
++  msg.UNBLOCK_BUNDLE,
++  msg.DISABLE_PROVIDER,
++  msg.ENABLE_PROVIDER,
++  msg.EVALUATE_JEXL_EXPRESSION,
++  msg.EXPIRE_QUERY_CACHE,
++  msg.FORCE_ATTRIBUTION,
++  msg.FORCE_PRIVATE_BROWSING_WINDOW,
++  msg.OVERRIDE_MESSAGE,
++  msg.MODIFY_MESSAGE_JSON,
++  msg.RESET_PROVIDER_PREF,
++  msg.SET_PROVIDER_USER_PREF,
++  msg.RESET_GROUPS_STATE,
++  msg.RESET_MESSAGE_STATE,
++  msg.RESET_SCREEN_IMPRESSIONS,
++  msg.EDIT_STATE,
++]);
++
+ export class ASRouterParentProcessMessageHandler {
+   constructor({
+     router,
+@@ -45,6 +71,11 @@ export class ASRouterParentProcessMessageHandler {
+   }
+ 
+   handleMessage(name, data, { browser } = { browser: null }) {
++    if (CONSOLE_COMMANDS.has(name) && !ASRouterPreferences.devtoolsEnabled) {
++      return Promise.reject(
++        new Error(`Gorilla: ${name} is a messaging-console command; the console is gone (D-157-40)`)
++      );
++    }
+     switch (name) {
+       case msg.AS_ROUTER_TELEMETRY_USER_EVENT:
+         return this.handleTelemetry({

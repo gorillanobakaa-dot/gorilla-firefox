@@ -1,0 +1,17 @@
+# Gorilla 158 rebase: browser/components/migration/FirefoxProfileMigrator.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/migration/FirefoxProfileMigrator.sys.mjs b/browser/components/migration/FirefoxProfileMigrator.sys.mjs
+index 73e19b97fd8ce473e4a2fda87617be82956a77c2..1ee73dbf31554ca8d26d999d7860b8d1b65c7e73 100644
+--- a/browser/components/migration/FirefoxProfileMigrator.sys.mjs
++++ b/browser/components/migration/FirefoxProfileMigrator.sys.mjs
+@@ -43,7 +43,7 @@ export class FirefoxProfileMigrator extends MigratorBase {
+   }
+ 
+   static get brandImage() {
+-    return "chrome://branding/content/icon128.png";
++    return "chrome://global/skin/icons/folder.svg"; // GORILLA D-157-35: neutral, not a small Gorilla
+   }
+ 
+   /**

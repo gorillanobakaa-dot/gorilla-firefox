@@ -1,0 +1,18 @@
+# Gorilla 158 rebase: dom/push/PushService.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/dom/push/PushService.sys.mjs b/dom/push/PushService.sys.mjs
+index 30ee9e3247c3d10524181d76a04cda07de4aa822..07170c91e2ba9558b867fb4fa398ed3cccbbf29b 100644
+--- a/dom/push/PushService.sys.mjs
++++ b/dom/push/PushService.sys.mjs
+@@ -240,6 +240,9 @@ export var PushService = {
+   },
+ 
+   _changeStateConnectionEnabledEvent(enabled) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK (egress): the push connection to push.services.mozilla.com is never
++    // enabled, whatever dom.push.connection.enabled says. Everything below treats the service as disabled.
++    enabled = false;
+     lazy.console.debug("changeStateConnectionEnabledEvent()", enabled);
+ 
+     if (

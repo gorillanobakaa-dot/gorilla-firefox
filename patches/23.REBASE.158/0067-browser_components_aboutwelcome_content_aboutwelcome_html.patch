@@ -1,0 +1,20 @@
+# Gorilla 158 rebase: browser/components/aboutwelcome/content/aboutwelcome.html as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/aboutwelcome/content/aboutwelcome.html b/browser/components/aboutwelcome/content/aboutwelcome.html
+index 8319ebc471b78ef08b171aa6324012f68ecec3aa..536906d5c460e54521932926e7237ffd2da937d5 100644
+--- a/browser/components/aboutwelcome/content/aboutwelcome.html
++++ b/browser/components/aboutwelcome/content/aboutwelcome.html
+@@ -12,11 +12,6 @@
+       content="default-src 'none'; object-src 'none'; script-src resource: chrome:; media-src resource: chrome: https://assets.mozilla.net  https://www.mozilla.org; connect-src https:; img-src https: data: blob: chrome:; style-src resource: chrome:;"
+     />
+     <title data-l10n-id="onboarding-welcome-header"></title>
+-    <link
+-      rel="icon"
+-      type="image/png"
+-      href="chrome://branding/content/icon32.png"
+-    />
+     <link rel="stylesheet" href="chrome://global/skin/in-content/common.css" />
+     <link
+       rel="stylesheet"

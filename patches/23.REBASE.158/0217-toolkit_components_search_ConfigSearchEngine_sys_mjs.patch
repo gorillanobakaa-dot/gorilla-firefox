@@ -1,0 +1,24 @@
+# Gorilla 158 rebase: toolkit/components/search/ConfigSearchEngine.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/components/search/ConfigSearchEngine.sys.mjs b/toolkit/components/search/ConfigSearchEngine.sys.mjs
+index 558441364bef0371a0416308c4c601f2a7707941..3bedd710893e94e1fefb084e80ea461a0725b4c2 100644
+--- a/toolkit/components/search/ConfigSearchEngine.sys.mjs
++++ b/toolkit/components/search/ConfigSearchEngine.sys.mjs
+@@ -317,10 +317,11 @@ const ParamPreferenceCache = {
+     }
+     this.branch.addObserver("", this, true);
+ 
+-    this.onNimbusUpdate = this.onNimbusUpdate.bind(this);
+-    this.onNimbusUpdate();
+-    lazy.NimbusFeatures.searchConfiguration.onUpdate(this.onNimbusUpdate);
+-    lazy.NimbusFeatures.searchConfiguration.ready().then(this.onNimbusUpdate);
++    // GORILLA UNLEASHED - PHYSICAL LOCK (D-157-31, D-157-23): search URLs never take parameters from Nimbus.
++    // GORILLA TECHNIQUE T-157-31-B: upstream reads extra search parameters from the searchConfiguration
++    //   experiment feature and listens for updates, so a remote enrollment could add codes to every search URL.
++    //   Nimbus never starts in Gorilla, so this was inert; the receiver is removed so it stays impossible.
++    //   nimbusCache stays empty: only browser.search.param.* prefs (built in) can add a parameter.
+   },
+ 
+   observe(subject, topic, data) {

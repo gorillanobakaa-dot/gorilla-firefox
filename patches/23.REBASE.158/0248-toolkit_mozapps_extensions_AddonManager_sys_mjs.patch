@@ -1,0 +1,18 @@
+# Gorilla 158 rebase: toolkit/mozapps/extensions/AddonManager.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/mozapps/extensions/AddonManager.sys.mjs b/toolkit/mozapps/extensions/AddonManager.sys.mjs
+index bf580789e03e8a602976acbc13465c96d16aa1a4..3496eaed748cc09188a20e02a42e078a0c8234a4 100644
+--- a/toolkit/mozapps/extensions/AddonManager.sys.mjs
++++ b/toolkit/mozapps/extensions/AddonManager.sys.mjs
+@@ -1349,7 +1349,8 @@ var AddonManagerInternal = {
+ 
+   // Returns true if System Addons should be updated
+   systemUpdateEnabled() {
+-    if (!Services.prefs.getBoolPref(PREF_SYS_ADDON_UPDATE_ENABLED)) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK (egress): system add-on updates never run (aus5.mozilla.org).
++    if (true || !Services.prefs.getBoolPref(PREF_SYS_ADDON_UPDATE_ENABLED)) {
+       return false;
+     }
+     if (Services.policies && !Services.policies.isAllowed("SysAddonUpdate")) {

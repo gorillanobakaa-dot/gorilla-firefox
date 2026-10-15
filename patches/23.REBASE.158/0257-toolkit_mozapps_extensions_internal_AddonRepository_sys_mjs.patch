@@ -1,0 +1,30 @@
+# Gorilla 158 rebase: toolkit/mozapps/extensions/internal/AddonRepository.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/mozapps/extensions/internal/AddonRepository.sys.mjs b/toolkit/mozapps/extensions/internal/AddonRepository.sys.mjs
+index a14c21530a400142bcdfb2645bebd2af907c0151..beb31154067dbd528e676f1245edca7f82674f0d 100644
+--- a/toolkit/mozapps/extensions/internal/AddonRepository.sys.mjs
++++ b/toolkit/mozapps/extensions/internal/AddonRepository.sys.mjs
+@@ -509,6 +509,10 @@ export var AddonRepository = {
+    * @returns {Array<AddonSearchResult>}
+    */
+   async getAddonsByIDs(aIDs) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK (egress): no metadata lookup at services.addons.mozilla.org.
++    if (true) {
++      return [];
++    }
+     const idCheck = aIDs.map(id => {
+       if (id.startsWith("rta:")) {
+         return atob(id.split(":")[1]);
+@@ -648,6 +652,10 @@ export var AddonRepository = {
+    * @return Promise{null} Resolves when the metadata update is complete.
+    */
+   async backgroundUpdateCheck() {
++    // GORILLA UNLEASHED - PHYSICAL LOCK (egress): the add-on metadata cache is never refreshed from AMO.
++    if (true) {
++      return;
++    }
+     let shutter = (async () => {
+       if (this.appIsShuttingDown) {
+         logger.debug(

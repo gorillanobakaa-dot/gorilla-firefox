@@ -1,0 +1,19 @@
+# Gorilla 158 rebase: toolkit/content/jar.mn as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/content/jar.mn b/toolkit/content/jar.mn
+index 1f8fe0c94db84f3cbfb495371cb6725543bfb507..355d7620618733cd0e78304a97ee4f7300c1a405 100644
+--- a/toolkit/content/jar.mn
++++ b/toolkit/content/jar.mn
+@@ -35,9 +35,7 @@ toolkit.jar:
+    content/global/aboutwebrtc/disclosure.mjs (aboutwebrtc/disclosure.mjs)
+    content/global/aboutwebrtc/copyButton.mjs (aboutwebrtc/copyButton.mjs)
+    content/global/aboutwebrtc/aboutWebrtc.html (aboutwebrtc/aboutWebrtc.html)
+-   content/global/aboutRestricted/aboutRestricted.mjs (aboutRestricted/aboutRestricted.mjs)
+-   content/global/aboutRestricted/aboutRestricted.html (aboutRestricted/aboutRestricted.html)
+-   content/global/aboutRestricted/aboutRestricted.css (aboutRestricted/aboutRestricted.css)
++#  GORILLA D-157-40: about:restricted (parental controls) is not packaged
+    content/global/aboutSupport.js
+ *  content/global/aboutSupport.xhtml
+ #ifndef MOZ_GLEAN_ANDROID

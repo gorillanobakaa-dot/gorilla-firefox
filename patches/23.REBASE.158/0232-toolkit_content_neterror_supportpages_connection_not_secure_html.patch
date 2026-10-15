@@ -1,0 +1,21 @@
+# Gorilla 158 rebase: toolkit/content/neterror/supportpages/connection-not-secure.html as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/content/neterror/supportpages/connection-not-secure.html b/toolkit/content/neterror/supportpages/connection-not-secure.html
+index 4fbce332edcf2b5579a5900ed90bc11a95cedccd..e853a46f4d5a02c255eeeefb2761c97850aa8e00 100644
+--- a/toolkit/content/neterror/supportpages/connection-not-secure.html
++++ b/toolkit/content/neterror/supportpages/connection-not-secure.html
+@@ -15,12 +15,6 @@
+       type="text/css"
+       href="chrome://global/skin/offlineSupportPages.css"
+     />
+-    <link
+-      rel="icon"
+-      type="image/png"
+-      id="favicon"
+-      href="chrome://branding/content/icon32.png"
+-    />
+     <title>Secure connection failed and Firefox did not connect</title>
+   </head>
+   <body>

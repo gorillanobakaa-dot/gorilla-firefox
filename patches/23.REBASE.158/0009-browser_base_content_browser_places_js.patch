@@ -1,0 +1,46 @@
+# Gorilla 158 rebase: browser/base/content/browser-places.js as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/base/content/browser-places.js b/browser/base/content/browser-places.js
+index 956207d99538b19464388b60e311a309e6e3aa14..0d5219048b73a63ca4c33444e0cd58a23977b009 100644
+--- a/browser/base/content/browser-places.js
++++ b/browser/base/content/browser-places.js
+@@ -865,13 +865,12 @@ var BookmarksEventHandler = {
+       // Only record interactions through the Bookmarks Toolbar
+       if (target.closest("#PersonalToolbar")) {
+         Glean.browserEngagement.bookmarksToolbarBookmarkOpened.add(1);
+-        if (
+-          gBookmarksToolbarVisibility == "newtab" &&
+-          AIWindow.isAIWindowActive(window) &&
+-          AIWindow.isAIWindowNewTabPage(gBrowser.currentURI)
+-        ) {
+-          Glean.smartWindow.bookmarkbar.opened.add(1);
+-        }
++        // GORILLA OVERRIDE 2026-08-27: aiwindow excised, so the AIWindow global
++        // does not exist. This smartWindow telemetry branch is removed rather
++        // than guarded: it can never be true in this build, and referencing the
++        // global threw a ReferenceError that killed browser-places.js at window
++        // startup (broken urlbar/search). Same class as the tab-context-menu
++        // GenAI crash. New consumer in 155; the 154 patch never saw it.
+       }
+     } else if (eventAction) {
+       gSync.handleSyncPromoAction(eventAction, "bookmarks-top-menu");
+@@ -1554,12 +1553,11 @@ var BookmarkingUI = {
+     if (PrivateBrowsingUtils.isWindowPrivate(window)) {
+       newTabURLs.push("about:privatebrowsing");
+     }
+-    // In a Smart Window, the new tab is a chrome document rather than
+-    // about:newtab; isAIWindowNewTabPage matches it (and excludes firstrun).
+-    return (
+-      newTabURLs.some(newTabUriString =>
+-        this._newTabURI(newTabUriString)?.equalsExceptRef(uri)
+-      ) || AIWindow.isAIWindowNewTabPage(uri)
++    // GORILLA OVERRIDE 2026-08-27: dropped the `|| AIWindow.isAIWindowNewTabPage(uri)`
++    // disjunct — aiwindow is excised, so the global is undefined and referencing
++    // it threw at startup. Smart Window new-tab documents cannot exist here.
++    return newTabURLs.some(newTabUriString =>
++      this._newTabURI(newTabUriString)?.equalsExceptRef(uri)
+     );
+   },
+ 

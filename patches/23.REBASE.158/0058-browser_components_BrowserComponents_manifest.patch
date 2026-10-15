@@ -1,0 +1,26 @@
+# Gorilla 158 rebase: browser/components/BrowserComponents.manifest as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/BrowserComponents.manifest b/browser/components/BrowserComponents.manifest
+index 408c84c798e0f83c38b5c556a84351e08cfe13cc..c8e3d647946a4ad59ba02225701477c98e6f84e2 100644
+--- a/browser/components/BrowserComponents.manifest
++++ b/browser/components/BrowserComponents.manifest
+@@ -72,7 +72,7 @@ category browser-window-load moz-src:///browser/components/customkeys/CustomKeys
+ 
+ category browser-window-delayed-startup moz-src:///browser/components/contentanalysis/content/ContentAnalysis.sys.mjs ContentAnalysis.initialize
+ category browser-window-delayed-startup resource:///modules/HomePage.sys.mjs HomePage.delayedStartup
+-category browser-window-delayed-startup moz-src:///browser/components/genai/LinkPreview.sys.mjs LinkPreview.init
++# GORILLA excised: LinkPreview.init (genai removed)
+ category browser-window-delayed-startup moz-src:///browser/components/reportbrokensite/ReportBrokenSite.sys.mjs ReportBrokenSite.init
+ category browser-window-delayed-startup moz-src:///browser/components/search/SearchUIUtils.sys.mjs SearchUIUtils.init
+ category browser-window-delayed-startup moz-src:///browser/components/sharing/SharePageAction.sys.mjs SharePageAction.init
+@@ -129,7 +129,7 @@ category browser-window-location-change chrome://browser/content/browser-pageAct
+ category browser-window-location-change moz-src:///browser/components/urlbar/UrlbarProviderSearchTips.sys.mjs UrlbarProviderSearchTips.onLocationChange
+ category browser-window-location-change moz-src:///browser/components/urlbar/ActionsProviderContextualSearch.sys.mjs ActionsProviderContextualSearch.onLocationChange
+ category browser-window-location-change resource:///actors/AboutReaderParent.sys.mjs AboutReaderParent.onLocationChange
+-category browser-window-location-change resource://gre/actors/TranslationsParent.sys.mjs TranslationsParent.onLocationChange
++# GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): TranslationsParent.onLocationChange hook removed
+ category browser-window-location-change moz-src:///toolkit/components/pictureinpicture/PictureInPicture.sys.mjs PictureInPicture.onLocationChange
+ 
+ category browser-window-unload-begin chrome://browser/content/browser-customtitlebar.js CustomTitlebar.uninit

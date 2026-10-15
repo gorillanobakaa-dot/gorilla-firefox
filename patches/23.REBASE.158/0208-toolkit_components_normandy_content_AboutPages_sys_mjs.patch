@@ -1,0 +1,34 @@
+# Gorilla 158 rebase: toolkit/components/normandy/content/AboutPages.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/components/normandy/content/AboutPages.sys.mjs b/toolkit/components/normandy/content/AboutPages.sys.mjs
+index 0db9267457aecf195bdc6f4ff0be0a4255587c95..21c496173e1a03016f04bee8d8a6ab69f9cf02e6 100644
+--- a/toolkit/components/normandy/content/AboutPages.sys.mjs
++++ b/toolkit/components/normandy/content/AboutPages.sys.mjs
+@@ -43,6 +43,12 @@ ChromeUtils.defineLazyGetter(
+   () =>
+     new (class {
+       getMessagingSystemList() {
++        // GORILLA TECHNIQUE T-157-31-A (2026-10-08): Nimbus never starts (D-157-31), so its store is never ready;
++        //   there is nothing to list. Answer here instead of reading a store that never loads (about:studies
++        //   waited for all four of its values and stayed blank).
++        if (true) {
++          return [];
++        }
+         const debugEnabled = Services.prefs.getBoolPref("nimbus.debug");
+ 
+         // Do not include Firefox Labs. Those are shown on
+@@ -108,6 +114,12 @@ ChromeUtils.defineLazyGetter(
+        * content processes safely.
+        */
+       async getStudiesEnabled() {
++        // GORILLA TECHNIQUE T-157-31-A (2026-10-08): Normandy never initialises (PHYSICAL LOCK in Normandy.sys.mjs),
++        //   so RecipeRunner.initializedPromise never resolves and about:studies and about:support waited for ever.
++        //   Studies are never enabled in Gorilla: say so at once.
++        if (true) {
++          return false;
++        }
+         await lazy.RecipeRunner.initializedPromise.promise;
+         return lazy.RecipeRunner.enabled && lazy.gOptOutStudiesEnabled;
+       }

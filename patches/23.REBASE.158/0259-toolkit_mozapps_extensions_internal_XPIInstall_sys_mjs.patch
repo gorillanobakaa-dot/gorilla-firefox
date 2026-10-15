@@ -1,0 +1,23 @@
+# Gorilla 158 rebase: toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs b/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs
+index c6aae4bfde4abe48ebadb2a6041272543c454520..d30cd822767cf31526547073715cf5e028a5ce7e 100644
+--- a/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs
++++ b/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs
+@@ -4855,10 +4855,10 @@ export var XPIInstall = {
+     // protocol's installTemporaryAddon) activate an add-on through _activateAddon directly, so they bypassed the
+     // installAddon/install() refusals above. Outside automated tests this route is now refused too. The bundled
+     // uBlock Origin is installed by GorillaBuiltinExtensions and is not affected.
+-    if (!Cu.isInAutomation) {
+-      logger.error(`[GORILLA] Temporary add-on installation blocked: ${aFile.path}`);
+-      throw new Error("[GORILLA] Temporary add-ons are disabled in this build");
+-    }
++    // // GORILLA UNLEASHED - NO TEST BYPASS (2026-10-15): Cu.isInAutomation is true when MOZ_DISABLE_NONLOCAL_CONNECTIONS=1 and the pref security.turn_off_all_security_so_that_viruses_can_take_over_this_computer are set, which a user can be talked into. Tests are not built, so the lock holds unconditionally.
++    logger.error(`[GORILLA] Temporary add-on installation blocked: ${aFile.path}`);
++    throw new Error("[GORILLA] Temporary add-ons are disabled in this build");
++    // eslint-disable-next-line no-unreachable
+     let installLocation = XPIExports.XPIInternal.TemporaryInstallLocation;
+ 
+     if (XPIExports.XPIInternal.isXPI(aFile.leafName)) {

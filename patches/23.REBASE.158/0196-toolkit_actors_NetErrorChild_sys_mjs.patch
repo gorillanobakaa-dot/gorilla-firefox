@@ -1,0 +1,21 @@
+# Gorilla 158 rebase: toolkit/actors/NetErrorChild.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/actors/NetErrorChild.sys.mjs b/toolkit/actors/NetErrorChild.sys.mjs
+index 75bcbabcf36a5398b4c32f7e3345e2adde251d7b..f09f49f2cc6c62053fd0af4837d569c3699e0a7b 100644
+--- a/toolkit/actors/NetErrorChild.sys.mjs
++++ b/toolkit/actors/NetErrorChild.sys.mjs
+@@ -125,6 +125,12 @@ export class NetErrorChild extends RemotePageChild {
+   }
+ 
+   RPMCheckAlternateHostAvailable() {
++    // GORILLA D-157-40 (2026-10-08): no guessed lookups. On "server not found" the page asked the DNS resolver for a
++    // guessed name on its own (www.<word>.com for a single word, www.<name> for a name with one dot), telling the
++    // resolver a name the user never typed. The user can still type the full address.
++    if (true) {
++      return;
++    }
+     const host = this.contentWindow.location.host.trim();
+ 
+     // Adapted from UrlbarUtils::looksLikeSingleWordHost

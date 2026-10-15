@@ -1,0 +1,26 @@
+# Gorilla 158 rebase: browser/components/migration/FileMigrators.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/migration/FileMigrators.sys.mjs b/browser/components/migration/FileMigrators.sys.mjs
+index dd346e8aed2e59f539bf4d0b570effdb343bfe87..1026259e20988033e70c121435d8f1678ed117dc 100644
+--- a/browser/components/migration/FileMigrators.sys.mjs
++++ b/browser/components/migration/FileMigrators.sys.mjs
+@@ -161,7 +161,7 @@ export class PasswordFileMigrator extends FileMigratorBase {
+   }
+ 
+   static get brandImage() {
+-    return "chrome://branding/content/document.ico";
++    return "chrome://global/skin/icons/page-portrait.svg"; // GORILLA D-157-35: neutral, not a small Gorilla
+   }
+ 
+   get enabled() {
+@@ -269,7 +269,7 @@ export class BookmarksFileMigrator extends FileMigratorBase {
+   }
+ 
+   static get brandImage() {
+-    return "chrome://branding/content/document.ico";
++    return "chrome://global/skin/icons/page-portrait.svg"; // GORILLA D-157-35: neutral, not a small Gorilla
+   }
+ 
+   get enabled() {

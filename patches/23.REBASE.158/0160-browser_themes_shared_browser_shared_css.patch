@@ -1,0 +1,270 @@
+# Gorilla 158 rebase: browser/themes/shared/browser-shared.css as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/themes/shared/browser-shared.css b/browser/themes/shared/browser-shared.css
+index 01e05f4e627d4d4f3da9b92ee1613922c5cf7bb7..86e8dd622119f805bf683d9ea3641f090a67c81f 100644
+--- a/browser/themes/shared/browser-shared.css
++++ b/browser/themes/shared/browser-shared.css
+@@ -11,7 +11,6 @@
+ @import url("chrome://browser/skin/tabbrowser/ctrlTab.css");
+ @import url("chrome://browser/skin/tabbrowser/fullscreen-and-pointerlock.css");
+ @import url("chrome://browser/skin/tabbrowser/tab.tokens.css");
+-@import url("chrome://browser/skin/tabbrowser/tabs-navbar.tokens.css");
+ @import url("chrome://browser/skin/tabbrowser/tabs.css");
+ @import url("chrome://browser/skin/tabbrowser/tab-groups-list.css");
+ @import url("chrome://browser/skin/tabbrowser/tab-hover-preview.css");
+@@ -28,12 +27,17 @@
+ @import url("chrome://browser/skin/searchbar.css");
+ @import url("chrome://browser/skin/sharePanel.css");
+ @import url("chrome://browser/skin/sidebar.css");
+-@import url("chrome://browser/skin/aiWindowSidebar.css");
+-@import url("chrome://browser/skin/smartwindowGroupTabs.css");
+-@import url("chrome://browser/skin/smartwindowMonitor.css");
++/* GORILLA excised 2026-10-15 (158, D-158-08): the AI sidebar stylesheet is not imported. */
++/* GORILLA excised 2026-10-15 (158, D-158-08): the Smart Window group-tabs and monitor stylesheets are not imported. */
+ @import url("chrome://browser/skin/customizableui/customizeMode.css");
+ @import url("chrome://browser/skin/UITour.css");
+ @import url("chrome://browser/skin/formautofill-notification.css");
++/* GORILLA 2026-09-09: this line originally read
++ *     the tabs-navbar.tokens.css import on the following line
++ * and the Gorilla theme patch REPLACED it rather than adding alongside it,
++ * silently dropping an upstream stylesheet. Both are needed. */
++@import url("chrome://browser/skin/tabbrowser/tabs-navbar.tokens.css");
++@import url("chrome://browser/skin/master-redirect.css");
+ 
+ :root,
+ body {
+@@ -81,6 +85,7 @@ body {
+     /* stylelint-disable-next-line stylelint-plugin-mozilla/use-design-tokens */
+     min-height: 120px;
+ 
++    /* stylelint-disable-next-line media-query-no-invalid */
+     @media -moz-pref("sidebar.verticalTabs") {
+       /* stylelint-disable-next-line stylelint-plugin-mozilla/use-design-tokens */
+       min-width: calc(var(--window-min-width) + var(--window-min-width-increase-for-vertical-tabs));
+@@ -119,34 +124,21 @@ body {
+   /* on macOS the animation of the toolbox in fullscreen needs the toolbox to be higher */
+   --browser-area-z-index-toolbox-while-animating: 4;
+ 
+-  --lwt-additional-images: none;
+-  --lwt-background-tiling: no-repeat;
++  --lwt-additional-images: url("chrome://browser/skin/nebula.jpg");
+   --lwt-background-alignment: right top;
+-  --lwt-background-size: auto;
++  --lwt-background-tiling: repeat-x;
+ 
+-  --toolbox-background-image: none;
+-  --toolbox-background-repeat: no-repeat;
+-  --toolbox-background-position: right top;
++  --toolbox-background-image: var(--lwt-additional-images);
++  --toolbox-background-repeat: var(--lwt-background-tiling);
++  --toolbox-background-position: var(--lwt-background-alignment);
+   --toolbox-background-size: auto;
+ 
+-  @media -moz-pref("browser.nova.enabled") {
+-    --toolbox-background-image: var(--toolbox-background-gradient);
+-  }
+-
+-  &[lwtheme] {
+-    --toolbox-background-image: var(--lwt-additional-images);
+-    --toolbox-background-repeat: var(--lwt-background-tiling);
+-    --toolbox-background-position: var(--lwt-background-alignment);
+-    --toolbox-background-size: var(--lwt-background-size);
+-  }
+-
+   &[lwtheme-image] {
+     /* When a theme defines both theme_frame and additional_backgrounds, show
+        the latter atop the former. */
+     --toolbox-background-image: var(--lwt-header-image), var(--lwt-additional-images);
+     --toolbox-background-repeat: no-repeat, var(--lwt-background-tiling);
+     --toolbox-background-position: right top, var(--lwt-background-alignment);
+-    --toolbox-background-size: auto, var(--lwt-background-size);
+   }
+ 
+   /* A mini window is a small always-on-top window. */
+@@ -363,15 +355,6 @@ body {
+   }
+ }
+ 
+-:root:not([theme-image-in-toolbox]) body,
+-:root[theme-image-in-toolbox] #navigator-toolbox {
+-  background-image: var(--toolbox-background-image);
+-  background-repeat: var(--toolbox-background-repeat);
+-  background-position: var(--toolbox-background-position);
+-  /* stylelint-disable-next-line stylelint-plugin-mozilla/use-design-tokens */
+-  background-size: var(--toolbox-background-size);
+-}
+-
+ .browser-toolbar {
+   appearance: none;
+   /* Reset linux padding */
+@@ -733,8 +716,11 @@ toolbarpaletteitem > #personal-bookmarks > #PlacesToolbar,
+ #notifications-toolbar {
+   min-height: 0;
+   flex-direction: column;
++  /* stylelint-disable-next-line media-query-no-invalid */
+ 
+   @media -moz-pref("browser.nova.enabled") {
++    background-color: var(--background-color-canvas);
++
+     --info-bar-margin: 0;
+   }
+ }
+@@ -815,7 +801,7 @@ menupopup::part(drop-indicator) {
+ 
+   :root[lwtheme] & {
+     background-color: var(--lwt-accent-color); /* Known opaque */
+-    background-image: image(var(--toolbar-background-color)), var(--toolbox-background-image);
++    background-image: linear-gradient(var(--toolbar-background-color)), var(--toolbox-background-image);
+     background-repeat: no-repeat, var(--toolbox-background-repeat);
+     /* stylelint-disable-next-line stylelint-plugin-mozilla/use-design-tokens */
+     background-position:
+@@ -970,6 +956,14 @@ menupopup::part(drop-indicator) {
+   z-index: var(--browser-stack-z-index-screenshots-panel); /* Above the web content in this stack. */
+ }
+ 
++/* Override theme colors since the picker uses extra colors that
++   themes cannot set */
++#DateTimePickerPanel {
++  color-scheme: env(-moz-content-preferred-color-scheme);
++  --panel-background-color: Field;
++  --panel-text-color: FieldText;
++}
++
+ #widget-overflow .webextension-popup-browser {
+   background: white;
+ 
+@@ -989,6 +983,7 @@ menupopup::part(drop-indicator) {
+     display: none;
+   }
+ }
++  /* stylelint-disable-next-line media-query-no-invalid */
+ 
+ /* Sits above the body text and reads as its heading, so it needs the body's
+  * inline padding and no gap between the two. */
+@@ -1216,7 +1211,40 @@ popupnotificationcontent {
+   -moz-context-properties: fill;
+   /* Variables defined in browser-colors.css will be updated to use design tokens, see bug 1952566. */
+   /* stylelint-disable-next-line stylelint-plugin-mozilla/use-design-tokens */
+-  fill: var(--input-text-color);
++  fill: var(--input-color, -moz-DialogText);
++}
++
++.ac-has-end-icon {
++  text-overflow: ellipsis;
++  overflow: hidden;
++}
++
++.popup-notification-body input.ac-has-end-icon {
++  --input-padding-from-arrow-side: calc(2 * var(--space-small) + var(--icon-size)); /* spacing on either side + arrow element width */
++  padding-inline-end: var(--input-padding-from-arrow-side);
++}
++
++/* Avoid overlapping the text on the arrow icon when switching input text direction */
++.popup-notification-body:-moz-locale-dir(rtl) input.ac-has-end-icon:dir(ltr) {
++  padding-left: var(--input-padding-from-arrow-side);
++  padding-right: var(--space-small);
++}
++.popup-notification-body:-moz-locale-dir(ltr) input.ac-has-end-icon:dir(rtl) {
++  padding-right: var(--input-padding-from-arrow-side);
++  padding-left: var(--space-small);
++}
++
++.password-notification-label {
++  margin-block-start: var(--space-large);
++
++  /**
++   * There's already a margin-block-start of 8px on popupnotificationcontent,
++   * so the first label only needs 8px of margin-block-start to match the
++   * spec.
++   */
++  &:first-of-type {
++    margin-block-start: var(--space-small);
++  }
+ }
+ 
+ #tab-notification-deck {
+@@ -1294,37 +1322,9 @@ popupnotificationcontent {
+ 
+     > span:first-child {
+       margin-inline-end: var(--space-xlarge);
+-      overflow: hidden;
+-      text-overflow: ellipsis;
+-      white-space: nowrap;
+-      min-width: 0;
+-      flex: 1;
+-    }
+ 
+     > span:last-child {
+       opacity: var(--opacity-deemphasized-strong);
+-      flex-shrink: 0;
+-    }
+-  }
+-}
+-
+-@media -moz-pref("browser.nova.enabled") {
+-  .reusable-relay-masks {
+-    gap: var(--space-small);
+-
+-    > button {
+-      padding: var(--space-xsmall) var(--space-medium);
+-      margin: 0;
+-      align-items: center;
+-      min-height: var(--size-item-large);
+-      border-radius: var(--border-radius-circle);
+-      border: 1px solid var(--border-color-deemphasized);
+-      background-color: transparent;
+-
+-      &:hover {
+-        background-color: var(--button-background-color-hover);
+-        border-color: var(--border-color-selected);
+-      }
+     }
+   }
+ }
+@@ -1452,9 +1452,9 @@ popupnotificationcontent {
+ 
+ /* AI Window Toggle Button */
+ #ai-window-toggle {
+-  list-style-image: url("chrome://branding/content/about-logo.svg");
++  /* GORILLA D-157-35: no 16 px Gorilla (the AI window is cut, D-157-21) */
++  padding-inline-end: var(--space-small);
+   border-radius: var(--border-radius-medium);
+-  padding-inline-end: var(--toolbarbutton-padding-inner);
+ 
+   &:is([cui-areatype="toolbar"]):not([overflowedItem]) > .toolbarbutton-icon {
+     padding: var(--toolbarbutton-padding-inner);
+@@ -1594,7 +1594,7 @@ popupnotificationcontent {
+ }
+ 
+ #ai-window-switch-classic {
+-  list-style-image: url("chrome://branding/content/about-logo.svg");
++  /* GORILLA D-157-35: no 16 px Gorilla here (the AI window is cut, D-157-21) */
+ 
+   :root[ai-window] &::after {
+     display: none;
+@@ -1616,10 +1616,6 @@ popupnotificationcontent {
+   }
+ }
+ 
+-#appMenu-new-ai-window-button > moz-badge {
+-  margin-inline-start: auto;
+-}
+-
+ /* Smart Window Toolbar styling. */
+ :root[ai-window] #nav-bar {
+   padding-inline-end: var(--toolbar-padding-inline);
+@@ -1652,6 +1648,7 @@ popupnotificationcontent {
+     pointer-events: none;
+   }
+ 
++  /* stylelint-disable-next-line media-query-no-invalid */
+   @media -moz-pref("sidebar.verticalTabs") {
+     #sidebar-container {
+       /* stylelint-disable-next-line stylelint-plugin-mozilla/use-design-tokens -- to be addressed in 2033919 */
+@@ -1680,3 +1677,4 @@ popupnotificationcontent {
+ #bookmarksToolbarFolderMenu {
+   --menuitem-icon: url("chrome://browser/skin/places/bookmarksToolbar.svg");
+ }
++  /* stylelint-disable-next-line media-query-no-invalid */

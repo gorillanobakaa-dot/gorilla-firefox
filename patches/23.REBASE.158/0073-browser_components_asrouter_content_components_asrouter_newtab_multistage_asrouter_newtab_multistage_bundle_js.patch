@@ -1,0 +1,17 @@
+# Gorilla 158 rebase: browser/components/asrouter/content/components/asrouter-newtab-multistage/asrouter-newtab-multistage.bundle.js as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/asrouter/content/components/asrouter-newtab-multistage/asrouter-newtab-multistage.bundle.js b/browser/components/asrouter/content/components/asrouter-newtab-multistage/asrouter-newtab-multistage.bundle.js
+index c1e0d0350afeebe9ba433cb78ffcfafad8037b17..c6c08ead7e90125ec112267367b45b3448dc6270 100644
+--- a/browser/components/asrouter/content/components/asrouter-newtab-multistage/asrouter-newtab-multistage.bundle.js
++++ b/browser/components/asrouter/content/components/asrouter-newtab-multistage/asrouter-newtab-multistage.bundle.js
+@@ -4609,7 +4609,7 @@ class ProtonScreen extends (external_React_default()).PureComponent {
+   }
+   renderPicture(image) {
+     const {
+-      imageURL = "chrome://branding/content/about-logo.svg",
++    imageURL = "chrome://branding/content/about-logo.png",
+       darkModeImageURL,
+       reducedMotionImageURL,
+       darkModeReducedMotionImageURL,

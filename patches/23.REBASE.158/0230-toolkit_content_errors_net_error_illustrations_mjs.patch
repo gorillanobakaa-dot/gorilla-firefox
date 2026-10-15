@@ -1,0 +1,26 @@
+# Gorilla 158 rebase: toolkit/content/errors/net-error-illustrations.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/content/errors/net-error-illustrations.mjs b/toolkit/content/errors/net-error-illustrations.mjs
+index d785e4381ad2fdcff72818f27ae999ff0047e7bd..31e7c893c31a284fb9b1d8ab0d7c1028ab9b26bc 100644
+--- a/toolkit/content/errors/net-error-illustrations.mjs
++++ b/toolkit/content/errors/net-error-illustrations.mjs
+@@ -2,12 +2,15 @@
+  * License, v. 2.0. If a copy of the MPL was not distributed with this
+  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+ 
++// GORILLA D-157-35 (2026-10-08): the error card draws its picture inside its own shadow root, where the theme's
++// master-icon override cannot reach; name the master Gorilla here (owner: about:telemetry, blocked by policy, showed
++// Mozilla's artwork).
+ export const NET_ERROR_ILLUSTRATIONS = {
+   noConnection: {
+-    src: "chrome://global/skin/illustrations/no-connection.svg",
++    src: "chrome://branding/content/about-logo.png",
+     className: "no-connection",
+   },
+   securityError: {
+-    src: "chrome://global/skin/illustrations/security-error.svg",
++    src: "chrome://branding/content/about-logo.png",
+   },
+ };

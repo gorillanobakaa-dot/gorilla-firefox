@@ -1,0 +1,32 @@
+# Gorilla 158 rebase: browser/themes/addons/jar.mn as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/themes/addons/jar.mn b/browser/themes/addons/jar.mn
+index fc83c11fdfaaa53eb68fd3e3d3700b90c5ed8406..48f48a1e67a352c70b78eb336f99abf6756e3f26 100644
+--- a/browser/themes/addons/jar.mn
++++ b/browser/themes/addons/jar.mn
+@@ -5,21 +5,9 @@
+ browser.jar:
+ %  resource builtin-themes %content/builtin-themes/
+ 
+-  content/builtin-themes/alpenglow                 (alpenglow/*.svg)
+-  content/builtin-themes/alpenglow/manifest.json   (alpenglow/manifest.json)
++# GORILLA UNLEASHED - PHYSICAL LOCK: one theme
++# Decision D-157-04: the alpenglow, dark and light built-in themes are not packaged.
+ 
+-  content/builtin-themes/dark/preview.svg          (dark/preview.svg)
+-  content/builtin-themes/dark/icon.svg             (dark/icon.svg)
+-  content/builtin-themes/dark/manifest.json        (dark/manifest.json)
+ 
+-  content/builtin-themes/light/preview.svg         (light/preview.svg)
+-  content/builtin-themes/light/icon.svg            (light/icon.svg)
+-  content/builtin-themes/light/manifest.json       (light/manifest.json)
+-
+-  content/builtin-themes/aiwindow/manifest.json        (aiwindow/manifest.json)
+-  content/builtin-themes/aiwindow/aiwindow-theme.css   (aiwindow/aiwindow-theme.css)
+-
+-  content/builtin-themes/aiwindow-nova/manifest.json   (aiwindow-nova/manifest.json)
+-  content/builtin-themes/aiwindow-nova/aiwindow-theme-nova.css  (aiwindow-nova/aiwindow-theme-nova.css)
+ 
+   content/builtin-themes/privatewindow/manifest.json            (privatewindow/manifest.json)

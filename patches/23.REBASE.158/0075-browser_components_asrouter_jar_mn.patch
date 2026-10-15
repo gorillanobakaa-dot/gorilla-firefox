@@ -1,0 +1,19 @@
+# Gorilla 158 rebase: browser/components/asrouter/jar.mn as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/asrouter/jar.mn b/browser/components/asrouter/jar.mn
+index ea04f17e4f59a5379a817bd3cc493faa9477e9e5..2500c34ec738798e7aade7d16fa12032d27a46a2 100644
+--- a/browser/components/asrouter/jar.mn
++++ b/browser/components/asrouter/jar.mn
+@@ -5,9 +5,7 @@
+ browser.jar:
+ % resource activity-stream %res/activity-stream/ contentaccessible=yes
+ % content activity-stream %content/activity-stream/ contentaccessible=yes
+-  content/browser/asrouter/asrouter-admin.html                           (content/asrouter-admin.html)
+-  content/browser/asrouter/asrouter-admin.bundle.js                      (content/asrouter-admin.bundle.js)
+-  content/browser/asrouter/components/ASRouterAdmin/ASRouterAdmin.css    (content/components/ASRouterAdmin/ASRouterAdmin.css)
++# GORILLA D-157-40: the messaging console (about:asrouter) is not packaged: asrouter-admin.html, its bundle and CSS
+   content/browser/asrouter/components/menu-message.mjs                   (content/components/menu-message/menu-message.mjs)
+   content/browser/asrouter/components/menu-message.css                   (content/components/menu-message/menu-message.css)
+   content/browser/asrouter/components/remote-text.js                     (content/components/remote-text.js)

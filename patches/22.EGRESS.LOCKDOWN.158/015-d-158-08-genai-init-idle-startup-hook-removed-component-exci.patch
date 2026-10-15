@@ -1,0 +1,18 @@
+# Gorilla 158 privacy cut
+# D-158-08: GenAI.init idle-startup hook removed (component excised; it logged a missing URL on every start)
+# Files: browser/components/BrowserComponents.manifest
+
+diff --git a/browser/components/BrowserComponents.manifest b/browser/components/BrowserComponents.manifest
+index cb6423eb0f..c8e3d64794 100644
+--- a/browser/components/BrowserComponents.manifest
++++ b/browser/components/BrowserComponents.manifest
+@@ -203,7 +203,8 @@ category browser-idle-startup resource://gre/modules/RFPHelper.sys.mjs RFPHelper
+ category browser-idle-startup resource://gre/modules/Blocklist.sys.mjs Blocklist.loadBlocklistAsync
+ category browser-idle-startup resource://gre/modules/psm/RemoteSecuritySettings.sys.mjs RemoteSecuritySettings.init
+ category browser-idle-startup moz-src:///browser/components/tabbrowser/TabUnloader.sys.mjs TabUnloader.init
+-category browser-idle-startup moz-src:///browser/components/genai/GenAI.sys.mjs GenAI.init
++# GORILLA excised (D-158-08, 2026-10-15): GenAI.init at idle startup; the genai component is not built, so the hook
++# only logged "Missing chrome or resource URL" on every start (post-install startup row, first run on Linux)
+ category browser-idle-startup moz-src:///browser/components/urlbar/QuickSuggest.sys.mjs QuickSuggest.init
+ category browser-idle-startup moz-src:///browser/components/urlbar/UrlbarSearchTermsPersistence.sys.mjs UrlbarSearchTermsPersistence.init
+ category browser-idle-startup moz-src:///browser/components/search/SERPCategorization.sys.mjs SERPCategorization.init

@@ -1,0 +1,22 @@
+# Gorilla 158 rebase: toolkit/mozapps/extensions/content/components/addon-page-header.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/mozapps/extensions/content/components/addon-page-header.mjs b/toolkit/mozapps/extensions/content/components/addon-page-header.mjs
+index 9e5f95b6c5730395b7e6328f36665d342a456185..2005cf6a96994cbbe907467d77189a645cfc56fe 100644
+--- a/toolkit/mozapps/extensions/content/components/addon-page-header.mjs
++++ b/toolkit/mozapps/extensions/content/components/addon-page-header.mjs
+@@ -10,12 +10,7 @@ class AddonPageHeader extends AboutAddonsHTMLElement {
+       <template>
+         <div class="sticky-container">
+           <div class="main-search">
+-            <label
+-              for="search-addons"
+-              class="search-label"
+-              data-l10n-id="default-heading-search-label"
+-            ></label>
+-            <search-addons></search-addons>
++            <!-- GORILLA UNLEASHED - NO ADD-ON OFFERS (D-157-05): no "Search addons.mozilla.org" box -->
+           </div>
+           <div class="main-heading">
+             <moz-button

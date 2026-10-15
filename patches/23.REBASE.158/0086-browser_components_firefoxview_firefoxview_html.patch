@@ -1,0 +1,42 @@
+# Gorilla 158 rebase: browser/components/firefoxview/firefoxview.html as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/firefoxview/firefoxview.html b/browser/components/firefoxview/firefoxview.html
+index a3ce067dd85f910a712b542f013af5de44033a67..ab63af5acd61d77e8065a6912cd4819c2999bf33 100644
+--- a/browser/components/firefoxview/firefoxview.html
++++ b/browser/components/firefoxview/firefoxview.html
+@@ -18,7 +18,7 @@
+     <link rel="localization" href="toolkit/global/textActions.ftl" />
+     <link rel="localization" href="toolkit/branding/brandings.ftl" />
+     <link rel="localization" href="browser/migrationWizard.ftl" />
+-    <link rel="localization" href="browser/aiWindow.ftl" />
++    <!-- GORILLA excised 2026-10-15 (158, D-158-08): AI window texts (aiWindow) not linked -->
+     <link
+       rel="stylesheet"
+       href="chrome://browser/content/firefoxview/firefoxview.css"
+@@ -59,14 +59,7 @@
+         iconSrc="chrome://browser/skin/history.svg"
+       >
+       </moz-page-nav-button>
+-      <moz-page-nav-button
+-        view="chats"
+-        id="firefoxview-chats-nav"
+-        data-l10n-id="firefoxview-chats-nav"
+-        iconSrc="chrome://browser/content/firefoxview/view-chats.svg"
+-        hidden
+-      >
+-      </moz-page-nav-button>
++      <!-- GORILLA excised 2026-10-15 (158, D-158-08): no "Chats" (AI chat history) page button. -->
+     </moz-page-nav>
+     <main id="pages" role="application" data-l10n-id="firefoxview-page-label">
+       <div class="main-container">
+@@ -96,7 +89,7 @@
+             name="syncedtabs"
+             type="page"
+           ></view-syncedtabs>
+-          <view-chats name="chats" type="page" hidden></view-chats>
++          <!-- GORILLA excised 2026-10-15 (158, D-158-08): no view-chats page. -->
+         </named-deck>
+       </div>
+     </main>

@@ -1,0 +1,140 @@
+# Gorilla 158 rebase: toolkit/locales/en-US/toolkit/global/extensions.ftl as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/locales/en-US/toolkit/global/extensions.ftl b/toolkit/locales/en-US/toolkit/global/extensions.ftl
+index 4ed920c971cbebd887f7f08023386376a8ff303f..ab45255779d4d3c26d5960f89d35d6aac7d1304a 100644
+--- a/toolkit/locales/en-US/toolkit/global/extensions.ftl
++++ b/toolkit/locales/en-US/toolkit/global/extensions.ftl
+@@ -1,23 +1,20 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-
+ ## Headers used in the webextension permissions dialog,
+ ## See https://bug1308309.bmoattachments.org/attachment.cgi?id=8814612
+ ## for an example of the full dialog.
+ ## Note: This string will be used as raw markup. Avoid characters like <, >, &
+ ## Variables:
+ ##   $extension (String): replaced with the localized name of the extension.
+-
+ webext-perms-header2 = Add { $extension }
+-webext-perms-list-intro-unsigned = This unverified extension might put your privacy at risk or compromise your device. Only add it if you trust the source.
++webext-perms-list-intro-unsigned = This unverified Gorilla extension might put your privacy at risk or compromise your device. Only add it if you trust the source.
+ webext-perms-sideload-header = { $extension } added
+ webext-perms-optional-perms-header2 = { $extension } requests additional permissions
+ 
+ ## Headers used in the webextension permissions dialog, inside the content.
+-
+ webext-perms-header-required-perms = Required permissions:
+-webext-perms-header-optional-settings = Optional settings:
++webext-perms-header-optional-settings = Optional Gorilla settings:
+ 
+ webext-perms-header-update-required-perms = New required permissions:
+ 
+@@ -35,7 +32,6 @@ webext-perms-header-update-data-collection-perms = New required data collection:
+ webext-perms-header-optional-data-collection-perms = New data collection:
+ 
+ ##
+-
+ webext-perms-add =
+     .label = Add
+     .accesskey = A
+@@ -43,8 +39,8 @@ webext-perms-cancel =
+     .label = Cancel
+     .accesskey = C
+ 
+-webext-perms-sideload-text = Another program on your computer installed an add-on that may affect your browser. Please review this add-on’s permissions requests and choose to Enable or Cancel (to leave it disabled).
+-webext-perms-sideload-text-no-perms = Another program on your computer installed an add-on that may affect your browser. Please choose to Enable or Cancel (to leave it disabled).
++webext-perms-sideload-text = Another program on your computer installed an add-on that may affect your Gorilla browser. Please review this add-on’s permissions requests and choose to Enable or Cancel (to leave it disabled).
++webext-perms-sideload-text-no-perms = Another program on your computer installed an add-on that may affect your Gorilla browser. Please choose to Enable or Cancel (to leave it disabled).
+ webext-perms-sideload-enable =
+     .label = Enable
+     .accesskey = E
+@@ -54,7 +50,7 @@ webext-perms-sideload-cancel =
+ 
+ # Variables:
+ #   $extension (String): replaced with the localized name of the extension.
+-webext-perms-update-text2 = { $extension } has been updated. You must approve new permissions before the updated version will install. Choosing “Cancel” will maintain your current extension version.
++webext-perms-update-text2 = { $extension } has been updated. You must approve new permissions before the updated version will install. Choosing “Cancel” will maintain your current Gorilla extension version.
+ webext-perms-update-accept =
+     .label = Update
+     .accesskey = U
+@@ -69,7 +65,7 @@ webext-perms-optional-perms-deny =
+ 
+ webext-perms-host-description-all-urls = Access your data for all websites
+ 
+-webext-perms-host-description-file-urls = Access local files on your computer
++webext-perms-host-description-file-urls = Access local Gorilla files on your computer
+ 
+ # Variables:
+ #   $domain (String): will be replaced by the DNS domain for which a webextension is requesting access (e.g., mozilla.org)
+@@ -92,34 +88,33 @@ webext-perms-host-description-one-domain = Access your data for sites in { $doma
+ #     (the list of domains will follow this string).
+ webext-perms-host-description-multiple-domains =
+     { $domainCount ->
+-       *[other] Access your data for sites in { $domainCount } domains
++    *[other] Access your data for sites in { $domainCount } domains
+     }
+ 
+ ## Strings for data collection permissions in the permission prompt.
+-
+-webext-perms-description-data-none = The developer says this extension doesn’t require data collection.
++webext-perms-description-data-none = The developer says this Gorilla extension doesn’t require data collection.
+ 
+ # Variables:
+ #    $permissions (String): a list of data collection permissions formatted with `Intl.ListFormat` using the "narrow" style.
+-webext-perms-description-data-some = The developer says this extension collects: { $permissions }
++webext-perms-description-data-some = The developer says this Gorilla extension collects: { $permissions }
+ 
+ # Variables:
+ #    $permissions (String): a list of data collection permissions formatted with `Intl.ListFormat` using the "narrow" style.
+-webext-perms-description-data-some-update = The developer says the extension will collect: { $permissions }
++webext-perms-description-data-some-update = The developer says the Gorilla extension will collect: { $permissions }
+ 
+ # Variables:
+ #    $permissions (String): a list of data collection permissions formatted with `Intl.ListFormat` using the "narrow" style.
+-webext-perms-description-data-some-optional = The developer says the extension wants to collect: { $permissions }
++webext-perms-description-data-some-optional = The developer says the Gorilla extension wants to collect: { $permissions }
+ 
+ # Variables:
+ #   $extension (String): replaced with the localized name of the extension.
+-webext-perms-update-text-with-data-collection = { $extension } requires new settings to update
++webext-perms-update-text-with-data-collection = { $extension } requires new Gorilla settings to update
+ 
+-webext-perms-update-list-intro-with-data-collection = Cancel to keep your current version and settings, or update to get the new version and approve the changes.
++webext-perms-update-list-intro-with-data-collection = Cancel to keep your current version and Gorilla settings, or update to get the new version and approve the changes.
+ 
+ # Variables:
+ #   $extension (String): replaced with the localized name of the extension.
+-webext-perms-optional-text-with-data-collection = { $extension } requests additional settings
++webext-perms-optional-text-with-data-collection = { $extension } requests additional Gorilla settings
+ 
+ # Variables:
+ #   $extension (String): replaced with the localized name of the extension.
+@@ -131,23 +126,19 @@ webext-perms-optional-text-with-data-collection-only = { $extension } requests a
+ ## Note, this string will be used as raw markup. Avoid characters like <, >, &
+ ## Variables:
+ ##   $hostname (String): the hostname of the site the add-on is being installed from.
+-
+ webext-site-perms-header-with-gated-perms-midi = This add-on gives { $hostname } access to your MIDI devices.
+ webext-site-perms-header-with-gated-perms-midi-sysex = This add-on gives { $hostname } access to your MIDI devices (with SysEx support).
+ webext-site-perms-header-with-gated-perms-serial = This add-on gives { $hostname } access to your serial devices.
+ 
+ ##
+-
+ # This string is used as description in the webextension permissions dialog for synthetic add-ons.
+ # Note, the empty line is used to create a line break between the two sections.
+ # Note, this string will be used as raw markup. Avoid characters like <, >, &
+-webext-site-perms-description-gated-perms-midi =
+-    These are usually plug-in devices like audio synthesizers, but might also be built into your computer.
++webext-site-perms-description-gated-perms-midi = These are usually plug-in devices like audio synthesizers, but might also be built into your computer.
+ 
+     Websites are normally not allowed to access MIDI devices. Improper usage could cause damage or compromise security.
+ 
+-webext-site-perms-description-gated-perms-webserial =
+-    These are devices like microcontrollers, 3D printers, and other devices that connect via USB, serial ports, or Bluetooth.
++webext-site-perms-description-gated-perms-webserial = These are devices like microcontrollers, 3D printers, and other devices that connect via USB, serial ports, or Bluetooth.
+ 
+     You will be able to choose which devices the website can access.
+ 

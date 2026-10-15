@@ -1,0 +1,137 @@
+# Gorilla 158 rebase: toolkit/components/translations/actors/stub/TranslationsParent.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/components/translations/actors/stub/TranslationsParent.sys.mjs b/toolkit/components/translations/actors/stub/TranslationsParent.sys.mjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..0ca0616249c7ca5252a6408d8d55820f3cf49d26
+--- /dev/null
++++ b/toolkit/components/translations/actors/stub/TranslationsParent.sys.mjs
+@@ -0,0 +1,127 @@
++/* This Source Code Form is subject to the terms of the Mozilla Public
++ * License, v. 2.0. If a copy of the MPL was not distributed with this
++ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
++
++/**
++ * GORILLA UNLEASHED - PHYSICAL LOCK: no translations
++ *
++ * Decision D-157-03 (English only - no language packs, no translations). Gorilla does not ship Firefox
++ * Translations: no Bergamot engine, no language models, no about:translations, no Translations actors.
++ * This file is installed as resource://gre/actors/TranslationsParent.sys.mjs in place of the real actor
++ * (see ../moz.build) so that code which still imports it (Settings, the address bar quick actions, the
++ * excised ML modules) gets a plain answer: Translations are disabled, there are no languages, nothing
++ * can be downloaded. It never touches the network, Remote Settings or the disk.
++ *
++ * The language detector (resource://gre/modules/translations/LanguageDetector.sys.mjs) is separate and stays.
++ */
++
++const PIVOT_LANGUAGE = "en";
++const ALWAYS_TRANSLATE_LANGS_PREF =
++  "browser.translations.alwaysTranslateLanguages";
++const NEVER_TRANSLATE_LANGS_PREF =
++  "browser.translations.neverTranslateLanguages";
++
++const REMOVED = "GORILLA: Translations are not part of this build";
++
++/** The AIFeature answer: never enabled, never allowed. */
++const DisabledTranslationsFeature = Object.freeze({
++  id: "translations",
++  isEnabled: false,
++  isAllowed: false,
++  isBlocked: true,
++  async enable() {},
++  async block() {},
++  async makeAvailable() {},
++});
++
++export class TranslationsParent {
++  static PIVOT_LANGUAGE = PIVOT_LANGUAGE;
++  static ALWAYS_TRANSLATE_LANGS_PREF = ALWAYS_TRANSLATE_LANGS_PREF;
++  static NEVER_TRANSLATE_LANGS_PREF = NEVER_TRANSLATE_LANGS_PREF;
++
++  static get AIFeature() {
++    return DisabledTranslationsFeature;
++  }
++
++  // State checks: never supported, every page restricted.
++  static getIsTranslationsEngineSupported() {
++    return false;
++  }
++  static isFullPageTranslationsRestrictedForPage() {
++    return true;
++  }
++  static shouldAlwaysTranslateLanguage() {
++    return false;
++  }
++  static shouldNeverTranslateLanguage() {
++    return false;
++  }
++
++  // Window and pref hooks: nothing to observe.
++  static ensurePrefObservers() {}
++  static onLocationChange() {}
++  static onIsEnabledChanged() {}
++
++  // Languages: none.
++  static async getSupportedLanguages() {
++    return { sourceLanguages: [], targetLanguages: [], languagePairs: [] };
++  }
++  static getLanguageList() {
++    return [];
++  }
++  static getPreferredLanguages() {
++    return [];
++  }
++  static createLanguageDisplayNames({
++    fallback = "code",
++    languageDisplay = "standard",
++  } = {}) {
++    return new Services.intl.DisplayNames(Services.locale.appLocaleAsBCP47, {
++      type: "language",
++      languageDisplay,
++      fallback,
++    });
++  }
++
++  // Lists and settings: empty, writes are ignored.
++  static getAlwaysTranslateLanguages() {
++    return [];
++  }
++  static getNeverTranslateLanguages() {
++    return [];
++  }
++  static listNeverTranslateSites() {
++    return [];
++  }
++  static addLangTagToPref() {}
++  static removeLangTagFromPref() {}
++  static setNeverTranslateSiteByOrigin() {}
++
++  // Models and files: there are none, and none can be fetched.
++  static async getMaxSupportedVersionRecords() {
++    return [];
++  }
++  static async getRecordsForTranslatingToAndFromAppLanguage() {
++    return [];
++  }
++  static async hasAllFilesForLanguage() {
++    return false;
++  }
++  static async getLanguageSize() {
++    return 0;
++  }
++  static async getExpectedTranslationDownloadSize() {
++    return 0;
++  }
++  static async downloadLanguageFiles() {
++    throw new Error(REMOVED);
++  }
++  static async downloadAllFiles() {
++    throw new Error(REMOVED);
++  }
++  static async deleteLanguageFiles() {}
++  static async deleteCachedLanguageFiles() {}
++
++  // about:translations does not exist in this build.
++  static async openAboutTranslationsPage() {}
++}

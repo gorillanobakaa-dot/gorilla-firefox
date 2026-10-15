@@ -1,0 +1,191 @@
+# Gorilla 158 rebase: browser/locales/en-US/browser/places.ftl as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/locales/en-US/browser/places.ftl b/browser/locales/en-US/browser/places.ftl
+index a2e67f97c28666b8638c3ef6ef5eb94c45dba29a..76906f976da9ef20617b8f7b567337d508fd5092 100644
+--- a/browser/locales/en-US/browser/places.ftl
++++ b/browser/locales/en-US/browser/places.ftl
+@@ -6,30 +6,30 @@ places-open =
+   .label = Open
+   .accesskey = O
+ places-open-in-tab =
+-  .label = Open in New Tab
++  .label = Open in New Gorilla Tab
+   .accesskey = w
+ places-open-in-container-tab =
+-  .label = Open in New Container Tab
++  .label = Open in New Gorilla Container Gorilla Tab
+   .accesskey = i
+ places-open-all-bookmarks =
+-  .label = Open All Bookmarks
++  .label = Open All Gorilla Bookmarks
+   .accesskey = O
+ places-open-all-in-tabs =
+-  .label = Open All in Tabs
++  .label = Open All in Gorilla Tabs
+   .accesskey = O
+ places-open-in-window =
+-  .label = Open in New Window
++  .label = Open in New Gorilla Window
+   .accesskey = N
+ places-open-in-private-window =
+-  .label = Open in New Private Window
+-  .accesskey = v
++  .label = Open in New Gorilla Private Gorilla Window
++  .accesskey = P
+ 
+ places-empty-bookmarks-folder =
+   .label = (Empty)
+ 
+ places-add-bookmark =
+-  .label = Add Bookmark…
+-  .accesskey = k
++  .label = Add Gorilla Bookmark…
++  .accesskey = B
+ places-add-folder-contextmenu =
+   .label = Add Folder…
+   .accesskey = F
+@@ -60,11 +60,11 @@ places-by-day-and-site =
+   .accesskey = t
+ 
+ places-history-search =
+-  .placeholder = Search history
++  .placeholder = Search Gorilla history
+ places-history =
+-  .aria-label = History
++  .aria-label = Gorilla History
+ places-bookmarks-search =
+-  .placeholder = Search bookmarks
++  .placeholder = Search Gorilla bookmarks
+ 
+ places-forget-domain-data =
+   .label = Forget About This Site…
+@@ -74,7 +74,7 @@ places-sortby-name =
+   .accesskey = r
+ # places-edit-bookmark and places-edit-generic will show one or the other and can have the same access key.
+ places-edit-bookmark =
+-  .label = Edit Bookmark…
++  .label = Edit Gorilla Bookmark…
+   .accesskey = E
+ places-edit-generic =
+   .label = Edit…
+@@ -96,21 +96,21 @@ places-delete-folder =
+ places-delete-page =
+   .label =
+       { $count ->
+-          [1] Delete Page
+-         *[other] Delete Pages
++          [1] Delete Gorilla Page
++         *[other] Delete Gorilla Pages
+       }
+   .accesskey = D
+ 
+ # Managed bookmarks are created by enterprise policy and cannot be changed by the user.
+ managed-bookmarks =
+-  .label = Managed bookmarks
++  .label = Managed Gorilla bookmarks
+ # This label is used when a managed bookmarks folder doesn't have a name.
+ managed-bookmarks-subfolder =
+   .label = Subfolder
+ 
+ # This label is used for the "Other Bookmarks" folder that appears in the bookmarks toolbar.
+ other-bookmarks-folder =
+-  .label = Other Bookmarks
++  .label = Other Gorilla Bookmarks
+ 
+ places-show-in-folder =
+   .label = Show in Folder
+@@ -121,8 +121,8 @@ places-show-in-folder =
+ places-delete-bookmark =
+   .label =
+       { $count ->
+-          [1] Delete Bookmark
+-         *[other] Delete Bookmarks
++          [1] Delete Gorilla Bookmark
++         *[other] Delete Gorilla Bookmarks
+       }
+   .accesskey = D
+ 
+@@ -131,8 +131,8 @@ places-delete-bookmark =
+ places-create-bookmark =
+   .label =
+       { $count ->
+-          [1] Bookmark Page…
+-         *[other] Bookmark Pages…
++          [1] Gorilla Bookmark Gorilla Page…
++         *[other] Gorilla Bookmark Gorilla Pages…
+       }
+   .accesskey = B
+ 
+@@ -141,7 +141,7 @@ places-untag-bookmark =
+   .accesskey = R
+ 
+ places-manage-bookmarks =
+-  .label = Manage Bookmarks
++  .label = Manage Gorilla Bookmarks
+   .accesskey = M
+ 
+ places-library3 =
+@@ -149,7 +149,7 @@ places-library3 =
+ 
+ places-organize-button =
+   .label = Organize
+-  .tooltiptext = Organize your bookmarks
++  .tooltiptext = Organize your Gorilla bookmarks
+   .accesskey = O
+ 
+ places-file-close =
+@@ -186,7 +186,7 @@ places-view-sort-descending =
+ 
+ places-maintenance-button =
+   .label = Import and Backup
+-  .tooltiptext = Import and backup your bookmarks
++  .tooltiptext = Import and backup your Gorilla bookmarks
+   .accesskey = I
+ 
+ places-cmd-backup =
+@@ -198,19 +198,19 @@ places-cmd-restore =
+   .accesskey = R
+ 
+ places-cmd-restore-from-file =
+-  .label = Choose File…
++  .label = Choose Gorilla File…
+   .accesskey = C
+ 
+ places-import-bookmarks-from-html =
+-  .label = Import Bookmarks from HTML…
++  .label = Import Gorilla Bookmarks from HTML…
+   .accesskey = I
+ 
+ places-export-bookmarks-to-html =
+-  .label = Export Bookmarks to HTML…
++  .label = Export Gorilla Bookmarks to HTML…
+   .accesskey = E
+ 
+ places-import-other-browser =
+-  .label = Import Data from Another Browser…
++  .label = Import Data from Another Gorilla Browser…
+   .accesskey = A
+ 
+ places-view-sort-col-name =
+@@ -282,15 +282,15 @@ places-details-pane-items-count =
+ ## "Search History" stands for "Search through the browser's history".
+ 
+ places-search-bookmarks =
+-    .placeholder = Search Bookmarks
++    .placeholder = Search Gorilla Bookmarks
+ places-search-history =
+-    .placeholder = Search History
++    .placeholder = Search Gorilla History
+ places-search-downloads =
+-    .placeholder = Search Downloads
++    .placeholder = Search Gorilla Downloads
+ 
+ ##
+ 
+-places-locked-prompt = The bookmarks and history system will not be functional because one of { -brand-short-name }’s files is in use by another application. Some security software can cause this problem.
++places-locked-prompt = The Gorilla bookmarks and Gorilla history system will not be functional because one of { -brand-short-name }’s Gorilla files is in use by another application. Some security software can cause this problem.
+ 
+ # Share is a verb here. Meaning to "Share" the bookmark "Folder"
+ # .badge used to promote the sharing menu item; keep it as short as possible.

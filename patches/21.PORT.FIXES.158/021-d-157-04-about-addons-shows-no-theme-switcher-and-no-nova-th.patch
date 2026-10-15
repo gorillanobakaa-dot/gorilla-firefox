@@ -1,0 +1,54 @@
+# Gorilla 158 port fix
+# D-157-04: about:addons shows no theme switcher and no Nova theme list (158 new components not inserted, not loaded)
+# Files: toolkit/mozapps/extensions/content/aboutaddons.html, toolkit/mozapps/extensions/content/components/addon-list.mjs, toolkit/mozapps/extensions/content/components/addon-page-header.mjs
+
+diff --git a/toolkit/mozapps/extensions/content/aboutaddons.html b/toolkit/mozapps/extensions/content/aboutaddons.html
+index 8635189251..a747744f00 100644
+--- a/toolkit/mozapps/extensions/content/aboutaddons.html
++++ b/toolkit/mozapps/extensions/content/aboutaddons.html
+@@ -66,14 +66,8 @@
+     ></script>
+ 
+     <!-- about:addons Domain-specific Components -->
+-    <script
+-      type="module"
+-      src="chrome://mozapps/content/extensions/components/aboutaddons-themes-mode.mjs"
+-    ></script>
+-    <script
+-      type="module"
+-      src="chrome://mozapps/content/extensions/components/aboutaddons-themes-picker.mjs"
+-    ></script>
++    <!-- GORILLA D-157-04 (2026-10-15): aboutaddons-themes-mode.mjs and aboutaddons-themes-picker.mjs are not loaded
++         (the theme switcher and the Nova list that installs themes from Mozilla's add-ons site) -->
+     <script
+       type="module"
+       src="chrome://mozapps/content/extensions/components/addon-card.mjs"
+diff --git a/toolkit/mozapps/extensions/content/components/addon-list.mjs b/toolkit/mozapps/extensions/content/components/addon-list.mjs
+index 60d716e445..d598aec837 100644
+--- a/toolkit/mozapps/extensions/content/components/addon-list.mjs
++++ b/toolkit/mozapps/extensions/content/components/addon-list.mjs
+@@ -526,9 +526,8 @@ export class AddonList extends HTMLElement {
+     for (let i = 0; i < sectionedAddons.length; i++) {
+       this.sections[i].node = this.renderSection(sectionedAddons[i], i);
+       frag.appendChild(this.sections[i].node);
+-      if (this.type == "theme" && i == 0) {
+-        frag.appendChild(document.createElement("aboutaddons-themes-picker"));
+-      }
++      // GORILLA D-157-04 (2026-10-15): 158's Nova theme list (Sun, Spark, Flame, Flare, Lavender, each with an Install
++      // button that downloads it from Mozilla's add-ons site) is not shown: one theme only, and no download door.
+     }
+ 
+     // Add the "empty list message" elements (but omit it in the list view
+diff --git a/toolkit/mozapps/extensions/content/components/addon-page-header.mjs b/toolkit/mozapps/extensions/content/components/addon-page-header.mjs
+index 311dc1bd84..9e5f95b6c5 100644
+--- a/toolkit/mozapps/extensions/content/components/addon-page-header.mjs
++++ b/toolkit/mozapps/extensions/content/components/addon-page-header.mjs
+@@ -42,7 +42,7 @@ class AddonPageHeader extends AboutAddonsHTMLElement {
+               ></moz-button>
+             </div>
+           </div>
+-          <aboutaddons-themes-mode></aboutaddons-themes-mode>
++          <!-- GORILLA D-157-04 (2026-10-15): no Light/Dark/Device switcher; one theme only -->
+         </div>
+         <global-warnings></global-warnings>
+       </template>

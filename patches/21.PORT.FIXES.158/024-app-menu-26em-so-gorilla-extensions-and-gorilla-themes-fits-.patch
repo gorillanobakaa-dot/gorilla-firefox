@@ -1,0 +1,22 @@
+# Gorilla 158 port fix
+# App menu 26em so 'Gorilla Extensions and Gorilla Themes' fits (was cut at 22.35em)
+# Files: browser/themes/shared/master-redirect.css
+
+diff --git a/browser/themes/shared/master-redirect.css b/browser/themes/shared/master-redirect.css
+index 8e20304ad8..9d5b391d98 100644
+--- a/browser/themes/shared/master-redirect.css
++++ b/browser/themes/shared/master-redirect.css
+@@ -45,6 +45,13 @@
+   --gorilla-master-icon: url("chrome://branding/content/about-logo.png");
+ }
+ 
++/* GORILLA 2026-10-15: the app menu is wide enough for its Gorilla labels. "Gorilla Extensions and Gorilla Themes"
++   with Ctrl+Shift+A did not fit Mozilla's 22.35em and was cut ("...Gorilla Them...", owner's screenshot 18:30).
++   26em fits it with room for the shortcut; static, no effect on drawing cost. Proven by the ui clip check. */
++:root {
++  --menu-panel-width: 26em !important;
++}
++
+ /* Override standard illustration classes and elements. GORILLA D-157-35: not the 16-42 px icon classes
+    (.info-icon, .error-icon, .category-icon): the artwork is lost at that size and only costs decoding. */
+ .illustration, .panel-illustration, moz-promo img, #extensions-empty-illustration {

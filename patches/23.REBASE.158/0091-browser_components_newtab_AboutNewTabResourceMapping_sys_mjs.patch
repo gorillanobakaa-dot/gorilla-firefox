@@ -1,0 +1,22 @@
+# Gorilla 158 rebase: browser/components/newtab/AboutNewTabResourceMapping.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/newtab/AboutNewTabResourceMapping.sys.mjs b/browser/components/newtab/AboutNewTabResourceMapping.sys.mjs
+index 119fa960edc0e50537a361f8db0ac61d23a63c3c..de68c4a145b41153273c5391b9a4acc3a28bb854 100644
+--- a/browser/components/newtab/AboutNewTabResourceMapping.sys.mjs
++++ b/browser/components/newtab/AboutNewTabResourceMapping.sys.mjs
+@@ -778,6 +778,13 @@ export var AboutNewTabResourceMapping = {
+   async updateTrainhopAddonState(forceRestartlessInstall = false) {
+     // GORILLA UNLEASHED - PHYSICAL LOCK (D-157-31): no train-hop. Mozilla's newtab XPI is never
+     // downloaded or installed: the page is the one built into this binary.
++    // GORILLA TECHNIQUE T-157-31-B "no remotely delivered code or configuration": train-hop lets a Nimbus
++    //   enrollment name an XPI (xpi_download_path) that is fetched from browser.newtabpage.trainhopAddon.xpiBaseURL
++    //   (upstream: https://archive.mozilla.org/pub/system-addons/newtab/) and installed over the built-in new tab.
++    //   All three entry points return at once: updateTrainhopAddonState, _installTrainhopAddon and
++    //   firstStartupNewProfile; the base URL pref is "" and locked. In a later Firefox, cut every path that
++    //   downloads or installs a newtab add-on, whatever it is called (search: trainhop, xpiDownloadURL,
++    //   installTemporaryAddon / AddonManager.getInstallForURL near newtab). Registry: Fieldkit fieldkit/buildh/techniques.py, `fieldkit build-harness techniques <task>`
+     if (true) {
+       return;
+     }

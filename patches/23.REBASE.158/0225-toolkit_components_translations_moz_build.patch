@@ -1,0 +1,32 @@
+# Gorilla 158 rebase: toolkit/components/translations/moz.build as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/components/translations/moz.build b/toolkit/components/translations/moz.build
+index 08c587aaa3c9040ef5ad6efb92a2077ffe7bb216..99b14954df5bd60d9236573a5879f47ca826a7f2 100644
+--- a/toolkit/components/translations/moz.build
++++ b/toolkit/components/translations/moz.build
+@@ -4,17 +4,23 @@
+ 
+ SPHINX_TREES["/toolkit/components/translations"] = "docs"
+ 
++# GORILLA UNLEASHED - PHYSICAL LOCK: no translations (decision D-157-03). The manifest is EMPTIED, not dropped
++# (mozbuild refuses an undeclared jar.mn); nothing under chrome://global/content/translations/ is packaged.
+ JAR_MANIFESTS += ["jar.mn"]
+ 
+ with Files("**"):
+     BUG_COMPONENT = ("Firefox", "Translations")
+ 
++# GORILLA UNLEASHED - PHYSICAL LOCK: no translations. actors/ now installs only a stub TranslationsParent
++# (actors/stub/) for the Settings and address bar code that still asks "is Translations enabled?" (answer: no).
+ DIRS += ["actors"]
+ 
+ BROWSER_CHROME_MANIFESTS += ["tests/browser/browser.toml"]
+ 
+ XPCSHELL_TESTS_MANIFESTS += ["tests/unit/xpcshell.toml"]
+ 
++# Kept on purpose: the language detector (CLD2, offline, no network) is used by browser.i18n.detectLanguage
++# (ext-i18n.js, ExtensionContent.sys.mjs) and by Reader View (ReaderMode.sys.mjs).
+ EXTRA_JS_MODULES.translations = [
+     "cld2/cld-worker.js",
+     "cld2/cld-worker.js.mem",

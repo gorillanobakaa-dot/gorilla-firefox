@@ -1,0 +1,31 @@
+# Gorilla 158 port fix
+# D-157-38: About stamp reads 'built 2026-10-15-2050hrs' (Gorilla), not YY:MM:DD:HH:MM:SS
+# Files: browser/base/content/aboutDialog.js
+
+diff --git a/browser/base/content/aboutDialog.js b/browser/base/content/aboutDialog.js
+index e92d955812..fc48b71e32 100644
+--- a/browser/base/content/aboutDialog.js
++++ b/browser/base/content/aboutDialog.js
+@@ -84,17 +84,13 @@ function init() {
+   }
+ 
+   // GORILLA D-157-38 (2026-10-08): every version line also says when this build was made, from the build's own
+-  // BuildID (application.ini; the harness records and checks the same number): "built YY:MM:DD:HH:MM:SS".
++  // BuildID (application.ini; the harness records and checks the same number): "built YYYY-MM-DD-HHMMhrs".
+   let buildStamp = Services.appinfo.appBuildID;
+   if (/^\d{14}$/.test(buildStamp)) {
+-    versionAttributes.built = [
+-      buildStamp.slice(2, 4),
+-      buildStamp.slice(4, 6),
+-      buildStamp.slice(6, 8),
+-      buildStamp.slice(8, 10),
+-      buildStamp.slice(10, 12),
+-      buildStamp.slice(12, 14),
+-    ].join(":");
++    // GORILLA 2026-10-15 (owner): "2026-10-15-2050hrs", not "26:10:15:20:50:14" (hard to read). Seconds left out.
++    versionAttributes.built =
++      `${buildStamp.slice(0, 4)}-${buildStamp.slice(4, 6)}-${buildStamp.slice(6, 8)}-` +
++      `${buildStamp.slice(8, 10)}${buildStamp.slice(10, 12)}hrs`;
+     versionIdKey += "-gorilla";
+     versionAttributes.build = Services.prefs.getIntPref("gorilla.build.number", 0);
+   }

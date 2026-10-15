@@ -1,0 +1,16 @@
+# Gorilla 158 rebase: browser/components/aboutlogins/content/aboutLoginsImportReport.html as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/aboutlogins/content/aboutLoginsImportReport.html b/browser/components/aboutlogins/content/aboutLoginsImportReport.html
+index 6a6932502d8eb82c70e6aea039580f489224ee60..fe34d2a5a193f1a2d573bbe4151691fb75662e62 100644
+--- a/browser/components/aboutlogins/content/aboutLoginsImportReport.html
++++ b/browser/components/aboutlogins/content/aboutLoginsImportReport.html
+@@ -32,7 +32,6 @@
+       rel="stylesheet"
+       href="chrome://browser/content/aboutlogins/common.css"
+     />
+-    <link rel="icon" href="chrome://branding/content/icon32.png" />
+   </head>
+   <body class="importreport">
+     <section id="report-body">

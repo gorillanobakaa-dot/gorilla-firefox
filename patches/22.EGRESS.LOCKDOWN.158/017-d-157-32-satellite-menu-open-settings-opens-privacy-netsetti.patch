@@ -1,0 +1,22 @@
+# Gorilla 158 privacy cut
+# D-157-32: satellite menu 'Open Settings' opens privacy-netsettings, where 158 keeps the switch (was paneGeneral)
+# Files: browser/modules/GorillaLinkMode.sys.mjs
+
+diff --git a/browser/modules/GorillaLinkMode.sys.mjs b/browser/modules/GorillaLinkMode.sys.mjs
+index 6be431dc46..9b0a11b982 100644
+--- a/browser/modules/GorillaLinkMode.sys.mjs
++++ b/browser/modules/GorillaLinkMode.sys.mjs
+@@ -462,8 +462,12 @@ export const GorillaLinkMode = {
+     popup.appendChild(doc.createXULElement("menuseparator"));
+     const settings = doc.createXULElement("menuitem");
+     settings.setAttribute("label", s["gorilla-satellite-button-settings"].label);
++    // GORILLA 2026-10-15 (D-157-32): open the page that HOLDS the switch, scrolled to it. 158 moved the network group
++    // (connectionLink, subcategory netsettings, where the switch lives) from General to Privacy & security, and
++    // "paneGeneral" left the user on Account and sync with no satellite in sight (owner's screenshot, 18:26).
++    // Proven by the post-install probe satellite-settings-link, which clicks this item and reads where it landed.
+     settings.addEventListener("command", () =>
+-      win().openPreferences("paneGeneral")
++      win().openPreferences("privacy-netsettings")
+     );
+     popup.appendChild(settings);
+     popup.addEventListener("popupshowing", () => {

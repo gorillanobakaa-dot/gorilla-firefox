@@ -1,0 +1,27 @@
+# Gorilla 158 rebase: dom/media/AudioStream.h as built on Firefox 158 (linux only: a linux-only patch touches this file)
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/dom/media/AudioStream.h b/dom/media/AudioStream.h
+index 2cddcaabc4e744947371516a63ee9b9468a1bb28..de38928bbd13ac7845d4f574e3ee1d325be44b36 100644
+--- a/dom/media/AudioStream.h
++++ b/dom/media/AudioStream.h
+@@ -32,6 +32,7 @@ class AudioStream;
+ class FrameHistory;
+ class AudioConfig;
+ class RLBoxSoundTouch;
++class AudioPsychoacousticEnhancer;
+ 
+ // A struct that contains the number of frames serviced or underrun by a
+ // callback, alongside the sample-rate for this callback (in case of playback
+@@ -482,6 +483,10 @@ class AudioStream final {
+   // Audio thread only
+   bool mAudioThreadChanged = false;
+   Atomic<bool> mCallbacksStarted;
++  // GORILLA PATCH: psychoacoustic DSP for Sony SVE14A3AJ
++  UniquePtr<AudioPsychoacousticEnhancer> mPsychoEnhancer;
++  std::atomic<float> mVolume;
++  Atomic<bool> mUseSoftwareVolume;
+ 
+   // The keep-running mode. When on, a pause across a seek leaves the cubeb
+   // stream running and pause/resume only track the logical playing state, so

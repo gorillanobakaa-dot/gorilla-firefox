@@ -1,0 +1,1065 @@
+# Gorilla 158 privacy cut
+# D-158-08: AI texts and the AI sidebar stylesheet are neither shipped nor loaded; the UI that used them is removed
+# Files: browser/base/content/appmenu-viewcache.inc.xhtml, browser/base/content/browser-context.inc.xhtml, browser/base/content/browser-context.js, browser/base/content/browser-menubar.inc.xhtml, browser/base/content/browser-places.js, browser/base/content/browser-sync.js, browser/base/content/browser.xhtml, browser/base/content/macWindow.inc.xhtml, browser/base/content/main-popupset.inc.xhtml, browser/base/content/main-popupset.js, browser/base/content/nsContextMenu.sys.mjs, browser/base/content/sanitize_v2.xhtml, browser/base/content/spotlight.html, browser/base/content/webext-panels.xhtml, browser/components/asrouter/modules/OnboardingMessageProvider.sys.mjs, browser/components/asrouter/modules/RemoteL10n.sys.mjs, browser/components/firefoxview/firefoxview.html, browser/components/preferences/config/tabs-browsing.mjs, browser/components/preferences/preferences.xhtml, browser/components/tabbrowser/content/tab-context-menu.js, browser/components/tabbrowser/content/tabgroup-menu.js, browser/locales-preview/aiWindow.ftl, browser/locales-preview/smartTabGroups.ftl, browser/locales/en-US/browser/aiWindow.ftl, browser/locales/en-US/browser/aiWindowContent.ftl, browser/locales/jar.mn, browser/themes/shared/aiWindowSidebar.css, browser/themes/shared/browser-shared.css, browser/themes/shared/jar.inc.mn, stylelint-rollouts.config.js
+
+diff --git a/browser/base/content/appmenu-viewcache.inc.xhtml b/browser/base/content/appmenu-viewcache.inc.xhtml
+index 7c7bdc9983..0a27b81973 100644
+--- a/browser/base/content/appmenu-viewcache.inc.xhtml
++++ b/browser/base/content/appmenu-viewcache.inc.xhtml
+@@ -1052,41 +1052,7 @@
+     <vbox id="PanelUI-ipprotection-locations-content" class="panel-subview-body"/>
+   </panelview>
+ 
+-  <panelview id="ai-window-toggle-view" class="PanelUI-subView">
+-    <vbox class="panel-subview-body">
+-      <toolbarbutton id="ai-window-switch-classic"
+-                    class="subviewbutton"
+-                    type="radio"
+-                    hidden="true"
+-                    data-l10n-attrs="label">
+-        <image class="toolbarbutton-icon"/>
+-        <vbox>
+-          <label class="toolbarbutton-text"
+-                data-l10n-id="ai-window-toggleview-switch-classic" crop="end"/>
+-          <label class="ai-window-switch-description toolbarbutton-text"
+-                data-l10n-id="ai-window-toggleview-switch-classic-description" crop="end"/>
+-        </vbox>
+-      </toolbarbutton>
+-      <toolbarbutton id="ai-window-switch-ai"
+-                    class="subviewbutton"
+-                    type="radio"
+-                    hidden="true"
+-                    data-l10n-attrs="label"
+-                    aria-describedby="ai-window-switch-ai-badge">
+-        <image class="toolbarbutton-icon"/>
+-        <vbox>
+-          <hbox>
+-            <label class="toolbarbutton-text"
+-                  data-l10n-id="ai-window-toggleview-switch-ai" crop="end"/>
+-            <html:moz-badge id="ai-window-switch-ai-badge"
+-                  type="beta"/>
+-          </hbox>
+-          <label class="ai-window-switch-description toolbarbutton-text"
+-                data-l10n-id="ai-window-toggleview-switch-ai-description" crop="end"/>
+-        </vbox>
+-      </toolbarbutton>
+-    </vbox>
+-  </panelview>
++  <!-- GORILLA excised 2026-10-15 (158, D-158-08): the Smart Window / classic window switch panel is removed; the classic window is the only window. -->
+ 
+   <panelview id="appMenu-tabGroupsListView" class="PanelUI-subView">
+     <vbox class="panel-subview-body">
+diff --git a/browser/base/content/browser-context.inc.xhtml b/browser/base/content/browser-context.inc.xhtml
+index b9f535636c..93da819820 100644
+--- a/browser/base/content/browser-context.inc.xhtml
++++ b/browser/base/content/browser-context.inc.xhtml
+@@ -104,10 +104,13 @@
+                 class="context-menu-open-link"
+                 data-l10n-id="main-context-menu-open-link-new-private-window"
+                 />
++      <!-- GORILLA excised 2026-08-27 (155): AI row. Its l10n strings were removed with the AI stack, so it rendered as a BLANK line in the right-click menu.
++           context > Open Link in New Smart Window
+       <menuitem id="context-openlinksmartwindow"
+                 class="context-menu-open-link"
+                 data-l10n-id="main-context-menu-open-link-new-smart-window"
+                 />
++      -->
+       <menuitem id="context-previewlink"
+                 data-l10n-id="main-context-menu-preview-link"
+                 />
+@@ -371,9 +374,7 @@
+       <menuitem id="context-searchselect-private"/>
+       <!-- GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): no "Translate selection" item -->
+       <menu id="context-ask-chat"/>
+-      <menuitem id="context-create-aitab"
+-                data-l10n-id="main-context-menu-create-aitab"
+-                hidden="true"/>
++      <!-- GORILLA excised 2026-10-15 (158, D-158-08): no "Create AI tab" item; its text lived in the AI strings, which are no longer shipped. -->
+ 
+       <menuseparator id="frame-sep"/>
+       <menu id="frame" data-l10n-id="main-context-menu-frame">
+diff --git a/browser/base/content/browser-context.js b/browser/base/content/browser-context.js
+index e90ab0169f..93892dfc1e 100644
+--- a/browser/base/content/browser-context.js
++++ b/browser/base/content/browser-context.js
+@@ -52,9 +52,7 @@ document.addEventListener(
+         case "context-openlinkprivate":
+           gContextMenu.openLinkInPrivateWindow();
+           break;
+-        case "context-openlinksmartwindow":
+-          gContextMenu.openLinkInSmartWindow();
+-          break;
++        // GORILLA excised 2026-10-15 (158, D-158-08): context-openlinksmartwindow handler removed with its menu item.
+         case "context-bookmarklink":
+           gContextMenu.bookmarkLink();
+           break;
+@@ -213,9 +211,7 @@ document.addEventListener(
+           break;
+         }
+         // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): no context-translate-selection item.
+-        case "context-create-aitab":
+-          gContextMenu.createAITab();
+-          break;
++        // GORILLA excised 2026-10-15 (158, D-158-08): context-create-aitab handler removed with its menu item.
+         case "context-showonlythisframe":
+           gContextMenu.showOnlyThisFrame();
+           break;
+diff --git a/browser/base/content/browser-menubar.inc.xhtml b/browser/base/content/browser-menubar.inc.xhtml
+index 6264dd4f6f..9c61dafc36 100644
+--- a/browser/base/content/browser-menubar.inc.xhtml
++++ b/browser/base/content/browser-menubar.inc.xhtml
+@@ -207,9 +207,7 @@
+                 key="showAllHistoryKb"
+                 command="Browser:ShowAllHistory" data-l10n-id="menu-history-show-all-history"/>
+ 
+-      <menuitem id="chatsHistoryMenu" class="chats-history-menuitem"
+-                data-l10n-id="menu-history-chats"
+-                disabled="true" hidden="true" command="Tools:ChatsHistory"/>
++      <!-- GORILLA excised 2026-10-15 (158, D-158-08): no "Chats" history item (AI chat history). -->
+ 
+       <menuitem id="sanitizeItem"
+                 key="key_sanitize"
+@@ -253,11 +251,7 @@
+ #endif
+         </menupopup>
+       </menu>
+-      <menuseparator id="startChatHistorySeparator" hidden="true"/>
+-      <menuitem id="recentChatsHeader" class="recent-chats-header"
+-                data-l10n-id="menu-history-chats-recent"
+-                disabled="true" hidden="true"/>
+-      <!-- Chat history menu items -->
++      <!-- GORILLA excised 2026-10-15 (158, D-158-08): no recent AI chats section in the History menu. -->
+       <menuseparator id="startHistorySeparator"
+                      class="hide-if-empty-places-result"/>
+     </menupopup>
+diff --git a/browser/base/content/browser-places.js b/browser/base/content/browser-places.js
+index 956207d995..0d5219048b 100644
+--- a/browser/base/content/browser-places.js
++++ b/browser/base/content/browser-places.js
+@@ -865,13 +865,12 @@ var BookmarksEventHandler = {
+       // Only record interactions through the Bookmarks Toolbar
+       if (target.closest("#PersonalToolbar")) {
+         Glean.browserEngagement.bookmarksToolbarBookmarkOpened.add(1);
+-        if (
+-          gBookmarksToolbarVisibility == "newtab" &&
+-          AIWindow.isAIWindowActive(window) &&
+-          AIWindow.isAIWindowNewTabPage(gBrowser.currentURI)
+-        ) {
+-          Glean.smartWindow.bookmarkbar.opened.add(1);
+-        }
++        // GORILLA OVERRIDE 2026-08-27: aiwindow excised, so the AIWindow global
++        // does not exist. This smartWindow telemetry branch is removed rather
++        // than guarded: it can never be true in this build, and referencing the
++        // global threw a ReferenceError that killed browser-places.js at window
++        // startup (broken urlbar/search). Same class as the tab-context-menu
++        // GenAI crash. New consumer in 155; the 154 patch never saw it.
+       }
+     } else if (eventAction) {
+       gSync.handleSyncPromoAction(eventAction, "bookmarks-top-menu");
+@@ -1554,12 +1553,11 @@ var BookmarkingUI = {
+     if (PrivateBrowsingUtils.isWindowPrivate(window)) {
+       newTabURLs.push("about:privatebrowsing");
+     }
+-    // In a Smart Window, the new tab is a chrome document rather than
+-    // about:newtab; isAIWindowNewTabPage matches it (and excludes firstrun).
+-    return (
+-      newTabURLs.some(newTabUriString =>
+-        this._newTabURI(newTabUriString)?.equalsExceptRef(uri)
+-      ) || AIWindow.isAIWindowNewTabPage(uri)
++    // GORILLA OVERRIDE 2026-08-27: dropped the `|| AIWindow.isAIWindowNewTabPage(uri)`
++    // disjunct — aiwindow is excised, so the global is undefined and referencing
++    // it threw at startup. Smart Window new-tab documents cannot exist here.
++    return newTabURLs.some(newTabUriString =>
++      this._newTabURI(newTabUriString)?.equalsExceptRef(uri)
+     );
+   },
+ 
+diff --git a/browser/base/content/browser-sync.js b/browser/base/content/browser-sync.js
+index a1551c6e7b..2e5406b953 100644
+--- a/browser/base/content/browser-sync.js
++++ b/browser/base/content/browser-sync.js
+@@ -1229,7 +1229,7 @@ var gSync = {
+         "browser/sync.ftl",
+         "browser/syncedTabs.ftl",
+         "browser/newtab/asrouter.ftl",
+-        "browser/aiWindow.ftl",
++        // GORILLA excised 2026-10-15 (158, D-158-08): AI window texts not loaded.
+       ],
+       true
+     ));
+diff --git a/browser/base/content/browser.xhtml b/browser/base/content/browser.xhtml
+index 9fd8ccf776..545c85762a 100644
+--- a/browser/base/content/browser.xhtml
++++ b/browser/base/content/browser.xhtml
+@@ -102,12 +102,11 @@
+   <link rel="localization" href="preview/interventions.ftl" />
+   <link rel="localization" href="preview/miniWindow.ftl"/>
+   <link rel="localization" href="preview/onboarding.ftl"/>
+-  <link rel="localization" href="preview/smartTabGroups.ftl"/>
++  <!-- GORILLA excised 2026-10-15 (158, D-158-08): smart tab group texts (smartTabGroups) not linked -->
+   <link rel="localization" href="preview/genai.ftl"/>
+   <link rel="localization" href="preview/autoTabGrouping.ftl"/>
+   <link rel="localization" href="preview/remoteControl.ftl"/>
+-  <link rel="localization" href="preview/aiWindow.ftl"/>
+-  <link rel="localization" href="browser/aiWindow.ftl" />
++  <!-- GORILLA excised 2026-10-15 (158, D-158-08): AI window texts (aiWindow) not linked -->
+ 
+   <title data-l10n-id="browser-main-window-default-title"></title>
+ 
+diff --git a/browser/base/content/macWindow.inc.xhtml b/browser/base/content/macWindow.inc.xhtml
+index bf9c45905a..5bdb10c394 100644
+--- a/browser/base/content/macWindow.inc.xhtml
++++ b/browser/base/content/macWindow.inc.xhtml
+@@ -15,7 +15,7 @@
+   <html:link rel="localization" href="browser/menubar.ftl"/>
+   <html:link rel="localization" href="browser/reportBrokenSite.ftl"/>
+   <html:link rel="localization" href="browser/screenshots.ftl"/>
+-  <html:link rel="localization" href="browser/aiWindow.ftl"/>
++  <!-- GORILLA excised 2026-08-27 (155): <html:link rel="localization" href="browser/aiWindow.ftl"/> -->
+   <html:link rel="localization" href="toolkit/branding/brandings.ftl"/>
+   <html:link rel="localization" href="toolkit/global/textActions.ftl"/>
+ </linkset>
+diff --git a/browser/base/content/main-popupset.inc.xhtml b/browser/base/content/main-popupset.inc.xhtml
+index 4f3503728f..ef55d07f7f 100644
+--- a/browser/base/content/main-popupset.inc.xhtml
++++ b/browser/base/content/main-popupset.inc.xhtml
+@@ -69,9 +69,7 @@
+          in place of the #context_askChat submenu. Populated by
+          GenAI.buildTabSummarizeItem; hidden by default. -->
+     <menuitem id="context_askChatSummarize" hidden="true"/>
+-    <menuitem id="context_createAITab"
+-              hidden="true"
+-              data-l10n-id="tab-context-create-aitab"/>
++    <!-- GORILLA excised 2026-10-15 (158, D-158-08): no "Create AI tab" item in the tab menu. -->
+     <menuseparator id="context_aiSeparator"/>
+     <menuitem id="context_bookmarkSelectedTabs"
+               hidden="true"
+diff --git a/browser/base/content/main-popupset.js b/browser/base/content/main-popupset.js
+index 8ce8191992..271b0688b2 100644
+--- a/browser/base/content/main-popupset.js
++++ b/browser/base/content/main-popupset.js
+@@ -7,8 +7,6 @@ document.addEventListener(
+   () => {
+     const lazy = {};
+     ChromeUtils.defineESModuleGetters(lazy, {
+-      AIWindow:
+-        "moz-src:///browser/components/aiwindow/ui/modules/AIWindow.sys.mjs",
+       ContentSharingUtils:
+         "moz-src:///browser/components/sharing/ContentSharingUtils.sys.mjs",
+       MiniWindowManager:
+@@ -121,14 +119,7 @@ document.addEventListener(
+         case "context_shareSelectedTabs":
+           lazy.ContentSharingUtils.handleShareTabs(TabContextMenu.contextTabs);
+           break;
+-        case "context_createAITab":
+-          lazy.AIWindow.createAITab(
+-            window,
+-            TabContextMenu.contextTabs.map(
+-              tab => tab.linkedBrowser.currentURI.spec
+-            )
+-          );
+-          break;
++        // GORILLA excised 2026-10-15 (158, D-158-08): context_createAITab handler removed with its menu item.
+         case "context_bookmarkTab":
+           PlacesCommandHook.bookmarkTabs([TabContextMenu.contextTab]);
+           break;
+diff --git a/browser/base/content/nsContextMenu.sys.mjs b/browser/base/content/nsContextMenu.sys.mjs
+index b489e3e0a3..ad0c86c3ad 100644
+--- a/browser/base/content/nsContextMenu.sys.mjs
++++ b/browser/base/content/nsContextMenu.sys.mjs
+@@ -50,13 +50,6 @@ XPCOMUtils.defineLazyPreferenceGetter(
+   false
+ );
+ 
+-XPCOMUtils.defineLazyPreferenceGetter(
+-  lazy,
+-  "AITAB_ENABLED",
+-  "browser.smartwindow.aitab.enabled",
+-  false
+-);
+-
+ XPCOMUtils.defineLazyPreferenceGetter(
+   lazy,
+   "STRIP_ON_SHARE_ENABLED",
+@@ -919,12 +912,7 @@ export class nsContextMenu {
+     this.showAndFormatSearchContextItem();
+     // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): no translate-selection item.
+     // GORILLA: EXCISED — no GenAI ask-chat item (genai module removed).
+-    this.showItem(
+-      "context-create-aitab",
+-      lazy.AITAB_ENABLED &&
+-        lazy.AIWindow.isAIWindowActiveAndEnabled(this.window) &&
+-        ["http", "https"].includes(this.browser.currentURI.scheme)
+-    );
++    // GORILLA excised 2026-10-15 (158, D-158-08): no "Create AI tab" item to show.
+ 
+     // srcdoc cannot be opened separately due to concerns about web
+     // content with about:srcdoc in location bar masquerading as trusted
+@@ -1561,15 +1549,7 @@ export class nsContextMenu {
+     );
+   }
+ 
+-  // Open linked-to URL in a new smart window.
+-  openLinkInSmartWindow() {
+-    const params = this._getGlobalHistoryOptions();
+-    this.window.openLinkIn(
+-      this.linkURL,
+-      "window",
+-      this._openLinkInParameters({ ...params, aiWindow: true })
+-    );
+-  }
++  // GORILLA excised 2026-10-15 (158, D-158-08): openLinkInSmartWindow() removed (no Smart Window).
+ 
+   // Open linked-to URL in a new tab.
+   openLinkInTab(event) {
+@@ -2658,9 +2638,7 @@ export class nsContextMenu {
+     this.window.openTrustedLinkIn(drmInfoURL, dest);
+   }
+ 
+-  createAITab() {
+-    lazy.AIWindow.createAITab(this.window, [this.browser.currentURI.spec]);
+-  }
++  // GORILLA excised 2026-10-15 (158, D-158-08): createAITab() removed.
+ 
+   // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): openSelectTranslationsPanel,
+   // localizeTranslateSelectionItem, #getTextToTranslate and showTranslateSelectionItem are removed with the
+diff --git a/browser/base/content/sanitize_v2.xhtml b/browser/base/content/sanitize_v2.xhtml
+index f381c15c40..0d738ea474 100644
+--- a/browser/base/content/sanitize_v2.xhtml
++++ b/browser/base/content/sanitize_v2.xhtml
+@@ -35,7 +35,7 @@
+       <html:link rel="localization" href="branding/brand.ftl" />
+       <html:link rel="localization" href="browser/sanitize.ftl" />
+       <html:link rel="localization" href="toolkit/branding/brandings.ftl" />
+-      <html:link rel="localization" href="browser/aiWindow.ftl" />
++      <!-- GORILLA excised 2026-10-15 (158, D-158-08): AI window texts (aiWindow) not linked -->
+     </linkset>
+ 
+     <script src="chrome://global/content/preferencesBindings.js" />
+diff --git a/browser/base/content/spotlight.html b/browser/base/content/spotlight.html
+index 47d21ff48f..9d57c89eb0 100644
+--- a/browser/base/content/spotlight.html
++++ b/browser/base/content/spotlight.html
+@@ -28,7 +28,7 @@
+     <link rel="localization" href="browser/preonboarding.ftl" />
+     <link rel="localization" href="browser/termsofuse.ftl" />
+     <link rel="localization" href="browser/featureCallout.ftl" />
+-    <link rel="localization" href="browser/aiWindow.ftl" />
++    <!-- GORILLA excised 2026-10-15 (158, D-158-08): AI window texts (aiWindow) not linked -->
+   </head>
+   <body
+     role="dialog"
+diff --git a/browser/base/content/webext-panels.xhtml b/browser/base/content/webext-panels.xhtml
+index 5a50ae5ab5..8597adddcc 100644
+--- a/browser/base/content/webext-panels.xhtml
++++ b/browser/base/content/webext-panels.xhtml
+@@ -30,8 +30,7 @@
+     <html:link rel="localization" href="toolkit/global/textActions.ftl"/>
+     <html:link rel="localization" href="browser/browserContext.ftl"/>
+     <html:link rel="localization" href="preview/miniWindow.ftl"/>
+-    <html:link rel="localization" href="browser/aiWindow.ftl"/>
+-    <html:link rel="localization" href="preview/aiWindow.ftl"/>
++    <!-- GORILLA excised 2026-10-15 (158, D-158-08): AI window texts (aiWindow) not linked -->
+     <!-- GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): translations.ftl not linked -->
+     <html:link rel="localization" href="browser/sidebar.ftl"/>
+   </linkset>
+diff --git a/browser/components/asrouter/modules/OnboardingMessageProvider.sys.mjs b/browser/components/asrouter/modules/OnboardingMessageProvider.sys.mjs
+index ee679745e0..436c177571 100644
+--- a/browser/components/asrouter/modules/OnboardingMessageProvider.sys.mjs
++++ b/browser/components/asrouter/modules/OnboardingMessageProvider.sys.mjs
+@@ -3021,305 +3021,9 @@ const BASE_MESSAGES = () => [
+       ],
+     },
+   },
+-  {
+-    id: "SMARTWINDOW_DEFAULT_PROMO",
+-    template: "smart_window_newtab_promo",
+-    content: {
+-      type: "vibrant",
+-      heading: {
+-        string_id: "smart-window-default-promo-heading",
+-      },
+-      message: {
+-        string_id: "smart-window-default-promo-message",
+-      },
+-      imageSrc:
+-        "chrome://browser/content/aiwindow/assets/smart-window-promo-default.svg",
+-      imageAlignment: "start",
+-      imageWidth: "small",
+-      imageDisplay: "padded",
+-      primary_button: {
+-        label: {
+-          string_id: "smart-window-default-promo-primary-button",
+-        },
+-        action: {
+-          type: "SET_PREF",
+-          data: {
+-            pref: {
+-              name: "browser.smartwindow.isDefaultWindow",
+-              value: true,
+-            },
+-          },
+-        },
+-      },
+-      additional_button: {
+-        label: {
+-          string_id: "smart-window-default-promo-additional-button",
+-        },
+-        action: {
+-          type: "BLOCK_MESSAGE",
+-          data: {
+-            id: "SMARTWINDOW_DEFAULT_PROMO",
+-          },
+-        },
+-      },
+-    },
+-    trigger: {
+-      id: "smartWindowNewTab",
+-    },
+-    targeting:
+-      "isAIWindow && previousSessionEnd && !activeNotifications && userPrefs.cfrFeatures && ('browser.smartwindow.chat.interactionCount'|preferenceValue) > 2 && !('browser.smartwindow.isDefaultWindow' | preferenceValue)",
+-    frequency: {
+-      lifetime: 3,
+-    },
+-    groups: [],
+-  },
+-  {
+-    id: "SMARTWINDOW_FEEDBACK_MODAL_POSITIVE",
+-    template: "spotlight",
+-    groups: [],
+-    targeting: "true",
+-    trigger: {
+-      id: "feedbackThumbClick",
+-      params: ["thumbs-up"],
+-    },
+-    content: {
+-      id: "SMARTWINDOW_FEEDBACK_MODAL_POSITIVE",
+-      template: "multistage",
+-      modal: "window",
+-      write_in_microsurvey: true,
+-      screens: [
+-        {
+-          id: "SMARTWINDOW_FEEDBACK_SCREEN",
+-          content: {
+-            position: "center",
+-            screen_style: {
+-              width: "560px",
+-              overflow: "auto",
+-            },
+-            dismiss_button: { size: "small", action: { dismiss: true } },
+-            title: { string_id: "aiwindow-feedback-modal-title" },
+-            tiles: [
+-              {
+-                type: "textarea",
+-                subtitle: { string_id: "aiwindow-feedback-what-worked-well" },
+-                style: { marginBlock: "0" },
+-                data: { id: "feedback-text", rows: 4, character_limit: 1000 },
+-              },
+-              {
+-                type: "textbox",
+-                style: { marginBlock: "8px 0" },
+-                header: {
+-                  title: { string_id: "aiwindow-feedback-preview-report" },
+-                  alternateTitle: {
+-                    string_id: "aiwindow-feedback-preview-report",
+-                  },
+-                },
+-                data: {
+-                  id: "chat-log-preview",
+-                  content: "",
+-                  style: {
+-                    backgroundColor: "var(--background-color-box)",
+-                    maxHeight: "130px",
+-                  },
+-                },
+-              },
+-              {
+-                type: "content-toggle",
+-                data: {
+-                  id: "page-content-toggle",
+-                  label: {
+-                    string_id: "aiwindow-feedback-include-page-content",
+-                  },
+-                },
+-              },
+-            ],
+-            above_button_content: [
+-              {
+-                type: "text",
+-                text: {
+-                  string_id: "aiwindow-feedback-disclaimer",
+-                  fontSize: "13px",
+-                },
+-                link_keys: ["learn-more"],
+-              },
+-            ],
+-            "learn-more": {
+-              action: {
+-                type: "OPEN_URL",
+-                data: {
+-                  where: "chromeless",
+-                  args: "https://support.mozilla.org/1/firefox/%VERSION%/%OS%/%LOCALE%/smart-window-user-feedback",
+-                  width: 960,
+-                  height: 720,
+-                },
+-              },
+-            },
+-            primary_button: {
+-              label: { string_id: "aiwindow-feedback-submit" },
+-              action: {
+-                type: "MULTI_ACTION",
+-                collectTextInput: true,
+-                collectContentToggleState: true,
+-                navigate: true,
+-                data: { actions: [] },
+-              },
+-            },
+-            secondary_button: {
+-              label: { string_id: "aiwindow-feedback-cancel" },
+-              action: { navigate: true },
+-            },
+-          },
+-        },
+-      ],
+-    },
+-  },
+-  {
+-    id: "SMARTWINDOW_FEEDBACK_MODAL_NEGATIVE",
+-    template: "spotlight",
+-    groups: [],
+-    targeting: "true",
+-    trigger: {
+-      id: "feedbackThumbClick",
+-      params: ["thumbs-down"],
+-    },
+-    content: {
+-      id: "SMARTWINDOW_FEEDBACK_MODAL_NEGATIVE",
+-      template: "multistage",
+-      modal: "window",
+-      write_in_microsurvey: true,
+-      screens: [
+-        {
+-          id: "SMARTWINDOW_FEEDBACK_SCREEN",
+-          content: {
+-            position: "center",
+-            screen_style: {
+-              width: "560px",
+-              overflow: "auto",
+-            },
+-            dismiss_button: { size: "small", action: { dismiss: true } },
+-            title: { string_id: "aiwindow-feedback-modal-title" },
+-            tiles: [
+-              {
+-                type: "multiselect",
+-                subtitle: { string_id: "aiwindow-feedback-choose-any" },
+-                data: [
+-                  {
+-                    id: "incorrect-or-misleading",
+-                    label: {
+-                      string_id:
+-                        "aiwindow-feedback-reason-incorrect-or-misleading",
+-                    },
+-                  },
+-                  {
+-                    id: "performance-or-usability",
+-                    label: {
+-                      string_id:
+-                        "aiwindow-feedback-reason-performance-or-usability",
+-                    },
+-                  },
+-                  {
+-                    id: "doesnt-address-my-request",
+-                    label: {
+-                      string_id:
+-                        "aiwindow-feedback-reason-doesnt-address-my-request",
+-                    },
+-                  },
+-                  {
+-                    id: "harmful-or-offensive",
+-                    label: {
+-                      string_id:
+-                        "aiwindow-feedback-reason-harmful-or-offensive",
+-                    },
+-                  },
+-                  {
+-                    id: "lacks-personalization",
+-                    label: {
+-                      string_id:
+-                        "aiwindow-feedback-reason-lacks-personalization",
+-                    },
+-                  },
+-                  {
+-                    id: "other",
+-                    label: { string_id: "aiwindow-feedback-reason-other" },
+-                  },
+-                ],
+-                style: { marginBlock: "0 16px" },
+-              },
+-              {
+-                type: "textarea",
+-                subtitle: { string_id: "aiwindow-feedback-add-details" },
+-                style: { marginBlock: "0" },
+-                data: { id: "feedback-text", rows: 4, character_limit: 1000 },
+-              },
+-              {
+-                type: "textbox",
+-                style: { marginBlock: "8px 0" },
+-                header: {
+-                  title: { string_id: "aiwindow-feedback-preview-report" },
+-                  alternateTitle: {
+-                    string_id: "aiwindow-feedback-preview-report",
+-                  },
+-                },
+-                data: {
+-                  id: "chat-log-preview",
+-                  content: "",
+-                  style: {
+-                    backgroundColor: "var(--background-color-box)",
+-                    maxHeight: "130px",
+-                  },
+-                },
+-              },
+-              {
+-                type: "content-toggle",
+-                data: {
+-                  id: "page-content-toggle",
+-                  label: {
+-                    string_id: "aiwindow-feedback-include-page-content",
+-                  },
+-                },
+-              },
+-            ],
+-            above_button_content: [
+-              {
+-                type: "text",
+-                text: {
+-                  string_id: "aiwindow-feedback-disclaimer",
+-                  fontSize: "13px",
+-                },
+-                link_keys: ["learn-more"],
+-              },
+-            ],
+-            "learn-more": {
+-              action: {
+-                type: "OPEN_URL",
+-                data: {
+-                  where: "chromeless",
+-                  args: "https://support.mozilla.org/1/firefox/%VERSION%/%OS%/%LOCALE%/smart-window-user-feedback",
+-                  width: 960,
+-                  height: 720,
+-                },
+-              },
+-            },
+-            primary_button: {
+-              label: { string_id: "aiwindow-feedback-submit" },
+-              action: {
+-                type: "MULTI_ACTION",
+-                collectSelect: true,
+-                collectTextInput: true,
+-                collectContentToggleState: true,
+-                navigate: true,
+-                data: { actions: [] },
+-              },
+-            },
+-            secondary_button: {
+-              label: { string_id: "aiwindow-feedback-cancel" },
+-              action: { navigate: true },
+-            },
+-          },
+-        },
+-      ],
+-    },
+-  },
++  // GORILLA excised: SMARTWINDOW_DEFAULT_PROMO onboarding message (aiwindow removed).
++  // GORILLA excised: SMARTWINDOW_FEEDBACK_MODAL_POSITIVE onboarding message (aiwindow removed).
++  // GORILLA excised: SMARTWINDOW_FEEDBACK_MODAL_NEGATIVE onboarding message (aiwindow removed).
+ ];
+ 
+ const PREONBOARDING_MESSAGES = () => [
+diff --git a/browser/components/asrouter/modules/RemoteL10n.sys.mjs b/browser/components/asrouter/modules/RemoteL10n.sys.mjs
+index 822b3aec15..f7252d2b1f 100644
+--- a/browser/components/asrouter/modules/RemoteL10n.sys.mjs
++++ b/browser/components/asrouter/modules/RemoteL10n.sys.mjs
+@@ -220,7 +220,7 @@ export class _RemoteL10n {
+         "browser/policy-messages.ftl",
+         "browser/profiles.ftl",
+         "browser/termsofuse.ftl",
+-        "browser/aiWindow.ftl",
++        // GORILLA excised 2026-10-15 (158, D-158-08): AI window texts not loaded.
+         "toolkit/branding/brandings.ftl",
+       ],
+       false
+diff --git a/browser/components/firefoxview/firefoxview.html b/browser/components/firefoxview/firefoxview.html
+index a3ce067dd8..ab63af5acd 100644
+--- a/browser/components/firefoxview/firefoxview.html
++++ b/browser/components/firefoxview/firefoxview.html
+@@ -18,7 +18,7 @@
+     <link rel="localization" href="toolkit/global/textActions.ftl" />
+     <link rel="localization" href="toolkit/branding/brandings.ftl" />
+     <link rel="localization" href="browser/migrationWizard.ftl" />
+-    <link rel="localization" href="browser/aiWindow.ftl" />
++    <!-- GORILLA excised 2026-10-15 (158, D-158-08): AI window texts (aiWindow) not linked -->
+     <link
+       rel="stylesheet"
+       href="chrome://browser/content/firefoxview/firefoxview.css"
+@@ -59,14 +59,7 @@
+         iconSrc="chrome://browser/skin/history.svg"
+       >
+       </moz-page-nav-button>
+-      <moz-page-nav-button
+-        view="chats"
+-        id="firefoxview-chats-nav"
+-        data-l10n-id="firefoxview-chats-nav"
+-        iconSrc="chrome://browser/content/firefoxview/view-chats.svg"
+-        hidden
+-      >
+-      </moz-page-nav-button>
++      <!-- GORILLA excised 2026-10-15 (158, D-158-08): no "Chats" (AI chat history) page button. -->
+     </moz-page-nav>
+     <main id="pages" role="application" data-l10n-id="firefoxview-page-label">
+       <div class="main-container">
+@@ -96,7 +89,7 @@
+             name="syncedtabs"
+             type="page"
+           ></view-syncedtabs>
+-          <view-chats name="chats" type="page" hidden></view-chats>
++          <!-- GORILLA excised 2026-10-15 (158, D-158-08): no view-chats page. -->
+         </named-deck>
+       </div>
+     </main>
+diff --git a/browser/components/preferences/config/tabs-browsing.mjs b/browser/components/preferences/config/tabs-browsing.mjs
+index 4ddb7b5a0c..a5a1fc3e75 100644
+--- a/browser/components/preferences/config/tabs-browsing.mjs
++++ b/browser/components/preferences/config/tabs-browsing.mjs
+@@ -258,19 +258,8 @@ Preferences.addSetting({
+     "aiControlDefault",
+     "aiControlSmartTabGroups",
+   ],
+-  visible: ({
+-    smartTabGroups,
+-    tabGroups,
+-    aiControlDefault,
+-    aiControlSmartTabGroups,
+-  }) => {
+-    return (
+-      window.canShowAiFeature(aiControlSmartTabGroups, aiControlDefault) &&
+-      !!tabGroups.value &&
+-      !!smartTabGroups.value &&
+-      Services.locale.appLocaleAsBCP47.startsWith("en")
+-    );
+-  },
++  // GORILLA excised 2026-10-15 (158, D-158-08): tab group suggestions never show.
++  visible: () => false,
+ });
+ Preferences.addSetting({
+   id: "tabGroupDragToCreate",
+@@ -631,10 +620,7 @@ SettingGroupManager.registerGroups({
+             id: "tabPreviewShowThumbnails",
+             l10nId: "settings-tabs-show-image-in-preview",
+           },
+-          {
+-            id: "tabGroupSuggestions",
+-            l10nId: "settings-tabs-show-group-and-tab-suggestions",
+-          },
++          // GORILLA excised 2026-10-15 (158, D-158-08): no "Show tab group suggestions" checkbox.
+           {
+             id: "tabGroupDragToCreate",
+             l10nId: "settings-tabs-drag-to-create-tab-groups",
+diff --git a/browser/components/preferences/preferences.xhtml b/browser/components/preferences/preferences.xhtml
+index 516adae0a0..229c9b90c5 100644
+--- a/browser/components/preferences/preferences.xhtml
++++ b/browser/components/preferences/preferences.xhtml
+@@ -52,7 +52,7 @@
+   <link rel="localization" href="toolkit/global/mozPageHeader.ftl"/>
+ 
+   <!-- Temporary until localization is done -->
+-  <link rel="localization" href="preview/smartTabGroups.ftl"/>
++  <!-- GORILLA excised 2026-08-27 (155): <link rel="localization" href="preview/smartTabGroups.ftl"/> -->
+   <link rel="localization" href="preview/privacyPreferences.ftl"/>
+   <link rel="localization" href="browser/ipProtection.ftl"/>
+   <link rel="localization" href="browser/aiFeatures.ftl"/>
+@@ -60,7 +60,7 @@
+   <!-- Links below are only used for search-l10n-ids into subdialogs -->
+   <link rel="localization" href="browser/aboutDialog.ftl"/>
+   <link rel="localization" href="browser/backupSettings.ftl"/>
+-  <link rel="localization" href="browser/genai.ftl"/>
++  <!-- GORILLA excised 2026-08-27 (155): <link rel="localization" href="browser/genai.ftl"/> -->
+   <link rel="localization" href="browser/search.ftl"/>
+   <link rel="localization" href="browser/preferences/browserIcon.ftl"/>
+   <link rel="localization" href="browser/preferences/clearSiteData.ftl"/>
+diff --git a/browser/components/tabbrowser/content/tab-context-menu.js b/browser/components/tabbrowser/content/tab-context-menu.js
+index 6572bd3331..dae303f610 100644
+--- a/browser/components/tabbrowser/content/tab-context-menu.js
++++ b/browser/components/tabbrowser/content/tab-context-menu.js
+@@ -76,7 +76,6 @@ var TabContextMenu = {
+             "#context_askChat",
+             "#context_aiSeparator",
+             "#context_askChatSummarize",
+-            "#context_createAITab",
+           ],
+         },
+         {
+@@ -237,7 +236,6 @@ var TabContextMenu = {
+             ["#context_bookmarkSelectedTabs", "#context_bookmarkTab"],
+             ["#context_addNote", "#context_editNote"],
+             "#context_askChatSummarize",
+-            "#context_createAITab",
+             "#context_tabToolsSeparator",
+           ],
+         },
+@@ -858,13 +856,7 @@ var TabContextMenu = {
+       document.getElementById("context_aiSeparator").hidden = false;
+     }
+ 
+-    document.getElementById("context_createAITab").hidden = !(
+-      TabContextMenu.AITAB_ENABLED &&
+-      TabContextMenu.AIWindow.isAIWindowActiveAndEnabled(window) &&
+-      this.contextTabs.some(tab =>
+-        ["http", "https"].includes(tab.linkedBrowser.currentURI.scheme)
+-      )
+-    );
++    // GORILLA excised 2026-10-15 (158, D-158-08): no "Create AI tab" item to show.
+ 
+     // Move Tab items
+     let contextMoveTabOptions = document.getElementById(
+@@ -1464,16 +1456,7 @@ XPCOMUtils.defineLazyPreferenceGetter(
+   false
+ );
+ 
+-XPCOMUtils.defineLazyPreferenceGetter(
+-  TabContextMenu,
+-  "AITAB_ENABLED",
+-  "browser.smartwindow.aitab.enabled",
+-  false
+-);
+-
+ ChromeUtils.defineESModuleGetters(TabContextMenu, {
+-  AIWindow:
+-    "moz-src:///browser/components/aiwindow/ui/modules/AIWindow.sys.mjs",
+   GenAI: "moz-src:///browser/components/genai/GenAI.sys.mjs",
+   MenuSectionLayout: "resource:///modules/MenuSectionLayout.sys.mjs",
+   Tabbrowser: "moz-src:///browser/components/tabbrowser/Tabbrowser.sys.mjs",
+diff --git a/browser/components/tabbrowser/content/tabgroup-menu.js b/browser/components/tabbrowser/content/tabgroup-menu.js
+index 5f4c21550e..950ba39b16 100644
+--- a/browser/components/tabbrowser/content/tabgroup-menu.js
++++ b/browser/components/tabbrowser/content/tabgroup-menu.js
+@@ -16,11 +16,7 @@
+   const { ContentSharingUtils } = ChromeUtils.importESModule(
+     "moz-src:///browser/components/sharing/ContentSharingUtils.sys.mjs"
+   );
+-  const lazy = {};
+-  ChromeUtils.defineESModuleGetters(lazy, {
+-    AIWindow:
+-      "moz-src:///browser/components/aiwindow/ui/modules/AIWindow.sys.mjs",
+-  });
++  // GORILLA excised 2026-10-15 (158, D-158-08): the AIWindow module getter is removed (no AI tab, no Smart Window).
+ 
+   // GORILLA OVERRIDE: genai excised — model-optin component import removed
+   // (was a boot-time load failure; the smart-tab-grouping optin path is dead).
+@@ -66,7 +62,6 @@
+         </html:h1>
+         <html:h1
+           id="tab-group-editor-title-suggest"
+-          data-l10n-id="tab-group-editor-title-suggest"
+           hidden=""
+         ></html:h1>
+       </html:div>
+@@ -101,13 +96,7 @@
+           id="tabGroupEditor_copyAllLinks"
+           class="subviewbutton">
+         </toolbarbutton>
+-        <toolbarbutton
+-          tabindex="0"
+-          id="tabGroupEditor_createAITab"
+-          class="subviewbutton"
+-          data-l10n-id="tab-group-editor-action-create-aitab"
+-          hidden="">
+-        </toolbarbutton>
++        <!-- GORILLA excised 2026-10-15 (158, D-158-08): no "Create AI tab" button. -->
+         <toolbarbutton
+           tabindex="0"
+           id="tabGroupEditor_saveAndCloseGroup"
+@@ -137,15 +126,12 @@
+ 
+         <html:moz-checkbox
+           checked=""
+-          id="tab-group-select-checkbox"
+-          data-l10n-id="tab-group-editor-select-suggestions">
++          id="tab-group-select-checkbox">
+         </html:moz-checkbox>
+ 
+         <html:div id="tab-group-suggestions"></html:div>
+ 
+-        <html:p
+-          data-l10n-id="tab-group-editor-information-message">
+-        </html:p>
++        <html:p></html:p>
+ 
+         <html:moz-button-group class="panel-footer tab-group-create-actions">
+           <html:moz-button
+@@ -167,16 +153,14 @@
+         hidden="true"
+         id="tab-group-suggestion-button"
+         class="subviewbutton"
+-        type="icon ghost"
+-        data-l10n-id="tab-group-editor-smart-suggest-button-create">
++        type="icon ghost">
+       </html:moz-button>
+     `;
+ 
+     static loadingSection = /*html*/ `
+       <html:div id="tab-group-suggestions-loading" hidden="true">
+         <html:div
+-          class="tab-group-suggestions-loading-header"
+-          data-l10n-id="tab-group-suggestions-loading-header">
++          class="tab-group-suggestions-loading-header">
+         </html:div>
+         <html:div class="tab-group-suggestions-loading-block"></html:div>
+         <html:div class="tab-group-suggestions-loading-block"></html:div>
+@@ -266,12 +250,9 @@
+               <html:moz-button
+                 disabled="true"
+                 type="icon ghost"
+-                id="tab-group-suggestions-message"
+-                data-l10n-id="tab-group-editor-no-tabs-found-title">
++                id="tab-group-suggestions-message">
+               </html:moz-button>
+-              <html:p
+-                data-l10n-id="tab-group-editor-no-tabs-found-message">
+-              </html:p>
++              <html:p></html:p>
+             </html:div>
+ 
+             ${this.defaultActions}
+@@ -388,13 +369,6 @@
+         true,
+         this.#onSmartTabGroupsPrefChange.bind(this)
+       );
+-
+-      XPCOMUtils.defineLazyPreferenceGetter(
+-        this,
+-        "aitabEnabled",
+-        "browser.smartwindow.aitab.enabled",
+-        false
+-      );
+     }
+ 
+     connectedCallback() {
+@@ -480,7 +454,6 @@
+           "tabGroupEditor_moveGroupToNewWindow"
+         ),
+         copyAllLinks: document.getElementById("tabGroupEditor_copyAllLinks"),
+-        createAITab: document.getElementById("tabGroupEditor_createAITab"),
+         ungroupTabs: document.getElementById("tabGroupEditor_ungroupTabs"),
+         saveAndCloseGroup: document.getElementById(
+           "tabGroupEditor_saveAndCloseGroup"
+@@ -542,14 +515,6 @@
+         this.close();
+       });
+ 
+-      this.#commandButtons.createAITab.addEventListener("command", () => {
+-        lazy.AIWindow.createAITab(
+-          window,
+-          this.activeGroup.tabs.map(tab => tab.linkedBrowser.currentURI.spec)
+-        );
+-        this.close();
+-      });
+-
+       this.panel.addEventListener("popupshown", this);
+       this.panel.addEventListener("popuphidden", this);
+       this.panel.addEventListener("keypress", this);
+@@ -557,22 +522,16 @@
+       Glean.tabgroup.smartTabEnabled.set(this.smartTabGroupsPrefEnabled);
+     }
+ 
++    // GORILLA excised 2026-10-15 (158, D-158-08): AI-suggested tab groups are off in code, not only by pref.
++    // Both answers are a constant false, so the editor only ever enters its
++    // standard (no AI) states and the suggestion, opt-in and model-download
++    // paths below are never reached. Their texts are no longer shipped.
+     get smartTabGroupsEnabled() {
+-      return (
+-        Services.locale.appLocaleAsBCP47.startsWith("en") &&
+-        this.smartTabGroupsUserEnabled &&
+-        this.smartTabGroupsFeatureConfigEnabled &&
+-        !PrivateBrowsingUtils.isWindowPrivate(this.documentGlobal) &&
+-        this.mlEnabled
+-      );
++      return false;
+     }
+ 
+     get smartTabGroupsPrefEnabled() {
+-      return (
+-        this.smartTabGroupsUserEnabled &&
+-        this.smartTabGroupsFeatureConfigEnabled &&
+-        this.smartTabGroupsOptin
+-      );
++      return false;
+     }
+ 
+     #onSmartTabGroupsPrefChange(_preName, _prev, _latest) {
+@@ -947,13 +906,6 @@
+ 
+       this.#commandButtons.shareTabGroup.hidden =
+         !ContentSharingUtils.isEnabled;
+-      this.#commandButtons.createAITab.hidden = !(
+-        this.aitabEnabled &&
+-        lazy.AIWindow.isAIWindowActiveAndEnabled(window) &&
+-        this.activeGroup?.tabs.some(tab =>
+-          ["http", "https"].includes(tab.linkedBrowser.currentURI.scheme)
+-        )
+-      );
+     }
+ 
+     on_popuphidden() {
+diff --git a/browser/locales/jar.mn b/browser/locales/jar.mn
+index d53d8c6f4a..e35ffa8fb2 100644
+--- a/browser/locales/jar.mn
++++ b/browser/locales/jar.mn
+@@ -14,8 +14,7 @@
+   preview/credentialChooser.ftl                    (../../toolkit/components/credentialmanagement/credentialChooser.ftl)
+   browser                                          (%browser/**/*.ftl)
+   preview/genai.ftl                                (../locales-preview/genai.ftl)
+-  preview/aiWindow.ftl                             (../locales-preview/aiWindow.ftl)
+-  preview/smartTabGroups.ftl                       (../locales-preview/smartTabGroups.ftl)
++# GORILLA excised 2026-10-15 (158, D-158-08): preview AI window and smart tab group texts not shipped.
+   preview/privacyPreferences.ftl                   (../locales-preview/privacyPreferences.ftl)
+   preview/autoTabGrouping.ftl                      (../locales-preview/autoTabGrouping.ftl)
+   preview/remoteControl.ftl                          (../locales-preview/remoteControl.ftl)
+diff --git a/browser/themes/shared/browser-shared.css b/browser/themes/shared/browser-shared.css
+index 58502dc935..e3aba262d6 100644
+--- a/browser/themes/shared/browser-shared.css
++++ b/browser/themes/shared/browser-shared.css
+@@ -27,7 +27,7 @@
+ @import url("chrome://browser/skin/searchbar.css");
+ @import url("chrome://browser/skin/sharePanel.css");
+ @import url("chrome://browser/skin/sidebar.css");
+-@import url("chrome://browser/skin/aiWindowSidebar.css");
++/* GORILLA excised 2026-10-15 (158, D-158-08): the AI sidebar stylesheet is not imported. */
+ @import url("chrome://browser/skin/smartwindowGroupTabs.css");
+ @import url("chrome://browser/skin/smartwindowMonitor.css");
+ @import url("chrome://browser/skin/customizableui/customizeMode.css");
+diff --git a/browser/themes/shared/jar.inc.mn b/browser/themes/shared/jar.inc.mn
+index 522446f27e..5fbd905cff 100644
+--- a/browser/themes/shared/jar.inc.mn
++++ b/browser/themes/shared/jar.inc.mn
+@@ -16,7 +16,7 @@
+   skin/classic/browser/tab-list-tree.css                       (../shared/tab-list-tree.css)
+   skin/classic/browser/addon-notification.css                  (../shared/addon-notification.css)
+   skin/classic/browser/autocomplete.css                        (../shared/autocomplete.css)
+-  skin/classic/browser/aiWindowSidebar.css                     (../shared/aiWindowSidebar.css)
++# GORILLA excised 2026-10-15 (158, D-158-08): AI sidebar stylesheet not shipped.
+ # GORILLA D-157-40: skin/classic/browser/blockedSite.css (about:blocked is not packaged)
+   skin/classic/browser/browser-colors.css                      (../shared/browser-colors.css)
+   skin/classic/browser/browser-shared.css                      (../shared/browser-shared.css)
+diff --git a/stylelint-rollouts.config.js b/stylelint-rollouts.config.js
+index 4cdca83e2d..029d39a213 100644
+--- a/stylelint-rollouts.config.js
++++ b/stylelint-rollouts.config.js
+@@ -171,7 +171,6 @@ module.exports = [
+       "browser/themes/shared/addon-notification.css",
+       "browser/themes/shared/addons/extension-controlled.css",
+       "browser/themes/shared/addons/unified-extensions.css",
+-      "browser/themes/shared/aiWindowSidebar.css",
+       "browser/themes/shared/autocomplete.css",
+       "browser/themes/shared/blockedSite.css",
+       "browser/themes/shared/contextmenu.css",

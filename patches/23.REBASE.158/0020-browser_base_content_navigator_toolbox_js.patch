@@ -1,0 +1,65 @@
+# Gorilla 158 rebase: browser/base/content/navigator-toolbox.js as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/base/content/navigator-toolbox.js b/browser/base/content/navigator-toolbox.js
+index 6fbf4b9c0838bb72f58e7e8a12c57dff8383fca0..bea2d145796a51d08ba7b70f4826db9f304c4fcd 100644
+--- a/browser/base/content/navigator-toolbox.js
++++ b/browser/base/content/navigator-toolbox.js
+@@ -216,10 +216,10 @@ document.addEventListener(
+         #tracking-protection-icon-container,
+         #identity-icon-box,
+         #identity-permission-box,
+-        #translations-button,
+-        #split-view-button,
+-        #smartwindow-ask-button
++        #split-view-button
+         `);
++      // GORILLA UNLEASHED - PHYSICAL LOCK: no Smart Window (aiwindow excised): #smartwindow-ask-button removed.
++      // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): #translations-button removed from the selector.
+       if (!element) {
+         return;
+       }
+@@ -303,9 +303,7 @@ document.addEventListener(
+           PageProxyClickHandler(event);
+           break;
+ 
+-        case "translations-button":
+-          FullPageTranslationsPanel.open(event);
+-          break;
++        // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): no translations-button case.
+ 
+         case "split-view-button":
+           if (isLeftClick) {
+@@ -337,7 +335,6 @@ document.addEventListener(
+         #trust-icon-container,
+         #identity-icon-box,
+         #identity-permission-box,
+-        #translations-button,
+         #alltabs-button,
+         #pageActionButton,
+         #downloads-button,
+@@ -345,9 +342,10 @@ document.addEventListener(
+         #unified-extensions-button,
+         #library-button,
+         #ipprotection-button,
+-        #split-view-button,
+-        #smartwindow-ask-button
++        #split-view-button
+       `);
++      // GORILLA UNLEASHED - PHYSICAL LOCK: no Smart Window (aiwindow excised): #smartwindow-ask-button removed.
++      // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): #translations-button removed from the selector.
+       if (!element) {
+         return;
+       }
+@@ -408,9 +406,7 @@ document.addEventListener(
+           gPermissionPanel.handleIdentityButtonEvent(event);
+           break;
+ 
+-        case "translations-button":
+-          FullPageTranslationsPanel.open(event);
+-          break;
++        // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): no translations-button case.
+ 
+         case "alltabs-button":
+           gTabsPanel.showAllTabsPanel(event, "alltabs-button");

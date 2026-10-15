@@ -1,0 +1,17 @@
+# Gorilla 158 rebase: toolkit/components/translations/content/about-translations.html as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/components/translations/content/about-translations.html b/toolkit/components/translations/content/about-translations.html
+index b61a96d8a4a91e52d53e5f386826d58d744b75f6..d971282e8392eb0a9f602d032ce7c035173c4e24 100644
+--- a/toolkit/components/translations/content/about-translations.html
++++ b/toolkit/components/translations/content/about-translations.html
+@@ -42,7 +42,7 @@
+       <div id="about-translations-logo-and-h1">
+         <img
+           id="about-translations-logo"
+-          src="chrome://branding/content/about-logo.svg"
++          src="chrome://branding/content/about-logo.png"
+         />
+         <h1
+           id="about-translations-h1"

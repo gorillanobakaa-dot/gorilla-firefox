@@ -1,0 +1,19 @@
+# Gorilla 158 rebase: browser/themes/shared/toolbarbutton-icons.css as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/themes/shared/toolbarbutton-icons.css b/browser/themes/shared/toolbarbutton-icons.css
+index 7e992eb485feec6bbc6a9c6b0f02ec9406c47bb0..51516b0461961c2d10a932b62c96259a2ce11a90 100644
+--- a/browser/themes/shared/toolbarbutton-icons.css
++++ b/browser/themes/shared/toolbarbutton-icons.css
+@@ -357,9 +357,7 @@
+   list-style-image: url("chrome://global/skin/icons/content-analysis.svg");
+ }
+ 
+-#fxms-bmb-button {
+-  list-style-image: url("chrome://branding/content/about-logo.png");
+-}
++/* GORILLA D-157-35: no 16 px Gorilla on #fxms-bmb-button (a messaging-system button Gorilla never shows) */
+ 
+ #ipprotection-button {
+   list-style-image: url("chrome://browser/content/ipprotection/assets/toolbaricons/ipprotection-off.svg");

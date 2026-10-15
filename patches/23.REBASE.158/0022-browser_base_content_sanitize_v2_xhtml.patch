@@ -1,0 +1,18 @@
+# Gorilla 158 rebase: browser/base/content/sanitize_v2.xhtml as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/base/content/sanitize_v2.xhtml b/browser/base/content/sanitize_v2.xhtml
+index 9eb9554ba37a9714b91a2bf688997782473a1f5b..0d738ea474baae28400e01a2cae3d25e83b7a9d6 100644
+--- a/browser/base/content/sanitize_v2.xhtml
++++ b/browser/base/content/sanitize_v2.xhtml
+@@ -34,7 +34,8 @@
+ 
+       <html:link rel="localization" href="branding/brand.ftl" />
+       <html:link rel="localization" href="browser/sanitize.ftl" />
+-      <html:link rel="localization" href="browser/aiWindow.ftl" />
++      <html:link rel="localization" href="toolkit/branding/brandings.ftl" />
++      <!-- GORILLA excised 2026-10-15 (158, D-158-08): AI window texts (aiWindow) not linked -->
+     </linkset>
+ 
+     <script src="chrome://global/content/preferencesBindings.js" />

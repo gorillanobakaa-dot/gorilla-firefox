@@ -1,0 +1,17 @@
+# Gorilla 158 rebase: browser/components/asrouter/modules/RemoteL10n.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/asrouter/modules/RemoteL10n.sys.mjs b/browser/components/asrouter/modules/RemoteL10n.sys.mjs
+index 822b3aec1593eddddca186976fb525756616c1c8..f7252d2b1f72ef3bf2826259e15ba35dfa5d9ee3 100644
+--- a/browser/components/asrouter/modules/RemoteL10n.sys.mjs
++++ b/browser/components/asrouter/modules/RemoteL10n.sys.mjs
+@@ -220,7 +220,7 @@ export class _RemoteL10n {
+         "browser/policy-messages.ftl",
+         "browser/profiles.ftl",
+         "browser/termsofuse.ftl",
+-        "browser/aiWindow.ftl",
++        // GORILLA excised 2026-10-15 (158, D-158-08): AI window texts not loaded.
+         "toolkit/branding/brandings.ftl",
+       ],
+       false

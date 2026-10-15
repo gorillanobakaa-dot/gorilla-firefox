@@ -1,0 +1,56 @@
+# Gorilla 158 rebase: browser/components/urlbar/QuickActionsLoaderDefault.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/urlbar/QuickActionsLoaderDefault.sys.mjs b/browser/components/urlbar/QuickActionsLoaderDefault.sys.mjs
+index 838512efba972e47fb90d301081416d1ce3cbde1..ccc611c5c523f09f9be3381de23f6e8d4811cf34 100644
+--- a/browser/components/urlbar/QuickActionsLoaderDefault.sys.mjs
++++ b/browser/components/urlbar/QuickActionsLoaderDefault.sys.mjs
+@@ -15,7 +15,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
+   ResetProfile: "resource://gre/modules/ResetProfile.sys.mjs",
+   ScreenshotsUtils:
+     "moz-src:///browser/components/screenshots/ScreenshotsUtils.sys.mjs",
+-  TranslationsParent: "resource://gre/actors/TranslationsParent.sys.mjs",
++  // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): TranslationsParent getter removed
+ });
+ 
+ import { AppConstants } from "resource://gre/modules/AppConstants.sys.mjs";
+@@ -230,7 +230,7 @@ const DEFAULT_ACTIONS = {
+   },
+   refresh: {
+     l10nCommands: ["quickactions-cmd-refresh"],
+-    icon: "chrome://branding/content/icon32.png",
++    icon: "chrome://global/skin/icons/reload.svg", // GORILLA D-157-35: neutral, not a 16 px Gorilla
+     label: "quickactions-refresh",
+     isUnsupported: () => !lazy.ResetProfile.resetSupported(),
+     onPick: (_queryContext, controller) => {
+@@ -293,28 +293,7 @@ const DEFAULT_ACTIONS = {
+     label: "quickactions-themes",
+     onPick: openAddonsUrl("addons://list/theme"),
+   },
+-  translate: {
+-    l10nCommands: ["quickactions-cmd-translate"],
+-    icon: "chrome://browser/skin/translations-companion.svg",
+-    label: "quickactions-translate",
+-    isUnsupported: () => {
+-      return !(
+-        lazy.TranslationsParent.AIFeature.isEnabled &&
+-        Services.prefs.getBoolPref(
+-          "browser.translations.quickAction.enabled",
+-          false
+-        )
+-      );
+-    },
+-    onPick: async (_queryContext, controller) => {
+-      await lazy.TranslationsParent.openAboutTranslationsPage({
+-        browserWindow: controller.browserWindow,
+-        targetLanguage: "derive",
+-      });
+-
+-      return { focusContent: true };
+-    },
+-  },
++  // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): the "translate" quick action is removed.
+   update: {
+     l10nCommands: ["quickactions-cmd-update"],
+     icon: "chrome://global/skin/icons/update-icon.svg",

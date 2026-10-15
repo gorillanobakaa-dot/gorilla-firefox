@@ -1,0 +1,18 @@
+# Gorilla 158 rebase: netwerk/dns/nsHostResolver.cpp as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/netwerk/dns/nsHostResolver.cpp b/netwerk/dns/nsHostResolver.cpp
+index 6ce08c2b016e757f30402b325dd615c332abd76f..13ca66385477cb38a620f229d17437b893cab825 100644
+--- a/netwerk/dns/nsHostResolver.cpp
++++ b/netwerk/dns/nsHostResolver.cpp
+@@ -182,6 +182,9 @@ nsresult nsHostResolver::Init() MOZ_NO_THREAD_SAFETY_ANALYSIS {
+   LOG(("Native HTTPS records supported=%d", bool(sNativeHTTPSSupported)));
+ 
+   nsCOMPtr<nsIThreadPool> threadPool = new nsThreadPool();
++  // GORILLA 157 (D-157-30, network study F1): upstream's own limits restored.
++  // The 154-era "raise to 16 / 12 idle" hunk now LOWERS the pool: 157 allows
++  // MaxResolverThreads() = 24 + 40 = 64 (network.dns.max_*_priority_threads).
+   MOZ_ALWAYS_SUCCEEDS(threadPool->SetThreadLimit(MaxResolverThreads()));
+   MOZ_ALWAYS_SUCCEEDS(threadPool->SetIdleThreadLimit(8));
+   MOZ_ALWAYS_SUCCEEDS(threadPool->SetIdleThreadMaximumTimeout(poolTimeoutMs));

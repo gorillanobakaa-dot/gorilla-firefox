@@ -1,0 +1,24 @@
+# Gorilla 158 rebase: browser/components/profiles/SelectableProfileService.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/profiles/SelectableProfileService.sys.mjs b/browser/components/profiles/SelectableProfileService.sys.mjs
+index 494742046aae30a704f435bf41322395eaa8e0b0..15456f0cda9e0c6bbaad0fc3ea111b2c72159914 100644
+--- a/browser/components/profiles/SelectableProfileService.sys.mjs
++++ b/browser/components/profiles/SelectableProfileService.sys.mjs
+@@ -436,12 +436,9 @@ class SelectableProfileServiceClass extends EventEmitter {
+ 
+     this.migrateToProfilesCreatedPref();
+ 
+-    // If a storeID has been assigned then profiles may have been created so force us on. Also
+-    // covers the case when the selector is shown at startup and we don't have preferences
+-    // available.
+-    if (this.groupToolkitProfile?.storeID) {
+-      return true;
+-    }
++    // GORILLA D-157-40 (2026-10-09): no forcing on. Upstream switched the profile switcher on whenever the profile
++    // group had a store ID (a profiles.ini from upstream Firefox), whatever the locked browser.profiles.enabled said;
++    // its pages (about:profilemanager and the rest) are not registered in Gorilla, so its menus led nowhere.
+ 
+     return lazy.PROFILES_ENABLED && !!this.groupToolkitProfile;
+   }

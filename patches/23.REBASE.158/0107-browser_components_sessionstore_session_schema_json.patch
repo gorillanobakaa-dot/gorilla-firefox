@@ -1,0 +1,18 @@
+# Gorilla 158 rebase: browser/components/sessionstore/session.schema.json as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/sessionstore/session.schema.json b/browser/components/sessionstore/session.schema.json
+index 38396547776847057d7159dcac4c0009ed8b732e..efb34d67c9b2eedf48a8da46a3cc755359c26d76 100644
+--- a/browser/components/sessionstore/session.schema.json
++++ b/browser/components/sessionstore/session.schema.json
+@@ -201,9 +201,6 @@
+           "deprecated": true,
+           "type": "string"
+         },
+-        "isAIWindow": {
+-          "type": "boolean"
+-        },
+         "isPopup": {
+           "type": "boolean"
+         },
