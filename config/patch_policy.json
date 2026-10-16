@@ -335,6 +335,7 @@
       "reason": "The 158 port's repairs and Gorilla changes made on the Linux 158 tree (2026-10-14/15), exported by build-harness export-hand: build fixes for 158 API moves, the GPU blocklist unlock carried from 155, About stamp, Settings layout, the single search engine. Cross-platform source unless a patch names its platform.",
       "exclude_on": {
         "windows": [
+          "007-build-fix-pdmfactory-h-decoderagent-cpp-webcodecs-purpose-mi.patch",
           "008-build-fix-findinreadable-pattern-text-comparator-caseinsensi.patch",
           "009-build-fix-browser-fonts-moz-build-wires-the-7-microsoft-font.patch",
           "010-gpu-widget-gtk-gfxinfo-cpp-blocklist-short-circuit-for-intel.patch"
