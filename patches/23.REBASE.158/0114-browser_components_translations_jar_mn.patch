@@ -1,0 +1,20 @@
+# Gorilla 158 rebase: browser/components/translations/jar.mn as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/translations/jar.mn b/browser/components/translations/jar.mn
+index fe552d2c9ac45edcf4c8f625d70880ecda030c25..74f8786fc80fd49da82e8890ed22ba75e689c6ae 100644
+--- a/browser/components/translations/jar.mn
++++ b/browser/components/translations/jar.mn
+@@ -2,7 +2,7 @@
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ 
+-browser.jar:
+-    content/browser/translations/selectTranslationsPanel.js      (content/selectTranslationsPanel.js)
+-    content/browser/translations/fullPageTranslationsPanel.js    (content/fullPageTranslationsPanel.js)
+-    content/browser/translations/TranslationsPanelShared.sys.mjs (content/TranslationsPanelShared.sys.mjs)
++# GORILLA UNLEASHED - PHYSICAL LOCK: no translations
++# Decision D-157-03 (English only): the full-page and select translations panels are not packaged
++# (chrome://browser/content/translations/ is empty). Their markup is no longer #included by main-popupset.inc.xhtml.
++# The file stays because mozbuild refuses a jar.mn that exists without a JAR_MANIFESTS declaration.

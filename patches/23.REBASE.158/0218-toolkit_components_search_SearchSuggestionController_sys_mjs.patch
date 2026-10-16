@@ -1,0 +1,18 @@
+# Gorilla 158 rebase: toolkit/components/search/SearchSuggestionController.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/components/search/SearchSuggestionController.sys.mjs b/toolkit/components/search/SearchSuggestionController.sys.mjs
+index 6b32d77bb726ab00fa2aae41dcfe1dbf97a06e70..ecc0b23263b1e55579b2e392797b70c5f775b66e 100644
+--- a/toolkit/components/search/SearchSuggestionController.sys.mjs
++++ b/toolkit/components/search/SearchSuggestionController.sys.mjs
+@@ -341,7 +341,8 @@ export class SearchSuggestionController {
+       maxRemoteResults &&
+       SearchSuggestionController.engineOffersSuggestions(engine, fetchTrending)
+     ) {
+-      promises.push(this.#fetchRemote(this.#context));
++      // GORILLA UNLEASHED - PHYSICAL LOCK (egress): no keystroke is sent to the search engine before Enter (search bar, about:home, context menu).
++      // promises.push(this.#fetchRemote(this.#context));
+     }
+ 
+     /**

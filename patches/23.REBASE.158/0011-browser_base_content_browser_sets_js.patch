@@ -1,0 +1,35 @@
+# Gorilla 158 rebase: browser/base/content/browser-sets.js as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/base/content/browser-sets.js b/browser/base/content/browser-sets.js
+index 75b67bbd65a113349ef1a8adcd2c3084decfd94d..289234596a2908560379e3e6b6050ba5a75cafc9 100644
+--- a/browser/base/content/browser-sets.js
++++ b/browser/base/content/browser-sets.js
+@@ -7,7 +7,7 @@ document.addEventListener(
+   () => {
+     const lazy = {};
+     ChromeUtils.defineESModuleGetters(lazy, {
+-      TranslationsParent: "resource://gre/actors/TranslationsParent.sys.mjs",
++      // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): TranslationsParent getter removed
+       ContainerCreationPanel:
+         "chrome://browser/content/usercontext/ContainerCreationPanel.mjs",
+       Referrals: "resource:///modules/referrals/Referrals.sys.mjs",
+@@ -128,15 +128,8 @@ document.addEventListener(
+           case "cmd_findSelection":
+             gLazyFindCommand("onFindSelectionCommand");
+             break;
+-          case "cmd_translate":
+-            FullPageTranslationsPanel.open(event);
+-            break;
+-          case "cmd_openAboutTranslations":
+-            lazy.TranslationsParent.openAboutTranslationsPage({
+-              browserWindow: window,
+-              targetLanguage: "derive",
+-            }).catch(console.error);
+-            break;
++          // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): cmd_translate and
++          // cmd_openAboutTranslations removed.
+           case "cmd_editPDF":
+             switchToTabHavingURI("about:pdf", true);
+             break;

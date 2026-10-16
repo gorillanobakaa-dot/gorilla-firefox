@@ -1,0 +1,18 @@
+# Gorilla 158 rebase: browser/base/content/browser-sets.inc.xhtml as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/base/content/browser-sets.inc.xhtml b/browser/base/content/browser-sets.inc.xhtml
+index 223691fb0cd3755493bf3f5151ec497f27ab38af..ed0427e2d02705b10c8a2c3985374134b2d0eecd 100644
+--- a/browser/base/content/browser-sets.inc.xhtml
++++ b/browser/base/content/browser-sets.inc.xhtml
+@@ -54,8 +54,7 @@
+     <command id="cmd_findSelection" />
+ #endif
+     <command id="cmd_reportBrokenSite"/>
+-    <command id="cmd_translate" />
+-    <command id="cmd_openAboutTranslations" />
++    <!-- GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): cmd_translate and cmd_openAboutTranslations removed -->
+     <command id="cmd_editPDF" />
+     <command id="cmd_openReferrals" />
+     <!-- work-around bug 392512 -->

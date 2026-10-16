@@ -1,0 +1,30 @@
+# Gorilla 158 rebase: browser/extensions/newtab/lib/TelemetryFeed.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/extensions/newtab/lib/TelemetryFeed.sys.mjs b/browser/extensions/newtab/lib/TelemetryFeed.sys.mjs
+index 7fec1c124a4e98594d6a38cede33e5e06e27f961..ae2035fbc5525b45043cae555626f13c64f58acf 100644
+--- a/browser/extensions/newtab/lib/TelemetryFeed.sys.mjs
++++ b/browser/extensions/newtab/lib/TelemetryFeed.sys.mjs
+@@ -1564,6 +1564,10 @@ export class TelemetryFeed {
+    */
+ 
+   async sendUnifiedAdsCallbackEvent(data = { url: null, position: null }) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no ad callback
++    if (true) {
++      return;
++    }
+     if (!data.url) {
+       throw new Error(
+         `[Unified ads callback] Missing argument (No url). Cannot send telemetry event.`
+@@ -2184,6 +2188,10 @@ export class TelemetryFeed {
+   }
+ 
+   async handleReportAdUserEvent(action) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no ad report
++    if (true) {
++      return;
++    }
+     const { placement_id, position, report_reason, reporting_url } =
+       action.data || {};
+ 

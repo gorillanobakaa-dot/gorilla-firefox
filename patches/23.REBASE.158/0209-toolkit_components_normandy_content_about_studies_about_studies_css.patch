@@ -1,0 +1,15 @@
+# Gorilla 158 rebase: toolkit/components/normandy/content/about-studies/about-studies.css as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/components/normandy/content/about-studies/about-studies.css b/toolkit/components/normandy/content/about-studies/about-studies.css
+index f1701598833d6c232d751aae57650d0805ef16e5..f1954614b4f4443f9373b7abfe2b39b33933992e 100644
+--- a/toolkit/components/normandy/content/about-studies/about-studies.css
++++ b/toolkit/components/normandy/content/about-studies/about-studies.css
+@@ -188,5 +188,5 @@ a, .learn-more-link { color: #35b3ee !important; }
+ /* GORILLA OVERRIDE 2026-07-31 (2nd pass): the crisp gorilla the author specified
+    for this page — same fixed-bottom mechanism as aboutTelemetry.css. */
+ body {
+-  background: #000000 url("chrome://branding/content/about-logo.svg") no-repeat fixed center bottom 10px / 450px !important;
++  background: #000000 url("chrome://branding/content/about-logo.png") no-repeat fixed center bottom 10px / 450px !important;
+ }

@@ -1,0 +1,24 @@
+# Gorilla 158 rebase: browser/branding/gorilla/content/jar.mn as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/branding/gorilla/content/jar.mn b/browser/branding/gorilla/content/jar.mn
+index 490670db04e787a8f451d33df3ec1b4dab3b4847..f4f6edd069bdf0813ef379dfd8a884539edf02d0 100644
+--- a/browser/branding/gorilla/content/jar.mn
++++ b/browser/branding/gorilla/content/jar.mn
+@@ -4,15 +4,9 @@
+ 
+ browser.jar:
+ % content branding %content/branding/ contentaccessible=yes
+-  content/branding/about.png
+   content/branding/about-logo.png
+-  content/branding/about-logo.svg
+-  content/branding/about-logo@2x.png
+   content/branding/about-wordmark.svg
+-  content/branding/about-logo-private.png
+-  content/branding/about-logo-private@2x.png
+   content/branding/document.ico                  (../document.ico)
+-  content/branding/document_pdf.svg
+   content/branding/firefox-wordmark.svg
+   content/branding/icon16.png                    (../default16.png)
+   content/branding/icon32.png                    (../default32.png)

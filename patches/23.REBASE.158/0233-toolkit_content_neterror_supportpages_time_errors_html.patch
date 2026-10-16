@@ -1,0 +1,21 @@
+# Gorilla 158 rebase: toolkit/content/neterror/supportpages/time-errors.html as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/content/neterror/supportpages/time-errors.html b/toolkit/content/neterror/supportpages/time-errors.html
+index 8b9f2c68c5b327361cf8f10baa08d4ee49afad74..03e87fa1303e9f06f9a3144a38a691e0819a260e 100644
+--- a/toolkit/content/neterror/supportpages/time-errors.html
++++ b/toolkit/content/neterror/supportpages/time-errors.html
+@@ -15,12 +15,6 @@
+       type="text/css"
+       href="chrome://global/skin/offlineSupportPages.css"
+     />
+-    <link
+-      rel="icon"
+-      type="image/png"
+-      id="favicon"
+-      href="chrome://branding/content/icon32.png"
+-    />
+     <title>How to troubleshoot time related errors on secure websites</title>
+   </head>
+   <body>

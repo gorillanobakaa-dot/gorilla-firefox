@@ -1,0 +1,44 @@
+# Gorilla 158 rebase: toolkit/locales/en-US/toolkit/global/contextual-identity.ftl as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/locales/en-US/toolkit/global/contextual-identity.ftl b/toolkit/locales/en-US/toolkit/global/contextual-identity.ftl
+index 732f801201c1910b02e4543ed4addf6407484399..361a991afe510c91331fc3cd375e14d0bef2ec6f 100644
+--- a/toolkit/locales/en-US/toolkit/global/contextual-identity.ftl
++++ b/toolkit/locales/en-US/toolkit/global/contextual-identity.ftl
+@@ -17,7 +17,7 @@ user-context-shopping2 =
+ ##
+ 
+ user-context-new-tab2 =
+-    .label = New Tab
++    .label = New Gorilla Tab
+ user-context-add-container2 =
+     .label = Add new container
+ user-context-manage-containers2 =
+@@ -26,7 +26,7 @@ user-context-manage-containers2 =
+ # The below strings need separate messages for use in panel-list implementations,
+ # which take their label from the message value rather than a .label attribute.
+ 
+-user-context-new-tab2-panel-item = New Tab
++user-context-new-tab2-panel-item = New Gorilla Tab
+ user-context-add-container2-panel-item = Add new container
+ user-context-manage-containers2-panel-item = Manage containers
+ 
+@@ -55,7 +55,6 @@ user-context-color-gray =
+ 
+ ## Container icons, shown as selectable swatches in the container
+ ## creation/edit dialog.
+-
+ user-context-icon-fingerprint =
+     .label = Fingerprint
+ user-context-icon-briefcase =
+@@ -84,3 +83,8 @@ user-context-icon-circle =
+     .label = Dot
+ user-context-icon-fence =
+     .label = Fence
++
++
++user-context-add-container =
++    .label = Add new container
++    .accesskey = A
+\ No newline at end of file

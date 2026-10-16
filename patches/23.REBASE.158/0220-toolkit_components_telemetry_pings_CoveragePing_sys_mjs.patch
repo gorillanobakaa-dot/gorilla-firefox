@@ -1,0 +1,19 @@
+# Gorilla 158 rebase: toolkit/components/telemetry/pings/CoveragePing.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/components/telemetry/pings/CoveragePing.sys.mjs b/toolkit/components/telemetry/pings/CoveragePing.sys.mjs
+index a41d7dcc7bfd6fedf059619c04c2ffbbdde02a5a..5bc60ce271a42c3d14bd9b83ded71ccfec1796af 100644
+--- a/toolkit/components/telemetry/pings/CoveragePing.sys.mjs
++++ b/toolkit/components/telemetry/pings/CoveragePing.sys.mjs
+@@ -61,6 +61,10 @@ export var CoveragePing = Object.freeze({
+   // by design. It also sends no identifying data like the client ID. See the "coverage ping"
+   // documentation for details.
+   reportTelemetrySetting() {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: the telemetry coverage ping (coverage.telemetry.mozilla.org) is never sent
++    if (true) {
++      return;
++    }
+     const enabled = Services.prefs.getBoolPref(TELEMETRY_ENABLED_PREF, false);
+ 
+     const payload = {

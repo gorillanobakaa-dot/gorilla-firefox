@@ -1,0 +1,20 @@
+# Gorilla 158 rebase: browser/extensions/newtab/data/content/remote-renderer-host.html as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/extensions/newtab/data/content/remote-renderer-host.html b/browser/extensions/newtab/data/content/remote-renderer-host.html
+index 3c2fbafd772d7f38b7f33285d2563ba6a100c1db..c33c43c3ed3449afe65b4d08b94a6bcff0d8978b 100644
+--- a/browser/extensions/newtab/data/content/remote-renderer-host.html
++++ b/browser/extensions/newtab/data/content/remote-renderer-host.html
+@@ -12,11 +12,6 @@
+     <meta name="color-scheme" content="light dark" />
+     <meta name="viewport" content="width=device-width, initial-scale=1" />
+     <title data-l10n-id="newtab-page-title"></title>
+-    <link
+-      rel="icon"
+-      type="image/png"
+-      href="chrome://branding/content/icon32.png"
+-    />
+     <link rel="localization" href="branding/brand.ftl" />
+     <link rel="localization" href="toolkit/branding/brandings.ftl" />
+     <link rel="localization" href="browser/newtab/newtab.ftl" />

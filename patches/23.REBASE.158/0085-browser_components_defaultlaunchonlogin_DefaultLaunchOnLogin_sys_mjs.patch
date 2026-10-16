@@ -1,0 +1,22 @@
+# Gorilla 158 rebase: browser/components/defaultlaunchonlogin/DefaultLaunchOnLogin.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/defaultlaunchonlogin/DefaultLaunchOnLogin.sys.mjs b/browser/components/defaultlaunchonlogin/DefaultLaunchOnLogin.sys.mjs
+index ac2c1e9adb3a4b9569013f1ca01cfb9a2d476094..ba6116c12339202467cfe44c0f2d41f101221808 100644
+--- a/browser/components/defaultlaunchonlogin/DefaultLaunchOnLogin.sys.mjs
++++ b/browser/components/defaultlaunchonlogin/DefaultLaunchOnLogin.sys.mjs
+@@ -116,6 +116,13 @@ export var DefaultLaunchOnLogin = {
+    * feature is knowable.
+    */
+   async waitForNimbusReady() {
++    // GORILLA UNLEASHED - PHYSICAL LOCK (D-157-31): never start or wait for Nimbus.
++    // GORILLA TECHNIQUE T-157-31-A: nothing starts Nimbus (the experiment system). Starting it here would load
++    //   experiment recipes and wait for a Remote Settings update that never comes in Gorilla. The caller goes on
++    //   with its built-in defaults. Registry: Fieldkit fieldkit/buildh/techniques.py.
++    if (true) {
++      return;
++    }
+     await lazy.ExperimentAPI.init();
+     await lazy.ExperimentAPI._rsLoader.finishedUpdating();
+   },

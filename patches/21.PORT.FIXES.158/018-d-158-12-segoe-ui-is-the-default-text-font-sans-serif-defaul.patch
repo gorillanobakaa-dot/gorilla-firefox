@@ -1,0 +1,21 @@
+# Gorilla 158 port fix
+# D-158-12: Segoe UI is the default text font (sans-serif default, named; not locked)
+# Files: browser/app/profile/firefox.js
+
+diff --git a/browser/app/profile/firefox.js b/browser/app/profile/firefox.js
+index 037f2e36aa..4f99a5029c 100644
+--- a/browser/app/profile/firefox.js
++++ b/browser/app/profile/firefox.js
+@@ -4240,3 +4240,12 @@ pref("toolkit.telemetry.dap.helper.url", "", locked);
+ // preview page's helper and a set of test messages.
+ pref("browser.newtabpage.activity-stream.asrouter.devtoolsEnabled", false, locked);
+ // -- end GORILLA 2026-10-08 --
++
++// -- GORILLA 2026-10-15: Segoe UI is the default text font (D-158-12) --
++// Owner: "the segoe fonts are the clearest one especially for smaller screen ... set by default". The fonts ship in
++// the package (11.FONT.SYSTEM). Firefox's own default family is serif, which is whatever the machine's fontconfig maps
++// serif to (Inter on the VAIO), so the look changed from machine to machine. Named here, it is Segoe everywhere.
++// Not locked: a person who needs another font can still pick it in Settings > Accessibility > Fonts.
++pref("font.default.x-western", "sans-serif");
++pref("font.name.sans-serif.x-western", "Segoe UI");
++// -- end GORILLA 2026-10-15 --

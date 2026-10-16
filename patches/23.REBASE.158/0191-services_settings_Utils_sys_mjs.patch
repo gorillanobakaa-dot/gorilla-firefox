@@ -1,0 +1,50 @@
+# Gorilla 158 rebase: services/settings/Utils.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/services/settings/Utils.sys.mjs b/services/settings/Utils.sys.mjs
+index 26bee1dc32f65214f3701cf5310ad0fe8faa9927..e49c88c4b8a053f71ef079f1552d33883a5d2345 100644
+--- a/services/settings/Utils.sys.mjs
++++ b/services/settings/Utils.sys.mjs
+@@ -105,10 +105,9 @@ function _isUndefined(value) {
+ 
+ export var Utils = {
+   get SERVER_URL() {
+-    return lazy.allowServerURL
+-      ? // eslint-disable-next-line mozilla/valid-lazy
+-        lazy.gServerURL
+-      : AppConstants.REMOTE_SETTINGS_SERVER_URLS[0];
++    // GORILLA UNLEASHED - PHYSICAL LOCK (egress): Remote Settings never talks to a server. The dummy URL is
++    // Mozilla's own "no server" value; local dumps still load, nothing is fetched, no signature chain is pulled.
++    return "data:,#remote-settings-dummy/v1";
+   },
+ 
+   CHANGES_PATH: "/buckets/monitor/collections/changes/changeset",
+@@ -119,13 +118,9 @@ export var Utils = {
+   log,
+ 
+   get shouldSkipRemoteActivity() {
+-    if (
+-      (lazy.isRunningTests || Cu.isInAutomation) &&
+-      this.SERVER_URL == "data:,#remote-settings-dummy/v1"
+-    ) {
+-      return true;
+-    }
+-    return Services.policies?.isAllowed("remoteSettings") === false;
++    // GORILLA UNLEASHED - PHYSICAL LOCK (egress): every remote activity of Remote Settings is skipped, not only
++    // under tests. Sync, the startup bundle and attachment downloads all consult this getter.
++    return true;
+   },
+ 
+   get CERT_CHAIN_ROOT_IDENTIFIER() {
+@@ -153,6 +148,10 @@ export var Utils = {
+     // dumps only for the production server, and SERVER_URL above is the dummy URL, so since the egress lock every
+     // dump was ignored: no search-engine icons, no URL-decoration list, no password rules (found 2026-10-03).
+     // Dumps are local files in omni.ja; nothing is fetched (shouldSkipRemoteActivity stays true).
++    // GORILLA TECHNIQUE T-157-31-C "a lock must not switch off the built-in copy": upstream ties the use of
++    //   packaged data to the server being Mozilla's production one, so locking the server silently disabled
++    //   every dump (nothing leaked; features quietly did less). In a later Firefox, after locking any remote
++    //   source, check what else read its URL or state. Registry: Fieldkit fieldkit/buildh/techniques.py, `fieldkit build-harness techniques <task>`
+     return true;
+   },
+ 

@@ -1,0 +1,17 @@
+# Gorilla 158 port fix
+# D-158-09: the recommended-stories feed (discoverystream.enabled) locked off
+# Files: browser/app/profile/firefox.js
+
+diff --git a/browser/app/profile/firefox.js b/browser/app/profile/firefox.js
+index 7b27650044..037f2e36aa 100644
+--- a/browser/app/profile/firefox.js
++++ b/browser/app/profile/firefox.js
+@@ -2084,7 +2084,7 @@ pref("browser.urlbar.pocket.featureGate", false, locked);
+ pref("browser.urlbar.suggest.fakespot", false, locked);
+ 
+ // These prefs control if Discovery Stream is enabled.
+-pref("browser.newtabpage.activity-stream.discoverystream.enabled", false);
++pref("browser.newtabpage.activity-stream.discoverystream.enabled", false, locked);
+ pref("browser.newtabpage.activity-stream.discoverystream.hardcoded-basic-layout", false);
+ pref("browser.newtabpage.activity-stream.discoverystream.hybridLayout.enabled", false);
+ pref("browser.newtabpage.activity-stream.discoverystream.hideCardBackground.enabled", false);

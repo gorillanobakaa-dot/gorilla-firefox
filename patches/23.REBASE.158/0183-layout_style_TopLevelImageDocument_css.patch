@@ -1,0 +1,26 @@
+# Gorilla 158 rebase: layout/style/TopLevelImageDocument.css as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/layout/style/TopLevelImageDocument.css b/layout/style/TopLevelImageDocument.css
+index c34683a0613ac00cda464804856d78471af8fc0f..6c1fa6c30f08168966e34888ec22843cddd5bee8 100644
+--- a/layout/style/TopLevelImageDocument.css
++++ b/layout/style/TopLevelImageDocument.css
+@@ -16,12 +16,15 @@
+     color: #eee;
+     /* The background-attachment is fixed to stop an ugly white gutter
+        from appearing when the document is overscrolled. */
+-    background: url("chrome://global/skin/media/imagedoc-darknoise.png") fixed;
++    /* GORILLA D-157-35: solid black, the Gorilla look; the 128 px noise texture had no 2x version and was drawn
++       upscaled at 200 % scaling */
++    background: #000000;
+   }
+ 
+   img.transparent {
+     color: #222;
+-    background: hsl(0, 0%, 90%) url("chrome://global/skin/media/imagedoc-lightnoise.png");
++    /* GORILLA D-157-35: transparent pictures on the same black, no 1x-only texture */
++    background: #000000;
+   }
+ 
+   img {

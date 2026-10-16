@@ -1,0 +1,52 @@
+# Gorilla 158 rebase: toolkit/mozapps/extensions/internal/XPIProvider.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/mozapps/extensions/internal/XPIProvider.sys.mjs b/toolkit/mozapps/extensions/internal/XPIProvider.sys.mjs
+index 74d738e46fe536652d7069a9f4408724c79c4cee..2c34cabaa5bc7816034545930448691d25174a42 100644
+--- a/toolkit/mozapps/extensions/internal/XPIProvider.sys.mjs
++++ b/toolkit/mozapps/extensions/internal/XPIProvider.sys.mjs
+@@ -1636,6 +1636,21 @@ var XPIStates = {
+       }
+       changed = changed || loc.changed;
+ 
++      // GORILLA UNLEASHED - PHYSICAL LOCK: no sideloaded add-ons
++      // Decision D-157-05 (uBlock Origin only). Only the add-ons that ship inside the package (built-in and system
++      // locations) are registered. An add-on dropped into the profile's extensions folder, a global extensions
++      // directory or a Windows registry key is never registered, and one registered under an earlier build is
++      // forgotten here, so the database drops it at this startup. XPIDatabase.isUsableAddon refuses it as well.
++      // // GORILLA UNLEASHED - NO TEST BYPASS (2026-10-15): Cu.isInAutomation is true when MOZ_DISABLE_NONLOCAL_CONNECTIONS=1 and the pref security.turn_off_all_security_so_that_viruses_can_take_over_this_computer are set, which a user can be talked into. Tests are not built, so the lock holds unconditionally.
++      if (!loc.isBuiltin && !loc.isSystem) {
++        for (let id of Array.from(loc.keys())) {
++          logger.warn(`[GORILLA] Add-on ${id} in ${loc.name} refused: add-ons are built in only`);
++          loc.delete(id);
++          changed = true;
++        }
++        continue;
++      }
++
+       // Don't bother checking scopes where we don't accept side-loads.
+       if (ignoreSideloads && !(loc.scope & startupScanScopes)) {
+         continue;
+@@ -2774,6 +2789,21 @@ export var XPIProvider = {
+           `Clearing obsolete theme ${lastTheme}`,
+           promise
+         );
++      } else if (
++        lastTheme &&
++        lastTheme !== "default-theme@mozilla.org"
++      ) {
++        // GORILLA UNLEASHED - PHYSICAL LOCK: one theme
++        // Decision D-157-04. A profile whose active theme is anything but the default (for example Mozilla's dark
++        // theme, chosen under an earlier build) is put back on the default theme, the same way Mozilla resets a
++        // theme it no longer ships. XPIDatabase.isUsableAddon keeps every other theme from being enabled again.
++        logger.warn(`[GORILLA] Theme ${lastTheme} is not allowed; resetting to the default theme`);
++        let promise = AddonManagerPrivate.notifyAddonChanged(null, "theme");
++        this.startupPromises.push(promise);
++        lazy.AsyncShutdown.appShutdownConfirmed.addBlocker(
++          `Gorilla: resetting theme ${lastTheme} to the default`,
++          promise
++        );
+       }
+ 
+       const isInAutomationOrXPCShellTests =

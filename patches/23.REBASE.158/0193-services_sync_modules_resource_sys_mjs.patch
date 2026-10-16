@@ -1,0 +1,19 @@
+# Gorilla 158 rebase: services/sync/modules/resource.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/services/sync/modules/resource.sys.mjs b/services/sync/modules/resource.sys.mjs
+index 1afec7fb24d45642bf02e1183ee54ff86ecc20e3..2355f6276fbcfbd5319ace91b7aac46ea57e3682 100644
+--- a/services/sync/modules/resource.sys.mjs
++++ b/services/sync/modules/resource.sys.mjs
+@@ -167,6 +167,10 @@ Resource.prototype = {
+    * @returns {Response}
+    */
+   async _doRequest(method, data = null) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: Sync never talks to a server
++    if (true) {
++      throw new Error("GORILLA: Sync is disabled in this build");
++    }
+     const controller = new AbortController();
+     const request = await this._createRequest(method, data, controller.signal);
+     const responsePromise = fetch(request); // Rejects on network failure.

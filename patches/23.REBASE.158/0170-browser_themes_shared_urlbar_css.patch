@@ -1,0 +1,87 @@
+# Gorilla 158 rebase: browser/themes/shared/urlbar.css as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/themes/shared/urlbar.css b/browser/themes/shared/urlbar.css
+index 61ef517759225ef44b42b535fef6dacbfd0f6285..1ded03a1895cd549b13ad3fd789e02ccf84ab745 100644
+--- a/browser/themes/shared/urlbar.css
++++ b/browser/themes/shared/urlbar.css
+@@ -1040,7 +1040,8 @@ toolbar[inactive="true"] .urlbar,
+   }
+ 
+   #remote-control-icon {
+-    list-style-image: url(chrome://browser/content/static-robot.png);
++    /* GORILLA UNLEASHED: static-robot.png is 16x16 in a 16px box (blurry at 200%); aboutRobots-icon.png is the same robot at 64x64, packaged by browser/base/jar.mn. */
++    list-style-image: url(chrome://browser/content/aboutRobots-icon.png);
+     width: 16px;
+     height: 16px;
+   }
+@@ -1109,67 +1110,7 @@ toolbar[inactive="true"] .urlbar,
+   }
+ }
+ 
+-/* Translations button */
+-
+-#translations-button-icon {
+-  list-style-image: url(chrome://browser/skin/translations.svg);
+-  /* The translation icon's right letter is 1px too long, so account for that here.
+-     Don't use margin-inline-end as this is adjusting the art of the icon. */
+-  margin-right: -1px;
+-
+-  #translations-button[translationsactive] > & {
+-    fill: var(--toolbarbutton-icon-fill-attention);
+-    fill-opacity: 1;
+-    margin-inline: var(--space-small);
+-  }
+-}
+-
+-#translations-button-circle-arrows {
+-  height: 16px;
+-  width: 16px;
+-  list-style-image: url("chrome://global/skin/icons/loading.svg");
+-  fill: var(--toolbarbutton-icon-fill-attention);
+-  fill-opacity: 1;
+-  margin-inline-end: var(--space-small);
+-}
+-
+-#translations-button-locale {
+-  background-color: var(--toolbarbutton-icon-fill-attention);
+-  color: var(--toolbarbutton-icon-fill-attention-text);
+-  border-radius: var(--border-radius-small);
+-  font-size: 0.8em;
+-  height: 20px;
+-  min-width: 20px;
+-  text-align: center;
+-  padding-top: 3px;
+-  padding-inline: 1px;
+-  box-sizing: border-box;
+-  margin-inline-end: var(--space-small);
+-  margin-block: -2px;
+-}
+-
+-#translations-button[translationsactive="true"] {
+-  width: auto;
+-}
+-
+-@media (prefers-contrast) and (-moz-platform: windows) {
+-  #translations-button-locale {
+-    font-weight: var(--font-weight-bold);
+-  }
+-
+-  #translations-button[translationsactive]:is(:hover, [open]) > #translations-button-icon {
+-    fill: currentColor;
+-  }
+-
+-  #translations-button:is(:hover, [open]) > #translations-button-locale {
+-    background-color: var(--toolbar-field-background-color);
+-    color: var(--toolbarbutton-icon-fill-attention);
+-  }
+-
+-  #translations-button:is(:hover, [open]) > #translations-button-circle-arrows {
+-    fill: currentColor;
+-  }
+-}
++/* GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): the translations button rules are removed with the button */
+ 
+ /* Zoom button */
+ 

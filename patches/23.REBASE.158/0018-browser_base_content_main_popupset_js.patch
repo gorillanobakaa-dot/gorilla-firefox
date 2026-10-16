@@ -1,0 +1,96 @@
+# Gorilla 158 rebase: browser/base/content/main-popupset.js as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/base/content/main-popupset.js b/browser/base/content/main-popupset.js
+index d2390681bd8cff28a0d9116655c3e591e71c2c73..271b0688b2eab263f4244daf218cac49151a01d6 100644
+--- a/browser/base/content/main-popupset.js
++++ b/browser/base/content/main-popupset.js
+@@ -7,8 +7,6 @@ document.addEventListener(
+   () => {
+     const lazy = {};
+     ChromeUtils.defineESModuleGetters(lazy, {
+-      AIWindow:
+-        "moz-src:///browser/components/aiwindow/ui/modules/AIWindow.sys.mjs",
+       ContentSharingUtils:
+         "moz-src:///browser/components/sharing/ContentSharingUtils.sys.mjs",
+       MiniWindowManager:
+@@ -121,14 +119,7 @@ document.addEventListener(
+         case "context_shareSelectedTabs":
+           lazy.ContentSharingUtils.handleShareTabs(TabContextMenu.contextTabs);
+           break;
+-        case "context_createAITab":
+-          lazy.AIWindow.createAITab(
+-            window,
+-            TabContextMenu.contextTabs.map(
+-              tab => tab.linkedBrowser.currentURI.spec
+-            )
+-          );
+-          break;
++        // GORILLA excised 2026-10-15 (158, D-158-08): context_createAITab handler removed with its menu item.
+         case "context_bookmarkTab":
+           PlacesCommandHook.bookmarkTabs([TabContextMenu.contextTab]);
+           break;
+@@ -445,33 +436,8 @@ document.addEventListener(
+           gUnifiedExtensions.reportExtension(event.target.parentElement);
+           break;
+ 
+-        // == full-page-translations-panel-settings-menupopup ==
+-        case "translations-panel-settings-always-offer-translation":
+-          FullPageTranslationsPanel.onAlwaysOfferTranslations();
+-          break;
+-        case "translations-panel-settings-always-translate":
+-          FullPageTranslationsPanel.onAlwaysTranslateLanguage();
+-          break;
+-        case "translations-panel-settings-never-translate":
+-          FullPageTranslationsPanel.onNeverTranslateLanguage();
+-          break;
+-        case "translations-panel-settings-never-translate-site":
+-          FullPageTranslationsPanel.onNeverTranslateSite();
+-          break;
+-        case "translations-panel-manage-languages":
+-          FullPageTranslationsPanel.openManageLanguages();
+-          break;
+-        case "translations-panel-about":
+-          FullPageTranslationsPanel.onAboutTranslations();
+-          break;
+-
+-        // == select-translations-panel-settings-menupopup ==
+-        case "select-translations-panel-open-settings-page-menuitem":
+-          SelectTranslationsPanel.openTranslationsSettingsPage();
+-          break;
+-        case "select-translations-panel-about-translations-menuitem":
+-          SelectTranslationsPanel.onAboutTranslations();
+-          break;
++        // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): the full-page and select translations
++        // settings menupopup commands are removed with their menupopups.
+ 
+         // == customizationPanelItemContextMenu ==
+         case "customizationPanelItemContextMenuManageExtension":
+@@ -740,9 +706,7 @@ document.addEventListener(
+         case "sharing-tabs-warning-panel":
+           gSharedTabWarning.sharedTabWarningShown();
+           break;
+-        case "full-page-translations-panel-settings-menupopup":
+-          FullPageTranslationsPanel.handleSettingsPopupShownEvent();
+-          break;
++        // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): no translations settings popup
+       }
+     });
+ 
+@@ -759,13 +723,8 @@ document.addEventListener(
+       }
+     });
+ 
+-    mainPopupSet.addEventListener("popuphidden", event => {
+-      switch (event.target.id) {
+-        case "full-page-translations-panel-settings-menupopup":
+-          FullPageTranslationsPanel.handleSettingsPopupHiddenEvent();
+-          break;
+-      }
+-    });
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): the popuphidden listener only served the
++    // full-page translations settings popup, so it is removed.
+   },
+   { once: true }
+ );

@@ -1,0 +1,21 @@
+# Gorilla 158 rebase: browser/components/tabbrowser/content/opentabs.html as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/tabbrowser/content/opentabs.html b/browser/components/tabbrowser/content/opentabs.html
+index 0f89e49733090cbf44ed3bd547ab17c5d9db6314..2972a763a5b6efe43613764b17bfda24764480e5 100644
+--- a/browser/components/tabbrowser/content/opentabs.html
++++ b/browser/components/tabbrowser/content/opentabs.html
+@@ -11,12 +11,6 @@
+       content="default-src resource: chrome:; object-src 'none'; img-src data: chrome:;"
+     />
+     <meta name="color-scheme" content="light dark" />
+-    <link
+-      rel="icon"
+-      type="image/png"
+-      id="favicon"
+-      href="chrome://branding/content/icon32.png"
+-    />
+     <link rel="localization" href="browser/firefoxView.ftl" />
+     <link rel="localization" href="browser/openTabs.ftl" />
+     <title data-l10n-id="opentabs-page-title"></title>

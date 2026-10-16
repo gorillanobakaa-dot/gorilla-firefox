@@ -1,0 +1,84 @@
+# Gorilla 158 rebase: dom/media/ipc/RemoteVideoDecoder.cpp as built on Firefox 158 (linux only: a linux-only patch touches this file)
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/dom/media/ipc/RemoteVideoDecoder.cpp b/dom/media/ipc/RemoteVideoDecoder.cpp
+index 9c5a241b63e6ac1c617ba80c0ffe21edaa934f72..13fb568e72c155bbfdf7acfe58bafb0565433a5e 100644
+--- a/dom/media/ipc/RemoteVideoDecoder.cpp
++++ b/dom/media/ipc/RemoteVideoDecoder.cpp
+@@ -260,14 +260,26 @@ MediaResult RemoteVideoDecoderParent::ProcessDecodedData(
+     IntSize size;
+     bool needStorage = false;
+ 
+-    YUVColorSpace yuvColorSpace = gfx::YUVColorSpace::Default;
+-    ColorSpace2 colorPrimaries = gfx::ColorSpace2::UNKNOWN;
++    // Read color space metadata from decoded frame for correct color rendering
++    // Initialize with sensible defaults that will be overridden by actual frame data
++    YUVColorSpace yuvColorSpace = gfx::YUVColorSpace::BT709;
++    ColorSpace2 colorPrimaries = gfx::ColorSpace2::BT709;
+     TransferFunction transferFunction = gfx::TransferFunction::BT709;
+     ColorRange colorRange = gfx::ColorRange::LIMITED;
+ 
+     PlanarYCbCrImage* image = video->mImage->AsPlanarYCbCrImage();
+     const PlanarYCbCrData* imageData = image ? image->GetData() : nullptr;
+ 
++    // Read actual color space metadata from the decoded frame
++    if (imageData) {
++      // Use frame's actual color space metadata for correct rendering
++      // This ensures SD content (BT.601), full-range content, and HDR (BT.2020) render correctly
++      yuvColorSpace = imageData->mYUVColorSpace;
++      colorPrimaries = imageData->mColorPrimaries;
++      transferFunction = imageData->mTransferFunction;
++      colorRange = imageData->mColorRange;
++    }
++
+     if (mKnowsCompositor) {
+       texture = video->mImage->GetTextureClient(mKnowsCompositor);
+ 
+@@ -287,37 +299,17 @@ MediaResult RemoteVideoDecoderParent::ProcessDecodedData(
+         sd = remoteSD;
+         size = texture->GetSize();
+       }
+-    }
+ 
+-    // If failed to create a GPU accelerated surface descriptor, fall back to
+-    // copying frames via shmem.
+-    if (!IsSurfaceDescriptorValid(sd)) {
+-      needStorage = false;
+-      if (!image) {
+-        return MediaResult(NS_ERROR_UNEXPECTED,
+-                           "Expected Planar YCbCr image in "
+-                           "RemoteVideoDecoderParent::ProcessDecodedData");
++      // GORILLA PATCH: Zero-copy IPC enforcement
++      // Only enforce SurfaceDescriptor validation when compositor bridge exists;
++      // otherwise allow frames through (e.g., RDD process, post-crash recovery).
++      // When a compositor bridge exists, we strictly forbid falling back to
++      // CPU shmem copying. Drop invalid frames to protect CPU cycles.
++      if (mKnowsCompositor && !IsSurfaceDescriptorValid(sd)) {
++        NS_WARNING(
++            "Strict HW decode mode: GPU descriptor invalid. Dropping frame.");
++        continue;
+       }
+-
+-      SurfaceDescriptorBuffer sdBuffer;
+-      nsresult rv = image->BuildSurfaceDescriptorBuffer(
+-          sdBuffer, Image::BuildSdbFlags::Default, [&](uint32_t aBufferSize) {
+-            ShmemBuffer buffer = AllocateBuffer(aBufferSize);
+-            if (buffer.Valid()) {
+-              return MemoryOrShmem(std::move(buffer.Get()));
+-            }
+-            return MemoryOrShmem();
+-          });
+-
+-      if (NS_WARN_IF(NS_FAILED(rv))) {
+-        if (sdBuffer.data().type() == MemoryOrShmem::TShmem) {
+-          DeallocShmem(sdBuffer.data().get_Shmem());
+-        }
+-        return rv;
+-      }
+-
+-      sd = sdBuffer;
+-      size = image->GetSize();
+     }
+ 
+     if ((!needStorage ||

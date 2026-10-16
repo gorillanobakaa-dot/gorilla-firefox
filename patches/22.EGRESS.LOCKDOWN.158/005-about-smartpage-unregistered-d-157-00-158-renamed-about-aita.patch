@@ -1,0 +1,17 @@
+# Gorilla 158 privacy cut
+# About:smartpage unregistered (D-157-00): 158 renamed about:aitab to about:smartpage, so patch 036's removal of 'aitab' from components.conf found nothing and the page stayed registered; its AboutRedirector entry and pref gate are already removed. lesson: when 158 renames an about: page, follow the rename in components.conf too (the register's about_register check found it, no step did)
+# Files: browser/components/about/components.conf
+
+diff --git a/browser/components/about/components.conf b/browser/components/about/components.conf
+index 4ac36ebc7a..66dba45ec1 100644
+--- a/browser/components/about/components.conf
++++ b/browser/components/about/components.conf
+@@ -27,7 +27,7 @@ pages = [
+     'robots',
+     'sessionrestore',
+     # GORILLA D-157-40: no about:settings (alias of about:preferences)
+-    'smartpage',
++    # GORILLA D-157-00: no about:smartpage (158's name for about:aitab; aiwindow is excised)
+     'tabcrashed',
+     'unloads',
+     'welcome',

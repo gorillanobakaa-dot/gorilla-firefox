@@ -1,0 +1,28 @@
+# Gorilla 158 rebase: browser/components/asrouter/content-src/styles/_multistage.scss as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/asrouter/content-src/styles/_multistage.scss b/browser/components/asrouter/content-src/styles/_multistage.scss
+index 2ce20b078b1af4a56de6ea29c31c25b97e9e345a..1e77ea6391d20429aa3fb9e96c912f60a1f1b72f 100644
+--- a/browser/components/asrouter/content-src/styles/_multistage.scss
++++ b/browser/components/asrouter/content-src/styles/_multistage.scss
+@@ -2962,17 +2962,8 @@ html {
+         }
+ 
+ 
+-        &.light {
+-          background-image: url('resource://builtin-themes/light/icon.svg');
+-        }
+-
+-        &.dark {
+-          background-image: url('resource://builtin-themes/dark/icon.svg');
+-        }
+-
+-        &.alpenglow {
+-          background-image: url('resource://builtin-themes/alpenglow/icon.svg');
+-        }
++        // GORILLA UNLEASHED: the light, dark and alpenglow theme tiles are removed; those themes are not
++        // packaged (one theme only, D-157-04).
+ 
+         &.default,
+         &.automatic {

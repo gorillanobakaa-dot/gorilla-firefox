@@ -1,0 +1,30 @@
+# Gorilla 158 rebase: browser/extensions/newtab/lib/TopStoriesFeed.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/extensions/newtab/lib/TopStoriesFeed.sys.mjs b/browser/extensions/newtab/lib/TopStoriesFeed.sys.mjs
+index 939f87ed1444b07db9a09060765ca4e6313b9c62..81270e00522e608dd8310a35d1f429890e0acc51 100644
+--- a/browser/extensions/newtab/lib/TopStoriesFeed.sys.mjs
++++ b/browser/extensions/newtab/lib/TopStoriesFeed.sys.mjs
+@@ -168,6 +168,10 @@ export class TopStoriesFeed {
+   }
+ 
+   async fetchStories() {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no stories endpoint
++    if (true) {
++      return;
++    }
+     if (!this.stories_endpoint) {
+       return null;
+     }
+@@ -270,6 +274,10 @@ export class TopStoriesFeed {
+   }
+ 
+   async fetchTopics() {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no topics endpoint
++    if (true) {
++      return;
++    }
+     if (!this.topics_endpoint) {
+       return null;
+     }

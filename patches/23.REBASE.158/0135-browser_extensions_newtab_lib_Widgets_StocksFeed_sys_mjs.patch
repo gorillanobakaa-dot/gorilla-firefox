@@ -1,0 +1,19 @@
+# Gorilla 158 rebase: browser/extensions/newtab/lib/Widgets/StocksFeed.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/extensions/newtab/lib/Widgets/StocksFeed.sys.mjs b/browser/extensions/newtab/lib/Widgets/StocksFeed.sys.mjs
+index ae36be4487361b22c0266522bbf7caeb2d476816..a211a2cd8821842f2f511e91ec3139cacd31f32b 100644
+--- a/browser/extensions/newtab/lib/Widgets/StocksFeed.sys.mjs
++++ b/browser/extensions/newtab/lib/Widgets/StocksFeed.sys.mjs
+@@ -213,6 +213,10 @@ export class StocksFeed {
+   }
+ 
+   async fetch(retryCount = 0) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no stocks lookup
++    if (true) {
++      return;
++    }
+     const generation = this.fetchGeneration;
+     try {
+       if (!this.ensureMerinoClient()) {

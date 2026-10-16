@@ -1,0 +1,26 @@
+# Gorilla 158 rebase: netwerk/base/NetworkConnectivityService.cpp as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/netwerk/base/NetworkConnectivityService.cpp b/netwerk/base/NetworkConnectivityService.cpp
+index 1a69dcbce76ef825db7d197971478401440e204b..b56035d99e0a28feb4e15b52ec2a7287b9ea81b5 100644
+--- a/netwerk/base/NetworkConnectivityService.cpp
++++ b/netwerk/base/NetworkConnectivityService.cpp
+@@ -354,7 +354,7 @@ NetworkConnectivityService::OnLookupComplete(nsICancelable* aRequest,
+ NS_IMETHODIMP
+ NetworkConnectivityService::RecheckDNS() {
+   bool enabled =
+-      Preferences::GetBool("network.connectivity-service.enabled", false);
++      false;  // GORILLA UNLEASHED - PHYSICAL LOCK (egress): no probe of firefox-portal-detection.com, whatever the pref says
+   if (!enabled) {
+     return NS_OK;
+   }
+@@ -538,7 +538,7 @@ already_AddRefed<nsIChannel> NetworkConnectivityService::SetupIPCheckChannel(
+ NS_IMETHODIMP
+ NetworkConnectivityService::RecheckIPConnectivity() {
+   bool enabled =
+-      Preferences::GetBool("network.connectivity-service.enabled", false);
++      false;  // GORILLA UNLEASHED - PHYSICAL LOCK (egress): no probe of firefox-portal-detection.com, whatever the pref says
+   if (!enabled) {
+     return NS_OK;
+   }

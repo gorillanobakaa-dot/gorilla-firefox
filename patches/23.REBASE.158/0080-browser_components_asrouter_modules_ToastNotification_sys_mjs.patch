@@ -1,0 +1,18 @@
+# Gorilla 158 rebase: browser/components/asrouter/modules/ToastNotification.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/asrouter/modules/ToastNotification.sys.mjs b/browser/components/asrouter/modules/ToastNotification.sys.mjs
+index f15adf09abad19b0ad3af180c29bb85806f31631..6bd9e866bd1be963f584ffc540da4f0412ef56f7 100644
+--- a/browser/components/asrouter/modules/ToastNotification.sys.mjs
++++ b/browser/components/asrouter/modules/ToastNotification.sys.mjs
+@@ -130,7 +130,8 @@ export const ToastNotification = {
+         Ci.nsIWindowsAlertNotification
+       );
+       try {
+-        const resp = await fetch(imageData.url);
++        // GORILLA UNLEASHED - PHYSICAL LOCK (egress): notification images are never fetched.
++        const resp = { ok: false };
+         if (!resp.ok) {
+           throw new Error(`Could not fetch ${imageUrl}`);
+         }

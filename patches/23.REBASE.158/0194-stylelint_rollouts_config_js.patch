@@ -1,0 +1,16 @@
+# Gorilla 158 rebase: stylelint-rollouts.config.js as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/stylelint-rollouts.config.js b/stylelint-rollouts.config.js
+index 4cdca83e2da8f342c3a1a45802816571ed67fb5f..029d39a213c4406bdb5170169096ac088e6bf3b4 100644
+--- a/stylelint-rollouts.config.js
++++ b/stylelint-rollouts.config.js
+@@ -171,7 +171,6 @@ module.exports = [
+       "browser/themes/shared/addon-notification.css",
+       "browser/themes/shared/addons/extension-controlled.css",
+       "browser/themes/shared/addons/unified-extensions.css",
+-      "browser/themes/shared/aiWindowSidebar.css",
+       "browser/themes/shared/autocomplete.css",
+       "browser/themes/shared/blockedSite.css",
+       "browser/themes/shared/contextmenu.css",

@@ -1,0 +1,32 @@
+# Gorilla 158 rebase: browser/components/customizableui/CustomizableUI.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/customizableui/CustomizableUI.sys.mjs b/browser/components/customizableui/CustomizableUI.sys.mjs
+index 5bce11b9d104868308848a6cf245d5619f9d93ce..0de0a0eefd33d80aeaee30a140f9ae338b5bcb4a 100644
+--- a/browser/components/customizableui/CustomizableUI.sys.mjs
++++ b/browser/components/customizableui/CustomizableUI.sys.mjs
+@@ -382,11 +382,8 @@ var CustomizableUIInternal = {
+         type: CustomizableUI.TYPE_TOOLBAR,
+         overflowable: true,
+         defaultPlacements: navbarPlacements,
+-        verticalTabsDefaultPlacements: [
+-          "alltabs-button",
+-          "smartwindow-group-tabs-button",
+-          "ai-window-toggle",
+-        ],
++        // GORILLA excised 2026-10-15 (158, D-158-08): no Smart Window buttons placed.
++        verticalTabsDefaultPlacements: ["alltabs-button"],
+         defaultCollapsed: false,
+       },
+       true
+@@ -413,8 +410,7 @@ var CustomizableUIInternal = {
+           "new-tab-button",
+           "spring",
+           "alltabs-button",
+-          "smartwindow-group-tabs-button",
+-          "ai-window-toggle",
++          // GORILLA excised 2026-10-15 (158, D-158-08): no Smart Window buttons placed.
+         ],
+         verticalTabsDefaultPlacements: [],
+         defaultCollapsed: null,

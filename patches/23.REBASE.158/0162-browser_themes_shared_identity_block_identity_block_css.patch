@@ -1,0 +1,25 @@
+# Gorilla 158 rebase: browser/themes/shared/identity-block/identity-block.css as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/themes/shared/identity-block/identity-block.css b/browser/themes/shared/identity-block/identity-block.css
+index 18bd129c431f565317d7ab38b0c15184341ad0d7..6ffb05e60e72d5fe2d4645f8fafdf05fc82035b1 100644
+--- a/browser/themes/shared/identity-block/identity-block.css
++++ b/browser/themes/shared/identity-block/identity-block.css
+@@ -182,13 +182,10 @@
+   list-style-image: url(chrome://global/skin/icons/info.svg);
+ }
+ 
++/* GORILLA D-157-35: no 16 px Gorilla in the address bar on browser pages; the "Gorilla" label stays, and the
++   identity popup anchors to #identity-icon-box, not to this icon */
+ #identity-box[pageproxystate="valid"].chromeUI #identity-icon {
+-  list-style-image: url(chrome://branding/content/icon16.png);
+-}
+-@media (min-resolution: 1.1dppx) {
+-  #identity-box[pageproxystate="valid"].chromeUI #identity-icon {
+-    list-style-image: url(chrome://branding/content/icon32.png);
+-  }
++  display: none;
+ }
+ 
+ #identity-box[pageproxystate="valid"].localResource #identity-icon {

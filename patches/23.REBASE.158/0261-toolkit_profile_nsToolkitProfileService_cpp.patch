@@ -1,0 +1,22 @@
+# Gorilla 158 rebase: toolkit/profile/nsToolkitProfileService.cpp as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/profile/nsToolkitProfileService.cpp b/toolkit/profile/nsToolkitProfileService.cpp
+index afa921dbb086789361be0112ac8d1579733e07ba..8765e9b01e9f96add6f74ef8c16ce6f601497c63 100644
+--- a/toolkit/profile/nsToolkitProfileService.cpp
++++ b/toolkit/profile/nsToolkitProfileService.cpp
+@@ -469,11 +469,9 @@ nsToolkitProfile::SetName(const nsACString& aName) {
+ 
+ NS_IMETHODIMP
+ nsToolkitProfile::GetShowProfileSelector(bool* aShowProfileSelector) {
+-#ifdef MOZ_SELECTABLE_PROFILES
+-  *aShowProfileSelector = mShowProfileSelector;
+-#else
++  // GORILLA D-157-40 (2026-10-08): the new profile switcher (about:profilemanager) is not registered in Gorilla, so
++  // a ShowSelector=1 in profiles.ini (an upstream Firefox profile) must not open it at start-up as a blank window.
+   *aShowProfileSelector = false;
+-#endif
+   return NS_OK;
+ }
+ 

@@ -1,0 +1,17 @@
+# Gorilla 158 rebase: browser/components/moz.build as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/moz.build b/browser/components/moz.build
+index 5b0809558f9c293bce3e5d1e4bab9fe9918def19..0a786248e23695ee0ddb97cc640cfac7b29dd452 100644
+--- a/browser/components/moz.build
++++ b/browser/components/moz.build
+@@ -46,7 +46,7 @@ DIRS += [
+     "firefoxview",
+     # GORILLA excised: "genai",
+     "ipprotection",
+-    "messagepreview",
++    # GORILLA D-157-40: "messagepreview" (about:messagepreview and its actors are not built)
+     "migration",
+     "mozcachedohttp",
+     "multilineeditor",

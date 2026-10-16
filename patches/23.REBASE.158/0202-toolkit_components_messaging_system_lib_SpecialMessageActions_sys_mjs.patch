@@ -1,0 +1,58 @@
+# Gorilla 158 rebase: toolkit/components/messaging-system/lib/SpecialMessageActions.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/components/messaging-system/lib/SpecialMessageActions.sys.mjs b/toolkit/components/messaging-system/lib/SpecialMessageActions.sys.mjs
+index 322ea38eac2530fdd3ff76f088c621b26bdc2b3d..26eedcbb6d76bd85b152cfb2e570d7dbef3a5712 100644
+--- a/toolkit/components/messaging-system/lib/SpecialMessageActions.sys.mjs
++++ b/toolkit/components/messaging-system/lib/SpecialMessageActions.sys.mjs
+@@ -30,12 +30,7 @@ const lazy = {};
+ 
+ ChromeUtils.defineESModuleGetters(lazy, {
+   AddonManager: "resource://gre/modules/AddonManager.sys.mjs",
+-  AIWindow:
+-    // eslint-disable-next-line mozilla/no-browser-refs-in-toolkit
+-    "moz-src:///browser/components/aiwindow/ui/modules/AIWindow.sys.mjs",
+-  AIWindowUI:
+-    // eslint-disable-next-line mozilla/no-browser-refs-in-toolkit
+-    "moz-src:///browser/components/aiwindow/ui/modules/AIWindowUI.sys.mjs",
++  // GORILLA UNLEASHED - PHYSICAL LOCK: AIWindow and AIWindowUI excised (browser/components/aiwindow is not built).
+   CustomIconManager:
+     // eslint-disable-next-line mozilla/no-browser-refs-in-toolkit
+     "moz-src:///browser/components/shell/CustomIconManager.sys.mjs",
+@@ -1082,14 +1077,11 @@ export const SpecialMessageActions = {
+         /** @returns {Promise<boolean>} */
+         return this.fxaSignInFlow(action.data, browser);
+       case "FXA_AIWINDOW_SIGNIN_FLOW":
++        // GORILLA UNLEASHED - PHYSICAL LOCK: no AI Window and no account sign-in (D-157-00).
+         /** @returns {Promise<boolean>} */
+-        return lazy.AIWindow.launchWindow(
+-          browser,
+-          false,
+-          action.data?.source ?? "asrouter"
+-        );
++        return false;
+       case "OPEN_SMARTWINDOW_MONITOR_CREATE":
+-        lazy.AIWindowUI.showMonitorCreateForm(window);
++        // GORILLA UNLEASHED - PHYSICAL LOCK: no Smart Window (D-157-00, D-158-08); AIWindowUI is excised.
+         break;
+       case "OPEN_PROTECTION_PANEL": {
+         let { gProtectionsHandler } = window;
+@@ -1175,15 +1167,9 @@ export const SpecialMessageActions = {
+         window.gURLBar.searchMode = action.data;
+         window.gURLBar.focus();
+         break;
+-      case "SUMMARIZE_PAGE": {
+-        const entry = action.data ?? "message";
+-        await lazy.GenAI.summarizeCurrentPage(window, entry);
+-        break;
+-      }
++      case "SUMMARIZE_PAGE":
+       case "OPEN_ORGANIZE_TABS_PANEL":
+-        lazy.AIWindowUI.toggleGroupTabsPanel(window, {
+-          source: action.data?.source ?? "message",
+-        });
++        // GORILLA UNLEASHED - PHYSICAL LOCK: AI page summaries and AI tab grouping are excised (D-157-00).
+         break;
+       case "OPEN_PANEL": {
+         let { anchor_id, widget_id, panel_id, fallback_to_app_menu } =

@@ -1,0 +1,280 @@
+# Gorilla 158 rebase: browser/components/tabbrowser/content/tabgroup-menu.js as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/tabbrowser/content/tabgroup-menu.js b/browser/components/tabbrowser/content/tabgroup-menu.js
+index 1902d2d40887aba210d5abc1b8bd1c3326bb561f..950ba39b16c432bbcdc779b34bbaa644bffcc990 100644
+--- a/browser/components/tabbrowser/content/tabgroup-menu.js
++++ b/browser/components/tabbrowser/content/tabgroup-menu.js
+@@ -16,18 +16,10 @@
+   const { ContentSharingUtils } = ChromeUtils.importESModule(
+     "moz-src:///browser/components/sharing/ContentSharingUtils.sys.mjs"
+   );
+-  const lazy = {};
+-  ChromeUtils.defineESModuleGetters(lazy, {
+-    AIWindow:
+-      "moz-src:///browser/components/aiwindow/ui/modules/AIWindow.sys.mjs",
+-  });
+-
+-  ChromeUtils.importESModule(
+-    "chrome://browser/content/genai/content/model-optin.mjs",
+-    {
+-      global: "current",
+-    }
+-  );
++  // GORILLA excised 2026-10-15 (158, D-158-08): the AIWindow module getter is removed (no AI tab, no Smart Window).
++
++  // GORILLA OVERRIDE: genai excised — model-optin component import removed
++  // (was a boot-time load failure; the smart-tab-grouping optin path is dead).
+ 
+   class MozTabbrowserTabGroupMenu extends MozXULElement {
+     static COLORS = [
+@@ -70,7 +62,6 @@
+         </html:h1>
+         <html:h1
+           id="tab-group-editor-title-suggest"
+-          data-l10n-id="tab-group-editor-title-suggest"
+           hidden=""
+         ></html:h1>
+       </html:div>
+@@ -105,13 +96,7 @@
+           id="tabGroupEditor_copyAllLinks"
+           class="subviewbutton">
+         </toolbarbutton>
+-        <toolbarbutton
+-          tabindex="0"
+-          id="tabGroupEditor_createAITab"
+-          class="subviewbutton"
+-          data-l10n-id="tab-group-editor-action-create-aitab"
+-          hidden="">
+-        </toolbarbutton>
++        <!-- GORILLA excised 2026-10-15 (158, D-158-08): no "Create AI tab" button. -->
+         <toolbarbutton
+           tabindex="0"
+           id="tabGroupEditor_saveAndCloseGroup"
+@@ -141,15 +126,12 @@
+ 
+         <html:moz-checkbox
+           checked=""
+-          id="tab-group-select-checkbox"
+-          data-l10n-id="tab-group-editor-select-suggestions">
++          id="tab-group-select-checkbox">
+         </html:moz-checkbox>
+ 
+         <html:div id="tab-group-suggestions"></html:div>
+ 
+-        <html:p
+-          data-l10n-id="tab-group-editor-information-message">
+-        </html:p>
++        <html:p></html:p>
+ 
+         <html:moz-button-group class="panel-footer tab-group-create-actions">
+           <html:moz-button
+@@ -171,16 +153,14 @@
+         hidden="true"
+         id="tab-group-suggestion-button"
+         class="subviewbutton"
+-        type="icon ghost"
+-        data-l10n-id="tab-group-editor-smart-suggest-button-create">
++        type="icon ghost">
+       </html:moz-button>
+     `;
+ 
+     static loadingSection = /*html*/ `
+       <html:div id="tab-group-suggestions-loading" hidden="true">
+         <html:div
+-          class="tab-group-suggestions-loading-header"
+-          data-l10n-id="tab-group-suggestions-loading-header">
++          class="tab-group-suggestions-loading-header">
+         </html:div>
+         <html:div class="tab-group-suggestions-loading-block"></html:div>
+         <html:div class="tab-group-suggestions-loading-block"></html:div>
+@@ -270,12 +250,9 @@
+               <html:moz-button
+                 disabled="true"
+                 type="icon ghost"
+-                id="tab-group-suggestions-message"
+-                data-l10n-id="tab-group-editor-no-tabs-found-title">
++                id="tab-group-suggestions-message">
+               </html:moz-button>
+-              <html:p
+-                data-l10n-id="tab-group-editor-no-tabs-found-message">
+-              </html:p>
++              <html:p></html:p>
+             </html:div>
+ 
+             ${this.defaultActions}
+@@ -392,13 +369,6 @@
+         true,
+         this.#onSmartTabGroupsPrefChange.bind(this)
+       );
+-
+-      XPCOMUtils.defineLazyPreferenceGetter(
+-        this,
+-        "aitabEnabled",
+-        "browser.smartwindow.aitab.enabled",
+-        false
+-      );
+     }
+ 
+     connectedCallback() {
+@@ -484,7 +454,6 @@
+           "tabGroupEditor_moveGroupToNewWindow"
+         ),
+         copyAllLinks: document.getElementById("tabGroupEditor_copyAllLinks"),
+-        createAITab: document.getElementById("tabGroupEditor_createAITab"),
+         ungroupTabs: document.getElementById("tabGroupEditor_ungroupTabs"),
+         saveAndCloseGroup: document.getElementById(
+           "tabGroupEditor_saveAndCloseGroup"
+@@ -546,14 +515,6 @@
+         this.close();
+       });
+ 
+-      this.#commandButtons.createAITab.addEventListener("command", () => {
+-        lazy.AIWindow.createAITab(
+-          window,
+-          this.activeGroup.tabs.map(tab => tab.linkedBrowser.currentURI.spec)
+-        );
+-        this.close();
+-      });
+-
+       this.panel.addEventListener("popupshown", this);
+       this.panel.addEventListener("popuphidden", this);
+       this.panel.addEventListener("keypress", this);
+@@ -561,22 +522,16 @@
+       Glean.tabgroup.smartTabEnabled.set(this.smartTabGroupsPrefEnabled);
+     }
+ 
++    // GORILLA excised 2026-10-15 (158, D-158-08): AI-suggested tab groups are off in code, not only by pref.
++    // Both answers are a constant false, so the editor only ever enters its
++    // standard (no AI) states and the suggestion, opt-in and model-download
++    // paths below are never reached. Their texts are no longer shipped.
+     get smartTabGroupsEnabled() {
+-      return (
+-        Services.locale.appLocaleAsBCP47.startsWith("en") &&
+-        this.smartTabGroupsUserEnabled &&
+-        this.smartTabGroupsFeatureConfigEnabled &&
+-        !PrivateBrowsingUtils.isWindowPrivate(this.documentGlobal) &&
+-        this.mlEnabled
+-      );
++      return false;
+     }
+ 
+     get smartTabGroupsPrefEnabled() {
+-      return (
+-        this.smartTabGroupsUserEnabled &&
+-        this.smartTabGroupsFeatureConfigEnabled &&
+-        this.smartTabGroupsOptin
+-      );
++      return false;
+     }
+ 
+     #onSmartTabGroupsPrefChange(_preName, _prev, _latest) {
+@@ -677,91 +632,8 @@
+       if (!this.smartTabGroupsEnabled || this.#smartTabGroupsInitiated) {
+         return;
+       }
+-      const { SmartTabGroupingManager } = ChromeUtils.importESModule(
+-        "moz-src:///browser/components/tabbrowser/SmartTabGrouping.sys.mjs"
+-      );
+-      this.#smartTabGroupingManager = new SmartTabGroupingManager();
+-
+-      // Init Suggestion Button
+-      this.#suggestionButton = this.querySelector(
+-        "#tab-group-suggestion-button"
+-      );
+-      this.#suggestionButton.iconSrc = this.smartTabGroupsEnabled
+-        ? MozTabbrowserTabGroupMenu.AI_ICON
+-        : "";
+-
+-      // If user has not opted in, show the optin flow
+-      this.#suggestionButton.addEventListener("click", () => {
+-        !this.smartTabGroupsOptin
+-          ? this.#initSmartTabGroupsOptin()
+-          : this.#handleSmartSuggest();
+-      });
+-
+-      // Init Suggestions UI
+-      this.#suggestionsHeading = this.querySelector(
+-        "#tab-group-editor-title-suggest"
+-      );
+-      this.#suggestionsContainer = this.querySelector(
+-        "#tab-group-suggestions-container"
+-      );
+-      this.#suggestions = this.querySelector("#tab-group-suggestions");
+-      this.#selectSuggestionsCheckbox = this.querySelector(
+-        "#tab-group-select-checkbox"
+-      );
+-      this.#selectSuggestionsCheckbox.addEventListener("change", e => {
+-        if (e.target.checked) {
+-          this.#handleSelectAll();
+-        } else {
+-          this.#handleDeselectAll();
+-        }
+-      });
+-      this.#suggestionsMessageContainer = this.querySelector(
+-        "#tab-group-suggestions-message-container"
+-      );
+-      this.#suggestionsMessage = this.querySelector(
+-        "#tab-group-suggestions-message"
+-      );
+-      this.#suggestionsMessage.iconSrc = this.smartTabGroupsEnabled
+-        ? MozTabbrowserTabGroupMenu.AI_ICON
+-        : "";
+-      this.#createSuggestionsButton = this.querySelector(
+-        "#tab-group-create-suggestions-button"
+-      );
+-      this.#createSuggestionsButton.addEventListener("click", () => {
+-        this.#handleMlTelemetry("save");
+-        this.activeGroup.addTabs(this.#selectedSuggestedTabs);
+-        this.close(true);
+-      });
+-      this.#cancelSuggestionsButton = this.querySelector(
+-        "#tab-group-cancel-suggestions-button"
+-      );
+-      this.#cancelSuggestionsButton.addEventListener("click", () => {
+-        this.#handleMlTelemetry("cancel");
+-        this.#suggestionsRunToken = null;
+-        this.close();
+-      });
+-      this.#suggestionsSeparator = this.querySelector(
+-        "#tab-group-suggestions-separator"
+-      );
+-      this.#suggestionsOptinContainer = this.querySelector(
+-        "#tab-group-suggestions-optin-container"
+-      );
+-
+-      // Init Loading UI
+-      this.#suggestionsLoading = this.querySelector(
+-        "#tab-group-suggestions-loading"
+-      );
+-      this.#suggestionsLoadActions = this.querySelector(
+-        "#tab-group-suggestions-load-actions"
+-      );
+-      this.#suggestionsLoadCancel = this.querySelector(
+-        "#tab-group-suggestions-load-cancel"
+-      );
+-      this.#suggestionsLoadCancel.addEventListener("click", () => {
+-        this.#suggestionsRunToken = null;
+-        this.#handleLoadSuggestionsCancel();
+-      });
+-      this.#smartTabGroupsInitiated = true;
++      // GORILLA: SmartTabGrouping excised (AI). Smart suggestions unavailable.
++      return;
+     }
+ 
+     #populateSwatches() {
+@@ -1034,13 +906,6 @@
+ 
+       this.#commandButtons.shareTabGroup.hidden =
+         !ContentSharingUtils.isEnabled;
+-      this.#commandButtons.createAITab.hidden = !(
+-        this.aitabEnabled &&
+-        lazy.AIWindow.isAIWindowActiveAndEnabled(window) &&
+-        this.activeGroup?.tabs.some(tab =>
+-          ["http", "https"].includes(tab.linkedBrowser.currentURI.scheme)
+-        )
+-      );
+     }
+ 
+     on_popuphidden() {

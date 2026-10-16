@@ -1,0 +1,94 @@
+# Gorilla 158 privacy cut
+# D-158-08: Smart Window group-tabs and monitor stylesheets neither imported nor shipped; their element callbacks and toolbar placements removed (copies in Agents.Work.Trash)
+# Files: browser/base/content/browser.js, browser/components/customizableui/CustomizableUI.sys.mjs, browser/themes/shared/browser-shared.css, browser/themes/shared/jar.inc.mn, browser/themes/shared/smartwindowGroupTabs.css, browser/themes/shared/smartwindowMonitor.css
+
+diff --git a/browser/base/content/browser.js b/browser/base/content/browser.js
+index 3e72cd9d0a..926aa023d9 100644
+--- a/browser/base/content/browser.js
++++ b/browser/base/content/browser.js
+@@ -650,28 +650,7 @@ customElements.setElementCreationCallback(
+   }
+ );
+ 
+-// The "Tasks" panel (Smart Window) renders its content with this custom
+-// element, which pulls in agent-monitor-item for the create form.
+-customElements.setElementCreationCallback("agent-monitor-panel", () => {
+-  ChromeUtils.importESModule(
+-    "chrome://browser/content/aiwindow/components/agent-monitor-panel.mjs",
+-    { global: "current" }
+-  );
+-});
+-
+-// The "Group my tabs" panel and flyout (Smart Window) render their content with
+-// these light-DOM custom elements; both live in one module.
+-for (const smartwindowGroupTabsTag of [
+-  "smartwindow-group-tabs-card",
+-  "smartwindow-group-tabs-flyout",
+-]) {
+-  customElements.setElementCreationCallback(smartwindowGroupTabsTag, () => {
+-    ChromeUtils.importESModule(
+-      "chrome://browser/content/aiwindow/components/smartwindow-group-tabs.mjs",
+-      { global: "current" }
+-    );
+-  });
+-}
++// GORILLA excised 2026-10-15 (158, D-158-08): no Smart Window Tasks panel or Group my tabs elements to define.
+ 
+ var gBrowser;
+ var gContextMenu = null; // nsContextMenu instance
+diff --git a/browser/components/customizableui/CustomizableUI.sys.mjs b/browser/components/customizableui/CustomizableUI.sys.mjs
+index 5bce11b9d1..0de0a0eefd 100644
+--- a/browser/components/customizableui/CustomizableUI.sys.mjs
++++ b/browser/components/customizableui/CustomizableUI.sys.mjs
+@@ -382,11 +382,8 @@ var CustomizableUIInternal = {
+         type: CustomizableUI.TYPE_TOOLBAR,
+         overflowable: true,
+         defaultPlacements: navbarPlacements,
+-        verticalTabsDefaultPlacements: [
+-          "alltabs-button",
+-          "smartwindow-group-tabs-button",
+-          "ai-window-toggle",
+-        ],
++        // GORILLA excised 2026-10-15 (158, D-158-08): no Smart Window buttons placed.
++        verticalTabsDefaultPlacements: ["alltabs-button"],
+         defaultCollapsed: false,
+       },
+       true
+@@ -413,8 +410,7 @@ var CustomizableUIInternal = {
+           "new-tab-button",
+           "spring",
+           "alltabs-button",
+-          "smartwindow-group-tabs-button",
+-          "ai-window-toggle",
++          // GORILLA excised 2026-10-15 (158, D-158-08): no Smart Window buttons placed.
+         ],
+         verticalTabsDefaultPlacements: [],
+         defaultCollapsed: null,
+diff --git a/browser/themes/shared/browser-shared.css b/browser/themes/shared/browser-shared.css
+index e3aba262d6..86e8dd6221 100644
+--- a/browser/themes/shared/browser-shared.css
++++ b/browser/themes/shared/browser-shared.css
+@@ -28,8 +28,7 @@
+ @import url("chrome://browser/skin/sharePanel.css");
+ @import url("chrome://browser/skin/sidebar.css");
+ /* GORILLA excised 2026-10-15 (158, D-158-08): the AI sidebar stylesheet is not imported. */
+-@import url("chrome://browser/skin/smartwindowGroupTabs.css");
+-@import url("chrome://browser/skin/smartwindowMonitor.css");
++/* GORILLA excised 2026-10-15 (158, D-158-08): the Smart Window group-tabs and monitor stylesheets are not imported. */
+ @import url("chrome://browser/skin/customizableui/customizeMode.css");
+ @import url("chrome://browser/skin/UITour.css");
+ @import url("chrome://browser/skin/formautofill-notification.css");
+diff --git a/browser/themes/shared/jar.inc.mn b/browser/themes/shared/jar.inc.mn
+index 5fbd905cff..a8c1e35002 100644
+--- a/browser/themes/shared/jar.inc.mn
++++ b/browser/themes/shared/jar.inc.mn
+@@ -32,8 +32,7 @@
+   skin/classic/browser/sharePanel.css                          (../shared/sharePanel.css)
+   skin/classic/browser/sidebar.css                             (../shared/sidebar.css)
+   skin/classic/browser/smartbar.css                            (../shared/smartbar.css)
+-  skin/classic/browser/smartwindowGroupTabs.css                (../shared/smartwindowGroupTabs.css)
+-  skin/classic/browser/smartwindowMonitor.css                  (../shared/smartwindowMonitor.css)
++# GORILLA excised 2026-10-15 (158, D-158-08): Smart Window group-tabs and monitor stylesheets not shipped.
+   skin/classic/browser/toolbarbuttons.css                      (../shared/toolbarbuttons.css)
+   skin/classic/browser/toolbarbutton-icons.css                 (../shared/toolbarbutton-icons.css)
+   skin/classic/browser/urlbar/badge-bookmark.svg               (../shared/urlbar/icons/badge-bookmark.svg)

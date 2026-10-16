@@ -1,0 +1,18 @@
+# Gorilla 158 rebase: browser/extensions/newtab/lib/Wallpapers/WallpaperFeed.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/extensions/newtab/lib/Wallpapers/WallpaperFeed.sys.mjs b/browser/extensions/newtab/lib/Wallpapers/WallpaperFeed.sys.mjs
+index fc43deba29c771437401e32e14f67128b1242be3..fb95abb4a808546eaf7882d6e86f90ea17914f50 100644
+--- a/browser/extensions/newtab/lib/Wallpapers/WallpaperFeed.sys.mjs
++++ b/browser/extensions/newtab/lib/Wallpapers/WallpaperFeed.sys.mjs
+@@ -106,7 +106,8 @@ export class WallpaperFeed {
+    * automated tests that simulate responses from this fetch.
+    */
+   fetch(...args) {
+-    return fetch(...args);
++    // GORILLA UNLEASHED - PHYSICAL LOCK (egress): this feed fetches nothing from the network.
++    return Promise.reject(new Error("GORILLA: network fetch disabled"));
+   }
+ 
+   /**

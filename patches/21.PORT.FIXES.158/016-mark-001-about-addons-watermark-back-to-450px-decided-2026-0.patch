@@ -1,0 +1,17 @@
+# Gorilla 158 port fix
+# MARK-001: about:addons watermark back to 450px (decided 2026-08-27 for the 155 column; 158 carried the 154 value 650px)
+# Files: toolkit/themes/shared/in-content/common-shared.css
+
+diff --git a/toolkit/themes/shared/in-content/common-shared.css b/toolkit/themes/shared/in-content/common-shared.css
+index 3b3458dd4b..0567ceeb4c 100644
+--- a/toolkit/themes/shared/in-content/common-shared.css
++++ b/toolkit/themes/shared/in-content/common-shared.css
+@@ -1123,7 +1123,7 @@ xul|*.addons-icon {
+ 
+ /* 🦍 Gorilla Unleashed 800px watermark — right-aligned, vertically offset */
+ #content {
+-  background: url("chrome://branding/content/about-logo.png") no-repeat fixed right calc(10% - 39px) bottom 50px / 650px !important; /* 650px author-recalled; bottom-anchored + viewport-fixed 2026-07-31 (beats growing top offsets: holds on any window height, stays visible on long lists) */ /* GORILLA 2026-07-31: svg — the 500px png at 800px was UPSCALED = blurry (Crisp_Logo rule); 2026-10-03: raster 1400px (650px needs 1300 at 200%) */
++  background: url("chrome://branding/content/about-logo.png") no-repeat fixed right calc(10% - 39px) bottom 50px / 450px !important; /* GORILLA 2026-10-15: 450px restored (MARK-001). 450px was chosen 2026-08-27 for the narrower 155 content column and approved on sight; the 157/158 sets carried 650px (the 154 value) and the owner saw the gorilla too big over the content. History: 800px WAY TOO BIG, 650px for 154, 450px from 155. */ /* 650px author-recalled; bottom-anchored + viewport-fixed 2026-07-31 (beats growing top offsets: holds on any window height, stays visible on long lists) */ /* GORILLA 2026-07-31: svg — the 500px png at 800px was UPSCALED = blurry (Crisp_Logo rule); 2026-10-03: raster 1400px (650px needs 1300 at 200%) */
+ }
+ 
+ /* ==========================================================================

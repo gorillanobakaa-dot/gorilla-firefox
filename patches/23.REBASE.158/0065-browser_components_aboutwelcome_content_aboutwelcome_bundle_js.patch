@@ -1,0 +1,17 @@
+# Gorilla 158 rebase: browser/components/aboutwelcome/content/aboutwelcome.bundle.js as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/aboutwelcome/content/aboutwelcome.bundle.js b/browser/components/aboutwelcome/content/aboutwelcome.bundle.js
+index 945e6084f2ffe06f568b998dae98b2c47c4df920..d2d54c1bacf816cfc96f4461dc07c522edad631f 100644
+--- a/browser/components/aboutwelcome/content/aboutwelcome.bundle.js
++++ b/browser/components/aboutwelcome/content/aboutwelcome.bundle.js
+@@ -1673,7 +1673,7 @@ class ProtonScreen extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
+   }
+   renderPicture(image) {
+     const {
+-      imageURL = "chrome://branding/content/about-logo.svg",
++    imageURL = "chrome://branding/content/about-logo.png",
+       darkModeImageURL,
+       reducedMotionImageURL,
+       darkModeReducedMotionImageURL,

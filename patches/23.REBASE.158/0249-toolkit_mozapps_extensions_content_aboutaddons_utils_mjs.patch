@@ -1,0 +1,42 @@
+# Gorilla 158 rebase: toolkit/mozapps/extensions/content/aboutaddons-utils.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/mozapps/extensions/content/aboutaddons-utils.mjs b/toolkit/mozapps/extensions/content/aboutaddons-utils.mjs
+index b77071bdcd9d0b486b91ce6399093bf11dc67f55..27decc73d4fed4cacd5e9c71e96d3fe532c14a1f 100644
+--- a/toolkit/mozapps/extensions/content/aboutaddons-utils.mjs
++++ b/toolkit/mozapps/extensions/content/aboutaddons-utils.mjs
+@@ -192,6 +192,10 @@ export function detachUpdateHandler(install) {
+ }
+ 
+ export async function loadReleaseNotes(uri) {
++  // GORILLA UNLEASHED - PHYSICAL LOCK: no release-notes fetch
++  if (true) {
++    throw new Error("GORILLA: release notes are not fetched");
++  }
+   const res = await fetch(uri.spec, { credentials: "omit" });
+ 
+   if (!res.ok) {
+@@ -929,6 +933,10 @@ export var DiscoveryAPI = {
+   },
+ 
+   async _fetchRecommendedAddons(useClientId) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no discovery request to AMO (it carried a hash of the telemetry client ID)
++    if (true) {
++      return [];
++    }
+     let discoveryApiUrl = new URL(
+       Services.urlFormatter.formatURLPref(PREF_DISCOVERY_API_URL)
+     );
+@@ -954,6 +962,11 @@ export var DiscoveryAPI = {
+  * @param {string} [options.utmContent="aboutaddons"] UTM content parameter for tracking.
+  */
+ export function openAmoInTab(path, { utmContent = "aboutaddons" } = {}) {
++  // GORILLA UNLEASHED - NO ADD-ON OFFERS (D-157-05): every "find more / get extensions / find your first
++  // extension" button ends here; nothing can be installed, so nothing is offered.
++  if (Services.prefs.getBoolPref("extensions.webapi.enabled", false) === false) {
++    return;
++  }
+   let amoUrl = Services.urlFormatter.formatURLPref(
+     "extensions.getAddons.link.url"
+   );

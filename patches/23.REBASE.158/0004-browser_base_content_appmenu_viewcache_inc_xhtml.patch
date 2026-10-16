@@ -1,0 +1,108 @@
+# Gorilla 158 rebase: browser/base/content/appmenu-viewcache.inc.xhtml as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/base/content/appmenu-viewcache.inc.xhtml b/browser/base/content/appmenu-viewcache.inc.xhtml
+index a85ea15b7ea430f253ae06d62977e2d81ae205f6..0a27b819732b8b92dc65b44c26d996ac88167842 100644
+--- a/browser/base/content/appmenu-viewcache.inc.xhtml
++++ b/browser/base/content/appmenu-viewcache.inc.xhtml
+@@ -96,19 +96,7 @@
+                      data-l10n-id="appmenuitem-new-window"
+                      key="key_newNavigator"
+                      command="cmd_newNavigator"/>
+-      <toolbarbutton id="appMenu-new-ai-window-button"
+-                     class="subviewbutton"
+-                     command="Tools:AIWindow"
+-                     aria-describedby="appMenu-new-ai-window-badge">
+-        <label class="toolbarbutton-text" crop="end"
+-               data-l10n-id="appmenuitem-new-ai-window"/>
+-        <html:moz-badge id="appMenu-new-ai-window-badge"
+-                        type="beta"/>
+-      </toolbarbutton>
+-      <toolbarbutton id="appMenu-new-classic-window-button"
+-                     class="subviewbutton"
+-                     data-l10n-id="appmenuitem-new-classic-window"
+-                     command="Tools:ClassicWindow"/>
++      <!-- GORILLA: New AI Window / New Classic Window removed (aiwindow excised; the buttons did nothing) -->
+       <toolbarbutton id="appMenu-new-private-window-button2"
+                      class="subviewbutton"
+                      data-l10n-id="appmenuitem-new-private-window"
+@@ -131,10 +119,7 @@
+                      closemenu="none"
+                      hidden="true"
+                      />
+-      <toolbarbutton id="appMenu-chats-history-button"
+-                     class="subviewbutton"
+-                     data-l10n-id="menu-history-chats"
+-                     command="Tools:ChatsHistory"/>
++      <!-- GORILLA: Chats removed (aiwindow excised) -->
+       <toolbarbutton id="appMenu-downloads-button"
+                      class="subviewbutton"
+                      data-l10n-id="appmenuitem-downloads"
+@@ -168,10 +153,7 @@
+                      data-l10n-id="appmenuitem-save-page"
+                      key="key_savePage"
+                      command="Browser:SavePage"/>
+-      <toolbarbutton id="appMenu-translate-button"
+-                     class="subviewbutton"
+-                     data-l10n-id="appmenuitem-translate"
+-                     command="cmd_translate"/>
++      <!-- GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): no "Translate page" menu item -->
+       <toolbarbutton id="appMenu-find-button2"
+                      class="subviewbutton"
+                      data-l10n-id="appmenuitem-find-in-page"
+@@ -493,10 +475,7 @@
+                      class="subviewbutton"
+                      data-l10n-id="appmenu-customizetoolbar"
+                      command="cmd_CustomizeToolbars"/>
+-      <toolbarbutton id="appmenu-abouttranslations-button"
+-                     class="subviewbutton"
+-                     data-l10n-id="appmenu-abouttranslations"
+-                     command="cmd_openAboutTranslations"/>
++      <!-- GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): no "Translations" (about:translations) item -->
+       <toolbarbutton id="appmenu-edit-pdf-button"
+                      class="subviewbutton"
+                      data-l10n-id="appmenu-edit-pdf"
+@@ -1073,41 +1052,7 @@
+     <vbox id="PanelUI-ipprotection-locations-content" class="panel-subview-body"/>
+   </panelview>
+ 
+-  <panelview id="ai-window-toggle-view" class="PanelUI-subView">
+-    <vbox class="panel-subview-body">
+-      <toolbarbutton id="ai-window-switch-classic"
+-                    class="subviewbutton"
+-                    type="radio"
+-                    hidden="true"
+-                    data-l10n-attrs="label">
+-        <image class="toolbarbutton-icon"/>
+-        <vbox>
+-          <label class="toolbarbutton-text"
+-                data-l10n-id="ai-window-toggleview-switch-classic" crop="end"/>
+-          <label class="ai-window-switch-description toolbarbutton-text"
+-                data-l10n-id="ai-window-toggleview-switch-classic-description" crop="end"/>
+-        </vbox>
+-      </toolbarbutton>
+-      <toolbarbutton id="ai-window-switch-ai"
+-                    class="subviewbutton"
+-                    type="radio"
+-                    hidden="true"
+-                    data-l10n-attrs="label"
+-                    aria-describedby="ai-window-switch-ai-badge">
+-        <image class="toolbarbutton-icon"/>
+-        <vbox>
+-          <hbox>
+-            <label class="toolbarbutton-text"
+-                  data-l10n-id="ai-window-toggleview-switch-ai" crop="end"/>
+-            <html:moz-badge id="ai-window-switch-ai-badge"
+-                  type="beta"/>
+-          </hbox>
+-          <label class="ai-window-switch-description toolbarbutton-text"
+-                data-l10n-id="ai-window-toggleview-switch-ai-description" crop="end"/>
+-        </vbox>
+-      </toolbarbutton>
+-    </vbox>
+-  </panelview>
++  <!-- GORILLA excised 2026-10-15 (158, D-158-08): the Smart Window / classic window switch panel is removed; the classic window is the only window. -->
+ 
+   <panelview id="appMenu-tabGroupsListView" class="PanelUI-subView">
+     <vbox class="panel-subview-body">

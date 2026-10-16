@@ -1,0 +1,46 @@
+# Gorilla 158 rebase: toolkit/components/certviewer/content/components/list-item.css as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/components/certviewer/content/components/list-item.css b/toolkit/components/certviewer/content/components/list-item.css
+index 0668e8f7b69f1b66f4d4b796a64b5564cd7eae32..0f33b240f1d4bf0062c6903155ee2fac16389709 100644
+--- a/toolkit/components/certviewer/content/components/list-item.css
++++ b/toolkit/components/certviewer/content/components/list-item.css
+@@ -2,9 +2,16 @@
+  * License, v. 2.0. If a copy of the MPL was not distributed with this
+  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+ 
++/* GORILLA UNLEASHED 2026-10-04: the row's link (position: absolute, the full
++ * row) lay under the Export button, so the two controls overlapped by the
++ * button's whole box. The row is now a two-column grid: the link fills the
++ * first column (still the full height of the row, clickable everywhere but
++ * the button's column) and the button sits in the second; the row keeps its
++ * height (min-height 2em = the old 1em + 1em padding). */
+ :host {
+   display: grid;
+-  padding: 1em 0 1em;
++  grid-template-columns: minmax(0, 1fr) auto;
++  min-height: 2em;
+   border-block: 0.5px solid var(--border-color);
+   border-inline: 0.5px solid transparent;
+   position: relative;
+@@ -23,9 +30,6 @@ a {
+ }
+ 
+ .cert-url {
+-  height: 100%;
+-  width: 100%;
+-  position: absolute;
+   align-items: center;
+   display: flex;
+ }
+@@ -35,8 +39,7 @@ a {
+ }
+ 
+ .export {
+-  position: absolute;
+-  inset-inline-end: 2em;
++  margin-inline: 0.5em 2em;
+   align-self: center;
+   font-size: 1em;
+ }

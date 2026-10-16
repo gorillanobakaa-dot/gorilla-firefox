@@ -1,0 +1,19 @@
+# Gorilla 158 rebase: toolkit/components/push/PushCommandLineHandler.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/components/push/PushCommandLineHandler.sys.mjs b/toolkit/components/push/PushCommandLineHandler.sys.mjs
+index b5d3004f0caf94d2e47b99836eb50d50a3940d29..1d89a74e9b18597e054d4216d93464d5e8d514bd 100644
+--- a/toolkit/components/push/PushCommandLineHandler.sys.mjs
++++ b/toolkit/components/push/PushCommandLineHandler.sys.mjs
+@@ -101,6 +101,10 @@ export class CommandLineHandler {
+    * @returns {Promise<void>} Resolves when receiving stops.
+    */
+   async receivePushMessages() {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no background push (D-157-00): --receive-push-messages never wakes the
++    // push service; Firefox started for it exits at once.
++    return;
++    // eslint-disable-next-line no-unreachable
+     if (!(await this.ensurePushServiceReady())) {
+       return;
+     }

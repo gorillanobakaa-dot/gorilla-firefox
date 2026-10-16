@@ -1,0 +1,118 @@
+# Gorilla 158 rebase: browser/base/content/browser-init.js as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/base/content/browser-init.js b/browser/base/content/browser-init.js
+index 8b714f455dbabf1f66242a713e636ddb0f65c9f1..e27d3fe2ff6c0c53072329dd5f53d64f0fcc3fdd 100644
+--- a/browser/base/content/browser-init.js
++++ b/browser/base/content/browser-init.js
+@@ -16,48 +16,8 @@ var gBrowserInit = {
+   idleTasksFinished: Promise.withResolvers(),
+   _reducedProtectionPrefObserver: null,
+ 
+-  /**
+-   * Handles considerations when the enabled state of the Translations feature
+-   * changes during runtime, such as being blocked or re-enabled in the AI Settings.
+-   */
+-  _translationsEnabledStateObserver: {
+-    observe(_subject, topic, data) {
+-      if (topic !== "translations:enabled-state-changed") {
+-        console.warn(`received unexpected topic: ${topic}`);
+-        return;
+-      }
+-
+-      // Ensures that the Application Menu correctly includes or omits the translate-page menu item.
+-      XULBrowserWindow._updateElementsForContentType();
+-
+-      if (data === "enabled") {
+-        // When the feature is re-enabled, ensure that actor instances exist for all tabs.
+-        // This loop is synchronous, but should be lightweight to instantiate only the actor objects.
+-        // Any expensive work is scheduled asynchronously to the event loop by the actor itself after construction.
+-        for (const tab of gBrowser.tabs) {
+-          try {
+-            const windowGlobal =
+-              tab.linkedBrowser?.browsingContext?.currentWindowGlobal;
+-
+-            if (
+-              !windowGlobal ||
+-              windowGlobal.isClosed ||
+-              !windowGlobal.isCurrentGlobal
+-            ) {
+-              // This tab's windowGlobal is not relevant to create a Translations actor.
+-              continue;
+-            }
+-
+-            // Ensure that a Translations actor instance is (re)created for each open tab that is allowed to have one.
+-            windowGlobal.getActor("Translations");
+-          } catch {
+-            // Not every tab is allowed to have a Translations actor, which is okay.
+-            // See ActorManagerParent for the official allow list of URLs.
+-          }
+-        }
+-      }
+-    },
+-  },
++  // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): the Translations enabled-state observer is gone
++  // (no Translations actor to re-create, no translate menu item to show).
+ 
+   _setupFirstContentWindowPaintPromise() {
+     let lastTransactionId = window.windowUtils.lastTransactionId;
+@@ -296,18 +256,8 @@ var gBrowserInit = {
+     gBrowser.addEventListener("DOMUpdateBlockedRedirect", e =>
+       PopupAndRedirectBlockerObserver.handleEvent(e)
+     );
+-    gBrowser.addEventListener(
+-      "TranslationsParent:LanguageState",
+-      FullPageTranslationsPanel
+-    );
+-    gBrowser.addEventListener(
+-      "TranslationsParent:OfferTranslation",
+-      FullPageTranslationsPanel
+-    );
+-    gBrowser.tabContainer.addEventListener("TabSelect", () => {
+-      FullPageTranslationsPanel.onLocationChange(gBrowser.selectedBrowser);
+-    });
+-    gBrowser.addTabsProgressListener(FullPageTranslationsPanel);
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): no FullPageTranslationsPanel listeners
++    // (LanguageState/OfferTranslation events, TabSelect, tabs progress listener); the panel is not packaged.
+ 
+     window.addEventListener("AppCommand", HandleAppCommandEvent, true);
+ 
+@@ -513,11 +463,8 @@ var gBrowserInit = {
+     Services.obs.addObserver(gXPInstallObserver, "addon-install-confirmation");
+     Services.obs.addObserver(gKeywordURIFixup, "keyword-uri-fixup");
+     Services.obs.addObserver(gLocaleChangeObserver, "intl:app-locales-changed");
+-    TranslationsParent.ensurePrefObservers();
+-    Services.obs.addObserver(
+-      this._translationsEnabledStateObserver,
+-      "translations:enabled-state-changed"
+-    );
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): no TranslationsParent pref observers and no
++    // translations:enabled-state-changed observer.
+ 
+     BrowserUtils.callModulesFromCategory(
+       {
+@@ -1080,10 +1027,7 @@ var gBrowserInit = {
+       gBrowser.removeTabsProgressListener(window.TabsProgressListener);
+     } catch (ex) {}
+ 
+-    // Bug 1952900 to allow switching to unload category without leaking
+-    ChromeUtils.importESModule(
+-      "moz-src:///browser/components/genai/LinkPreview.sys.mjs"
+-    ).LinkPreview.teardown(window);
++    // GORILLA excised: LinkPreview.teardown (genai removed; the module is not packaged)
+ 
+     BrowserUtils.callModulesFromCategory(
+       { categoryName: "browser-window-unload", jsGlobal: globalThis },
+@@ -1148,10 +1092,7 @@ var gBrowserInit = {
+         gLocaleChangeObserver,
+         "intl:app-locales-changed"
+       );
+-      Services.obs.removeObserver(
+-        this._translationsEnabledStateObserver,
+-        "translations:enabled-state-changed"
+-      );
++      // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): no translations observer to remove.
+     }
+ 
+     BrowserUtils.callModulesFromCategory(

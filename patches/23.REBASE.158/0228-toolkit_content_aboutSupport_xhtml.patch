@@ -1,0 +1,17 @@
+# Gorilla 158 rebase: toolkit/content/aboutSupport.xhtml as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/content/aboutSupport.xhtml b/toolkit/content/aboutSupport.xhtml
+index b950f88e2bad783902cac37969c02da154fe0cd7..daed993ec2f06609f2197eee8f4b81541ae30ac7 100644
+--- a/toolkit/content/aboutSupport.xhtml
++++ b/toolkit/content/aboutSupport.xhtml
+@@ -14,8 +14,6 @@
+     <meta name="color-scheme" content="light dark" />
+     <title data-l10n-id="page-title"/>
+ 
+-    <link rel="icon" type="image/png" id="favicon"
+-          href="chrome://branding/content/icon32.png"/>
+     <link rel="stylesheet" href="chrome://global/skin/aboutSupport.css"
+           type="text/css"/>
+ 

@@ -1,0 +1,16 @@
+# Gorilla 158 rebase: browser/components/aboutlogins/content/aboutLogins.html as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/aboutlogins/content/aboutLogins.html b/browser/components/aboutlogins/content/aboutLogins.html
+index 9bbf5e69b17139d5063977334a869db090af3de1..8efc34c8f07e4215d6f91845b55c65dfb7fa38ec 100644
+--- a/browser/components/aboutlogins/content/aboutLogins.html
++++ b/browser/components/aboutlogins/content/aboutLogins.html
+@@ -30,7 +30,6 @@
+     <link rel="stylesheet" href="chrome://global/skin/in-content/common.css">
+     <link rel="stylesheet" href="chrome://browser/content/aboutlogins/aboutLogins.css">
+     <link rel="stylesheet" href="chrome://browser/content/aboutlogins/common.css">
+-    <link rel="icon" href="chrome://branding/content/icon32.png">
+   </head>
+   <body>
+     <header>

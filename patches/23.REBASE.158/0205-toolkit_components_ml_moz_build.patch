@@ -1,0 +1,35 @@
+# Gorilla 158 rebase: toolkit/components/ml/moz.build as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/components/ml/moz.build b/toolkit/components/ml/moz.build
+index ccd378c06bd0f7bd8317be4a4df3162f87374144..50421c8168de54c7db603ae87c8de22d572c9b33 100644
+--- a/toolkit/components/ml/moz.build
++++ b/toolkit/components/ml/moz.build
+@@ -7,13 +7,13 @@ SPHINX_TREES["/toolkit/components/ml"] = "docs"
+ if CONFIG["ONNX_RUNTIME"]:
+     FINAL_TARGET_FILES += ["%" + CONFIG["ONNX_RUNTIME"]]
+ 
+-JAR_MANIFESTS += ["jar.mn"]
++JAR_MANIFESTS += ["jar.mn"]  # GORILLA: the manifest is EMPTIED, not dropped (mozbuild refuses an undeclared jar.mn); nothing under chrome://global/content/ml/ is packaged
+ 
+ with Files("**"):
+     BUG_COMPONENT = ("Core", "Machine Learning: On Device")
+ 
+ DIRS += [
+-    "actors",
++    # GORILLA excised: "actors" (MLEngineParent/Child; the MLEngine actor is excised in ActorManagerParent)
+     "tests",
+ ]
+ 
+@@ -43,9 +43,7 @@ XPIDL_SOURCES += [
+     "nsIMLUtils.idl",
+ ]
+ 
+-MOZ_SRC_FILES += [
+-    "MLModelHubService.sys.mjs",
+-]
++# GORILLA excised: MOZ_SRC_FILES MLModelHubService.sys.mjs (its components.conf entry is removed too)
+ 
+ UNIFIED_SOURCES += [
+     "MLUtils.cpp",

@@ -1,0 +1,67 @@
+# Gorilla 158 rebase: browser/components/about/components.conf as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/about/components.conf b/browser/components/about/components.conf
+index f76be11e93ad061dec13897d3460f27ac89c5a9c..66dba45ec1511f3c3f44c4c7559c1523bf257806 100644
+--- a/browser/components/about/components.conf
++++ b/browser/components/about/components.conf
+@@ -1,11 +1,11 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
++# GORILLA UNLEASHED - PHYSICAL LOCK: no AI window (D-157-00): aichatcontent, aitab, smartformfillreview and
++# smartwindowtasks are not registered (aiwindow is excised).
+ 
+ pages = [
+-    'aichatcontent',
+-    'asrouter',
+-    'blocked',
++    # GORILLA D-157-40: no about:asrouter, about:blocked
+     'certerror',
+     'downloads',
+     'framecrashed',
+@@ -13,23 +13,21 @@ pages = [
+     'logins',
+     'loginsimportreport',
+     'firefoxview',
+-    'messagepreview',
++    # GORILLA D-157-40: no about:messagepreview
+     'opentabs',
+     'policies',
+     'preferences',
+     'privatebrowsing',
+     'protections',
+-    'profiling',
++    # GORILLA D-157-36: no about:profiling
+     'reader',
+-    'referrals',
++    # GORILLA D-157-40: no about:referrals
+     'restartrequired',
+     'rights',
+     'robots',
+     'sessionrestore',
+-    'settings',
+-    'smartformfillreview',
+-    'smartpage',
+-    'smartwindowtasks',
++    # GORILLA D-157-40: no about:settings (alias of about:preferences)
++    # GORILLA D-157-00: no about:smartpage (158's name for about:aitab; aiwindow is excised)
+     'tabcrashed',
+     'unloads',
+     'welcome',
+@@ -39,13 +37,7 @@ pages = [
+ if buildconfig.substs.get('MOZ_NORMANDY'):
+     pages += ['studies']
+ 
+-if buildconfig.substs.get('MOZ_SELECTABLE_PROFILES'):
+-    pages += [
+-        'deleteprofile',
+-        'editprofile',
+-        'profilemanager',
+-        'newprofile',
+-    ]
++# GORILLA D-157-40: no about:deleteprofile, editprofile, profilemanager, newprofile (the profile switcher is off)
+ 
+ Classes = [
+     {

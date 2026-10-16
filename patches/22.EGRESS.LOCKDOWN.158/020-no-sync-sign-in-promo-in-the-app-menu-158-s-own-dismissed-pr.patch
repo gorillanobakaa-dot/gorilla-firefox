@@ -1,0 +1,21 @@
+# Gorilla 158 privacy cut
+# No Sync sign-in promo in the app menu (158's own dismissed pref, locked)
+# Files: browser/app/profile/firefox.js
+
+diff --git a/browser/app/profile/firefox.js b/browser/app/profile/firefox.js
+index c6b3aa8c69..2d207a3998 100644
+--- a/browser/app/profile/firefox.js
++++ b/browser/app/profile/firefox.js
+@@ -4243,6 +4243,12 @@ pref("toolkit.telemetry.dap.helper.url", "", locked);
+ pref("browser.newtabpage.activity-stream.asrouter.devtoolsEnabled", false, locked);
+ // -- end GORILLA 2026-10-08 --
+ 
++// -- GORILLA 2026-10-15: no Sync sign-in promo in the app menu (D-157-00, D-158-03) --
++// 158 draws "Sync your data everywhere / Sign in" at the top of the app menu unless this is set; the locked
++// identity.fxaccounts.enabled=false no longer hides it (owner's screenshot, 18:30). The account is off: no promo for it.
++pref("identity.fxaccounts.toolbar.appMenuSignInPromo.dismissed", true, locked);
++// -- end GORILLA 2026-10-15 --
++
+ // -- GORILLA 2026-10-15: Segoe UI is the default text font (D-158-12) --
+ // Owner: "the segoe fonts are the clearest one especially for smaller screen ... set by default". The fonts ship in
+ // the package (11.FONT.SYSTEM). Firefox's own default family is serif, which is whatever the machine's fontconfig maps

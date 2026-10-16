@@ -1,0 +1,18 @@
+# Gorilla 158 rebase: browser/base/jar.mn as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/base/jar.mn b/browser/base/jar.mn
+index b2b5db6040bfa4b0a6923b49669238191fcee1c4..dd61f6af1796e3d59341ba44d63406bc1258a0dc 100644
+--- a/browser/base/jar.mn
++++ b/browser/base/jar.mn
+@@ -96,8 +96,7 @@ browser.jar:
+ # the following files are browser-specific overrides
+         content/browser/license.html
+ % override chrome://global/content/license.html chrome://browser/content/license.html
+-        content/browser/blockedSite.xhtml               (content/blockedSite.xhtml)
+-        content/browser/blockedSite.js                  (content/blockedSite.js)
++#       GORILLA D-157-40: about:blocked (Safe Browsing's warning) is not packaged: blockedSite.xhtml, blockedSite.js
+         content/browser/spotlight.html                (content/spotlight.html)
+         content/browser/spotlight.js                  (content/spotlight.js)
+ *       content/browser/default-bookmarks.html        (content/default-bookmarks.html)

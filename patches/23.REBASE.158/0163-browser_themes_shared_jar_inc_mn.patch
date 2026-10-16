@@ -1,0 +1,47 @@
+# Gorilla 158 rebase: browser/themes/shared/jar.inc.mn as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/themes/shared/jar.inc.mn b/browser/themes/shared/jar.inc.mn
+index adf4b9161560ca9cbd795d01b238e9a4eee87efd..a8c1e35002f14507f409eaba29b0061dc4ce3d82 100644
+--- a/browser/themes/shared/jar.inc.mn
++++ b/browser/themes/shared/jar.inc.mn
+@@ -16,8 +16,8 @@
+   skin/classic/browser/tab-list-tree.css                       (../shared/tab-list-tree.css)
+   skin/classic/browser/addon-notification.css                  (../shared/addon-notification.css)
+   skin/classic/browser/autocomplete.css                        (../shared/autocomplete.css)
+-  skin/classic/browser/aiWindowSidebar.css                     (../shared/aiWindowSidebar.css)
+-  skin/classic/browser/blockedSite.css                         (../shared/blockedSite.css)
++# GORILLA excised 2026-10-15 (158, D-158-08): AI sidebar stylesheet not shipped.
++# GORILLA D-157-40: skin/classic/browser/blockedSite.css (about:blocked is not packaged)
+   skin/classic/browser/browser-colors.css                      (../shared/browser-colors.css)
+   skin/classic/browser/browser-shared.css                      (../shared/browser-shared.css)
+   skin/classic/browser/master-redirect.css                     (../shared/master-redirect.css)
+@@ -32,8 +32,7 @@
+   skin/classic/browser/sharePanel.css                          (../shared/sharePanel.css)
+   skin/classic/browser/sidebar.css                             (../shared/sidebar.css)
+   skin/classic/browser/smartbar.css                            (../shared/smartbar.css)
+-  skin/classic/browser/smartwindowGroupTabs.css                (../shared/smartwindowGroupTabs.css)
+-  skin/classic/browser/smartwindowMonitor.css                  (../shared/smartwindowMonitor.css)
++# GORILLA excised 2026-10-15 (158, D-158-08): Smart Window group-tabs and monitor stylesheets not shipped.
+   skin/classic/browser/toolbarbuttons.css                      (../shared/toolbarbuttons.css)
+   skin/classic/browser/toolbarbutton-icons.css                 (../shared/toolbarbutton-icons.css)
+   skin/classic/browser/urlbar/badge-bookmark.svg               (../shared/urlbar/icons/badge-bookmark.svg)
+@@ -187,7 +186,7 @@
+   skin/classic/browser/preferences/vpn-logo.svg                (../shared/preferences/vpn-logo.svg)
+   skin/classic/browser/preferences/search.css                  (../shared/preferences/search.css)
+   skin/classic/browser/preferences/siteDataSettings.css        (../shared/preferences/siteDataSettings.css)
+-  skin/classic/browser/translations/panel.css                  (../shared/translations/panel.css)
++# GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): translations/panel.css not packaged
+   skin/classic/browser/fxa/fxa-spinner.svg                     (../shared/fxa/fxa-spinner.svg)
+   skin/classic/browser/fxa/sync-illustration.svg               (../shared/fxa/sync-illustration.svg)
+   skin/classic/browser/fxa/sync-illustration-issue.svg         (../shared/fxa/sync-illustration-issue.svg)
+@@ -293,7 +292,7 @@
+   skin/classic/browser/send-tab.svg                   (../shared/icons/send-tab.svg)
+   skin/classic/browser/tab.svg                        (../shared/icons/tab.svg)
+   skin/classic/browser/tabs.svg                       (../shared/icons/tabs.svg)
+-  skin/classic/browser/translations-companion.svg     (../shared/icons/translations-companion.svg)
++# GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): translations-companion.svg (quick action icon) not packaged
+   skin/classic/browser/translations.svg               (../shared/icons/translations.svg)
+   skin/classic/browser/thumb-down.svg                 (../shared/icons/thumb-down.svg)
+   skin/classic/browser/topsites.svg                   (../shared/icons/topsites.svg)

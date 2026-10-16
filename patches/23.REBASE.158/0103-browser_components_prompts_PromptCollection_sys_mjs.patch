@@ -1,0 +1,17 @@
+# Gorilla 158 rebase: browser/components/prompts/PromptCollection.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/prompts/PromptCollection.sys.mjs b/browser/components/prompts/PromptCollection.sys.mjs
+index 78b3024e78d3d29a8b82f39fc26764436a758693..7d40db234611f166ea94c6ad1c8fcf74685aa838 100644
+--- a/browser/components/prompts/PromptCollection.sys.mjs
++++ b/browser/components/prompts/PromptCollection.sys.mjs
+@@ -108,7 +108,7 @@ export class PromptCollection {
+           (Ci.nsIPrompt.BUTTON_TITLE_DONT_SAVE * Ci.nsIPrompt.BUTTON_POS_2);
+         args.useTitle = true;
+         args.headerIconCSSValue =
+-          "url('chrome://branding/content/document_pdf.svg')";
++          "url('chrome://global/skin/icons/pdf.svg')"; // GORILLA D-157-35: not the wrapped 216 px Gorilla
+       } else if (isProfilePage) {
+         title = this.stringBundles.dom.GetStringFromName(
+           "OnBeforeUnloadAboutNewProfileTitle"

@@ -1,0 +1,18 @@
+# Gorilla 158 rebase: devtools/client/aboutdebugging/src/modules/debug-target-support.js as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/devtools/client/aboutdebugging/src/modules/debug-target-support.js b/devtools/client/aboutdebugging/src/modules/debug-target-support.js
+index 2b8d4afa5b097ea77159c2d6df267ef157df2a5f..ab7b2e07875843ae9a5d7e134f898a828e0be2a6 100644
+--- a/devtools/client/aboutdebugging/src/modules/debug-target-support.js
++++ b/devtools/client/aboutdebugging/src/modules/debug-target-support.js
+@@ -92,7 +92,8 @@ exports.isSupportedDebugTargetPane = isSupportedDebugTargetPane;
+  * from about:debugging (currently disallowed on non-local runtimes).
+  */
+ function supportsTemporaryExtensionInstaller(runtimeType) {
+-  return runtimeType === RUNTIMES.THIS_FIREFOX;
++  // GORILLA UNLEASHED (D-157-05): temporary add-ons are refused in XPIInstall; the button is not offered either.
++  return runtimeType === RUNTIMES.THIS_FIREFOX && false;
+ }
+ exports.supportsTemporaryExtensionInstaller =
+   supportsTemporaryExtensionInstaller;

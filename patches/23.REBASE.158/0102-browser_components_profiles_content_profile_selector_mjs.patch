@@ -1,0 +1,17 @@
+# Gorilla 158 rebase: browser/components/profiles/content/profile-selector.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/profiles/content/profile-selector.mjs b/browser/components/profiles/content/profile-selector.mjs
+index e1378f304c276e1c0162fc565a4518c306480be1..ad393ae0427d8743b531d1e267512f7b2e798e15 100644
+--- a/browser/components/profiles/content/profile-selector.mjs
++++ b/browser/components/profiles/content/profile-selector.mjs
+@@ -174,7 +174,7 @@ export class ProfileSelector extends MozLitElement {
+         class="logo"
+         data-l10n-id="profile-window-logo"
+         data-l10n-attrs="alt"
+-        src="chrome://branding/content/about-logo.svg"
++        src="chrome://branding/content/about-logo.png"
+       />
+       <h1 data-l10n-id="profile-window-heading"></h1>
+       <p class="profiles-body-text" data-l10n-id="profile-window-body"></p>

@@ -1,0 +1,17 @@
+# Gorilla 158 rebase: browser/components/qrcode/QRCodeWorker.worker.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/qrcode/QRCodeWorker.worker.mjs b/browser/components/qrcode/QRCodeWorker.worker.mjs
+index 9a013be6a2db516caca799797995c6705c15ee01..bf59d17db4e2bdc705ae23cfa4c42fac5ec2c5f4 100644
+--- a/browser/components/qrcode/QRCodeWorker.worker.mjs
++++ b/browser/components/qrcode/QRCodeWorker.worker.mjs
+@@ -259,7 +259,7 @@ class QRCodeWorkerImpl {
+     if (placement.showLogo) {
+       try {
+         const response = await fetch(
+-          "chrome://branding/content/about-logo@2x.png"
++          "chrome://branding/content/about-logo.png"
+         );
+         if (!response.ok) {
+           throw new Error(`Logo fetch failed: ${response.status}`);

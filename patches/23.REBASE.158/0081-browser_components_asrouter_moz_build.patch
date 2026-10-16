@@ -1,0 +1,17 @@
+# Gorilla 158 rebase: browser/components/asrouter/moz.build as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/asrouter/moz.build b/browser/components/asrouter/moz.build
+index 0fefb9bf810403455d741a8595f86daab86f4941..19211a545190db8fc453a0a0e3cee24d54c5450d 100644
+--- a/browser/components/asrouter/moz.build
++++ b/browser/components/asrouter/moz.build
+@@ -39,7 +39,7 @@ EXTRA_JS_MODULES.asrouter += [
+     "modules/PreonboardingSplash.sys.mjs",
+     "modules/RemoteL10n.sys.mjs",
+     "modules/SidebarChatBotPromo.sys.mjs",
+-    "modules/SmartWindowNewTabPromo.sys.mjs",
++    # GORILLA excised: modules/SmartWindowNewTabPromo.sys.mjs (Smart Window promotion; ASRouter no longer imports it)
+     "modules/Spotlight.sys.mjs",
+     "modules/ToastNotification.sys.mjs",
+     "modules/ToolbarBadgeHub.sys.mjs",

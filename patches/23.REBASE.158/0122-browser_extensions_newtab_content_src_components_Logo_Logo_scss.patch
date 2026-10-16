@@ -1,0 +1,17 @@
+# Gorilla 158 rebase: browser/extensions/newtab/content-src/components/Logo/_Logo.scss as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/extensions/newtab/content-src/components/Logo/_Logo.scss b/browser/extensions/newtab/content-src/components/Logo/_Logo.scss
+index 0bf9bfbda4f3b70d48eeb88799c850c544bdb9f5..ef69823cfd2676b6604447d00ebe88f48849d404 100644
+--- a/browser/extensions/newtab/content-src/components/Logo/_Logo.scss
++++ b/browser/extensions/newtab/content-src/components/Logo/_Logo.scss
+@@ -71,7 +71,7 @@
+     display: inline-block;
+     height: $logo-size;
+     width: $logo-size;
+-    background: image-set(url('chrome://branding/content/about-logo.png'), url('chrome://branding/content/about-logo@2x.png') 2x) no-repeat center;
++    background: url('chrome://branding/content/about-logo.png') no-repeat center;
+     background-size: $logo-size;
+   }
+ 

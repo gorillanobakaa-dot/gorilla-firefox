@@ -1,0 +1,26 @@
+# Gorilla 158 rebase: browser/modules/AIWindowStub.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/modules/AIWindowStub.sys.mjs b/browser/modules/AIWindowStub.sys.mjs
+index 2d3bd2171bf54a400c15c7368484af9a069e58f2..a36f954f8b83c682ae04a2fc2d25aed346196621 100644
+--- a/browser/modules/AIWindowStub.sys.mjs
++++ b/browser/modules/AIWindowStub.sys.mjs
+@@ -64,4 +64,17 @@ export const AIWindow = {
+   get initialStartupURL() {
+     return null;
+   },
++
++  /** 157: Tabbrowser asks every tab for its chat conversation id. No tab is a chat tab here. */
++  getChatTabConversationId() {
++    return null;
++  },
++
++  /**
++   * SessionStore asks this when it restores a window that a session file (written by a Firefox with the AI
++   * Window) marks as an AI window. Here it is restored as an ordinary window: the arguments pass through.
++   */
++  handleAIWindowOptions(options) {
++    return options?.args ?? null;
++  },
+ };

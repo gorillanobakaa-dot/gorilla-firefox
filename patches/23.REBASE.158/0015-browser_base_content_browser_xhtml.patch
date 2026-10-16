@@ -1,0 +1,41 @@
+# Gorilla 158 rebase: browser/base/content/browser.xhtml as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/base/content/browser.xhtml b/browser/base/content/browser.xhtml
+index cb8fc3105f09533227363b5d52cec7415f771a24..545c85762a07378aedd35c2ad5955b8fb7ba2e6e 100644
+--- a/browser/base/content/browser.xhtml
++++ b/browser/base/content/browser.xhtml
+@@ -46,7 +46,7 @@
+     href="chrome://browser/skin/customizableui/panelUI.css"
+   />
+   <link rel="stylesheet" href="chrome://browser/skin/downloads/downloads.css" />
+-  <link rel="stylesheet" href="chrome://browser/skin/translations/panel.css" />
++  <!-- GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): translations panel.css not linked -->
+   <link rel="stylesheet" href="chrome://browser/skin/places/tree-icons.css" />
+   <link rel="stylesheet" href="chrome://browser/skin/places/editBookmark.css" />
+   <link
+@@ -85,7 +85,7 @@
+   <link rel="localization" href="browser/tabbrowser.ftl"/>
+   <link rel="localization" href="browser/taskbartabs.ftl"/>
+   <link rel="localization" href="browser/toolbarContextMenu.ftl"/>
+-  <link rel="localization" href="browser/translations.ftl" />
++  <!-- GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): translations.ftl not linked -->
+   <link rel="localization" href="browser/unifiedExtensions.ftl"/>
+   <link rel="localization" href="browser/webrtcIndicator.ftl"/>
+   <link rel="localization" href="browser/webrtc-preview.ftl"/>
+@@ -102,12 +102,11 @@
+   <link rel="localization" href="preview/interventions.ftl" />
+   <link rel="localization" href="preview/miniWindow.ftl"/>
+   <link rel="localization" href="preview/onboarding.ftl"/>
+-  <link rel="localization" href="preview/smartTabGroups.ftl"/>
++  <!-- GORILLA excised 2026-10-15 (158, D-158-08): smart tab group texts (smartTabGroups) not linked -->
+   <link rel="localization" href="preview/genai.ftl"/>
+   <link rel="localization" href="preview/autoTabGrouping.ftl"/>
+   <link rel="localization" href="preview/remoteControl.ftl"/>
+-  <link rel="localization" href="preview/aiWindow.ftl"/>
+-  <link rel="localization" href="browser/aiWindow.ftl" />
++  <!-- GORILLA excised 2026-10-15 (158, D-158-08): AI window texts (aiWindow) not linked -->
+ 
+   <title data-l10n-id="browser-main-window-default-title"></title>
+ 

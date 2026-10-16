@@ -1,0 +1,25 @@
+# Gorilla 158 rebase: toolkit/components/aboutcheckerboard/content/aboutCheckerboard.css as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/components/aboutcheckerboard/content/aboutCheckerboard.css b/toolkit/components/aboutcheckerboard/content/aboutCheckerboard.css
+index f04a5eddafd30df0bf413257ffc1a26fdcfae59f..30e31164ed4bcb9d0a5efa10287e523ea7459014 100644
+--- a/toolkit/components/aboutcheckerboard/content/aboutCheckerboard.css
++++ b/toolkit/components/aboutcheckerboard/content/aboutCheckerboard.css
+@@ -43,10 +43,16 @@ iframe {
+   width: 100%;
+   border: solid 1px black;
+   margin-top: 0;
++  /* GORILLA UNLEASHED 2026-10-04: width 100% plus the 1 px border overflowed
++   * #player by 2 px; include the border in the width. */
++  box-sizing: border-box;
+ }
+ 
+ #trace {
+   width: 100%;
++  /* GORILLA UNLEASHED 2026-10-04: width 100% plus the textarea's padding and
++   * border overflowed its container; include them in the width. */
++  box-sizing: border-box;
+ }
+ 
+ #enabled {

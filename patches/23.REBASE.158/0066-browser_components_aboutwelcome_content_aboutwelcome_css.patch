@@ -1,0 +1,34 @@
+# Gorilla 158 rebase: browser/components/aboutwelcome/content/aboutwelcome.css as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/aboutwelcome/content/aboutwelcome.css b/browser/components/aboutwelcome/content/aboutwelcome.css
+index cd119d8b665411348fd0735c72267487f8f7cdb4..ef51614a18bae2776f86dddbcf7bf3d24f76bacf 100644
+--- a/browser/components/aboutwelcome/content/aboutwelcome.css
++++ b/browser/components/aboutwelcome/content/aboutwelcome.css
+@@ -4107,15 +4107,7 @@ html {
+ .onboardingContainer .tiles-single-select-section .select-item .icon:dir(rtl) {
+   transform: scaleX(-1);
+ }
+-.onboardingContainer .tiles-single-select-section .select-item .icon.light {
+-  background-image: url("resource://builtin-themes/light/icon.svg");
+-}
+-.onboardingContainer .tiles-single-select-section .select-item .icon.dark {
+-  background-image: url("resource://builtin-themes/dark/icon.svg");
+-}
+-.onboardingContainer .tiles-single-select-section .select-item .icon.alpenglow {
+-  background-image: url("resource://builtin-themes/alpenglow/icon.svg");
+-}
++/* GORILLA UNLEASHED: the light, dark and alpenglow theme tiles are removed; those themes are not packaged (one theme only, D-157-04). */
+ .onboardingContainer .tiles-single-select-section .select-item .icon.default, .onboardingContainer .tiles-single-select-section .select-item .icon.automatic {
+   background-image: url("resource://default-theme/icon.svg");
+ }
+@@ -5519,7 +5511,7 @@ html {
+ }
+ /* GORILLA OVERRIDE 2026-07-31: split-screen art = gorilla, not the fox (author call). */
+ .onboardingContainer .screen[pos=split] .section-secondary {
+-  background: #000000 url("chrome://branding/content/about-logo.svg") no-repeat center / min(80%, 500px) !important;
++  background: #000000 url("chrome://branding/content/about-logo.png") no-repeat center / min(80%, 500px) !important;
+ }
+ .onboardingContainer .screen[pos=split] .section-secondary picture,
+ .onboardingContainer .screen[pos=split] .section-secondary img,

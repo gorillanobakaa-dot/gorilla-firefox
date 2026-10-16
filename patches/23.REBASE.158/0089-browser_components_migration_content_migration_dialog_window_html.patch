@@ -1,0 +1,20 @@
+# Gorilla 158 rebase: browser/components/migration/content/migration-dialog-window.html as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/migration/content/migration-dialog-window.html b/browser/components/migration/content/migration-dialog-window.html
+index 21341df83aecb05b576ae34a1eab9e60de1b74e2..c8ea093627b9cc1433722a315e737d1b4635ef5f 100644
+--- a/browser/components/migration/content/migration-dialog-window.html
++++ b/browser/components/migration/content/migration-dialog-window.html
+@@ -10,11 +10,6 @@
+       http-equiv="Content-Security-Policy"
+       content="default-src 'none'; object-src 'none'; script-src chrome:; media-src chrome:; img-src chrome:; style-src chrome:;"
+     />
+-    <link
+-      rel="icon"
+-      type="image/png"
+-      href="chrome://branding/content/icon32.png"
+-    />
+     <link rel="stylesheet" href="chrome://global/skin/in-content/common.css" />
+     <link
+       rel="stylesheet"

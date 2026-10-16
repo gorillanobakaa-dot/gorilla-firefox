@@ -1,0 +1,17 @@
+# Gorilla 158 rebase: browser/components/asrouter/content-src/components/MultiStageProtonScreen.jsx as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/asrouter/content-src/components/MultiStageProtonScreen.jsx b/browser/components/asrouter/content-src/components/MultiStageProtonScreen.jsx
+index cc86a05f548c177c295cdfc22ba638f17ffd982a..348f30965b25b7c1b73cee80a2c13c70b1b20d70 100644
+--- a/browser/components/asrouter/content-src/components/MultiStageProtonScreen.jsx
++++ b/browser/components/asrouter/content-src/components/MultiStageProtonScreen.jsx
+@@ -522,7 +522,7 @@ export class ProtonScreen extends React.PureComponent {
+ 
+   renderPicture(image) {
+     const {
+-      imageURL = "chrome://branding/content/about-logo.svg",
++    imageURL = "chrome://branding/content/about-logo.png",
+       darkModeImageURL,
+       reducedMotionImageURL,
+       darkModeReducedMotionImageURL,

@@ -1,0 +1,7 @@
+browser/locales-preview/aiWindow.ftl
+browser/locales-preview/smartTabGroups.ftl
+browser/locales/en-US/browser/aiWindow.ftl
+browser/locales/en-US/browser/aiWindowContent.ftl
+browser/themes/shared/aiWindowSidebar.css
+browser/themes/shared/smartwindowGroupTabs.css
+browser/themes/shared/smartwindowMonitor.css

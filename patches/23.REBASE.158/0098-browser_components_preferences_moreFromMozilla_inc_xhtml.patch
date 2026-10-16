@@ -1,0 +1,17 @@
+# Gorilla 158 rebase: browser/components/preferences/moreFromMozilla.inc.xhtml as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/preferences/moreFromMozilla.inc.xhtml b/browser/components/preferences/moreFromMozilla.inc.xhtml
+index 646e78a56679c1cee609a6ad1b1c50f4e349f2d4..ef8815053d7f8a7e9f611bbee88646aa67394683 100644
+--- a/browser/components/preferences/moreFromMozilla.inc.xhtml
++++ b/browser/components/preferences/moreFromMozilla.inc.xhtml
+@@ -38,7 +38,7 @@
+       <h3 class="qr-code-box-title"/>
+       <div class="qr-code-box-image-wrapper">
+         <img class="qr-code-box-image"/>
+-        <img class="qr-code-box-logo" src="chrome://branding/content/about-logo.svg"/>
++        <img class="qr-code-box-logo" src="chrome://branding/content/about-logo.png"/>
+       </div>
+       <a class="qr-code-link text-link" target="_blank" hidden=""/>
+     </div>

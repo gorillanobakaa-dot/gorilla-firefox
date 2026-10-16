@@ -1,0 +1,28 @@
+# Gorilla 158 rebase: browser/components/tabbrowser/Tabbrowser.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/tabbrowser/Tabbrowser.sys.mjs b/browser/components/tabbrowser/Tabbrowser.sys.mjs
+index a6bb500acdb3e6e8e5a4134e32fdc881d15af73b..1fea2f3d876f7acb02411acbb2949ba66a2af625 100644
+--- a/browser/components/tabbrowser/Tabbrowser.sys.mjs
++++ b/browser/components/tabbrowser/Tabbrowser.sys.mjs
+@@ -7,7 +7,7 @@ import { XPCOMUtils } from "resource://gre/modules/XPCOMUtils.sys.mjs";
+ 
+ const lazy = XPCOMUtils.declareLazy({
+   AIWindow:
+-    "moz-src:///browser/components/aiwindow/ui/modules/AIWindow.sys.mjs",
++    "resource:///modules/AIWindowStub.sys.mjs", // GORILLA: aiwindow excised, stub answers
+   allowTransparentBrowser: {
+     pref: "browser.tabs.allow_transparent_browser",
+     default: false,
+@@ -88,9 +88,7 @@ const lazy = XPCOMUtils.declareLazy({
+  * start loading them faster than FaviconLoader would normally find them.
+  */
+ const FAVICON_DEFAULTS = {
+-  "about:newtab": "chrome://branding/content/icon32.png",
+-  "about:home": "chrome://branding/content/icon32.png",
+-  "about:welcome": "chrome://branding/content/icon32.png",
++  // GORILLA D-157-35: no 16 px Gorilla as the tab icon of New Tab, Home or Welcome
+   "about:privatebrowsing": "chrome://browser/skin/privatebrowsing/favicon.svg",
+ };
+ 

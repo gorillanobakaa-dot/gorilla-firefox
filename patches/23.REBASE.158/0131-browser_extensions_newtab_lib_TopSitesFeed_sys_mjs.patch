@@ -1,0 +1,18 @@
+# Gorilla 158 rebase: browser/extensions/newtab/lib/TopSitesFeed.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/extensions/newtab/lib/TopSitesFeed.sys.mjs b/browser/extensions/newtab/lib/TopSitesFeed.sys.mjs
+index 91ba0b8cca8cb75f918cdc42cf6364a0d7018491..a2358ee8b812654e9c090b35bc4e4d1f59812683 100644
+--- a/browser/extensions/newtab/lib/TopSitesFeed.sys.mjs
++++ b/browser/extensions/newtab/lib/TopSitesFeed.sys.mjs
+@@ -1536,7 +1536,8 @@ export class TopSitesFeed {
+    * automated tests that simulate responses from this fetch.
+    */
+   fetch(...args) {
+-    return fetch(...args);
++    // GORILLA UNLEASHED - PHYSICAL LOCK (egress): this feed fetches nothing from the network.
++    return Promise.reject(new Error("GORILLA: network fetch disabled"));
+   }
+ 
+   /**

@@ -1,0 +1,46 @@
+# Gorilla 158 rebase: browser/base/content/browser-menubar.inc.xhtml as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/base/content/browser-menubar.inc.xhtml b/browser/base/content/browser-menubar.inc.xhtml
+index ea461ff47202e536021909a6ba5f6374617556c5..9c61dafc36bac84ef74d2facd0eb730031d52ceb 100644
+--- a/browser/base/content/browser-menubar.inc.xhtml
++++ b/browser/base/content/browser-menubar.inc.xhtml
+@@ -16,12 +16,7 @@
+       <menuitem id="menu_newNavigator"
+                 key="key_newNavigator"
+                 command="cmd_newNavigator" data-l10n-id="menu-file-new-window"/>
+-      <menuitem id="menu_newAIWindow"
+-                command="Tools:AIWindow"
+-                data-l10n-id="menu-file-new-ai-window"/>
+-      <menuitem id="menu_newClassicWindow"
+-                command="Tools:ClassicWindow"
+-                data-l10n-id="menu-file-new-classic-window"/>
++      <!-- GORILLA: New AI Window / New Classic Window removed (aiwindow excised) -->
+       <menuitem id="menu_newPrivateWindow"
+                 command="Tools:PrivateBrowsing"
+                 key="key_privatebrowsing" data-l10n-id="menu-file-new-private-window"/>
+@@ -212,9 +207,7 @@
+                 key="showAllHistoryKb"
+                 command="Browser:ShowAllHistory" data-l10n-id="menu-history-show-all-history"/>
+ 
+-      <menuitem id="chatsHistoryMenu" class="chats-history-menuitem"
+-                data-l10n-id="menu-history-chats"
+-                disabled="true" hidden="true" command="Tools:ChatsHistory"/>
++      <!-- GORILLA excised 2026-10-15 (158, D-158-08): no "Chats" history item (AI chat history). -->
+ 
+       <menuitem id="sanitizeItem"
+                 key="key_sanitize"
+@@ -258,11 +251,7 @@
+ #endif
+         </menupopup>
+       </menu>
+-      <menuseparator id="startChatHistorySeparator" hidden="true"/>
+-      <menuitem id="recentChatsHeader" class="recent-chats-header"
+-                data-l10n-id="menu-history-chats-recent"
+-                disabled="true" hidden="true"/>
+-      <!-- Chat history menu items -->
++      <!-- GORILLA excised 2026-10-15 (158, D-158-08): no recent AI chats section in the History menu. -->
+       <menuseparator id="startHistorySeparator"
+                      class="hide-if-empty-places-result"/>
+     </menupopup>

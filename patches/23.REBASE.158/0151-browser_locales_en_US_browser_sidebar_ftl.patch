@@ -1,0 +1,19 @@
+# Gorilla 158 rebase: browser/locales/en-US/browser/sidebar.ftl as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/locales/en-US/browser/sidebar.ftl b/browser/locales/en-US/browser/sidebar.ftl
+index a94abf279fc5d473b682f01172b3861f621bc927..785087aba421d75b980826091753011323bb5825 100644
+--- a/browser/locales/en-US/browser/sidebar.ftl
++++ b/browser/locales/en-US/browser/sidebar.ftl
+@@ -344,10 +344,6 @@ sidebar-widget-hide-sidebar2 =
+ # this area to pin them.
+ sidebar-pins-promo-text = Drag important Gorilla tabs here to keep them within reach
+ 
+-# Accessible label for the splitter used to resize the sidebar.
+-sidebar-resize-splitter =
+-  .aria-label = Resize sidebar
+-
+ # GORILLA REPAIR: messages required by this Firefox version,
+ # grafted verbatim from the vanilla vault (branding flows via -brand terms).
+ sidebar-bookmarks-title = Bookmarks

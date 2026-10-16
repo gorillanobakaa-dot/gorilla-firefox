@@ -1,0 +1,19 @@
+# Gorilla 158 rebase: toolkit/locales/jar.mn as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/locales/jar.mn b/toolkit/locales/jar.mn
+index e756676cbf8b612f979b7fc1333e017bd7f6ea6c..6169b9d899c1460a1ec12c9f93ac2ebc8fbb8f06 100644
+--- a/toolkit/locales/jar.mn
++++ b/toolkit/locales/jar.mn
+@@ -7,8 +7,8 @@
+   crashreporter                                    (%crashreporter/**/*.ftl)
+   services                                         (%services/**/*.ftl)
+   toolkit                                          (%toolkit/**/*.ftl)
+-  locales-preview/aboutRestricted.ftl              (../locales-preview/aboutRestricted.ftl)
+-  locales-preview/smartWindow-aboutAddons.ftl      (../locales-preview/smartWindow-aboutAddons.ftl)
++# GORILLA D-157-40: locales-preview/aboutRestricted.ftl (about:restricted is not packaged)
++# GORILLA excised: locales-preview/smartWindow-aboutAddons.ftl (the Smart Window themes notice is removed)
+ #ifdef MOZ_LAYOUT_DEBUGGER
+   layoutdebug/layoutdebug.ftl                      (../../layout/tools/layout-debug/ui/content/layoutdebug.ftl)
+ #endif

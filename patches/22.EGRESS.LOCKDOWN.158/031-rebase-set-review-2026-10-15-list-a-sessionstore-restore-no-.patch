@@ -1,0 +1,124 @@
+# Gorilla 158 privacy cut
+# Rebase-set review 2026-10-15, list A: SessionStore restore no longer calls Smart Window functions the AIWindow stub lacks (threw on a non-resumed startup with pinned tabs; 16.SNAPSHOT hunk not carried); ASRouter OPEN_SMARTWINDOW_MONITOR_CREATE (new in 158) locked like FXA_AIWINDOW_SIGNIN_FLOW; Gorilla wording (D-157-34) carried to the 158 ids of search-mode settings, aboutAddons and migrationWizard.
+# Files: browser/components/sessionstore/SessionStore.sys.mjs, browser/locales/en-US/browser/browser.ftl, browser/locales/en-US/browser/migrationWizard.ftl, toolkit/components/messaging-system/lib/SpecialMessageActions.sys.mjs, toolkit/locales/en-US/toolkit/about/aboutAddons.ftl
+
+diff --git a/browser/components/sessionstore/SessionStore.sys.mjs b/browser/components/sessionstore/SessionStore.sys.mjs
+index 23205334b8..684951c2a8 100644
+--- a/browser/components/sessionstore/SessionStore.sys.mjs
++++ b/browser/components/sessionstore/SessionStore.sys.mjs
+@@ -6751,31 +6751,9 @@ class _SessionStore {
+    *        Options for the restoration
+    */
+   #restoreWindowFeatures(aWindow, aWinData, aOptions = {}) {
+-    // A restored window keeps its saved type: Classic stays Classic and Smart
+-    // stays Smart, for both automatic (startup.page=3 / crash) and manual
+-    // "Restore previous session" restores.
+-    // The only exception is the new startup window when Smart Window is the user's
+-    // default and we are NOT auto-restoring a session.
+-    // aOptions.firstWindow is set only for the initial startup window (manual
+-    // restores don't set it), and willRestore() is true only for automatic
+-    // restore / crash recovery — so this forces Smart for a genuinely new
+-    // default startup window, never for a window restored from a saved session.
+-    const isNewDefaultStartupWindow =
+-      aOptions.firstWindow &&
+-      !lazy.SessionStartup.willRestore() &&
+-      lazy.AIWindow.shouldOpenAsSmartWindow();
+-    const shouldBeAIWindow =
+-      isNewDefaultStartupWindow ||
+-      (!!aWinData.isAIWindow && lazy.AIWindow.isAIWindowEnabled());
+-
+-    const trigger = aOptions.trigger ?? "open_browser";
+-
+-    if (lazy.AIWindow.isAIWindowActive(aWindow) !== shouldBeAIWindow) {
+-      lazy.AIWindow.toggleAIWindow(aWindow, shouldBeAIWindow, trigger);
+-    } else if (shouldBeAIWindow) {
+-      lazy.AIWindow.recordOpenWindowTelemetry(trigger);
+-    }
+-
++    // GORILLA UNLEASHED (16.SNAPSHOT, carried to 158 by the rebase-set review 2026-10-15): no Smart Window toggle at
++    // restore. AIWindowStub has none of shouldOpenAsSmartWindow / isAIWindowEnabled / toggleAIWindow, so this threw
++    // on a non-resumed startup with pinned tabs (D-158-08, AI excised).
+     let promiseParts = Promise.withResolvers();
+     const wasMinimized = aWindow.windowState == aWindow.STATE_MINIMIZED;
+     aWindow.setTimeout(() => {
+diff --git a/browser/locales/en-US/browser/browser.ftl b/browser/locales/en-US/browser/browser.ftl
+index a96d1978b2..71d6454f98 100644
+--- a/browser/locales/en-US/browser/browser.ftl
++++ b/browser/locales/en-US/browser/browser.ftl
+@@ -887,8 +887,8 @@ urlbar-searchmode-popup-one-off-header = This time search with:
+ # Label shown on the top of Searchmode Switcher popup when the search engine won't automatically
+ # reset after submitting.
+ urlbar-searchmode-popup-header = Search with:
+-urlbar-searchmode-popup-search-settings2 = Search Settings
+-urlbar-searchmode-popup-settings2 = Settings
++urlbar-searchmode-popup-search-settings2 = Search Gorilla Settings
++urlbar-searchmode-popup-settings2 = Gorilla Settings
+ 
+ # Label prompting user to search with a particular search engine.
+ #  $engine (String): the name of a search engine that searches a specific site
+diff --git a/browser/locales/en-US/browser/migrationWizard.ftl b/browser/locales/en-US/browser/migrationWizard.ftl
+index 7580638ddc..b4f87d8de8 100644
+--- a/browser/locales/en-US/browser/migrationWizard.ftl
++++ b/browser/locales/en-US/browser/migrationWizard.ftl
+@@ -31,13 +31,13 @@ migration-wizard-migrator-display-name-chrome = Chrome
+ migration-wizard-migrator-display-name-chrome-beta = Chrome Beta
+ migration-wizard-migrator-display-name-chrome-dev = Chrome Dev
+ migration-wizard-migrator-display-name-chromium = Chromium
+-migration-wizard-migrator-display-name-chromium-360se = 360 Secure Browser
++migration-wizard-migrator-display-name-chromium-360se = 360 Secure Gorilla Browser
+ migration-wizard-migrator-display-name-chromium-edge = Microsoft Edge
+ migration-wizard-migrator-display-name-chromium-edge-beta = Microsoft Edge Beta
+ migration-wizard-migrator-display-name-edge-legacy = Microsoft Edge Legacy
+ migration-wizard-migrator-display-name-self = { -brand-product-name }
+-migration-wizard-migrator-display-name-file-password-csv = Passwords from CSV file
+-migration-wizard-migrator-display-name-file-bookmarks = Bookmarks from HTML file
++migration-wizard-migrator-display-name-file-password-csv = Passwords from CSV Gorilla file
++migration-wizard-migrator-display-name-file-bookmarks = Bookmarks from HTML Gorilla file
+ migration-wizard-migrator-display-name-ie = Microsoft Internet Explorer
+ migration-wizard-migrator-display-name-opera = Opera
+ migration-wizard-migrator-display-name-opera-gx = Opera GX
+diff --git a/toolkit/components/messaging-system/lib/SpecialMessageActions.sys.mjs b/toolkit/components/messaging-system/lib/SpecialMessageActions.sys.mjs
+index a56d4ee801..26eedcbb6d 100644
+--- a/toolkit/components/messaging-system/lib/SpecialMessageActions.sys.mjs
++++ b/toolkit/components/messaging-system/lib/SpecialMessageActions.sys.mjs
+@@ -1081,7 +1081,7 @@ export const SpecialMessageActions = {
+         /** @returns {Promise<boolean>} */
+         return false;
+       case "OPEN_SMARTWINDOW_MONITOR_CREATE":
+-        lazy.AIWindowUI.showMonitorCreateForm(window);
++        // GORILLA UNLEASHED - PHYSICAL LOCK: no Smart Window (D-157-00, D-158-08); AIWindowUI is excised.
+         break;
+       case "OPEN_PROTECTION_PANEL": {
+         let { gProtectionsHandler } = window;
+diff --git a/toolkit/locales/en-US/toolkit/about/aboutAddons.ftl b/toolkit/locales/en-US/toolkit/about/aboutAddons.ftl
+index 1956beca83..8bcb94744b 100644
+--- a/toolkit/locales/en-US/toolkit/about/aboutAddons.ftl
++++ b/toolkit/locales/en-US/toolkit/about/aboutAddons.ftl
+@@ -314,23 +314,23 @@ header-back-button =
+ # We hard code "Firefox" because we do not want to imply that a Firefox fork is
+ # making this recommendation.
+ discopane-intro3 =
+-    Extensions and themes let you customize { -brand-product-name }. They can boost privacy,
++    Gorilla Extensions and Gorilla themes let you customize { -brand-product-name }. They can boost privacy,
+     enhance productivity, improve media, change the way { -brand-product-name } looks, and
+     so much more. These small software programs are often developed by a third party. Here’s
+-    a selection Firefox <a data-l10n-name="learn-more-trigger">recommends</a> for
++    a selection Gorilla Unleashed <a data-l10n-name="learn-more-trigger">recommends</a> for
+     exceptional security, performance, and functionality.
+ 
+ # Notice to make user aware that the recommendations are personalized.
+ discopane-notice-recommendations2 =
+     .message =
+         Some of these recommendations are personalized. They are based on other
+-        extensions you’ve installed, profile preferences, and usage statistics.
++        Gorilla extensions you’ve installed, Gorilla profile preferences, and usage statistics.
+ discopane-notice-learn-more = Learn more
+ 
+ # Notice to make user aware that themes are not applied in forced colors mode.
+ # This notice is only visible on Windows.
+ forced-colors-theme-notice =
+-    .message = Your Windows contrast settings are overriding { -brand-short-name } themes. Turn off these settings to use themes in { -brand-short-name }.
++    .message = Your Gorilla Windows contrast Gorilla settings are overriding { -brand-short-name } Gorilla themes. Turn off these Gorilla settings to use Gorilla themes in { -brand-short-name }.
+ 
+ privacy-policy = Privacy Policy
+ 

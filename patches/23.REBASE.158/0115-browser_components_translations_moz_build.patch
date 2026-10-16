@@ -1,0 +1,15 @@
+# Gorilla 158 rebase: browser/components/translations/moz.build as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/translations/moz.build b/browser/components/translations/moz.build
+index 6c576098c896ca5bb9ddf4e05a88f66cb2264f93..0ac04ea3343878237fcce53656a29a258b4af58f 100644
+--- a/browser/components/translations/moz.build
++++ b/browser/components/translations/moz.build
+@@ -13,4 +13,6 @@ BROWSER_CHROME_MANIFESTS += [
+     "tests/browser/perftest.toml",
+ ]
+ 
++# GORILLA UNLEASHED - PHYSICAL LOCK: no translations (decision D-157-03). The manifest is EMPTIED, not dropped
++# (mozbuild refuses an undeclared jar.mn); nothing under chrome://browser/content/translations/ is packaged.
+ JAR_MANIFESTS += ["jar.mn"]

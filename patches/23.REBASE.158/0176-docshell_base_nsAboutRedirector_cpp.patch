@@ -1,0 +1,210 @@
+# Gorilla 158 rebase: docshell/base/nsAboutRedirector.cpp as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/docshell/base/nsAboutRedirector.cpp b/docshell/base/nsAboutRedirector.cpp
+index 54555e0f79b42f1bc7ce380d43067c149f76c1ca..4e62c48b991506f8c6a5df6ffe7086855cf07818 100644
+--- a/docshell/base/nsAboutRedirector.cpp
++++ b/docshell/base/nsAboutRedirector.cpp
+@@ -27,55 +27,10 @@ struct RedirEntry {
+   uint32_t flags;
+ };
+ 
+-class CrashChannel final : public nsBaseChannel {
+- public:
+-  explicit CrashChannel(nsIURI* aURI) { SetURI(aURI); }
+-
+-  nsresult OpenContentStream(bool async, nsIInputStream** stream,
+-                             nsIChannel** channel) override {
+-    nsAutoCString spec;
+-    mURI->GetSpec(spec);
+-
+-    if (spec.EqualsASCII("about:crashparent") && XRE_IsParentProcess()) {
+-      MOZ_CRASH("Crash via about:crashparent");
+-    }
+-
+-    if (spec.EqualsASCII("about:crashgpu") && XRE_IsParentProcess()) {
+-      if (auto* gpu = mozilla::gfx::GPUProcessManager::Get()) {
+-        gpu->CrashProcess();
+-      }
+-    }
+-
+-    if (spec.EqualsASCII("about:crashcontent") && XRE_IsContentProcess()) {
+-      MOZ_CRASH("Crash via about:crashcontent");
+-    }
+-
+-#ifdef MOZ_WIDGET_ANDROID
+-    if (spec.EqualsASCII("about:crashcontentjava") && XRE_IsContentProcess()) {
+-      mozilla::java::GeckoAppShell::CrashByUncaughtException();
+-    }
+-#endif
+-
+-    if (spec.EqualsASCII("about:crashextensions") && XRE_IsParentProcess()) {
+-      using ContentParent = mozilla::dom::ContentParent;
+-      nsTArray<RefPtr<ContentParent>> toKill;
+-      for (auto* cp : ContentParent::AllProcesses(ContentParent::eLive)) {
+-        if (cp->GetRemoteType().IsExtension()) {
+-          toKill.AppendElement(cp);
+-        }
+-      }
+-      for (auto& cp : toKill) {
+-        cp->KillHard("Killed via about:crashextensions");
+-      }
+-    }
+-
+-    NS_WARNING("Unhandled about:crash* URI or wrong process");
+-    return NS_ERROR_NOT_IMPLEMENTED;
+-  }
+-
+- protected:
+-  virtual ~CrashChannel() = default;
+-};
++// GORILLA D-157-40 (2026-10-08): no about:crashparent, crashcontent, crashgpu, crashextensions (or Android's
++// crashcontentjava). One typed address killed the whole browser, a tab's process, the GPU process or every add-on
++// (uBlock Origin included); they exist for Mozilla's test suites, and Gorilla is built --disable-tests and
++// --disable-crashreporter. The channel that did the killing is gone with them.
+ 
+ /*
+   Entries which do not have URI_SAFE_FOR_UNTRUSTED_CONTENT will run with chrome
+@@ -115,15 +70,16 @@ static const RedirEntry kRedirMap[] = {
+     {"crashes", "chrome://global/content/crashes.html",
+      nsIAboutModule::IS_SECURE_CHROME_UI},
+ #endif
+-    {"credits", "https://www.mozilla.org/credits/",
++    // GORILLA UNLEASHED - PHYSICAL LOCK (D-157-00), 2026-10-04: about:credits
++    // opened https://www.mozilla.org/credits/ (a request to Mozilla); it shows
++    // the local licence page.
++    {"credits", "chrome://global/content/license.html",
+      nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+-         nsIAboutModule::URI_MUST_LOAD_IN_CHILD},
+-    {"fingerprintingprotection",
+-     "chrome://global/content/usercharacteristics/usercharacteristics.html",
+-     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+-         nsIAboutModule::HIDE_FROM_ABOUTABOUT | nsIAboutModule::ALLOW_SCRIPT |
+-         nsIAboutModule::URI_MUST_LOAD_IN_CHILD |
+-         nsIAboutModule::URI_CAN_LOAD_IN_PRIVILEGEDABOUT_PROCESS},
++         nsIAboutModule::IS_SECURE_CHROME_UI},
++    // GORILLA D-157-40 (2026-10-08): no about:fingerprintingprotection. It was the hidden measuring page of
++    // Mozilla's "user-characteristics" study: loaded in an invisible browser once per study wave, it fingerprinted this
++    // installation (graphics, fonts, audio, codecs, screen, CPU, keyboard, WebRTC addresses) for a ping to Mozilla.
++    // The collection is cut at source (nsRFPService.cpp) and its prefs are locked off (all.js).
+ #ifdef MOZ_WIDGET_ANDROID
+     {"home", "about:blank",
+      nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+@@ -138,10 +94,10 @@ static const RedirEntry kRedirMap[] = {
+     {"license", "chrome://global/content/license.html",
+      nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+          nsIAboutModule::IS_SECURE_CHROME_UI},
+-    {"logging", "chrome://global/content/aboutLogging/aboutLogging.html",
+-     nsIAboutModule::ALLOW_SCRIPT},
+-    {"logo", "chrome://branding/content/about.png",
+-     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT},
++    // GORILLA D-157-36 (2026-10-08): no about:logging. It set log modules at run time and handed what it caught to
++    // the profiler: profiler.firefox.com opened with it, or (pref) an upload to api.profiler.firefox.com.
++    // MOZ_LOG in the environment still logs to a file (the leak gate's nsHttp log uses it).
++    // GORILLA D-157-35: no about:logo (it only showed the master logo, upscaled at 200 % scaling)
+     {"memory", "chrome://global/content/aboutMemory.xhtml",
+      nsIAboutModule::ALLOW_SCRIPT},
+     {"certificate", "chrome://global/content/certviewer/certviewer.html",
+@@ -170,16 +126,12 @@ static const RedirEntry kRedirMap[] = {
+          nsIAboutModule::URI_CAN_LOAD_IN_PRIVILEGEDABOUT_PROCESS |
+          nsIAboutModule::IS_SECURE_CHROME_UI},
+ #endif
+-    {"performance", "about:processes",
+-     nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::IS_SECURE_CHROME_UI |
+-         nsIAboutModule::HIDE_FROM_ABOUTABOUT},
++    // GORILLA D-157-40 (2026-10-08): no about:performance, a leftover second name for about:processes.
+     {"processes", "chrome://global/content/aboutProcesses.html",
+      nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::IS_SECURE_CHROME_UI},
+-    {"restricted",
+-     "chrome://global/content/aboutRestricted/aboutRestricted.html",
+-     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+-         nsIAboutModule::URI_CAN_LOAD_IN_CHILD | nsIAboutModule::ALLOW_SCRIPT |
+-         nsIAboutModule::HIDE_FROM_ABOUTABOUT},
++    // GORILLA D-157-40 (2026-10-08): no about:restricted. It was the "Restricted Content" page of parental
++    // controls, which Gorilla is built without (--disable-parental-controls); nothing enforces them now
++    // (CanonicalBrowsingContext::ShouldEnforceParentalControls).
+     // about:serviceworkers always wants to load in the parent process because
+     // the only place nsIServiceWorkerManager has any data is in the parent
+     // process.
+@@ -206,47 +158,22 @@ static const RedirEntry kRedirMap[] = {
+ #ifdef XP_WIN
+     {"third-party", "chrome://global/content/aboutThirdParty.html",
+      nsIAboutModule::ALLOW_SCRIPT},
+-    {"windows-messages", "chrome://global/content/aboutWindowsMessages.html",
+-     nsIAboutModule::ALLOW_SCRIPT},
+-#endif
+-#ifndef MOZ_GLEAN_ANDROID
+-    {"glean", "chrome://global/content/aboutGlean.html",
+-#  if !defined(NIGHTLY_BUILD) && defined(MOZILLA_OFFICIAL)
+-     nsIAboutModule::HIDE_FROM_ABOUTABOUT |
+-#  endif
+-         nsIAboutModule::ALLOW_SCRIPT},
++    // GORILLA D-157-36 (2026-10-08): no about:windows-messages (nothing is recorded for it: nsWindowDbg.cpp)
+ #endif
++    // GORILLA D-157-36 (2026-10-08): no about:glean. It is the test bench of Glean, Mozilla's telemetry library, which
++    // never starts in Gorilla (FOG.cpp): debug-tagged pings for Mozilla's Glean Debug Ping Viewer, metric values, links
++    // to Mozilla's data dictionary. Its menus showed text; its submit button did nothing (0 requests, 2026-10-08).
+     {"sync-log", "chrome://global/content/aboutSyncLog.html",
+      nsIAboutModule::ALLOW_SCRIPT},
+     {"telemetry", "chrome://global/content/aboutTelemetry.xhtml",
+      nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::IS_SECURE_CHROME_UI},
+-#ifndef MOZ_WIDGET_ANDROID
+-    {"translations",
+-     "chrome://global/content/translations/about-translations.html",
+-     nsIAboutModule::ALLOW_SCRIPT |
+-         nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+-         nsIAboutModule::URI_MUST_LOAD_IN_CHILD |
+-         nsIAboutModule::URI_CAN_LOAD_IN_PRIVILEGEDABOUT_PROCESS},
+-#endif
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): about:translations removed
+     {"url-classifier", "chrome://global/content/aboutUrlClassifier.xhtml",
+      nsIAboutModule::ALLOW_SCRIPT},
+     {"webrtc", "chrome://global/content/aboutwebrtc/aboutWebrtc.html",
+      nsIAboutModule::ALLOW_SCRIPT},
+-    {"crashparent", "about:blank", nsIAboutModule::HIDE_FROM_ABOUTABOUT},
+-    {"crashcontent", "about:blank",
+-     nsIAboutModule::HIDE_FROM_ABOUTABOUT |
+-         nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+-         nsIAboutModule::URI_CAN_LOAD_IN_CHILD |
+-         nsIAboutModule::URI_MUST_LOAD_IN_CHILD},
+-#ifdef MOZ_WIDGET_ANDROID
+-    {"crashcontentjava", "about:blank",
+-     nsIAboutModule::HIDE_FROM_ABOUTABOUT |
+-         nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+-         nsIAboutModule::URI_CAN_LOAD_IN_CHILD |
+-         nsIAboutModule::URI_MUST_LOAD_IN_CHILD},
+-#endif
+-    {"crashgpu", "about:blank", nsIAboutModule::HIDE_FROM_ABOUTABOUT},
+-    {"crashextensions", "about:blank", nsIAboutModule::HIDE_FROM_ABOUTABOUT}};
++    // GORILLA D-157-40 (2026-10-08): the crash pages are gone (see the note above the table).
++};
+ 
+ NS_IMETHODIMP
+ nsAboutRedirector::NewChannel(nsIURI* aURI, nsILoadInfo* aLoadInfo,
+@@ -262,25 +189,6 @@ nsAboutRedirector::NewChannel(nsIURI* aURI, nsILoadInfo* aLoadInfo,
+   nsCOMPtr<nsIIOService> ioService = do_GetIOService(&rv);
+   NS_ENSURE_SUCCESS(rv, rv);
+ 
+-  if (path.EqualsASCII("crashparent") || path.EqualsASCII("crashcontent") ||
+-      path.EqualsASCII("crashgpu") || path.EqualsASCII("crashextensions")
+-#ifdef MOZ_WIDGET_ANDROID
+-      || path.EqualsASCII("crashcontentjava")
+-#endif
+-  ) {
+-    bool isExternal;
+-    aLoadInfo->GetLoadTriggeredFromExternal(&isExternal);
+-    if (isExternal || !aLoadInfo->TriggeringPrincipal() ||
+-        !aLoadInfo->TriggeringPrincipal()->IsSystemPrincipal()) {
+-      return NS_ERROR_NOT_AVAILABLE;
+-    }
+-
+-    nsCOMPtr<nsIChannel> channel = new CrashChannel(aURI);
+-    channel->SetLoadInfo(aLoadInfo);
+-    channel.forget(aResult);
+-    return NS_OK;
+-  }
+-
+   if (path.EqualsASCII("config") &&
+       !mozilla::Preferences::GetBool(ABOUT_CONFIG_ENABLED_PREF, true)) {
+     return NS_ERROR_NOT_AVAILABLE;

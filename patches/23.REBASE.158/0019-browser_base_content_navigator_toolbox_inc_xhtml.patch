@@ -1,0 +1,44 @@
+# Gorilla 158 rebase: browser/base/content/navigator-toolbox.inc.xhtml as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/base/content/navigator-toolbox.inc.xhtml b/browser/base/content/navigator-toolbox.inc.xhtml
+index d8aeb318a225ac9a2528d274ec1dcb32fac3fd8e..cac1aabf23f569b53d3da377d6786814a226f28c 100644
+--- a/browser/base/content/navigator-toolbox.inc.xhtml
++++ b/browser/base/content/navigator-toolbox.inc.xhtml
+@@ -384,15 +384,7 @@
+                   hidden="true">
+               <image class="urlbar-icon"/>
+             </hbox>
+-            <hbox id="translations-button"
+-                  class="urlbar-page-action"
+-                  role="button"
+-                  data-l10n-id="urlbar-translations-button2"
+-                  hidden="true">
+-              <image class="urlbar-icon" id="translations-button-icon" />
+-              <image class="urlbar-icon" id="translations-button-circle-arrows" />
+-              <html:span id="translations-button-locale" aria-hidden="true" />
+-            </hbox>
++            <!-- GORILLA UNLEASHED - PHYSICAL LOCK: no translations (D-157-03): no translations button in the address bar -->
+             <toolbarbutton id="urlbar-zoom-button"
+                     tooltip="dynamic-shortcut-tooltip"
+                     hidden="true"/>
+@@ -506,17 +498,7 @@
+                     data-l10n-id="mini-window-close-button"
+                     hidden="" removable="false" overflows="false"/>
+ 
+-    <toolbaritem id="smartwindow-ask-button"
+-                 class="chromeclass-toolbar-additional"
+-                 hidden="true"
+-                 overflows="false"
+-                 removable="false">
+-      <toolbarbutton id="smartwindow-ask-button-inner"
+-                      class="toolbarbutton-1"
+-                      aria-expanded="false"
+-                      data-l10n-id="smartwindow-ask-button">
+-      </toolbarbutton>
+-    </toolbaritem>
++    <!-- GORILLA UNLEASHED - PHYSICAL LOCK: no Smart Window "Ask" button (aiwindow excised). -->
+ 
+     <toolbarbutton id="nav-bar-overflow-button"
+                    class="toolbarbutton-1 chromeclass-toolbar-additional"

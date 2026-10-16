@@ -1,0 +1,47 @@
+# Gorilla 158 port fix
+# Search-config-v2.json was not valid JSON: the 07.TOOLKIT hunk empties specificDefaults (no per-region or partner default engine) by removing 157's array, and 158's array is longer, so a 32-line tail of it was left after the new []. The tail is removed; the file parses and specificDefaults is [] as the patch intends. lesson: a hunk that replaces a whole JSON value must be ported by value (parse, replace the key, write), never by line count; and every changed .json must parse at the step, not first at final-checks
+# Files: services/settings/dumps/main/search-config-v2.json
+
+diff --git a/services/settings/dumps/main/search-config-v2.json b/services/settings/dumps/main/search-config-v2.json
+index 485f2dff35..de3ff4d7c0 100644
+--- a/services/settings/dumps/main/search-config-v2.json
++++ b/services/settings/dumps/main/search-config-v2.json
+@@ -119,38 +119,6 @@
+       "recordType": "defaultEngines",
+       "schema": 1702901837584,
+       "specificDefaults": []
+-              "at",
+-              "be",
+-              "ch",
+-              "de",
+-              "es",
+-              "it",
+-              "nl",
+-              "se"
+-            ]
+-          },
+-          "subVariants": [
+-            {
+-              "environment": {
+-                "applications": [
+-                  "firefox-android",
+-                  "focus-android"
+-                ]
+-              },
+-              "partnerCode": "813cf1dd"
+-            },
+-            {
+-              "environment": {
+-                "applications": [
+-                  "firefox-ios",
+-                  "focus-ios"
+-                ]
+-              },
+-              "partnerCode": "16eeffc4"
+-            }
+-          ]
+-        }
+-      ]
+     },
+     {
+       "base": {

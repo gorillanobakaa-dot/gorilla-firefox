@@ -1,0 +1,17 @@
+# Gorilla 158 rebase: browser/components/uitour/UITour.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/uitour/UITour.sys.mjs b/browser/components/uitour/UITour.sys.mjs
+index 378a3a8660ee30eb8f2740e37807b98993eb4cb0..cb1a55196324b806d4fbe8160c7ad82bb82995c2 100644
+--- a/browser/components/uitour/UITour.sys.mjs
++++ b/browser/components/uitour/UITour.sys.mjs
+@@ -8,8 +8,6 @@ const lazy = {};
+ 
+ ChromeUtils.defineESModuleGetters(lazy, {
+   AboutReaderParent: "resource:///actors/AboutReaderParent.sys.mjs",
+-  AIWindow:
+-    "moz-src:///browser/components/aiwindow/ui/modules/AIWindow.sys.mjs",
+   AppProvidedConfigEngine:
+     "moz-src:///toolkit/components/search/ConfigSearchEngine.sys.mjs",
+   ASRouter: "resource:///modules/asrouter/ASRouter.sys.mjs",

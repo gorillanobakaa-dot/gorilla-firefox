@@ -1,0 +1,30 @@
+# Gorilla 158 rebase: browser/components/search/content/contentSearchHandoffUI.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/search/content/contentSearchHandoffUI.mjs b/browser/components/search/content/contentSearchHandoffUI.mjs
+index e1d2a59ce886dc624b9c037bcd75a7fbdd1518ac..f9b78cfe1d59210403031f62117d54128537b56a 100644
+--- a/browser/components/search/content/contentSearchHandoffUI.mjs
++++ b/browser/components/search/content/contentSearchHandoffUI.mjs
+@@ -84,15 +84,12 @@ class ContentSearchHandoffUIController {
+       URL.revokeObjectURL(this._engineIcon);
+     }
+ 
+-    // We only show the engines icon for config engines, otherwise show
+-    // a default. xref https://bugzilla.mozilla.org/show_bug.cgi?id=1449338#c19
+-    if (!engine.isConfigEngine) {
+-      this._engineIcon = "chrome://global/skin/icons/search-glass.svg";
+-    } else if (engine.iconData) {
+-      this._engineIcon = this._getFaviconURIFromIconData(engine.iconData);
+-    } else {
+-      this._engineIcon = "chrome://global/skin/icons/defaultFavicon.svg";
+-    }
++    // GORILLA UNLEASHED 2026-10-04: always show the vector search glass. The
++    // bundled engine icons are 16/32 px rasters that blur when enlarged to
++    // the button's icon size at 2x DPR, and a sharper one would have to be
++    // downloaded from Mozilla, which Gorilla never does. The glass takes the
++    // themed fill set in contentSearchHandoffUI.css.
++    this._engineIcon = "chrome://global/skin/icons/search-glass.svg";
+ 
+     document.body.style.setProperty(
+       "--newtab-search-icon",

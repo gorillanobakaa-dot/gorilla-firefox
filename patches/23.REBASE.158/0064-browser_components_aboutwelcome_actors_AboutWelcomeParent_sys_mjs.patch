@@ -1,0 +1,22 @@
+# Gorilla 158 rebase: browser/components/aboutwelcome/actors/AboutWelcomeParent.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/aboutwelcome/actors/AboutWelcomeParent.sys.mjs b/browser/components/aboutwelcome/actors/AboutWelcomeParent.sys.mjs
+index 529018430287862b22a783bc5f4f9e7a7a693702..85b0c8fb0ed9020a6d8377d966385e565c7e0837 100644
+--- a/browser/components/aboutwelcome/actors/AboutWelcomeParent.sys.mjs
++++ b/browser/components/aboutwelcome/actors/AboutWelcomeParent.sys.mjs
+@@ -94,6 +94,13 @@ function shouldGateNimbusForAboutWelcome() {
+  * @returns {Promise<"ready"|"timeout"|"error"|"skipped">}
+  */
+ async function waitForNimbusForAboutWelcome() {
++  // GORILLA UNLEASHED - PHYSICAL LOCK (D-157-31): about:welcome never starts or waits for Nimbus.
++  // GORILLA TECHNIQUE T-157-31-A: nothing starts Nimbus (the experiment system). Starting it here would load
++  //   experiment recipes and wait for a Remote Settings update that never comes in Gorilla. The caller goes on
++  //   with its built-in defaults. Registry: Fieldkit fieldkit/buildh/techniques.py.
++  if (true) {
++    return "skipped";
++  }
+   if (!shouldGateNimbusForAboutWelcome()) {
+     lazy.log.debug("AboutWelcomeParent: skipping Nimbus wait (gate disabled)");
+     return "skipped";

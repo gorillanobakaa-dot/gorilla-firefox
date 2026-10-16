@@ -1,0 +1,33 @@
+# Gorilla 158 privacy cut
+# D-157-05 (Gorilla 2026-10-15): a refused add-on or theme install says it is blocked on purpose and why (add-ons run remotely changeable code and widen the attack surface), instead of Mozilla's 'not compatible with Gorilla Unleashed 158.0', which reads like a bug to fix. Every failed install routes to gorilla-addon-install-refused. Do not restore the stock message; do not loosen any lock.
+# Files: browser/base/content/browser-addons.js, browser/locales/en-US/browser/addonNotifications.ftl
+
+diff --git a/browser/base/content/browser-addons.js b/browser/base/content/browser-addons.js
+index d04118a9dd..80f129f12b 100644
+--- a/browser/base/content/browser-addons.js
++++ b/browser/base/content/browser-addons.js
+@@ -1665,6 +1665,11 @@ var gXPInstallObserver = {
+             if (!errorId) {
+               errorId = "addon-install-error-incompatible";
+             }
++            // GORILLA UNLEASHED - ADD-ON REFUSAL MESSAGE (D-157-05): no add-on or theme can install in this browser
++            // (XPIDatabase.isUsableAddon, XPIInstall and AddonManager refuse them), so every failed install from a
++            // site or a file IS that refusal. Mozilla's text ("not compatible with ... 158.0") reads like a bug to
++            // fix; this says it is blocked on purpose and why. Do not restore the stock message.
++            errorId = "gorilla-addon-install-refused";
+             messageString = lazy.l10n.formatValueSync(errorId, args);
+           }
+ 
+diff --git a/browser/locales/en-US/browser/addonNotifications.ftl b/browser/locales/en-US/browser/addonNotifications.ftl
+index e992fe0030..43451631e5 100644
+--- a/browser/locales/en-US/browser/addonNotifications.ftl
++++ b/browser/locales/en-US/browser/addonNotifications.ftl
+@@ -53,7 +53,7 @@ addon-installation-blocked-by-policy = { $addonName } ({ $addonId }) is blocked
+ addon-install-domain-blocked-by-policy = Your organization prevented this site from asking you to install software on your computer.
+ addon-install-full-screen-blocked = Add-on installation is not allowed while in or before entering fullscreen mode.
+ # GORILLA: shown when an add-on or theme install is refused (decision D-157-05: add-ons are built in only).
+-gorilla-addon-install-refused = { -brand-short-name } does not install add-ons or themes. uBlock Origin is built in.
++gorilla-addon-install-refused = Blocked on purpose: { -brand-short-name } does not install add-ons or themes. An add-on runs code that its maker can change from the internet at any time, and it opens the browser to attacks. uBlock Origin is built in.
+ 
+ # Variables:
+ #   $addonName (String): the localized name of the sideloaded add-on.

@@ -1,0 +1,1553 @@
+# Gorilla 158 rebase: browser/locales/en-US/browser/browser.ftl as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/locales/en-US/browser/browser.ftl b/browser/locales/en-US/browser/browser.ftl
+index 065b99ecdd77777fa1b85528f0fd861474a60fac..71d6454f989bc0db3feb6099fd34d25c98c6bd49 100644
+--- a/browser/locales/en-US/browser/browser.ftl
++++ b/browser/locales/en-US/browser/browser.ftl
+@@ -1,17 +1,17 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-
+ # This is the initial default title for the browser window.
+ # It gets updated based on loaded tabs or private browsing state.
+ browser-main-window-default-title = { -brand-full-name }
+ 
+ # Note: only on macOS do we use a `-` separator between the brand name and the
+ # "Private Browsing" suffix.
+-browser-main-private-window-title = { PLATFORM() ->
+-      [macos] { -brand-full-name } — Private Browsing
+-     *[other] { -brand-full-name } Private Browsing
+-  }
++browser-main-private-window-title =
++    { PLATFORM() ->
++    [macos] { -brand-full-name } — Private Browsing
++    *[other] { -brand-full-name } Private Browsing
++    }
+ 
+ # This is only used on macOS; on other OSes we use the full private window
+ # title (so including the brand name) as a suffix
+@@ -67,7 +67,7 @@ urlbar-xr-notification-anchor =
+ urlbar-storage-access-anchor =
+     .tooltiptext = Open browsing activity permission panel
+ urlbar-web-rtc-share-screen-notification-anchor =
+-    .tooltiptext = Manage sharing your windows or screen with the site
++    .tooltiptext = Manage sharing your Gorilla windows or screen with the site
+ urlbar-indexed-db-notification-anchor =
+     .tooltiptext = Open offline storage message panel
+ urlbar-password-notification-anchor =
+@@ -91,24 +91,32 @@ urlbar-result-menu-button =
+     .title = Open menu
+ urlbar-result-menu-button-feedback = Feedback
+     .title = Open menu
+-urlbar-result-menu-learn-more2 = Learn more
++urlbar-result-menu-learn-more =
++    .label = Learn more
+     .accesskey = L
+-urlbar-result-menu-remove-from-history2 = Remove from history
++urlbar-result-menu-remove-from-history =
++    .label = Remove from Gorilla history
+     .accesskey = R
+-urlbar-result-menu-tip-get-help2 = Get help
++urlbar-result-menu-tip-get-help =
++    .label = Get help
+     .accesskey = h
+-urlbar-result-menu-dismiss-suggestion2 = Dismiss this suggestion
++urlbar-result-menu-dismiss-suggestion =
++    .label = Dismiss this suggestion
+     .accesskey = D
+-urlbar-result-menu-manage-firefox-suggest2 = Manage { -firefox-suggest-brand-name }
++urlbar-result-menu-manage-firefox-suggest =
++    .label = Manage { -firefox-suggest-brand-name }
+     .accesskey = M
+ # Some urlbar suggestions show the user's approximate location as automatically
+ # detected by Firefox (e.g., weather suggestions), and this menu item lets the
+ # user tell Firefox that the location is not accurate. Typically the location
+ # will be a city name, or a city name combined with the name of its parent
+ # administrative division (e.g., a province, prefecture, or state).
+-urlbar-result-menu-report-inaccurate-location2 = Report inaccurate location
+-urlbar-result-menu-show-less-frequently2 = Show less frequently
+-urlbar-result-menu-dont-show-weather-suggestions2 = Don’t show weather suggestions
++urlbar-result-menu-report-inaccurate-location =
++    .label = Report inaccurate location
++urlbar-result-menu-show-less-frequently =
++    .label = Show less frequently
++urlbar-result-menu-dont-show-weather-suggestions =
++    .label = Don’t show weather suggestions
+ 
+ # Shown in the urlbar input field context menu to dismiss an adaptive autofill
+ # suggestion.
+@@ -137,23 +145,20 @@ urlbar-dismissal-acknowledgment-weather = Thanks for your feedback. You won’t
+ ## homepage of their default search engine.
+ ## Variables:
+ ##  $engineName (String): The name of the user's default search engine. e.g. "Google" or "DuckDuckGo".
+-
+ urlbar-search-tips-onboard = Type less, find more: Search { $engineName } right from your address bar.
+-urlbar-search-tips-redirect-2 = Start your search in the address bar to see suggestions from { $engineName } and your browsing history.
++urlbar-search-tips-redirect-2 = Start your search in the address bar to see suggestions from { $engineName } and your browsing Gorilla history.
+ 
+ # Prompts users to use the Urlbar when they are typing in the domain of a
+ # search engine, e.g. google.com or amazon.com.
+ urlbar-tabtosearch-onboard = Select this shortcut to find what you need faster.
+ 
+ ## Local search mode indicator labels in the urlbar
+-
+-urlbar-search-mode-bookmarks = Bookmarks
+-urlbar-search-mode-tabs = Tabs
+-urlbar-search-mode-history = History
++urlbar-search-mode-bookmarks = Gorilla Bookmarks
++urlbar-search-mode-tabs = Gorilla Tabs
++urlbar-search-mode-history = Gorilla History
+ urlbar-search-mode-actions = Actions
+ 
+ ##
+-
+ urlbar-geolocation-blocked =
+     .tooltiptext = You have blocked location information for this website.
+ urlbar-localhost-blocked =
+@@ -188,58 +193,54 @@ urlbar-install-blocked =
+ # Variables
+ #   $shortcut (String) - A keyboard shortcut for the edit bookmark command.
+ urlbar-star-edit-bookmark =
+-    .tooltiptext = Edit this bookmark ({ $shortcut })
++    .tooltiptext = Edit this Gorilla bookmark ({ $shortcut })
+ 
+ # Variables
+ #   $shortcut (String) - A keyboard shortcut for the add bookmark command.
+ urlbar-star-add-bookmark =
+-    .tooltiptext = Bookmark this page ({ $shortcut })
++    .tooltiptext = Gorilla Bookmark this Gorilla page ({ $shortcut })
+ 
+ urlbar-split-view-button =
+     .tooltiptext = Split view
+     .aria-label = Split view
+ 
+ ## Searchbar context menu
+-
+ clear-search-history =
+-    .label = Clear Search History
++    .label = Clear Search Gorilla History
+     .accesskey = H
+ 
+ ## Page Action Context Menu
+-
+ page-action-manage-extension2 =
+-    .label = Manage Extension…
++    .label = Manage Gorilla Extension…
+     .accesskey = E
+ page-action-remove-extension2 =
+-    .label = Remove Extension
++    .label = Remove Gorilla Extension
+     .accesskey = v
+ 
+ ## Auto-hide Context Menu
+-
+ full-screen-autohide =
+-    .label = Hide Toolbars
++    .label = Hide Gorilla Toolbars
+     .accesskey = H
+ full-screen-exit =
+     .label = Exit Full Screen Mode
+     .accesskey = F
+ 
+ ## Search Engine selection buttons (one-offs)
+-
+ # This string prompts the user to use the list of search shortcuts in
+ # the Urlbar and searchbar.
+ search-one-offs-with-title = This time, search with:
+ 
+ search-one-offs-change-settings-compact-button =
+-    .tooltiptext = Change search settings
++    .tooltiptext = Change search Gorilla settings
+ 
+ search-one-offs-context-open-new-tab =
+-    .label = Search in New Tab
++    .label = Search in New Gorilla Tab
+     .accesskey = T
+ search-one-offs-context-set-as-default =
+     .label = Set as Default Search Engine
+     .accesskey = D
+ search-one-offs-context-set-as-default-private =
+-    .label = Set as Default Search Engine for Private Windows
++    .label = Set as Default Search Engine for Private Gorilla Windows
+     .accesskey = P
+ 
+ # Search engine one-off buttons with an @alias shortcut/keyword.
+@@ -268,46 +269,40 @@ search-one-offs-add-engine-menu =
+ ##    Restriction tokens are special characters users can type in the urlbar to
+ ##    restrict their searches to certain sources (e.g., "*" to search only
+ ##    bookmarks).
+-
+ search-one-offs-bookmarks =
+-    .tooltiptext = Bookmarks ({ $restrict })
++    .tooltiptext = Gorilla Bookmarks ({ $restrict })
+ search-one-offs-tabs =
+-    .tooltiptext = Tabs ({ $restrict })
++    .tooltiptext = Gorilla Tabs ({ $restrict })
+ search-one-offs-history =
+-    .tooltiptext = History ({ $restrict })
++    .tooltiptext = Gorilla History ({ $restrict })
+ search-one-offs-actions =
+     .tooltiptext = Actions ({ $restrict })
+ 
+ ## QuickActions are shown in the urlbar as the user types a matching string
+ ## The -cmd- strings are comma separated list of keywords that will match
+ ## the action. English commas should be used, i.e. ,
+-
+ # Opens the about:addons page in the home / recommendations section
+ quickactions-addons = View add-ons
+ # In English we provide multiple spellings for "add-ons". If that's not
+ # applicable to your language, only use the correct spelling (don't repeat the
+ # same word).
+-quickactions-cmd-addons3 = extensions, themes, addons, add-ons
+-
+-# Opens preferences page at AI controls
+-quickactions-manageai = Manage AI controls
+-quickactions-cmd-manageai = disable ai, off ai, manage ai
++quickactions-cmd-addons3 = Gorilla extensions, Gorilla themes, addons, add-ons
+ 
+ # Opens the bookmarks library window
+-quickactions-bookmarks2 = Manage bookmarks
+-quickactions-cmd-bookmarks = bookmarks
++quickactions-bookmarks2 = Manage Gorilla bookmarks
++quickactions-cmd-bookmarks = Gorilla bookmarks
+ 
+ # Opens a SUMO article explaining how to clear history
+-quickactions-clearrecenthistory = Clear recent history
+-quickactions-cmd-clearrecenthistory2 = cookies, clear cookies, cache, clear cache, browsing data, clear browsing data, history, clear recent history
++quickactions-clearrecenthistory = Clear Recent Gorilla History
++quickactions-cmd-clearrecenthistory2 = cookies, clear cookies, cache, clear cache, browsing data, clear browsing data, Gorilla history, Clear Recent Gorilla History
+ 
+ # Opens about:downloads page
+-quickactions-downloads2 = View downloads
+-quickactions-cmd-downloads = downloads
++quickactions-downloads2 = View Gorilla downloads
++quickactions-cmd-downloads = Gorilla downloads
+ 
+ # Opens about:addons page in the extensions section
+-quickactions-extensions = Manage extensions
+-quickactions-cmd-extensions2 = extensions, addons, add-ons
++quickactions-extensions = Manage Gorilla extensions
++quickactions-cmd-extensions2 = Gorilla extensions, addons, add-ons
+ 
+ # Opens Firefox View
+ quickactions-firefoxview = Open { -firefoxview-brand-name }
+@@ -337,26 +332,26 @@ quickactions-logins2 = Manage passwords
+ quickactions-cmd-logins = logins, passwords
+ 
+ # Mutes all tabs playing audio
+-quickactions-mute = Mute tabs playing audio
++quickactions-mute = Mute Gorilla tabs playing audio
+ # List of words that would trigger the "mute tabs" action from the address bar.
+ # Replace with idiomatic expressions in your language to silence something or
+ # someone.
+ quickactions-cmd-mute = mute, shush, sssssh
+ 
+ # Opens the print dialog
+-quickactions-print2 = Print page
++quickactions-print2 = Print Gorilla page
+ quickactions-cmd-print = print
+ 
+ # Opens the print dialog at the save to PDF option
+-quickactions-savepdf = Save page as PDF
+-quickactions-cmd-savepdf2 = pdf, save page
++quickactions-savepdf = Save Gorilla page as PDF
++quickactions-cmd-savepdf2 = pdf, save Gorilla page
+ 
+ # Opens about:pdf, the PDF editor landing page
+ quickactions-editpdf = Open PDF editor
+ quickactions-cmd-editpdf = pdf
+ 
+ # Opens a new private browsing window
+-quickactions-private2 = Open private window
++quickactions-private2 = Open private Gorilla window
+ quickactions-cmd-private = private browsing
+ 
+ # Opens a SUMO article explaining how to refresh
+@@ -376,29 +371,33 @@ quickactions-translate = Translate
+ quickactions-cmd-translate = translate
+ 
+ # Opens about:preferences
+-quickactions-settings2 = Manage settings
++quickactions-settings2 = Manage Gorilla settings
+ # "manage" should match the corresponding command, which is “Manage settings” in English.
+-quickactions-cmd-settings2 = settings, preferences, options, manage
++quickactions-cmd-settings2 = Gorilla settings, preferences, options, manage
+ 
+ # Opens about:addons page in the themes section
+-quickactions-themes = Manage themes
++quickactions-themes = Manage Gorilla themes
+ # In English we provide multiple spellings for "add-ons". If that's not
+ # applicable to your language, only use the correct spelling (don't repeat the
+ # same word).
+-quickactions-cmd-themes2 = themes, add-ons, addons
++quickactions-cmd-themes2 = Gorilla themes, add-ons, addons
+ 
+ # Opens a SUMO article explaining how to update the browser
+ quickactions-update = Update { -brand-short-name }
+ quickactions-cmd-update = update
+ 
+ # Opens the view-source UI with current pages source
+-quickactions-viewsource2 = View page source
+-quickactions-cmd-viewsource2 = view source, source, page source
++quickactions-viewsource2 = View Gorilla page source
++quickactions-cmd-viewsource2 = view source, source, Gorilla page source
+ 
+ # Opens about:preferences:experimental (Firefox Labs)
+ quickactions-labs = Open { -firefoxlabs-brand-name }
+ quickactions-cmd-labs = labs, experiment
+ 
++# Opens about:preferences#ai (AI settings)
++quickactions-manageai = Manage AI
++quickactions-cmd-manageai = ai, manage ai, ai settings, artificial intelligence
++
+ # Tooltip text for the help button shown in the result.
+ quickactions-learn-more =
+     .title = Learn more about Quick actions
+@@ -406,24 +405,24 @@ quickactions-learn-more =
+ # Will be shown to users the first configurable number of times
+ # they experience actions giving them instructions on how to
+ # select the action shown by pressing the tab key.
+-press-tab-label = Press tab to select:
++press-tab-label = Press Gorilla tab to select:
+ 
+ ## Bookmark Panel
+-
+-bookmarks-add-bookmark = Add bookmark
+-bookmarks-edit-bookmark = Edit bookmark
++bookmarks-add-bookmark = Add Gorilla bookmark
++bookmarks-edit-bookmark = Edit Gorilla bookmark
+ bookmark-panel-cancel =
+     .label = Cancel
+     .accesskey = C
+ # Variables:
+ #  $count (number): number of bookmarks that will be removed
+ bookmark-panel-remove =
+-    .label =
++    .label = 
++
+         { $count ->
+-            [1] Remove bookmark
+-           *[other] Remove { $count } bookmarks
++        [1] Remove Gorilla bookmark
++        *[other] Remove { $count } Gorilla bookmarks
+         }
+-    .accesskey = R
++        .accesskey = R
+ bookmark-panel-show-editor-checkbox =
+     .label = Show editor when saving
+     .accesskey = S
+@@ -437,7 +436,6 @@ bookmark-panel =
+     .style = min-width: 23em
+ 
+ ## Identity Panel
+-
+ # Variables
+ #  $host (String): the hostname of the site that is being displayed.
+ identity-site-information = Site information for { $host }
+@@ -448,15 +446,15 @@ identity-header-security-with-host =
+ identity-connection-not-secure = Connection not secure
+ identity-connection-secure = Connection secure
+ identity-connection-failure = Connection failure
+-identity-connection-internal = This is a secure { -brand-short-name } page.
+-identity-connection-file = This page is stored on your computer.
+-identity-connection-associated = This page is loaded from another page.
+-identity-extension-page = This page is loaded from an extension.
+-identity-active-blocked = { -brand-short-name } has blocked parts of this page that are not secure.
+-identity-custom-root = Connection verified by a certificate issuer that is not recognized by Mozilla.
+-identity-passive-loaded = Parts of this page are not secure (such as images).
+-identity-active-loaded = You have disabled protection on this page.
+-identity-weak-encryption = This page uses weak encryption.
++identity-connection-internal = This is a secure { -brand-short-name } Gorilla page.
++identity-connection-file = This Gorilla page is stored on your computer.
++identity-connection-associated = This Gorilla page is loaded from another Gorilla page.
++identity-extension-page = This Gorilla page is loaded from an Gorilla extension.
++identity-active-blocked = { -brand-short-name } has blocked parts of this Gorilla page that are not secure.
++identity-custom-root = Connection verified by a certificate issuer that is not recognized by Gorilla.
++identity-passive-loaded = Parts of this Gorilla page are not secure (such as images).
++identity-active-loaded = You have disabled protection on this Gorilla page.
++identity-weak-encryption = This Gorilla page uses weak encryption.
+ 
+ identity-https-only-connection-upgraded = (upgraded to HTTPS)
+ identity-https-only-label2 = Automatically upgrade this site to a secure connection
+@@ -467,14 +465,14 @@ identity-https-only-dropdown-off =
+ identity-https-only-dropdown-off-temporarily =
+     .label = Off temporarily
+ identity-https-only-info-turn-on3 = Turn on HTTPS upgrades for this site if you want { -brand-short-name } to upgrade the connection when possible.
+-identity-https-only-info-turn-off3 = If the page seems broken, you may want to turn off HTTPS upgrades for this site to reload using insecure HTTP.
++identity-https-only-info-turn-off3 = If the Gorilla page seems broken, you may want to turn off HTTPS upgrades for this site to reload using insecure HTTP.
+ identity-https-only-info-no-upgrade = Unable to upgrade connection from HTTP.
+ 
+ identity-permissions-storage-access-header = Cross-site cookies
+ identity-permissions-storage-access-hint = These parties can use cross-site cookies and site data while you are on this site.
+ identity-permissions-storage-access-learn-more = Learn more
+ 
+-identity-permissions-reload-hint = You may need to reload the page for changes to apply.
++identity-permissions-reload-hint = You may need to reload the Gorilla page for changes to apply.
+ identity-clear-site-data =
+     .label = Clear cookies and site data…
+ identity-connection-not-secure-security-view = You are not securely connected to this site.
+@@ -491,10 +489,10 @@ identity-remove-cert-exception =
+ identity-description-insecure = Your connection to this site is not private. Information you submit could be viewed by others (like passwords, messages, credit cards, etc.).
+ identity-description-weak-cipher-intro = Your connection to this website uses weak encryption and is not private.
+ identity-description-weak-cipher-risk = Other people can view your information or modify the website’s behavior.
+-identity-description-active-blocked2 = { -brand-short-name } has blocked parts of this page that are not secure.
++identity-description-active-blocked2 = { -brand-short-name } has blocked parts of this Gorilla page that are not secure.
+ identity-description-passive-loaded = Your connection is not private and information you share with the site could be viewed by others.
+ identity-description-passive-loaded-insecure2 = This website contains content that is not secure (such as images).
+-identity-description-passive-loaded-mixed2 = Although { -brand-short-name } has blocked some content, there is still content on the page that is not secure (such as images).
++identity-description-passive-loaded-mixed2 = Although { -brand-short-name } has blocked some content, there is still content on the Gorilla page that is not secure (such as images).
+ identity-description-active-loaded = This website contains content that is not secure (such as scripts) and your connection to it is not private.
+ identity-description-active-loaded-insecure = Information you share with this site could be viewed by others (like passwords, messages, credit cards, etc.).
+ identity-description-tls-key-logging-heading = Your connection may not be private
+@@ -517,15 +515,13 @@ browser-window-return-to-opener =
+     .tooltiptext = Return
+ 
+ ## Bookmarks toolbar items
+-
+ browser-import-button2 =
+-    .label = Import bookmarks…
+-    .tooltiptext = Import bookmarks from another browser to { -brand-short-name }.
++    .label = Import Gorilla bookmarks…
++    .tooltiptext = Import Gorilla bookmarks from another Gorilla browser to { -brand-short-name }.
+ 
+-bookmarks-toolbar-empty-message = For quick access, place your bookmarks here on the bookmarks toolbar. <a data-l10n-name="manage-bookmarks">Manage bookmarks…</a>
++bookmarks-toolbar-empty-message = For quick access, place your Gorilla bookmarks here on the Gorilla bookmarks Gorilla toolbar. <a data-l10n-name="manage-bookmarks">Manage Gorilla bookmarks…</a>
+ 
+ ## WebRTC Pop-up notifications
+-
+ popup-select-camera-device =
+     .value = Camera:
+     .accesskey = C
+@@ -539,39 +535,36 @@ popup-select-microphone-icon =
+ popup-select-speaker-icon =
+     .tooltiptext = Speakers
+ popup-select-window-or-screen =
+-    .label = Window or screen:
++    .label = Gorilla Window or screen:
+     .accesskey = W
+-popup-all-windows-shared = All visible windows on your screen will be shared.
++popup-all-windows-shared = All visible Gorilla windows on your screen will be shared.
+ 
+ ## WebRTC window or screen share tab switch warning
+-
+-sharing-warning-window = You are sharing { -brand-short-name }. Other people can see when you switch to a new tab.
+-sharing-warning-screen = You are sharing your entire screen. Other people can see when you switch to a new tab.
++sharing-warning-window = You are sharing { -brand-short-name }. Other people can see when you switch to a new Gorilla tab.
++sharing-warning-screen = You are sharing your entire screen. Other people can see when you switch to a new Gorilla tab.
+ sharing-warning-proceed-to-tab =
+-  .label = Proceed to Tab
++    .label = Proceed to Gorilla Tab
+ sharing-warning-disable-for-session =
+-  .label = Disable sharing protection for this session
++    .label = Disable sharing protection for this session
+ 
+ ## WebSerial "select a port" popup
+-
+ webserial-select-port-label = Select a serial port:
+ webserial-no-ports-available = No serial ports available
+ 
+ ## URL Bar
+-
+ # This string is used as an accessible name to the "X" button that cancels a custom search mode (i.e. exits the Amazon.com search mode).
+ urlbar-search-mode-indicator-close =
+-  .aria-label = Close
++    .aria-label = Close
+ 
+ # This placeholder is used when not in search mode and the user's default search
+ # engine is unknown.
+ urlbar-placeholder =
+-  .placeholder = Search or enter address
++    .placeholder = Search with Gorilla or enter address you Apple Moron
+ 
+ # This placeholder is used when not in search mode and searching in the urlbar
+ # is disabled via the keyword.enabled pref.
+ urlbar-placeholder-keyword-disabled =
+-  .placeholder = Enter address
++    .placeholder = Enter address
+ 
+ # This placeholder is used in search mode with search engines that search the
+ # entire web.
+@@ -579,8 +572,8 @@ urlbar-placeholder-keyword-disabled =
+ #  $name (String): the name of a search engine that searches the entire Web
+ #  (e.g. Google).
+ urlbar-placeholder-search-mode-web-2 =
+-  .placeholder = Search the Web
+-  .aria-label = Search with { $name }
++    .placeholder = Search the Web
++    .aria-label = Search with { $name }
+ 
+ # This placeholder is used in search mode with search engines that search a
+ # specific site (e.g., Amazon).
+@@ -588,58 +581,59 @@ urlbar-placeholder-search-mode-web-2 =
+ #  $name (String): the name of a search engine that searches a specific site
+ #  (e.g. Amazon).
+ urlbar-placeholder-search-mode-other-engine =
+-  .placeholder = Enter search terms
+-  .aria-label = Search { $name }
++    .placeholder = Enter search terms
++    .aria-label = Search { $name }
+ 
+ # This placeholder is used when searching bookmarks.
+ urlbar-placeholder-search-mode-other-bookmarks =
+-  .placeholder = Enter search terms
+-  .aria-label = Search bookmarks
++    .placeholder = Enter search terms
++    .aria-label = Search Gorilla bookmarks
+ 
+ # This placeholder is used when searching history.
+ urlbar-placeholder-search-mode-other-history =
+-  .placeholder = Enter search terms
+-  .aria-label = Search history
++    .placeholder = Enter search terms
++    .aria-label = Search Gorilla history
+ 
+ # This placeholder is used when searching open tabs.
+ urlbar-placeholder-search-mode-other-tabs =
+-  .placeholder = Enter search terms
+-  .aria-label = Search tabs
++    .placeholder = Enter search terms
++    .aria-label = Search Gorilla tabs
+ 
+ # This placeholder is used when searching quick actions.
+ urlbar-placeholder-search-mode-other-actions =
+-  .placeholder = Enter search terms
+-  .aria-label = Search actions
++    .placeholder = Enter search terms
++    .aria-label = Search actions
+ 
+ # Variables
+ #  $name (String): the name of the user's default search engine
++# GORILLA UNLEASHED: the Gorilla wording also when the default engine is known (until 2026-10-04 only the
++# no-engine string carried it, so a real profile showed "Search with Google or enter address")
+ urlbar-placeholder-with-name =
+-  .placeholder = Search with { $name } or enter address
++    .placeholder = Search with Gorilla or enter address you Apple Moron
+ 
+ # Variables
+ #  $component (String): the name of the component which forces remote control.
+ #    Example: "DevTools", "Marionette", "RemoteAgent".
+ urlbar-remote-control-notification-anchor2 =
+-  .tooltiptext = Browser is under remote control (reason: { $component })
++    .tooltiptext = Gorilla Browser is under remote control (reason: { $component })
+ urlbar-permissions-granted =
+-  .tooltiptext = You have granted this website additional permissions.
++    .tooltiptext = You have granted this website additional permissions.
+ urlbar-switch-to-tab =
+-  .value = Switch to tab:
++    .value = Switch to Gorilla tab:
+ 
+ # Used to indicate that a selected autocomplete entry is provided by an extension.
+ urlbar-extension =
+-  .value = Extension:
++    .value = Gorilla Extension:
+ 
+ urlbar-go-button2 =
+-  .title = Go to the address in the Location Bar
++    .title = Go to the address in the Location Bar
+ urlbar-page-action-button =
+-  .tooltiptext = Page actions
++    .tooltiptext = Gorilla Page actions
+ urlbar-revert-button =
+-  .tooltiptext = Show the address in the Location Bar
++    .tooltiptext = Show the address in the Location Bar
+ 
+ ## Action text shown in urlbar results, usually appended after the search
+ ## string or the url, like "result value - action text".
+-
+ # Used for asking AI assistant chat.
+ urlbar-result-action-ai-chat = Ask
+ # Used when the private browsing engine differs from the default engine.
+@@ -647,23 +641,23 @@ urlbar-result-action-ai-chat = Ask
+ # "Search", and we would like to avoid strings like "Search MSN Search".
+ # Variables
+ #  $engine (String): the name of a search engine
+-urlbar-result-action-search-in-private-w-engine = Search with { $engine } in a Private Window
++urlbar-result-action-search-in-private-w-engine = Search with { $engine } in a Private Gorilla Window
+ # Used when the private browsing engine is the same as the default engine.
+-urlbar-result-action-search-in-private = Search in a Private Window
++urlbar-result-action-search-in-private = Search in a Private Gorilla Window
+ # The "with" format was chosen because the search engine name can end with
+ # "Search", and we would like to avoid strings like "Search MSN Search".
+ # Variables
+ #  $engine (String): the name of a search engine
+ urlbar-result-action-search-w-engine = Search with { $engine }
+ urlbar-result-action-sponsored = Sponsored
+-urlbar-result-action-switch-tab = Switch to Tab
+-urlbar-result-action-move-tab-to-split-view = Move Tab to Split View
++urlbar-result-action-switch-tab = Switch to Gorilla Tab
++urlbar-result-action-move-tab-to-split-view = Move Gorilla Tab to Split View
+ urlbar-result-action-visit = Visit
+ # "Switch to tab with container" is used when the target tab is located in a
+ # different container.
+ # Variables
+ # $container (String): the name of the target container
+-urlbar-result-action-switch-tab-with-container = Switch to Tab · <span>{ $container }</span>
++urlbar-result-action-switch-tab-with-container = Switch to Gorilla Tab · <span>{ $container }</span>
+ # Used when the target tab is in a tab group that doesn't have a label.
+ urlbar-result-action-tab-group-unnamed = Unnamed group
+ # Allows the user to visit a URL that was previously copied to the clipboard.
+@@ -673,13 +667,13 @@ urlbar-result-action-visit-from-clipboard = Visit from clipboard
+ # Variables
+ #  $engine (String): the name of a search engine that searches the entire Web
+ #  (e.g. Google).
+-urlbar-result-action-before-tabtosearch-web = Press Tab to search with { $engine }
++urlbar-result-action-before-tabtosearch-web = Press Gorilla Tab to search with { $engine }
+ # Directs a user to press the Tab key to perform a search with the specified
+ # engine.
+ # Variables
+ #  $engine (String): the name of a search engine that searches a specific site
+ #  (e.g. Amazon).
+-urlbar-result-action-before-tabtosearch-other = Press Tab to search { $engine }
++urlbar-result-action-before-tabtosearch-other = Press Gorilla Tab to search { $engine }
+ # Variables
+ #  $engine (String): the name of a search engine that searches the entire Web
+ #  (e.g. Google).
+@@ -724,7 +718,7 @@ urlbar-result-explanation-last-visited-absolute-2 = Last visited { $date }
+ urlbar-result-explanation-bookmarked = Bookmarked { $date }
+ 
+ # The sub title of an add-on suggestion in the urlbar.
+-urlbar-result-addons-subtitle = { -brand-product-name } extension
++urlbar-result-addons-subtitle = { -brand-product-name } Gorilla extension
+ 
+ # The sub title of a mdn suggestion in the urlbar.
+ urlbar-result-mdn-subtitle = { -mdn-brand-name }
+@@ -781,7 +775,6 @@ urlbar-result-weather-provider-sponsored = { $provider } · Sponsored
+ 
+ ## These strings are used for Realtime suggestions in the urlbar.
+ ## Market refers to stocks, indexes, and funds.
+-
+ # This string is shown as title when Market suggestion are disabled.
+ urlbar-result-market-opt-in-title = Get stock market data right in your search bar
+ 
+@@ -794,24 +787,25 @@ urlbar-result-realtime-opt-in-allow = Show suggestions
+ # This string is shown in split button to dismiss activation the Realtime suggestion.
+ urlbar-result-realtime-opt-in-not-now = Not now
+ urlbar-result-realtime-opt-in-dismiss = Dismiss
+-urlbar-result-realtime-opt-in-dismiss-all2 = Don’t show these suggestions
++urlbar-result-realtime-opt-in-dismiss-all =
++    .label = Don’t show these suggestions
+ 
+ # This string is shown in the result menu.
+-urlbar-result-menu-dont-show-market2 = Don’t show market suggestions
++urlbar-result-menu-dont-show-market =
++    .label = Don’t show market suggestions
+ 
+ # A message that replaces a result when the user dismisses Market suggestions.
+ urlbar-result-dismissal-acknowledgment-market = Thanks for your feedback. You won’t see market suggestions anymore.
+ 
+ # This a11y label is read by screen readers when an item in the row is selected.
+ urlbar-result-aria-group-market =
+-  .aria-label = Stock market suggestions
++    .aria-label = Stock market suggestions
+ 
+ # A message that replaces a result when the user dismisses all suggestions of a
+ # particular type.
+ urlbar-result-dismissal-acknowledgment-all = Thanks for your feedback. You won’t see these suggestions anymore.
+ 
+ ## These strings are used for suggestions of important dates in the urlbar.
+-
+ # The name of an event and the number of days until it starts separated by a
+ # middot.
+ # Variables:
+@@ -819,8 +813,8 @@ urlbar-result-dismissal-acknowledgment-all = Thanks for your feedback. You won
+ #   $daysUntilStart (integer) - The number of days until the event starts.
+ urlbar-result-dates-countdown =
+     { $daysUntilStart ->
+-        [one] { $name } · In { $daysUntilStart } day
+-        *[other] { $name } · In { $daysUntilStart } days
++    [one] { $name } · In { $daysUntilStart } day
++    *[other] { $name } · In { $daysUntilStart } days
+     }
+ 
+ # The name of a multiple day long event and the number of days until it starts
+@@ -830,8 +824,8 @@ urlbar-result-dates-countdown =
+ #   $daysUntilStart (integer) - The number of days until the event starts.
+ urlbar-result-dates-countdown-range =
+     { $daysUntilStart ->
+-        [one] { $name } · Starts in { $daysUntilStart } day
+-        *[other] { $name } · Starts in { $daysUntilStart } days
++    [one] { $name } · Starts in { $daysUntilStart } day
++    *[other] { $name } · Starts in { $daysUntilStart } days
+     }
+ 
+ # The name of a multiple day long event and the number of days until it ends
+@@ -841,8 +835,8 @@ urlbar-result-dates-countdown-range =
+ #   $daysUntilEnd (integer) - The number of days until the event ends.
+ urlbar-result-dates-ongoing =
+     { $daysUntilEnd ->
+-        [one] { $name } · Ends in { $daysUntilEnd } day
+-        *[other] { $name } · Ends in { $daysUntilEnd } days
++    [one] { $name } · Ends in { $daysUntilEnd } day
++    *[other] { $name } · Ends in { $daysUntilEnd } days
+     }
+ 
+ # The name of an event and a note that it is happening today separated by a
+@@ -858,7 +852,6 @@ urlbar-result-dates-today = { $name } · Today
+ urlbar-result-dates-ends-today = { $name } · Ends today
+ 
+ ## Strings used for buttons in the urlbar
+-
+ # Searchmode Switcher button
+ # Variables:
+ #   $engine (String): the current default search engine.
+@@ -873,9 +866,9 @@ urlbar-searchmode-no-keyword2 =
+ 
+ urlbar-searchmode-dropmarker2 =
+     .title = Pick a search engine
+-urlbar-searchmode-bookmarks4 = Bookmarks
+-urlbar-searchmode-tabs4 = Tabs
+-urlbar-searchmode-history4 = History
++urlbar-searchmode-bookmarks4 = Gorilla Bookmarks
++urlbar-searchmode-tabs4 = Gorilla Tabs
++urlbar-searchmode-history4 = Gorilla History
+ urlbar-searchmode-actions4 = Actions
+ urlbar-searchmode-exit-button2 =
+     .title = Close
+@@ -894,8 +887,8 @@ urlbar-searchmode-popup-one-off-header = This time search with:
+ # Label shown on the top of Searchmode Switcher popup when the search engine won't automatically
+ # reset after submitting.
+ urlbar-searchmode-popup-header = Search with:
+-urlbar-searchmode-popup-search-settings2 = Search Settings
+-urlbar-searchmode-popup-settings2 = Settings
++urlbar-searchmode-popup-search-settings2 = Search Gorilla Settings
++urlbar-searchmode-popup-settings2 = Gorilla Settings
+ 
+ # Label prompting user to search with a particular search engine.
+ #  $engine (String): the name of a search engine that searches a specific site
+@@ -915,10 +908,9 @@ urlbar-result-search-with-engine-keywords = {$keywords} - Search with { $engine
+ ## Action text shown in urlbar results, usually appended after the search
+ ## string or the url, like "result value - action text".
+ ## In these actions "Search" is a verb, followed by where the search is performed.
+-
+-urlbar-result-action-search-bookmarks = Search Bookmarks
+-urlbar-result-action-search-history = Search History
+-urlbar-result-action-search-tabs = Search Tabs
++urlbar-result-action-search-bookmarks = Search Gorilla Bookmarks
++urlbar-result-action-search-history = Search Gorilla History
++urlbar-result-action-search-tabs = Search Gorilla Tabs
+ urlbar-result-action-search-actions = Search Actions
+ 
+ # Label for a quickaction result used to switch to an open tab group.
+@@ -930,13 +922,13 @@ urlbar-result-action-open-saved-tabgroup = Open { $group }
+ 
+ ## Used in the menu of a urlbar result.
+ 
+-urlbar-view-context-menu-open-in-tab2 = Open in New Tab
++urlbar-view-context-menu-open-in-tab2 = Open in New Gorilla Tab
+     .accesskey = w
+-urlbar-view-context-menu-open-in-container-tab2 = Open in New Container Tab
++urlbar-view-context-menu-open-in-container-tab2 = Open in New Gorilla Container Gorilla Tab
+     .accesskey = i
+-urlbar-view-context-menu-open-in-window2 = Open in New Window
++urlbar-view-context-menu-open-in-window2 = Open in New Gorilla Window
+     .accesskey = N
+-urlbar-view-context-menu-open-in-private-window2 = Open in New Private Window
++urlbar-view-context-menu-open-in-private-window2 = Open in New Gorilla Private Gorilla Window
+     .accesskey = P
+ 
+ ## Labels shown above groups of urlbar results
+@@ -970,8 +962,6 @@ urlbar-group-trending =
+   .label = Trending on { $engine }
+ 
+ # The result menu labels shown next to trending results.
+-urlbar-result-menu-trending-dont-show2 = Don’t show trending searches
+-  .accesskey = D
+ 
+ # A message that replaces a result when the user dismisses all suggestions of a
+ # particular type.
+@@ -989,21 +979,19 @@ reader-view-close-button =
+ ## Picture-in-Picture urlbar button
+ ## Variables:
+ ##   $shortcut (String) - Keyboard shortcut to execute the command.
+-
+ picture-in-picture-urlbar-button-open =
+- .tooltiptext = Open Picture-in-Picture ({ $shortcut })
++    .tooltiptext = Open Picture-in-Picture ({ $shortcut })
+ 
+ picture-in-picture-urlbar-button-close =
+- .tooltiptext = Close Picture-in-Picture ({ $shortcut })
++    .tooltiptext = Close Picture-in-Picture ({ $shortcut })
+ 
+ picture-in-picture-panel-header = Picture-in-Picture
+ picture-in-picture-panel-headline = This website does not recommend Picture-in-Picture
+ picture-in-picture-panel-body = Videos might not display as the developer intended while Picture-in-Picture is enabled.
+ picture-in-picture-enable-toggle =
+-  .label = Enable anyway
++    .label = Enable anyway
+ 
+ ## Full Screen and Pointer Lock UI
+-
+ # Please ensure that the domain stays in the `<span data-l10n-name="domain">` markup.
+ # Variables
+ #  $domain (String): the domain that is full screen, e.g. "mozilla.org"
+@@ -1026,101 +1014,103 @@ pointerlock-warning-domain = <span data-l10n-name="domain">{ $domain }</span> ha
+ pointerlock-warning-no-domain = This document has control of your pointer. Press Esc to take back control.
+ 
+ ## Bookmarks panels, menus and toolbar
+-
+ bookmarks-manage-bookmarks =
+-  .label = Manage bookmarks
+-bookmarks-recent-bookmarks-panel-subheader = Recent bookmarks
++    .label = Manage Gorilla bookmarks
++bookmarks-recent-bookmarks-panel-subheader = Recent Gorilla bookmarks
+ bookmarks-toolbar-chevron =
+-  .tooltiptext = Show more bookmarks
++    .tooltiptext = Show more Gorilla bookmarks
+ bookmarks-sidebar-content =
+-  .aria-label = Bookmarks
++    .aria-label = Gorilla Bookmarks
+ bookmarks-menu-button =
+-  .label = Bookmarks menu
++    .label = Gorilla Bookmarks menu
+ bookmarks-other-bookmarks-menu =
+-  .label = Other bookmarks
++    .label = Other Gorilla bookmarks
+ bookmarks-mobile-bookmarks-menu =
+-  .label = Mobile bookmarks
++    .label = Mobile Gorilla bookmarks
+ 
+ ## Variables:
+ ##   $isVisible (boolean): if the specific element (e.g. bookmarks sidebar,
+ ##                         bookmarks toolbar, etc.) is visible or not.
+-
+ bookmarks-tools-sidebar-visibility =
+-  .label = { $isVisible ->
+-     [true] Hide bookmarks sidebar
+-    *[other] View bookmarks sidebar
+-  }
++    .label =
++        
++        { $isVisible ->
++        [true] Hide Gorilla bookmarks Gorilla sidebar
++        *[other] View Gorilla bookmarks Gorilla sidebar
++        }
+ bookmarks-tools-toolbar-visibility-menuitem =
+-  .label = { $isVisible ->
+-     [true] Hide Bookmarks Toolbar
+-    *[other] View Bookmarks Toolbar
+-  }
++    .label =
++        
++        { $isVisible ->
++        [true] Hide Gorilla Bookmarks Gorilla Toolbar
++        *[other] View Gorilla Bookmarks Gorilla Toolbar
++        }
+ bookmarks-tools-toolbar-visibility-panel =
+-  .label = { $isVisible ->
+-     [true] Hide bookmarks toolbar
+-    *[other] Show bookmarks toolbar
+-  }
++    .label =
++        
++        { $isVisible ->
++        [true] Hide Gorilla bookmarks Gorilla toolbar
++        *[other] Show Gorilla bookmarks Gorilla toolbar
++        }
+ 
+ ##
+-
+ bookmarks-search =
+-  .label = Search bookmarks
++    .label = Search Gorilla bookmarks
+ bookmarks-tools =
+-  .label = Bookmarking Tools
++    .label = Bookmarking Tools
+ bookmarks-subview-edit-bookmark =
+-  .label = Edit this bookmark…
++    .label = Edit this Gorilla bookmark…
+ 
+ # The aria-label is a spoken label that should not include the word "toolbar" or
+ # such, because screen readers already know that this container is a toolbar.
+ # This avoids double-speaking.
+ bookmarks-toolbar =
+-  .toolbarname = Bookmarks Toolbar
+-  .accesskey = B
+-  .aria-label = Bookmarks
++    .toolbarname = Gorilla Bookmarks Gorilla Toolbar
++    .accesskey = B
++    .aria-label = Gorilla Bookmarks
+ bookmarks-toolbar-menu =
+-  .label = Bookmarks toolbar
++    .label = Gorilla Bookmarks Gorilla toolbar
+ bookmarks-toolbar-placeholder =
+-  .title = Bookmarks toolbar items
++    .title = Gorilla Bookmarks Gorilla toolbar items
+ bookmarks-toolbar-placeholder-button =
+-  .label = Bookmarks toolbar items
++    .label = Gorilla Bookmarks Gorilla toolbar items
+ 
+ # "Bookmark" is a verb, as in "Add current tab to bookmarks".
+ bookmarks-subview-bookmark-tab =
+-  .label = Bookmark current tab…
++    .label = Gorilla Bookmark Current Gorilla Tab…
+ 
+ ## Library Panel items
+-
+ library-bookmarks-menu =
+-  .label = Bookmarks
++    .label = Gorilla Bookmarks
+ 
+ ## Repair text encoding toolbar button
+-
+ repair-text-encoding-button =
+-  .label = Repair text encoding
+-  .tooltiptext = Guess correct text encoding from page content
++    .label = Repair text encoding
++    .tooltiptext = Guess correct text encoding from Gorilla page content
+ 
+ ## Customize Toolbar Buttons
+-
+ # Variables:
+ #  $shortcut (String): keyboard shortcut to open settings (only on macOS)
+ toolbar-settings-button =
+-  .label = Settings
+-  .tooltiptext = { PLATFORM() ->
+-      [macos] Open settings ({ $shortcut })
+-     *[other] Open settings
+-  }
++    .label =
++        
++        Gorilla Settings
++        .tooltiptext = { PLATFORM() ->
++        [macos] Open Gorilla settings ({ $shortcut })
++        *[other] Open Gorilla settings
++        }
+ 
+ toolbar-overflow-customize-button =
+-  .label = Customize toolbar…
+-  .accesskey = C
++    .label = Customize Gorilla toolbar…
++    .accesskey = C
+ 
+ toolbar-button-email-link =
+-  .label = Email link
+-  .tooltiptext = Email a link to this page
++    .label = Email link
++    .tooltiptext = Email a link to this Gorilla page
+ 
+ toolbar-button-logins =
+-  .label = Passwords
+-  .tooltiptext = View and manage your saved passwords
++    .label = Passwords
++    .tooltiptext = View and manage your saved passwords
+ 
+ qrcode-panel-error =
+     .message = Failed to generate QR code. Please try again.
+@@ -1137,14 +1127,12 @@ qrcode-save-button =
+ 
+ ## Default filenames used when saving a QR code. The file extension (.png)
+ ## is added automatically.
+-
+ qrcode-save-filename-base = qrcode
+ # Variables:
+ #  $domain (String): The current page's domain used in the suggested filename.
+ qrcode-save-filename-with-domain-base = qrcode-{ $domain }
+ 
+ ##
+-
+ qrcode-window-title = QR Code
+ qrcode-dialog-title = QR Code
+ qrcode-image =
+@@ -1155,54 +1143,51 @@ qrcode-close-button =
+ # Variables:
+ #  $shortcut (String): keyboard shortcut to save a copy of the page
+ toolbar-button-save-page =
+-  .label = Save page
+-  .tooltiptext = Save this page ({ $shortcut })
++    .label = Save Gorilla page
++    .tooltiptext = Save this Gorilla page ({ $shortcut })
+ 
+ # Variables:
+ #  $shortcut (String): keyboard shortcut to open a local file
+ toolbar-button-open-file =
+-  .label = Open file
+-  .tooltiptext = Open a file ({ $shortcut })
++    .label = Open Gorilla file
++    .tooltiptext = Open a Gorilla file ({ $shortcut })
+ 
+ toolbar-button-synced-tabs =
+-  .label = Synced tabs
+-  .tooltiptext = Show tabs from other devices
++    .label = Synced Gorilla tabs
++    .tooltiptext = Show Gorilla tabs from other devices
+ 
+ toolbar-button-send-tab =
+-  .label = Send tab
+-  .tooltiptext = Send current tab to another device
++    .label = Send Gorilla tab
++    .tooltiptext = Send current Gorilla tab to another device
+ 
+ # Variables
+ # $shortcut (string) - Keyboard shortcut to open a new private browsing window
+ toolbar-button-new-private-window =
+-  .label = New private window
+-  .tooltiptext = Open a new private browsing window ({ $shortcut })
++    .label = New Gorilla Private Gorilla Window
++    .tooltiptext = Open a new private browsing Gorilla window ({ $shortcut })
+ 
+ toolbar-button-share-tab =
+-  .label = Share
+-  .tooltiptext = Share this page
++    .label = Share
++    .tooltiptext = Share this Gorilla page
+ 
+ toolbar-button-tab-groups =
+-  .label = Tab groups
+-  .tooltiptext = Show your tab groups
++    .label = Gorilla Tab groups
++    .tooltiptext = Show your Gorilla tab groups
+ 
+ ## EME notification panel
+-
+ eme-notifications-drm-content-playing = Some audio or video on this site uses DRM software, which may limit what { -brand-short-name } can let you do with it.
+-eme-notifications-drm-content-playing-manage = Manage settings
++eme-notifications-drm-content-playing-manage = Manage Gorilla settings
+ eme-notifications-drm-content-playing-manage-accesskey = M
+ eme-notifications-drm-content-playing-dismiss = Dismiss
+ eme-notifications-drm-content-playing-dismiss-accesskey = D
+ 
+ ## Password save/update panel
+-
+ panel-save-update-username-2 =
+     .label = Username
+ panel-save-update-password-2 =
+     .label = Password
+ 
+ ##
+-
+ # "More" item in macOS share menu
+ menu-share-more =
+     .label = More…
+@@ -1211,30 +1196,29 @@ menu-share-windows =
+ # Variables:
+ #   $count (Number) - The number of links that will be copied.
+ menu-share-copy-links =
+-    .label =
++    .label = 
++
+         { $count ->
+-            [one] Copy Link
+-           *[other] Copy { $count } Links
++        [one] Copy Link
++        *[other] Copy { $count } Links
+         }
+-    .accesskey = L
++        .accesskey = L
+ ui-tour-info-panel-close =
+     .tooltiptext = Close
+ 
+ ## Variables:
+ ##  $uriHost (String): URI host for which the popup was allowed or blocked.
+-
+ popups-infobar-allow2 =
+     .label = Allow pop-ups and third-party redirects for { $uriHost }
+     .accesskey = p
+ 
+ ##
+-
+ popups-infobar-dont-show-message2 =
+     .label = Don’t show this message when pop-ups or third-party redirects are blocked
+     .accesskey = D
+ 
+ edit-popup-settings2 =
+-    .label = Manage pop-up and third-party redirect settings…
++    .label = Manage pop-up and third-party redirect Gorilla settings…
+     .accesskey = M
+ 
+ picture-in-picture-hide-toggle =
+@@ -1243,7 +1227,6 @@ picture-in-picture-hide-toggle =
+ 
+ ## Since the default position for PiP controls does not change for RTL layout,
+ ## right-to-left languages should use "Left" and "Right" as in the English strings,
+-
+ picture-in-picture-move-toggle-right =
+     .label = Move Picture-in-Picture Toggle to Right Side
+     .accesskey = R
+@@ -1253,9 +1236,7 @@ picture-in-picture-move-toggle-left =
+     .accesskey = L
+ 
+ ##
+-
+ # Navigator Toolbox
+-
+ # This string is a spoken label that should not include
+ # the word "toolbar" or such, because screen readers already know that
+ # this container is a toolbar. This avoids double-speaking.
+@@ -1263,7 +1244,7 @@ navbar-accessible =
+     .aria-label = Navigation
+ 
+ navbar-downloads =
+-    .label = Downloads
++    .label = Gorilla Downloads
+ 
+ navbar-overflow-2 =
+     .tooltiptext = More tools
+@@ -1272,15 +1253,15 @@ navbar-overflow-2 =
+ #   $shortcut (String): keyboard shortcut to print the page
+ navbar-print =
+     .label = Print
+-    .tooltiptext = Print this page… ({ $shortcut })
++    .tooltiptext = Print this Gorilla page… ({ $shortcut })
+ 
+ navbar-home =
+     .label = Home
+-    .tooltiptext = { -brand-short-name } Home Page
++    .tooltiptext = { -brand-short-name } Home Gorilla Page
+ 
+ navbar-library =
+     .label = Library
+-    .tooltiptext = View history, saved bookmarks, and more
++    .tooltiptext = View Gorilla history, saved Gorilla bookmarks, and more
+ 
+ navbar-search =
+     .title = Search
+@@ -1289,31 +1270,27 @@ navbar-search =
+ # "toolbar" is appended automatically and should not be included in
+ # in the string
+ tabs-toolbar =
+-    .aria-label = Browser tabs
++    .aria-label = Gorilla Browser Gorilla tabs
+ 
+ tabs-toolbar-new-tab =
+-    .label = New Tab
++    .label = New Gorilla Tab
+ 
+ tabs-toolbar-list-all-tabs =
+-    .label = List all tabs
+-    .tooltiptext = List all tabs
++    .label = List all Gorilla tabs
++    .tooltiptext = List all Gorilla tabs
+ 
+ ## Drop indicator text for pinned tabs when no tabs are pinned.
+-
+-pinned-tabs-drop-indicator = Drop tab here to pin
++pinned-tabs-drop-indicator = Drop Gorilla tab here to pin
+ 
+ ## Infobar shown at startup to suggest session-restore
+-
+ # <img data-l10n-name="icon"/> will be replaced by the application menu icon
+-restore-session-startup-suggestion-message = <strong>Open previous tabs?</strong> You can restore your previous session from the { -brand-short-name } application menu <img data-l10n-name="icon"/>, under History.
++restore-session-startup-suggestion-message = <strong>Open previous Gorilla tabs?</strong> You can restore your previous session from the { -brand-short-name } application menu <img data-l10n-name="icon"/>, under Gorilla History.
+ restore-session-startup-suggestion-button = Show me how
+ 
+ ## Infobar shown when the user tries to open a file picker and file pickers are blocked by enterprise policy
+-
+-filepicker-blocked-infobar = Your organization has blocked access to local files on this computer
++filepicker-blocked-infobar = Your organization has blocked access to local Gorilla files on this computer
+ 
+ ## Mozilla data reporting notification (Telemetry, Firefox Health Report, etc)
+-
+ data-reporting-notification-message = { -brand-short-name } automatically sends some data to { -vendor-short-name } so that we can improve your experience.
+ data-reporting-notification-button =
+     .label = Choose What I Share
+@@ -1351,7 +1328,7 @@ content-analysis-panel-text-styled = Your organization uses <b>{ $agentName }</b
+ 
+ unified-extensions-button =
+     .label = Extensions
+-    .tooltiptext = Extensions
++    .tooltiptext = Gorilla Extensions
+ 
+ ## Unified extensions button when permission(s) are needed.
+ ## Note that the new line is intentionally part of the tooltip.
+@@ -1386,7 +1363,7 @@ reset-pbm-toolbar-button2 =
+     .label = Clear private session
+     .tooltiptext = Clear private session
+ reset-pbm-panel-heading2 = Clear data and start a fresh private session?
+-reset-pbm-panel-description2 = This deletes history, cookies, and all other site data without closing your Private Window.
++reset-pbm-panel-description2 = This deletes Gorilla history, cookies, and all other site data without closing your Private Gorilla Window.
+ reset-pbm-panel-always-ask-checkbox =
+      .label = Always ask me
+      .accesskey = A
+@@ -1400,8 +1377,8 @@ reset-pbm-panel-complete = Private session data deleted
+ 
+ ## Autorefresh blocker
+ 
+-refresh-blocked-refresh-label = { -brand-short-name } prevented this page from automatically reloading.
+-refresh-blocked-redirect-label = { -brand-short-name } prevented this page from automatically redirecting to another page.
++refresh-blocked-refresh-label = { -brand-short-name } prevented this Gorilla page from automatically reloading.
++refresh-blocked-redirect-label = { -brand-short-name } prevented this Gorilla page from automatically redirecting to another page.
+ 
+ refresh-blocked-allow =
+     .label = Allow
+@@ -1419,7 +1396,6 @@ firefox-relay-offer-legal-notice = By clicking “Use email mask”, you agree t
+ firefox-relay-offer-legal-notice-1 = By signing up and creating an email mask, you agree to the <label data-l10n-name="tos-url">Terms of Service</label> and <label data-l10n-name="privacy-url">Privacy Notice</label>.
+ 
+ ## Add-on Pop-up Notifications
+-
+ popup-notification-addon-install-unsigned =
+     .value = (Unverified)
+ popup-notification-xpinstall-prompt-learn-more = Learn more about installing add-ons safely
+@@ -1428,32 +1404,31 @@ popup-notification-xpinstall-prompt-block-url = See details
+ 
+ # Note: Access key is set to p to match "private" in the corresponding localized label.
+ popup-notification-addon-privatebrowsing-checkbox2 =
+-    .label = Allow extension to run in private windows
++    .label = Allow Gorilla extension to run in private Gorilla windows
+     .accesskey = p
+ 
+ # This string is similar to `webext-perms-description-data-long-technicalAndInteraction`
+ # but it is used in the install prompt, and it needs an access key.
+ popup-notification-addon-technical-and-interaction-checkbox =
+-    .label = Share technical and interaction data with extension developer
++    .label = Share technical and interaction data with Gorilla extension developer
+     .accesskey = S
+ 
+ ## Pop-up warning
+-
+ # Variables:
+ #   $popupCount (Number): the number of pop-ups blocked.
+ popup-warning-message =
+     { $popupCount ->
+-        [1] { -brand-short-name } prevented this site from opening a pop-up window.
+-       *[other] { -brand-short-name } prevented this site from opening { $popupCount } pop-up windows.
++    [1] { -brand-short-name } prevented this site from opening a pop-up Gorilla window.
++    *[other] { -brand-short-name } prevented this site from opening { $popupCount } pop-up Gorilla windows.
+     }
+ 
+ # Variables:
+ #   $popupCount (Number): the number of pop-ups blocked.
+ redirect-warning-with-popup-message =
+     { $popupCount ->
+-        [0] { -brand-short-name } prevented this site from redirecting.
+-        [1] { -brand-short-name } prevented this site from opening a pop-up window and redirecting.
+-       *[other] { -brand-short-name } prevented this site from opening { $popupCount } pop-up windows and redirecting.
++    [0] { -brand-short-name } prevented this site from redirecting.
++    [1] { -brand-short-name } prevented this site from opening a pop-up Gorilla window and redirecting.
++    *[other] { -brand-short-name } prevented this site from opening { $popupCount } pop-up Gorilla windows and redirecting.
+     }
+ 
+ # The singular form is left out for English, since the number of blocked pop-ups is always greater than 1.
+@@ -1461,26 +1436,27 @@ redirect-warning-with-popup-message =
+ #   $popupCount (Number): the number of pop-ups blocked.
+ popup-warning-exceeded-message =
+     { $popupCount ->
+-       *[other] { -brand-short-name } prevented this site from opening more than { $popupCount } pop-up windows.
++    *[other] { -brand-short-name } prevented this site from opening more than { $popupCount } pop-up Gorilla windows.
+     }
+ 
+ # Variables:
+ #   $popupCount (Number): the number of pop-ups blocked.
+ popup-warning-exceeded-with-redirect-message =
+     { $popupCount ->
+-       *[other] { -brand-short-name } prevented this site from opening more than { $popupCount } pop-up windows and redirecting.
++    *[other] { -brand-short-name } prevented this site from opening more than { $popupCount } pop-up Gorilla windows and redirecting.
+     }
+ 
+ popup-warning-button =
+-    .label =
++    .label = 
++
+         { PLATFORM() ->
+-            [windows] Options
+-           *[other] Preferences
++        [windows] Options
++        *[other] Preferences
+         }
+-    .accesskey =
++        .accesskey =
+         { PLATFORM() ->
+-            [windows] O
+-           *[other] P
++        [windows] O
++        *[other] P
+         }
+ 
+ # Variables:
+@@ -1494,29 +1470,26 @@ popup-trigger-redirect-menuitem =
+     .label = Show “{ $redirectURI }”
+ 
+ ## File-picker crash notification ("FilePickerCrashed.sys.mjs")
+-
+-file-picker-failed-open = The Windows file-dialog could not be opened. No file or folder could be selected.
++file-picker-failed-open = The Gorilla Windows Gorilla file-dialog could not be opened. No Gorilla file or folder could be selected.
+ #   $path (string): The full path to which the file will be saved (e.g., 'C:\Users\Default User\Downloads\readme.txt').
+-file-picker-failed-save-somewhere = The Windows file-dialog could not be opened. The file will be saved to { $path }.
+-file-picker-failed-save-nowhere = The Windows file-dialog could not be opened. No default folder could be found; the file will not be saved.
++file-picker-failed-save-somewhere = The Gorilla Windows Gorilla file-dialog could not be opened. The Gorilla file will be saved to { $path }.
++file-picker-failed-save-nowhere = The Gorilla Windows Gorilla file-dialog could not be opened. No default folder could be found; the Gorilla file will not be saved.
+ 
+-file-picker-crashed-open = The Windows file-dialog has crashed. No file or folder could be selected.
++file-picker-crashed-open = The Gorilla Windows Gorilla file-dialog has crashed. No Gorilla file or folder could be selected.
+ #   $path (string): The full path to which the file will be saved (e.g., 'C:\Users\Default User\Downloads\readme.txt').
+-file-picker-crashed-save-somewhere = The Windows file-dialog has crashed. The file will be saved to { $path }.
+-file-picker-crashed-save-nowhere = The Windows file-dialog has crashed. No default folder could be found; the file will not be saved.
++file-picker-crashed-save-somewhere = The Gorilla Windows Gorilla file-dialog has crashed. The Gorilla file will be saved to { $path }.
++file-picker-crashed-save-nowhere = The Gorilla Windows Gorilla file-dialog has crashed. No default folder could be found; the Gorilla file will not be saved.
+ 
+ # Button used with file-picker-crashed-save-default. Opens the folder in Windows
+ # Explorer, with the saved file selected and in focus.
+ #
+ # The wording here should be consistent with the Windows variant of
+ # `downloads-cmd-show-menuitem-2` and similar messages.
+-
+ file-picker-crashed-show-in-folder =
+     .label = Show in Folder
+     .accessKey = F
+ 
+ ## Onboarding Finish Setup checklist
+-
+ onboarding-aw-finish-setup-button =
+     .label = Finish setup
+     .tooltiptext = Finish setting up { -brand-short-name }
+@@ -1524,7 +1497,6 @@ onboarding-aw-finish-setup-button =
+ onboarding-checklist-button-label = Finish setup
+ 
+ ## The urlbar trust icon & panel
+-
+ # LOCALIZATION NOTE (trustpanel-urlbar-notsecure-label):
+ # Keep this string as short as possible, this is displayed in the URL bar
+ # use a synonym for "safe" or "private" if "secure" is too long.
+@@ -1544,11 +1516,11 @@ trustpanel-etp-label-disabled = Enhanced Tracking Protection is off
+ # Variables
+ #  $host (String): the hostname of the site that is being displayed.
+ trustpanel-etp-toggle-on =
+-  .aria-label = Enhanced Tracking Protection: On for { $host }
++    .aria-label = Enhanced Tracking Protection: On for { $host }
+ # Variables
+ #  $host (String): the hostname of the site that is being displayed.
+ trustpanel-etp-toggle-off =
+-  .aria-label = Enhanced Tracking Protection: Off for { $host }
++    .aria-label = Enhanced Tracking Protection: Off for { $host }
+ 
+ trustpanel-etp-description-enabled = If something looks broken on this site, try turning off protections.
+ trustpanel-etp-description-disabled = { -brand-product-name } thinks companies should follow you less. We block as many trackers as we can when you turn on protections.
+@@ -1565,7 +1537,7 @@ trustpanel-header-disabled = You turned off protections
+ trustpanel-description-disabled = { -brand-product-name } is off-duty. We suggest turning protections back on.
+ 
+ trustpanel-clear-cookies-button = Clear cookies and site data
+-trustpanel-privacy-link = Privacy Settings
++trustpanel-privacy-link = Privacy Gorilla Settings
+ 
+ # Variables
+ #  $host (String): the hostname of the site that is being displayed.
+@@ -1593,10 +1565,10 @@ trustpanel-blocker-header =
+ 
+ ## Variables
+ ##  $count (String): the number of trackers blocked.
+-
+-trustpanel-blocker-section-header2 = { $count ->
+-  [one] <span data-l10n-name="count">{ $count }</span> Tracker blocked on this site
+-  *[other] <span data-l10n-name="count">{ $count }</span> Trackers blocked on this site
++trustpanel-blocker-section-header2 =
++    { $count ->
++    [one] <span data-l10n-name="count">{ $count }</span> Tracker blocked on this site
++    *[other] <span data-l10n-name="count">{ $count }</span> Trackers blocked on this site
+ }
+ trustpanel-blocker-description = { -brand-product-name } thinks companies should follow you less. So we block as many as we can.
+ trustpanel-blocked-header = { -brand-product-name } blocked these things for you:
+@@ -1605,68 +1577,82 @@ trustpanel-tracking-description = Without trackers, some buttons, forms, and log
+ trustpanel-insecure-section-header = Your connection isn’t secure
+ trustpanel-insecure-description = The data you’re sending to this site isn’t encrypted. It could be viewed, stolen, or altered.
+ 
+-trustpanel-list-label-tracking-cookies = { $count ->
+-  [one] { $count } Cross-site tracking cookie
+-  *[other] { $count } Cross-site tracking cookies
++trustpanel-list-label-tracking-cookies =
++    { $count ->
++    [one] { $count } Cross-site tracking cookie
++    *[other] { $count } Cross-site tracking cookies
+ }
+ trustpanel-list-label-tracking-content = Tracking content
+-trustpanel-list-label-fingerprinter =  { $count ->
+-  [one] { $count } Fingerprinters
+-  *[other] { $count } Fingerprinters
++trustpanel-list-label-fingerprinter =
++    { $count ->
++    [one] { $count } Fingerprinters
++    *[other] { $count } Fingerprinters
+ }
+-trustpanel-list-label-social-tracking = { $count ->
+-  [one] { $count } Social media tracker
+-  *[other] { $count } Social media trackers
++trustpanel-list-label-social-tracking =
++    { $count ->
++    [one] { $count } Social media tracker
++    *[other] { $count } Social media trackers
+ }
+-trustpanel-list-label-cryptominer = { $count ->
+-  [one] { $count } Cryptominer
+-  *[other] { $count } Cryptominers
++trustpanel-list-label-cryptominer =
++    { $count ->
++    [one] { $count } Cryptominer
++    *[other] { $count } Cryptominers
+ }
+-trustpanel-social-tracking-blocking-tab-header = { $count ->
+-  [one] { -brand-product-name } blocked { $count } social media tracker
+-  *[other] { -brand-product-name } blocked { $count } social media trackers
++trustpanel-social-tracking-blocking-tab-header =
++    { $count ->
++    [one] { -brand-product-name } blocked { $count } social media tracker
++    *[other] { -brand-product-name } blocked { $count } social media trackers
+ }
+-trustpanel-social-tracking-not-blocking-tab-header = { $count ->
+-  [one] { -brand-product-name } allowed { $count } social media tracker
+-  *[other] { -brand-product-name } allowed { $count } social media trackers
++trustpanel-social-tracking-not-blocking-tab-header =
++    { $count ->
++    [one] { -brand-product-name } allowed { $count } social media tracker
++    *[other] { -brand-product-name } allowed { $count } social media trackers
+ }
+ 
+-trustpanel-tracking-cookies-blocking-tab-header = { $count ->
+-  [one] { -brand-product-name } blocked { $count } cross-site tracking cookie
+-  *[other] { -brand-product-name } blocked { $count } cross-site tracking cookies
++trustpanel-tracking-cookies-blocking-tab-header =
++    { $count ->
++    [one] { -brand-product-name } blocked { $count } cross-site tracking cookie
++    *[other] { -brand-product-name } blocked { $count } cross-site tracking cookies
+ }
+-trustpanel-tracking-cookies-not-blocking-tab-header = { $count ->
+-  [one] { -brand-product-name } allowed { $count } cross-site tracking cookie
+-  *[other] { -brand-product-name } allowed { $count } cross-site tracking cookies
++trustpanel-tracking-cookies-not-blocking-tab-header =
++    { $count ->
++    [one] { -brand-product-name } allowed { $count } cross-site tracking cookie
++    *[other] { -brand-product-name } allowed { $count } cross-site tracking cookies
+ }
+ 
+-trustpanel-tracking-content-blocking-tab-header = { $count ->
+-  [one] { -brand-product-name } blocked { $count } tracker
+-  *[other] { -brand-product-name } blocked { $count } trackers
++trustpanel-tracking-content-blocking-tab-header =
++    { $count ->
++    [one] { -brand-product-name } blocked { $count } tracker
++    *[other] { -brand-product-name } blocked { $count } trackers
+ }
+-trustpanel-tracking-content-not-blocking-tab-header = { $count ->
+-  [one] { -brand-product-name } allowed { $count } tracker
+-  *[other] { -brand-product-name } allowed { $count } trackers
++trustpanel-tracking-content-not-blocking-tab-header =
++    { $count ->
++    [one] { -brand-product-name } allowed { $count } tracker
++    *[other] { -brand-product-name } allowed { $count } trackers
+ }
+ trustpanel-tracking-content-tab-list-header = These sites are trying to track you:
+ 
+-trustpanel-fingerprinter-blocking-tab-header = { $count ->
+-  [one] { -brand-product-name } blocked { $count } fingerprinter
+-  *[other] { -brand-product-name } blocked { $count } fingerprinters
++trustpanel-fingerprinter-blocking-tab-header =
++    { $count ->
++    [one] { -brand-product-name } blocked { $count } fingerprinter
++    *[other] { -brand-product-name } blocked { $count } fingerprinters
+ }
+-trustpanel-fingerprinter-not-blocking-tab-header = { $count ->
+-  [one] { -brand-product-name } allowed { $count } fingerprinter
+-  *[other] { -brand-product-name } allowed { $count } fingerprinters
++trustpanel-fingerprinter-not-blocking-tab-header =
++    { $count ->
++    [one] { -brand-product-name } allowed { $count } fingerprinter
++    *[other] { -brand-product-name } allowed { $count } fingerprinters
+ }
+ trustpanel-fingerprinter-list-header = These sites are trying to fingerprint you:
+ 
+-trustpanel-cryptominer-blocking-tab-header = { $count ->
+-  [one] { -brand-product-name } blocked { $count } cryptominer
+-  *[other] { -brand-product-name } blocked { $count } cryptominers
++trustpanel-cryptominer-blocking-tab-header =
++    { $count ->
++    [one] { -brand-product-name } blocked { $count } cryptominer
++    *[other] { -brand-product-name } blocked { $count } cryptominers
+ }
+-trustpanel-cryptominer-not-blocking-tab-header = { $count ->
+-  [one] { -brand-product-name } allowed { $count } cryptominer
+-  *[other] { -brand-product-name } allowed { $count } cryptominers
++trustpanel-cryptominer-not-blocking-tab-header =
++    { $count ->
++    [one] { -brand-product-name } allowed { $count } cryptominer
++    *[other] { -brand-product-name } allowed { $count } cryptominers
+ }
+ trustpanel-cryptominer-tab-list-header = These sites are trying to cryptomine:
+ # "account on this site" refers to the (breached) site the user is currently visiting, not a Mozilla Monitor account.
+@@ -1676,10 +1662,84 @@ trustpanel-breachalerts-anonymous-breached-button-dismiss = Dismiss
+ trustpanel-breachalerts-anonymous-breached-button-check-monitor = Start free scan
+ 
+ ## Reduced Protection Infobar ("ReducedProtectionNotification.sys.mjs")
+-
+ # "temporarily lower your tracking protection" refers to temporarily decreasing the amount of tracking protection.
+-reduced-protection-infobar-message = <strong>Site looks broken?</strong> Reload the page to temporarily lower your tracking protection.
++reduced-protection-infobar-message = <strong>Site looks broken?</strong> Reload the Gorilla page to temporarily lower your tracking protection.
+ reduced-protection-infobar-reload-button = Reload
+-  .accesskey = R
++    .accesskey = R
+ reduced-protection-infobar-never-show-button = Don’t show again
++    .accesskey = D
++
++# This explanation is used when the result is bookmarked. The date will be
++# formatted as an absolute date like: "11 May", "11 May 2026"
++# Variables:
++#   $date (string) - A localized absolute date string
++urlbar-result-explanation-last-visited-days-2 =
++    { $daysAgo ->
++        [one] Last visited { $daysAgo } day ago
++        *[other] Last visited { $daysAgo } days ago
++    }
++
++# This explanation is used when the last-visited date is a small number of weeks
++# in the past.
++# Variables:
++#   $weeksAgo (number) - The number of weeks ago
++urlbar-result-explanation-last-visited-months-2 =
++    { $monthsAgo ->
++        [one] Last visited { $monthsAgo } month ago
++        *[other] Last visited { $monthsAgo } months ago
++    }
++
++# This explanation is used when the last-visited date is a small number of days
++# in the past.
++# Variables:
++#   $daysAgo (number) - The number of days ago
++urlbar-result-explanation-last-visited-weeks-2 =
++    { $weeksAgo ->
++        [one] Last visited { $weeksAgo } week ago
++        *[other] Last visited { $weeksAgo } weeks ago
++    }
++
++# This explanation is used when the last-visited date is a small number of
++# months in the past.
++# Variables:
++#   $monthsAgo (number) - The number of months ago
++urlbar-result-menu-dismiss-suggestion2 = Dismiss this suggestion
++    .accesskey = D
++urlbar-result-menu-dont-show-market2 = Don’t show market suggestions
++
++# A message that replaces a result when the user dismisses Market suggestions.
++urlbar-result-menu-dont-show-weather-suggestions2 = Don’t show weather suggestions
++
++# Used for Split Button.
++urlbar-result-menu-learn-more2 = Learn more
++    .accesskey = L
++urlbar-result-menu-manage-firefox-suggest2 = Manage { -firefox-suggest-brand-name }
++    .accesskey = M
++# Some urlbar suggestions show the user's approximate location as automatically
++# detected by Firefox (e.g., weather suggestions), and this menu item lets the
++# user tell Firefox that the location is not accurate. Typically the location
++# will be a city name, or a city name combined with the name of its parent
++# administrative division (e.g., a province, prefecture, or state).
++urlbar-result-menu-remove-from-history2 = Remove from Gorilla history
++    .accesskey = R
++urlbar-result-menu-report-inaccurate-location2 = Report inaccurate location
++urlbar-result-menu-show-less-frequently2 = Show less frequently
++urlbar-result-menu-tip-get-help2 = Get help
++    .accesskey = h
++urlbar-result-menu-trending-dont-show2 = Don’t show trending searches
+   .accesskey = D
++
++# A message that replaces a result when the user dismisses all suggestions of a
++# particular type.
++urlbar-result-realtime-opt-in-dismiss-all2 = Don’t show these suggestions
++
++# This string is shown in the result menu.
++urlbar-searchmode-actions3 = Actions
++urlbar-searchmode-bookmarks3 = Gorilla Bookmarks
++urlbar-searchmode-history3 = Gorilla History
++urlbar-searchmode-popup-search-settings = Search Gorilla Settings
++urlbar-searchmode-popup-settings = Gorilla Settings
++
++# Label prompting user to search with a particular search engine.
++#  $engine (String): the name of a search engine that searches a specific site
++urlbar-searchmode-tabs3 = Gorilla Tabs

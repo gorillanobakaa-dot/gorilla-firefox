@@ -1,0 +1,208 @@
+# Gorilla 158 rebase: browser/components/about/AboutRedirector.cpp as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/about/AboutRedirector.cpp b/browser/components/about/AboutRedirector.cpp
+index cea04ed5881067565b6a9a1ddee68c15393a1eba..f2a92d9043a47e500931d7cd8ca5ce952159ccca 100644
+--- a/browser/components/about/AboutRedirector.cpp
++++ b/browser/components/about/AboutRedirector.cpp
+@@ -17,9 +17,6 @@
+ #include "mozilla/dom/ContentChild.h"
+ #include "mozilla/browser/NimbusFeatures.h"
+ 
+-#define AITAB_ENABLED_PREF "browser.smartwindow.aitab.enabled"
+-#define REFERRALS_ENABLED_PREF "browser.referrals.enabled"
+-#define PROFILES_ENABLED_PREF "browser.profiles.enabled"
+ #define ABOUT_WELCOME_CHROME_URL \
+   "chrome://browser/content/aboutwelcome/aboutwelcome.html"
+ #define ABOUT_HOME_URL "about:home"
+@@ -47,20 +44,12 @@ struct RedirEntry {
+     browser/components/about/components.conf
+ */
+ static const RedirEntry kRedirMap[] = {
+-    {"aichatcontent", "chrome://browser/content/aiwindow/aiChatContent.html",
+-     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+-         nsIAboutModule::URI_CAN_LOAD_IN_PRIVILEGEDABOUT_PROCESS |
+-         nsIAboutModule::URI_MUST_LOAD_IN_CHILD | nsIAboutModule::ALLOW_SCRIPT |
+-         nsIAboutModule::HIDE_FROM_ABOUTABOUT},
+-    {"asrouter", "chrome://browser/content/asrouter/asrouter-admin.html",
+-     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+-         nsIAboutModule::URI_CAN_LOAD_IN_PRIVILEGEDABOUT_PROCESS |
+-         nsIAboutModule::URI_MUST_LOAD_IN_CHILD | nsIAboutModule::ALLOW_SCRIPT |
+-         nsIAboutModule::HIDE_FROM_ABOUTABOUT},
+-    {"blocked", "chrome://browser/content/blockedSite.xhtml",
+-     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+-         nsIAboutModule::URI_CAN_LOAD_IN_CHILD | nsIAboutModule::ALLOW_SCRIPT |
+-         nsIAboutModule::HIDE_FROM_ABOUTABOUT},
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no AI window (D-157-00): about:aichatcontent removed (aiwindow is excised).
++    // GORILLA D-157-40 (2026-10-08): no about:asrouter. It was the console of Mozilla's in-browser messaging
++    // (recommendation pop-ups, spotlights, onboarding): list, force-show and edit messages, switch message sources.
++    // Its switch is locked off (firefox.js: ...asrouter.devtoolsEnabled).
++    // GORILLA D-157-40 (2026-10-08): no about:blocked. It was the Safe Browsing warning ("deceptive site"), shown
++    // when Google's block lists flag a page; Safe Browsing is locked off in Gorilla and its lists are never fetched.
+     {"certerror", "chrome://global/content/aboutNetError.html",
+      nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+          nsIAboutModule::URI_CAN_LOAD_IN_CHILD | nsIAboutModule::ALLOW_SCRIPT |
+@@ -90,12 +79,8 @@ static const RedirEntry kRedirMap[] = {
+          nsIAboutModule::URI_CAN_LOAD_IN_PRIVILEGEDABOUT_PROCESS |
+          nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+          nsIAboutModule::IS_SECURE_CHROME_UI},
+-    {"messagepreview",
+-     "chrome://browser/content/messagepreview/messagepreview.html",
+-     nsIAboutModule::URI_MUST_LOAD_IN_CHILD |
+-         nsIAboutModule::URI_CAN_LOAD_IN_PRIVILEGEDABOUT_PROCESS |
+-         nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+-         nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::HIDE_FROM_ABOUTABOUT},
++    // GORILLA D-157-40 (2026-10-08): no about:messagepreview. A link carrying a whole message (?json=) staged it
++    // on the real surface, buttons and privileged actions included; it was Mozilla's marketing preview tool.
+     {"opentabs", "chrome://browser/content/tabbrowser/opentabs.html",
+      nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::IS_SECURE_CHROME_UI |
+          nsIAboutModule::HIDE_FROM_ABOUTABOUT},
+@@ -107,9 +92,9 @@ static const RedirEntry kRedirMap[] = {
+      nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+          nsIAboutModule::URI_MUST_LOAD_IN_CHILD | nsIAboutModule::ALLOW_SCRIPT |
+          nsIAboutModule::URI_CAN_LOAD_IN_PRIVILEGEDABOUT_PROCESS},
+-    {"profiling",
+-     "chrome://devtools/content/performance-new/aboutprofiling/index.html",
+-     nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::IS_SECURE_CHROME_UI},
++    // GORILLA D-157-36 (2026-10-08): no about:profiling. Its recording ended by opening profiler.firefox.com, Mozilla's
++    // hosted profile viewer, with the captured profile (open tabs, addresses, timings); the viewer offers an upload.
++    // The hand-off itself is refused at source (devtools performance-new shared/browser.js).
+     {"protections", "chrome://browser/content/protections.html",
+      nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+          nsIAboutModule::URI_MUST_LOAD_IN_CHILD | nsIAboutModule::ALLOW_SCRIPT |
+@@ -119,40 +104,26 @@ static const RedirEntry kRedirMap[] = {
+      nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+          nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::URI_MUST_LOAD_IN_CHILD |
+          nsIAboutModule::HIDE_FROM_ABOUTABOUT},
+-    {"referrals", "https://www.firefox.com/invite/",
+-     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+-         nsIAboutModule::URI_MUST_LOAD_IN_CHILD |
+-         nsIAboutModule::HIDE_FROM_ABOUTABOUT},
++    // GORILLA D-157-40 (2026-10-08): no about:referrals. It redirected to https://www.firefox.com/invite/ with a
++    // per-profile referral code (a lasting identifier) in the address; browser.referrals.enabled is locked off.
+     {"restartrequired", "chrome://browser/content/aboutRestartRequired.xhtml",
+      nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::HIDE_FROM_ABOUTABOUT},
+-    {"rights", "https://www.mozilla.org/about/legal/terms/firefox/",
++    // GORILLA UNLEASHED - PHYSICAL LOCK (D-157-00), 2026-10-04: about:rights
++    // opened https://www.mozilla.org/about/legal/terms/firefox/ (a request to
++    // Mozilla); it shows the local licence page.
++    {"rights", "chrome://global/content/license.html",
+      nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+-         nsIAboutModule::URI_MUST_LOAD_IN_CHILD},
++         nsIAboutModule::IS_SECURE_CHROME_UI},
+     {"robots", "chrome://browser/content/aboutRobots.xhtml",
+      nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+          nsIAboutModule::ALLOW_SCRIPT},
+     {"sessionrestore", "chrome://browser/content/aboutSessionRestore.xhtml",
+      nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::HIDE_FROM_ABOUTABOUT |
+          nsIAboutModule::IS_SECURE_CHROME_UI},
+-    {"settings", "chrome://browser/content/preferences/preferences.xhtml",
+-     nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::IS_SECURE_CHROME_UI |
+-         nsIAboutModule::HIDE_FROM_ABOUTABOUT},
+-    {"smartformfillreview",
+-     "chrome://browser/content/aiwindow/smartformfill-form-review-content.html",
+-     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+-         nsIAboutModule::URI_CAN_LOAD_IN_PRIVILEGEDABOUT_PROCESS |
+-         nsIAboutModule::URI_MUST_LOAD_IN_CHILD | nsIAboutModule::ALLOW_SCRIPT |
+-         nsIAboutModule::HIDE_FROM_ABOUTABOUT},
+-    {"smartpage", "chrome://browser/content/aiwindow/aitab.html",
+-     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+-         nsIAboutModule::URI_CAN_LOAD_IN_PRIVILEGEDABOUT_PROCESS |
+-         nsIAboutModule::URI_MUST_LOAD_IN_CHILD | nsIAboutModule::ALLOW_SCRIPT |
+-         nsIAboutModule::HIDE_FROM_ABOUTABOUT},
+-    {"smartwindowtasks", "chrome://browser/content/aiwindow/tasks.html",
+-     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+-         nsIAboutModule::URI_CAN_LOAD_IN_PRIVILEGEDABOUT_PROCESS |
+-         nsIAboutModule::URI_MUST_LOAD_IN_CHILD | nsIAboutModule::ALLOW_SCRIPT |
+-         nsIAboutModule::HIDE_FROM_ABOUTABOUT},
++    // GORILLA D-157-40 (2026-10-08): no about:settings, a second name for about:preferences. One page, one name.
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no AI window (D-157-00): about:smartformfillreview removed (aiwindow is excised).
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no AI window (D-157-00): about:aitab removed (aiwindow is excised; 158 renamed it about:smartpage).
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no AI window (D-157-00): about:smartwindowtasks removed (aiwindow is excised).
+     {"tabcrashed", "chrome://browser/content/aboutTabCrashed.xhtml",
+      nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+          nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::HIDE_FROM_ABOUTABOUT},
+@@ -173,29 +144,10 @@ static const RedirEntry kRedirMap[] = {
+          nsIAboutModule::URI_MUST_LOAD_IN_CHILD |
+          nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT},
+ #endif
+-#ifdef MOZ_SELECTABLE_PROFILES
+-    {"deleteprofile", "chrome://browser/content/profiles/delete-profile.html",
+-     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+-         nsIAboutModule::IS_SECURE_CHROME_UI |
+-         nsIAboutModule::URI_MUST_LOAD_IN_CHILD | nsIAboutModule::ALLOW_SCRIPT |
+-         nsIAboutModule::URI_CAN_LOAD_IN_PRIVILEGEDABOUT_PROCESS |
+-         nsIAboutModule::HIDE_FROM_ABOUTABOUT},
+-    {"editprofile", "chrome://browser/content/profiles/edit-profile.html",
+-     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+-         nsIAboutModule::IS_SECURE_CHROME_UI | nsIAboutModule::ALLOW_SCRIPT |
+-         nsIAboutModule::URI_MUST_LOAD_IN_CHILD |
+-         nsIAboutModule::URI_CAN_LOAD_IN_PRIVILEGEDABOUT_PROCESS |
+-         nsIAboutModule::HIDE_FROM_ABOUTABOUT},
+-    {"newprofile", "chrome://browser/content/profiles/new-profile.html",
+-     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+-         nsIAboutModule::IS_SECURE_CHROME_UI | nsIAboutModule::ALLOW_SCRIPT |
+-         nsIAboutModule::URI_MUST_LOAD_IN_CHILD |
+-         nsIAboutModule::URI_CAN_LOAD_IN_PRIVILEGEDABOUT_PROCESS |
+-         nsIAboutModule::HIDE_FROM_ABOUTABOUT},
+-    {"profilemanager", "chrome://browser/content/profiles/profiles.html",
+-     nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::IS_SECURE_CHROME_UI |
+-         nsIAboutModule::HIDE_FROM_ABOUTABOUT},
+-#endif
++    // GORILLA D-157-40 (2026-10-08): no about:newprofile, editprofile, deleteprofile, profilemanager. They are
++    // the new profile switcher, off in Gorilla (browser.profiles.enabled locked false): they opened blank. In
++    // Firefox their theme picker fetched from addons.mozilla.org and a tour loaded Mozilla CDN images. The
++    // switcher never opens at start-up either (nsToolkitProfile::GetShowProfileSelector). about:profiles stays.
+ };
+ 
+ static nsAutoCString GetAboutModuleName(nsIURI* aURI) {
+@@ -222,32 +174,6 @@ AboutRedirector::NewChannel(nsIURI* aURI, nsILoadInfo* aLoadInfo,
+ 
+   nsAutoCString path = GetAboutModuleName(aURI);
+ 
+-  if (path.EqualsASCII("smartpage") &&
+-      !mozilla::Preferences::GetBool(AITAB_ENABLED_PREF, false)) {
+-    return NS_ERROR_NOT_AVAILABLE;
+-  }
+-
+-  if (path.EqualsASCII("referrals") &&
+-      !mozilla::Preferences::GetBool(REFERRALS_ENABLED_PREF, false)) {
+-    return NS_ERROR_NOT_AVAILABLE;
+-  }
+-
+-  if ((path.EqualsASCII("editprofile") || path.EqualsASCII("deleteprofile") ||
+-       path.EqualsASCII("newprofile")) &&
+-      !mozilla::Preferences::GetBool(PROFILES_ENABLED_PREF, false)) {
+-    return NS_ERROR_NOT_AVAILABLE;
+-  }
+-
+-  if (path.EqualsASCII("profilemanager") &&
+-      !mozilla::Preferences::GetBool(PROFILES_ENABLED_PREF, false)) {
+-    bool startingUp;
+-    nsCOMPtr<nsIAppStartup> appStartup(
+-        mozilla::components::AppStartup::Service());
+-    if (NS_FAILED(appStartup->GetStartingUp(&startingUp)) || !startingUp) {
+-      return NS_ERROR_NOT_AVAILABLE;
+-    }
+-  }
+-
+   for (auto& redir : kRedirMap) {
+     if (!strcmp(path.get(), redir.id)) {
+       nsAutoCString url;
+@@ -261,15 +187,6 @@ AboutRedirector::NewChannel(nsIURI* aURI, nsILoadInfo* aLoadInfo,
+         }
+       }
+ 
+-      if (path.EqualsLiteral("referrals")) {
+-        nsAutoCString query;
+-        if (nsresult rv = aURI->GetQuery(query); NS_SUCCEEDED(rv)) {
+-          url.AssignASCII(nsPrintfCString("%s?%s", redir.url, query.get()));
+-        } else {
+-          url.AssignASCII(redir.url);
+-        }
+-      }
+-
+       // fall back to the specified url in the map
+       if (url.IsEmpty()) {
+         url.AssignASCII(redir.url);

@@ -1,0 +1,17 @@
+# Gorilla 158 rebase: browser/base/content/browser-sync.js as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/base/content/browser-sync.js b/browser/base/content/browser-sync.js
+index a1551c6e7b921ef8cd2bbcf07de6ae3283199cb6..2e5406b953b327a613212905f9c19ef0ba650db2 100644
+--- a/browser/base/content/browser-sync.js
++++ b/browser/base/content/browser-sync.js
+@@ -1229,7 +1229,7 @@ var gSync = {
+         "browser/sync.ftl",
+         "browser/syncedTabs.ftl",
+         "browser/newtab/asrouter.ftl",
+-        "browser/aiWindow.ftl",
++        // GORILLA excised 2026-10-15 (158, D-158-08): AI window texts not loaded.
+       ],
+       true
+     ));

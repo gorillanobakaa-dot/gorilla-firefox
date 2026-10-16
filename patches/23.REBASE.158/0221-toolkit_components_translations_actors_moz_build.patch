@@ -1,0 +1,26 @@
+# Gorilla 158 rebase: toolkit/components/translations/actors/moz.build as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/components/translations/actors/moz.build b/toolkit/components/translations/actors/moz.build
+index 70743e82fd9a67ca2e632d56615dd965698696f9..81ac942c80dc836b2b7e8219e0b521e96a969023 100644
+--- a/toolkit/components/translations/actors/moz.build
++++ b/toolkit/components/translations/actors/moz.build
+@@ -2,11 +2,11 @@
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ 
++# GORILLA UNLEASHED - PHYSICAL LOCK: no translations (decision D-157-03).
++# The Translations, TranslationsEngine and AboutTranslations actors are not packaged and not registered
++# (ActorManagerParent). Only a stub is installed as resource://gre/actors/TranslationsParent.sys.mjs: it answers
++# "disabled / no languages" to the Settings, address bar and context menu code that still imports it.
++# FINAL_TARGET_FILES installs by base name, so stub/TranslationsParent.sys.mjs lands as actors/TranslationsParent.sys.mjs.
+ FINAL_TARGET_FILES.actors += [
+-    "AboutTranslationsChild.sys.mjs",
+-    "AboutTranslationsParent.sys.mjs",
+-    "TranslationsChild.sys.mjs",
+-    "TranslationsEngineChild.sys.mjs",
+-    "TranslationsEngineParent.sys.mjs",
+-    "TranslationsParent.sys.mjs",
++    "stub/TranslationsParent.sys.mjs",
+ ]

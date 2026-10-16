@@ -1,0 +1,17 @@
+# Gorilla 158 rebase: browser/base/content/spotlight.html as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/base/content/spotlight.html b/browser/base/content/spotlight.html
+index 47d21ff48fa8e8914979a7e85a1acfdee2ea81c0..9d57c89eb01dbf597260c2ff4ea41eab18defc80 100644
+--- a/browser/base/content/spotlight.html
++++ b/browser/base/content/spotlight.html
+@@ -28,7 +28,7 @@
+     <link rel="localization" href="browser/preonboarding.ftl" />
+     <link rel="localization" href="browser/termsofuse.ftl" />
+     <link rel="localization" href="browser/featureCallout.ftl" />
+-    <link rel="localization" href="browser/aiWindow.ftl" />
++    <!-- GORILLA excised 2026-10-15 (158, D-158-08): AI window texts (aiWindow) not linked -->
+   </head>
+   <body
+     role="dialog"

@@ -1,0 +1,20 @@
+# Gorilla 158 rebase: toolkit/content/aboutAbout.html as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/content/aboutAbout.html b/toolkit/content/aboutAbout.html
+index 74702381dd1bed2d4bb47c464ae0ca309c10e45b..571595d9dd348c79877cb7e057eeeafd6bb54042 100644
+--- a/toolkit/content/aboutAbout.html
++++ b/toolkit/content/aboutAbout.html
+@@ -18,11 +18,6 @@
+       href="chrome://global/skin/in-content/info-pages.css"
+     />
+     <link rel="localization" href="toolkit/about/aboutAbout.ftl" />
+-    <link
+-      rel="icon"
+-      type="image/png"
+-      href="chrome://branding/content/icon32.png"
+-    />
+     <script src="chrome://global/content/aboutAbout.js"></script>
+   </head>
+ 

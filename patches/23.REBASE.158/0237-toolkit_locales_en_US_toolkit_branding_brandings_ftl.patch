@@ -1,0 +1,21 @@
+# Gorilla 158 rebase: toolkit/locales/en-US/toolkit/branding/brandings.ftl as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/locales/en-US/toolkit/branding/brandings.ftl b/toolkit/locales/en-US/toolkit/branding/brandings.ftl
+index ea1e09e0a2e955268d832cb49900949c42416bc0..d99b256dff93888c1aa61f09a3dca8e5ed838090 100644
+--- a/toolkit/locales/en-US/toolkit/branding/brandings.ftl
++++ b/toolkit/locales/en-US/toolkit/branding/brandings.ftl
+@@ -58,8 +58,7 @@
+ # and kept in English.
+ -firefoxlabs-brand-name = Firefox Labs
+ 
+--smart-window-brand-name =
+-    { $plural-form ->
+-        [true] Smart Windows
+-       *[false] Smart Window
+-    }
++# GORILLA (2026-10-08): the 08.Look name, defined here once. aiWindow.ftl and aiWindowContent.ftl
++# defined it again, and Firefox kept whichever file loaded first: "Smart Window" in some places,
++# "Gorilla AI" in others, and an "Attempt to override an existing term" error each time.
++-smart-window-brand-name = Gorilla AI

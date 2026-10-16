@@ -120,18 +120,14 @@ for bin in firefox glxtest vaapitest plugin-container updater pingsender; do
   f="$STAGE/usr/lib/gorilla-unleashed/$bin"; [ -f "$f" ] && strip -s "$f" 2>/dev/null || true
 done
 
-# 3. branding: about-logo — ONE artwork, PROPER-SIZED (one-PNG doctrine + Crisp_Logo lesson).
-#    about-logo.svg (embeds a 1200px raster) is the newtab/PB artwork via master-redirect. The
-#    PNGs are only for about:dialog: 500px + 1000px @2x, Lanczos-DOWNSAMPLED from the master.
-#    NEVER copy the ~8MB 2598px master verbatim — that duplicated ~15MB of dead pixels.
+# 3. branding: about-logo is shipped AS BUILT (D-157-35, one master). Until 2026-10-15 this step regenerated it here:
+#    a 500px about-logo.png over the build's 1400px master and an extra 1000px about-logo@2x.png, written for the
+#    154/155 one-PNG doctrine. D-157-35 (2026-10-07) made ONE 1400px master, linked by every page and decoded once,
+#    and retired the @2x copy; this step undid that in every .deb (the blurry 500px gorilla of the first 158 install,
+#    and the register's omni_absent FAIL on about-logo@2x.png). The picture now comes only from the tree, checked by
+#    fieldkit preflight `binary-patches` and the package check `about-logo is the tree's master`.
+# the branding folder of the tree that was built (hicolor icons below, the display name further down)
 BR="${5:-$(cd "$DIST_BIN/../../.." 2>/dev/null && pwd)/browser/branding/gorilla}"
-ALOGO="$STAGE/usr/lib/gorilla-unleashed/browser/chrome/browser/content/branding"
-if [ -d "$ALOGO" ] && [ -f "$ICON_MASTER" ] && command -v magick >/dev/null; then
-  magick "$ICON_MASTER" -fuzz 5% -trim -filter Lanczos -resize 500x500 \
-    -background none -gravity center -extent 500x500 "$ALOGO/about-logo.png"
-  magick "$ICON_MASTER" -fuzz 5% -trim -filter Lanczos -resize 1000x1000 \
-    -background none -gravity center -extent 1000x1000 "$ALOGO/about-logo@2x.png"
-fi
 # hicolor app icon sizes from the branding set (for the .desktop Icon= entry)
 for sz in 16 22 24 32 48 64 128 256; do
   src="$BR/default${sz}.png"
@@ -156,6 +152,51 @@ if command -v magick >/dev/null; then
 else
   echo "WARN: magick missing — 1024 app-grid icon left as raw non-square master (renders small)" >&2
 fi
+
+# NAME = BRANDING + VERSION (D-158-05, owner 2026-10-15: "Gorilla Unleashed followed by the version", on hover, in
+# the task manager and wherever the browser appears in a search). The template said "Gorilla Unleashed 154" through
+# 155 and 158 because nobody stamped it. Stamped here from the branding's MOZ_APP_DISPLAYNAME and the built
+# application.ini's major version, into every name a desktop shows or searches: Name, X-GNOME-FullName, Comment
+# (the hover tooltip on many docks), Keywords. Checked by the Fieldkit pipeline (package stage, verify_deb).
+DISPLAYNAME=$(sed -n 's/^MOZ_APP_DISPLAYNAME="\{0,1\}\([^"]*\)"\{0,1\}$/\1/p' "$BR/configure.sh" 2>/dev/null | head -1)
+MAJOR=$(sed -n 's/^Version=\([0-9]*\).*/\1/p' "$DIST_BIN/application.ini" | head -1)
+if [ -n "$DISPLAYNAME" ] && [ -n "$MAJOR" ]; then
+  APPNAME="$DISPLAYNAME $MAJOR"
+  python3 - "$STAGE/usr/share/applications/gorilla-unleashed.desktop" "$APPNAME" <<'PY'
+import sys, re
+path, name = sys.argv[1:3]
+s = open(path).read()
+head, sep, rest = s.partition("\n[Desktop Action")
+def put(text, key, value):
+    if re.search(rf"(?m)^{key}=", text):
+        return re.sub(rf"(?m)^{key}=.*$", f"{key}={value}", text, count=1)
+    return text.rstrip("\n") + f"\n{key}={value}\n"
+head = put(head, "Name", name)
+head = put(head, "X-GNOME-FullName", name)
+head = put(head, "Comment", f"{name} web browser")
+words = name.split()
+kw = re.search(r"(?m)^Keywords=(.*)$", head)
+have = [k for k in (kw.group(1).split(";") if kw else []) if k]
+head = put(head, "Keywords", ";".join(dict.fromkeys(words + have)) + ";")
+open(path, "w").write(head + sep + rest)
+PY
+  echo "   name: $APPNAME (branding $BR/configure.sh + application.ini)"
+else
+  echo "FATAL: cannot name the package: MOZ_APP_DISPLAYNAME='$DISPLAYNAME' major version='$MAJOR'" >&2; exit 1
+fi
+
+# PROGRAM NAME AND WINDOW IDENTITY (D-158-05, owner 2026-10-15: yes to renaming the program file).
+# - RemotingName in application.ini is read at start-up and becomes the Wayland app_id / X11 WM_CLASS of any window
+#   started without --name. It was "firefox-default", so a link opened from another app, or any plain launch, showed
+#   in the dock as "firefox-default" with a generic icon. Now gorilla-unleashed, matching StartupWMClass.
+# - The program is shipped as gorilla-unleashed beside firefox (kept for existing scripts): the task manager shows
+#   the file name, cut by Linux to 15 characters ("gorilla-unleash"). The menu entry starts the new name.
+APPDIR="$STAGE/usr/lib/gorilla-unleashed"
+sed -i 's/^RemotingName=.*/RemotingName=gorilla-unleashed/' "$APPDIR/application.ini"
+cp -p "$APPDIR/firefox" "$APPDIR/gorilla-unleashed"
+sed -i 's#/usr/lib/gorilla-unleashed/firefox #/usr/lib/gorilla-unleashed/gorilla-unleashed #g' \
+  "$STAGE/usr/share/applications/gorilla-unleashed.desktop"
+echo "   program: gorilla-unleashed (RemotingName gorilla-unleashed)"
 
 # 4. DEBIAN/control — bump version, compute Installed-Size (KB), keep the rest
 INSTALLED_KB=$(du -sk "$STAGE" | cut -f1)

@@ -1,0 +1,21 @@
+# Gorilla 158 rebase: toolkit/components/normandy/content/about-studies/about-studies.html as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/components/normandy/content/about-studies/about-studies.html b/toolkit/components/normandy/content/about-studies/about-studies.html
+index 6f0ffa9217571eb09ec4b8de0310d5d1ecacd69f..0ee6360ab632f1add35e1593378c3afebbaf60be 100644
+--- a/toolkit/components/normandy/content/about-studies/about-studies.html
++++ b/toolkit/components/normandy/content/about-studies/about-studies.html
+@@ -12,12 +12,6 @@
+     />
+     <!-- The title is replaced in about-studies.js -->
+     <title>about:studies</title>
+-    <link
+-      rel="icon"
+-      type="image/png"
+-      id="favicon"
+-      href="chrome://branding/content/icon32.png"
+-    />
+     <link rel="stylesheet" href="chrome://global/skin/global.css" />
+     <link rel="stylesheet" href="chrome://global/skin/in-content/common.css" />
+     <link

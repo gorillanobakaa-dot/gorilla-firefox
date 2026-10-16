@@ -1,0 +1,34 @@
+# Gorilla 158 privacy cut
+# D-157-35 on 158: about:pdf draws no Gorilla. Fable's 081 removed the page's one logo on 157; 158 shows the page in two lockups, so both 32 px logos are removed. The artwork was made to be seen large; at icon size nothing in it can be made out. 081's own step was judged obsolete only because it looked for 052's 64 px logo, which was still a proposal (now withdrawn). lesson: when a later patch removes what an earlier patch's proposal changes, the later patch wins: judge the later patch against the tree as it would be without the earlier proposal, not mark it obsolete
+# Files: toolkit/components/aboutpdf/content/aboutPDF.html
+
+diff --git a/toolkit/components/aboutpdf/content/aboutPDF.html b/toolkit/components/aboutpdf/content/aboutPDF.html
+index ac032a2c8c..c07f42251d 100644
+--- a/toolkit/components/aboutpdf/content/aboutPDF.html
++++ b/toolkit/components/aboutpdf/content/aboutPDF.html
+@@ -61,12 +61,6 @@
+           <div id="main-view">
+             <div class="logo-lockup">
+               <div class="logo-row">
+-                <img
+-                  class="firefox-logo"
+-                  src="chrome://branding/content/icon32.png"
+-                  alt=""
+-                  role="presentation"
+-                />
+                 <h1
+                   id="main-heading"
+                   tabindex="-1"
+@@ -104,12 +98,6 @@
+           <div id="features-view">
+             <div class="logo-lockup">
+               <div class="logo-row">
+-                <img
+-                  class="firefox-logo"
+-                  src="chrome://branding/content/icon32.png"
+-                  alt=""
+-                  role="presentation"
+-                />
+                 <h1
+                   id="features-heading"
+                   tabindex="-1"

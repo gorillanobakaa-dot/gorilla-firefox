@@ -1,0 +1,27 @@
+# Gorilla 158 rebase: browser/extensions/newtab/lib/Widgets/PictureOfTheDayFeed.sys.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/extensions/newtab/lib/Widgets/PictureOfTheDayFeed.sys.mjs b/browser/extensions/newtab/lib/Widgets/PictureOfTheDayFeed.sys.mjs
+index 494628d51322cb5a799cdeca140104a6cafbfb66..e48a649af8337c31989393ea02954506a5400e14 100644
+--- a/browser/extensions/newtab/lib/Widgets/PictureOfTheDayFeed.sys.mjs
++++ b/browser/extensions/newtab/lib/Widgets/PictureOfTheDayFeed.sys.mjs
+@@ -174,6 +174,10 @@ export class PictureOfTheDayFeed {
+   }
+ 
+   async fetch() {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no picture-of-the-day fetch
++    if (true) {
++      return;
++    }
+     if (!this.merino) {
+       this.merino = this.MerinoClient(MERINO_CLIENT_KEY);
+     }
+@@ -410,5 +414,6 @@ PictureOfTheDayFeed.prototype.Date = () => {
+   return Date;
+ };
+ PictureOfTheDayFeed.prototype.fetchImage = url => {
+-  return fetch(url);
++  // GORILLA UNLEASHED - PHYSICAL LOCK (egress)
++  return Promise.reject(new Error("GORILLA: network fetch disabled"));
+ };

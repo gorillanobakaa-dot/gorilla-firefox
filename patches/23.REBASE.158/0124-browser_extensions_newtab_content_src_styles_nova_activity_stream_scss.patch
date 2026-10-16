@@ -1,0 +1,25 @@
+# Gorilla 158 rebase: browser/extensions/newtab/content-src/styles/nova/activity-stream.scss as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/extensions/newtab/content-src/styles/nova/activity-stream.scss b/browser/extensions/newtab/content-src/styles/nova/activity-stream.scss
+index d7fb37b9a1bea4fe1099ec88c552d51d9c8702cc..c1edbf5dff0b0a0c6b4fcdd4fe115f5f2a00f3b1 100644
+--- a/browser/extensions/newtab/content-src/styles/nova/activity-stream.scss
++++ b/browser/extensions/newtab/content-src/styles/nova/activity-stream.scss
+@@ -304,14 +304,14 @@ input {
+ :root[lwt-newtab-brighttext] {
+   -moz-osx-font-smoothing: grayscale;
+ }
+-/* giant crisp gorilla (about-logo.svg wraps a 1200px raster → 600px box downsamples) */
++/* giant crisp gorilla (D-157-35: the one 1400 px master PNG -> 600 px box downsamples 2.3:1) */
+ .logo-and-wordmark .logo,
+ .nova-enabled .logo-and-wordmark .logo,
+ .classic-enabled .logo-and-wordmark .logo {
+   display: inline-block !important;
+   height: 600px !important; width: 600px !important;
+   max-width: 95vw !important; max-height: 70vh !important;
+-  background: url("chrome://branding/content/about-logo.svg") no-repeat center !important;
++  background: url("chrome://branding/content/about-logo.png") no-repeat center !important;
+   background-size: contain !important;
+ }
+ .logo-and-wordmark .wordmark,

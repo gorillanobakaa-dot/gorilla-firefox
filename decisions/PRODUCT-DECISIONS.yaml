@@ -126,10 +126,40 @@ decisions:
       Extensions are the biggest privacy side door in a browser. uBlock Origin stays because it removes ads and
       trackers and its filter-list updates are its own. Cost: no other add-ons, and uBlock itself updates only with a
       new Gorilla build.
+    not_a_bug: >
+      2026-10-15 (owner): "We are the cause of the incompatibility. This is a DESIGN security measure, part of the
+      hardening. Do NOT mess around with them." A failed add-on or theme install (any message, including Mozilla's
+      "not compatible with Gorilla Unleashed 158.0") is this decision working. Never diagnose it as a bug, never
+      loosen a lock to make an install work. Add-ons run code their makers change remotely and widen the attack
+      surface. The only allowed change is the refusal's wording (gorilla-addon-install-refused). Every lock is
+      checked above; removing one turns this entry VIOLATED.
     verify:
       - pref: {name: devtools.chrome.enabled, value: false, locked: true}
       - pref: {name: devtools.debugger.remote-enabled, value: false, locked: true}
       - tree_contains: {path: toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs, text: "GORILLA UNLEASHED - PHYSICAL LOCK: no temporary add-ons"}
+      - tree_contains: {path: toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs, text: "GORILLA UNLEASHED - PHYSICAL LOCK: no sideloaded add-ons"}
+      - tree_contains: {path: toolkit/mozapps/extensions/internal/XPIProvider.sys.mjs, text: "GORILLA UNLEASHED - PHYSICAL LOCK: no sideloaded add-ons"}
+      - tree_contains: {path: toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs, text: "[GORILLA] Add-on installation rejected"}
+      - tree_contains: {path: toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs, text: "[GORILLA] Theme installation rejected"}
+      - tree_contains: {path: toolkit/mozapps/extensions/AddonManager.sys.mjs, text: "Block AMO-based theme/extension installation flow"}
+      - tree_contains: {path: toolkit/mozapps/extensions/AddonManager.sys.mjs, text: "Block web-initiated add-on/theme installation flow"}
+      - tree_contains: {path: browser/base/content/browser-addons.js, text: "GORILLA UNLEASHED - ADD-ON REFUSAL MESSAGE (D-157-05)"}
+      - tree_contains: {path: browser/locales/en-US/browser/addonNotifications.ftl, text: "gorilla-addon-install-refused = Blocked on purpose"}
+      - pref: {name: extensions.webapi.enabled, value: false, locked: true}
+      - pref: {name: privacy.resistFingerprinting.block_mozAddonManager, value: true, locked: true}
+      - pref: {name: xpinstall.enabled, value: false, locked: true}
+      - pref: {name: extensions.InstallTrigger.enabled, value: false, locked: true}
+      - pref: {name: extensions.htmlaboutaddons.recommendations.enabled, value: false, locked: true}
+      - pref: {name: extensions.getAddons.link.url, value: "", locked: true}
+      - pref: {name: extensions.getAddons.search.browseURL, value: "", locked: true}
+      - pref: {name: browser.taskbarTabs.enabled, value: false, locked: true}
+      - tree_contains: {path: toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs, text: "GORILLA UNLEASHED - NO TEST BYPASS"}
+      - tree_contains: {path: toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs, text: "GORILLA UNLEASHED - NO TEST BYPASS"}
+      - tree_contains: {path: toolkit/mozapps/extensions/internal/XPIProvider.sys.mjs, text: "GORILLA UNLEASHED - NO TEST BYPASS"}
+      - tree_contains: {path: toolkit/mozapps/extensions/content/aboutaddons-utils.mjs, text: "GORILLA UNLEASHED - NO ADD-ON OFFERS (D-157-05)"}
+      - tree_contains: {path: toolkit/mozapps/extensions/content/components/addon-list.mjs, text: "gorilla-addons-none-installable"}
+      - tree_contains: {path: devtools/client/aboutdebugging/src/modules/debug-target-support.js, text: "runtimeType === RUNTIMES.THIS_FIREFOX && false"}
+      - tree_contains: {path: browser/base/content/nsContextMenu.sys.mjs, text: "dictionaries are not downloaded; the item is never shown"}
 
   - id: D-157-06
     title: "Fingerprinting: the light protection on and locked; the Tor-style mode off and NOT locked; local time kept"
@@ -390,6 +420,10 @@ decisions:
     why: >
       The policy file re-locks Normandy, experiments and other doors at runtime even if a pref were somehow changed.
       It was in the tree but missing from the 155.0.1 and 157 installs. Invisible to users.
+    correction: >
+      2026-10-15, owner: NOT invisible. Settings shows "Your Gorilla browser is being managed by your organization"
+      on every page because of this file. That banner is intentional, part of Gorilla's charm and branding: keep it,
+      never report it as a defect, never hide it.
     verify:
       - installed_present: [distribution/policies.json]
 
@@ -700,8 +734,14 @@ decisions:
       the harness reports. The build number is the branding pref gorilla.build.number, raised once per release
       candidate. The owner's build pins the BuildID when the compile starts, no longer when an attempt starts (an
       attempt halted before compiling had left "built 10:34" on a 12:51 compile).
+    correction: >
+      2026-10-15, owner, looking at "158.0 (64-bit) build 1, built 26:10:15:17:30:14": "what kind of freking date is
+      that? it was supposed to be something simple like ... 2026-10-15-2050hrs (seconds being optional) ... hard to
+      tell". The stamp now reads "built YYYY-MM-DD-HHMMhrs" (e.g. "built 2026-10-15-2050hrs"), no seconds. The colon
+      form above was accepted on 2026-10-09 and is kept here as history.
     verify:
       - tree_contains: {path: browser/base/content/aboutDialog.js, text: "GORILLA D-157-38 (2026-10-08): every version line also says when this build was made"}
+      - tree_contains: {path: browser/base/content/aboutDialog.js, text: '${buildStamp.slice(8, 10)}${buildStamp.slice(10, 12)}hrs'}
       - tree_contains: {path: browser/locales/en-US/browser/aboutDialog.ftl, text: "aboutDialog-version-gorilla = { $version } ({ $bits }-bit) build { $build }, built { $built }"}
       - tree_contains: {path: browser/locales/en-US/browser/aboutDialog.ftl, text: "aboutDialog-buildid-gorilla = Build ID { $buildid }"}
       - tree_contains: {path: browser/base/content/aboutDialog.xhtml, text: '<label id="gorilla-buildid" class="text-blurb" hidden="true"/>'}
@@ -960,3 +1000,313 @@ decisions:
       - mozconfig_has: {file: gorilla-patchset/mozconfig, text: "ac_add_options --enable-lto=thin"}
       - mozconfig_has: {file: gorilla-patchset/mozconfig, text: "ac_add_options --with-branding=browser/branding/gorilla"}
       - fieldkit_test: tests/test_firefox_preflight.py
+
+  - id: D-158-05
+    title: "The browser is named \"Gorilla Unleashed\" followed by its version (Gorilla Unleashed 158) wherever a person sees or searches for it"
+    decided: 2026-10-15
+    by: maintainer
+    provenance: 'chat 2026-10-15 (owner): "Gorilla Unleashed followed by the version name. the name should appear when you hover your mouse over the icon, should appear in task manager and in all the places where the browser will appear in a search"'
+    status: enforced
+    platforms: [linux]
+    why: >
+      One name, with the version, so a person always knows which browser and which release they are opening. The name
+      is formed, never typed: the branding's MOZ_APP_DISPLAYNAME ("Gorilla Unleashed") plus the major version of the
+      build (application.ini Version, 158). scripts/build_deb.sh stamps it into the desktop entry: Name= and
+      X-GNOME-FullName= (menus, the app grid, the dock), Comment= (the hover tooltip on docks that show it) and
+      Keywords= (desktop search). The template's hand-typed "Gorilla Unleashed 154" survived 155 and the first 158
+      package for exactly this reason. The Fieldkit pipeline refuses a package (verify_deb) and an install
+      (verify_install) whose names differ. The task manager shows the process name, which is the executable's file
+      name ("firefox", at most 15 characters in Linux process names): that part is NOT done yet and waits for the
+      owner's choice (see the chat of 2026-10-15).
+    verify:
+      - fieldkit_test: tests/test_build_deb_check.py
+
+  - id: D-158-06
+    title: "Old GPUs are never blocklisted, on every platform: the GPU blocklist is short-circuited IN CODE for Intel, AMD and NVIDIA, so 15-year-old laptops (Linux and Windows) keep hardware video decoding and WebRender"
+    decided: 2026-10-15
+    by: maintainer
+    provenance: 'chat 2026-10-15 (owner): "That file matters most not only for my vaio or for me, BUT FOR MILLIONS OF KIDS in Africa, South America, South East asia where people are living on $20 per month at best and the only laptops around are 15 years old laptops which Mozilla ... has put them on the banned list even though the cards are working perfectly still." Earlier rulings: GORILLA comments in widget/GfxDriverInfo.cpp (2026-08-02 "owner ruling, fleet unlock is TOTAL"), 02.GPU since Firefox 153.'
+    status: enforced
+    covers: ["widget/gtk/GfxInfo.cpp", "widget/GfxInfoBase.cpp", "widget/GfxDriverInfo.cpp"]
+    why: >
+      NON-NEGOTIABLE, the point of the project (owner 2026-10-15): "unlock the ASIC and the graphic cards for everyone,
+      for all the kids and make sure they hardware decode not via .prefs but via actual code changes ... keep an old
+      laptop cool so it does not fry up software decoding overloading the processors so a poor kid can still access
+      internet". A pref can be reset, overridden by policy or lost in a profile; the code path cannot. Prefs may help,
+      never carry it.
+      Who this is for: people on old, cheap laptops (Sandy Bridge, Ivy Bridge and their AMD and NVIDIA peers) who
+      cannot buy new ones. Upstream Firefox blocklists these GPUs, which turns off WebRender and hardware video decode
+      and pushes all video onto a 2012 CPU, so working silicon becomes unusable for video. Gorilla removes that
+      refusal at all three layers: the GTK platform test (widget/gtk/GfxInfo.cpp), the static blocklist engine
+      (widget/GfxInfoBase.cpp) and the device-family lists (widget/GfxDriverInfo.cpp).
+      Evidence (stated in input, measured on the Sony VAIO, Intel HD 4000 0x0166): Gorilla 153 audit
+      (SECOND.BRAIN RECOVERED_HISTORY.xml, "Cross-layer architectural audit report"): YouTube 1080p25 avc1, top about
+      0% CPU, intel_gpu_top Render 0% and Video about 8%, 0 of 1422 frames dropped. 154 media log
+      (patches/01.MEDIA/MASTER_PROJECT_LOG_FIREFOX_154_MEDIA_PATCHES.md): 1080p60 H.264 keeps the video engine about
+      1.5% busy (a frame in about 200 microseconds); its saturation table is estimates (16 simultaneous 1080p60 streams
+      about 24%, memory bandwidth the limit). Owner, 2026-10-15: saturating the ASIC would take about 200 simultaneous
+      1080p YouTube videos (owner's statement; the table above is the recorded estimate).
+      Windows (read from the 158 code, not yet proven by a Windows 158 build): widget/windows/GfxInfo.cpp
+      GetFeatureStatusImpl refuses before the shared code only an unknown, VM or Microsoft Basic adapter and a missing
+      or unparseable driver version; a real Intel/AMD/NVIDIA adapter reaches GfxInfoBase, where the short-circuit
+      returns FEATURE_STATUS_OK. Owner: the last GitHub build hardware-decodes on a ThinkPad L15 (owner's statement,
+      tested on that machine only). The Windows harness proves it on its own build before a release.
+      Lesson of 2026-10-15: the 157 patch set (exported from Windows) lacked the GTK layer; the first Linux 158 build
+      shipped without it until fieldkit build-harness archive-gap listed it. This entry's checks now refuse that.
+    verify:
+      - tree_contains: {path: widget/gtk/GfxInfo.cpp, text: "GORILLA OVERRIDE: Short-circuit blocklist and platform tests for", platform: linux}
+      - tree_contains: {path: widget/GfxInfoBase.cpp, text: "GORILLA OVERRIDE: Short-circuit blocklist for Intel/AMD/NVIDIA"}
+      - tree_contains: {path: widget/GfxDriverInfo.cpp, text: "GORILLA: Ivy Bridge un-blocklisted"}
+      - tree_contains: {path: widget/GfxDriverInfo.cpp, text: "GORILLA: Sandy Bridge un-blocklisted"}
+
+  - id: D-158-07
+    title: "Hardware-decoded video stays zero-copy on old chips: cool CPU first, at the price of about one dropped frame in five at 60 fps on Ivy Bridge"
+    decided: 2026-10-15
+    by: maintainer
+    provenance: 'chat 2026-10-15 (owner, translated from Romanian): "on old chips like this I would keep it ... one frame in five is almost invisible to the human eye". Earlier design: the 2026-07-05 hardware-only policy and the RemoteVideoDecoder zero-copy enforcement (01.MEDIA log): all video work on the ASIC, no double decoding, no CPU read-back.'
+    status: enforced
+    platforms: [linux]
+    covers: ["gfx/thebes/gfxPlatformGtk.cpp", "dom/media/ipc/RemoteVideoDecoder.cpp"]
+    why: >
+      Measured on the Sony VAIO (Intel HD 4000, i965, GNOME Wayland, 59.95 Hz panel), local 1080p H.264 clip, machine
+      isolated (fieldkit decode-test). Gorilla 158 forces hardware-decoded video zero-copy (gfxPlatformGtk
+      UserForceEnable under media.gorilla.hardware_only_mode): the frame goes from the video engine to the compositor
+      with no CPU copy. Cost and benefit, stated in input from the 2026-10-15 runs:
+      at 30 fps Gorilla drops under 1% (stock Firefox 158 about 2-3%); at 60 fps Gorilla drops 20-23% where stock
+      158 drops 8-14%; stock 158 with zero-copy forced drops 18.5%, so most of the gap is zero-copy itself on this
+      driver (the renderer waits on the video engine per frame). Gorilla uses about 43% of one core for 60 fps video,
+      stock about 72%: the CPU stays cool, which is the project's point (D-158-06). Network was not the cause: the
+      owner's YouTube 1080p60 run kept about 30 s of buffer at 46-50 Mb/s. Decoding is never doubled: 2392 frames
+      decoded once in RDD, all on VA-API. A remaining gap of about 4 points against stock-with-zero-copy is inside the
+      run-to-run wobble until confirmed by repeated runs (fieldkit pref-bisect confirm rule).
+      Revisit only with new measurements, never by argument: a change here must show the cooler CPU is kept.
+    verify:
+      - tree_contains: {path: gfx/thebes/gfxPlatformGtk.cpp, text: 'featureZeroCopy.UserForceEnable("Forced by Gorilla hardware-only policy");'}
+      - tree_contains: {path: dom/media/ipc/RemoteVideoDecoder.cpp, text: "GORILLA PATCH: Zero-copy IPC enforcement"}
+
+  - id: D-158-08
+    title: "No AI in the browser, on every platform: the AI window, AI tab groups, the AI sidebar and the Smartbar are removed from the code; the classic address bar only"
+    decided: 2026-10-15
+    by: maintainer
+    provenance: 'chat 2026-10-15 (owner, translated from Romanian): "I do not want anything related to AI in the code. I do not even know what the smartbar does, I do not want it; no AI-suggested groups; I want a classic bar ... All of these eat processor cycles and offer nothing constructive, they overload the processor and keep it in a loop even when the features are not used. I do not want the sidebar." Extends D-158-03.'
+    status: enforced
+    covers: ["browser/components/aiwindow/**", "browser/components/urlbar/**", "browser/modules/AIWindowStub.sys.mjs", "browser/locales/en-US/browser/aiWindow*.ftl", "browser/locales-preview/*.ftl", "browser/themes/shared/aiWindowSidebar.css"]
+    why: >
+      Code that is loaded costs CPU even when its feature is never used: parsing, observers, timers, network
+      checks. The rule: removed from the build, not hidden behind a pref. How it is done (stable across Firefox
+      versions, shared by Linux and Windows): the aiwindow component is taken out of browser/components/moz.build;
+      browser/modules/AIWindowStub.sys.mjs answers every leftover caller with "no" so upstream code cannot throw;
+      the Smartbar's SmartbarInput.mjs is deleted, so the classic bar is the only bar; the AI texts and the AI sidebar
+      stylesheet are neither shipped nor loaded by any window; the ML engine, smart tab groups and semantic history
+      are switched off and locked. Each Firefox version: re-check these with the register, adapt, never re-argue.
+    verify:
+      - tree_absent: [browser/components/urlbar/content/SmartbarInput.mjs]
+      - tree_present: [browser/modules/AIWindowStub.sys.mjs]
+      - tree_lacks: {path: browser/themes/shared/browser-shared.css, text: 'aiWindowSidebar.css'}
+      - tree_lacks: {path: browser/base/content/browser.xhtml, text: 'href="browser/aiWindow.ftl"'}
+      - tree_lacks: {path: browser/base/content/browser.xhtml, text: 'href="preview/smartTabGroups.ftl"'}
+      - pref: {name: browser.tabs.groups.smart.enabled, value: false, locked: true}
+      - pref: {name: browser.ml.enable, value: false, locked: true}
+      - pref: {name: browser.ml.chat.enabled, value: false, locked: true}
+      - pref: {name: places.semanticHistory.featureGate, value: false, locked: true}
+
+  - id: D-158-09
+    title: "The new-tab page is the Gorilla logo and a search box, permanently: no Top Sites, no sponsored shortcuts, no promotional tiles, no recommended-stories feed"
+    decided: 2026-10-15
+    by: maintainer
+    provenance: 'chat 2026-10-15 (owner, translated from Romanian): "the decision is and will remain permanent ... nothing from top sites, sponsored shortcuts and promotional tiles"; the recommended-stories feed "must be adapted on 158 and on any future version ... an open door that eats processor cycles and bandwidth and does not fit our philosophy of minimalism, efficiency and pragmatism. We do not need the extra bandwidth drain, processor use and open doors, and the telemetry that comes with them." Extends D-157-31.'
+    status: enforced
+    covers: ["browser/extensions/newtab/**", "browser/components/newtab/**"]
+    why: >
+      Every feed on the new-tab page fetches, renders and reports. Off is not enough: an enterprise policy, an
+      experiment or a stray pref change could turn a feed back on, so each is off AND locked, on both platforms. The
+      code that draws them is cut where it can be adapted per version (TopSites, Base, DiscoveryStreamBase); the
+      locks are the guarantee that holds even before that adaptation lands.
+    verify:
+      - pref: {name: browser.newtabpage.activity-stream.feeds.topsites, value: false, locked: true}
+      - pref: {name: browser.newtabpage.activity-stream.showSponsoredTopSites, value: false, locked: true}
+      - pref: {name: browser.newtabpage.activity-stream.showSponsored, value: false, locked: true}
+      - pref: {name: browser.newtabpage.activity-stream.feeds.section.topstories, value: false, locked: true}
+      - pref: {name: browser.newtabpage.activity-stream.feeds.system.topstories, value: false, locked: true}
+      - pref: {name: browser.newtabpage.activity-stream.discoverystream.enabled, value: false, locked: true}
+
+  - id: D-158-10
+    title: "The look is static: the Gorilla dark theme as it is, with no transitions, animations or effects that make the CPU or the GPU redraw"
+    decided: 2026-10-15
+    by: maintainer
+    provenance: 'chat 2026-10-15 (owner, translated from Romanian): "the colours and borders for tabs you see are the intended ones. We do not want transitions, changing colours, graphics-intensive things. The rule of thumb: everything that makes the processor kick in and the GPU ASIC redraw is a big no-no. We want the classic boring one look we have now; it is designed to keep Gorilla Firefox running on super old processors and laptops ... whatever Fable did from the Windows laptop seems to be working, so leave it if it is not broken." Extends D-157-04.'
+    status: enforced
+    covers: ["browser/themes/**", "toolkit/themes/**"]
+    why: >
+      An animation or a transition repaints the window many times a second; on a 2012 laptop that is CPU and GPU
+      time taken from the page. The current look (pink tabs, cyan borders, black; the Windows-built theme of 157,
+      ported to 158) is the reference and is not reworked. The design-system token files
+      (toolkit/themes/shared/design-system/dist/tokens-*.css) are generated upstream and are not patched: the Gorilla
+      colours come from the theme, which is how 157 and 158 already look right. A visual change must show it adds no
+      repaint.
+    verify:
+      - pref: {name: ui.prefersReducedMotion, value: 1}
+
+  - id: D-158-11
+    title: "The working build is unpacked (no omni.ja) so styles, scripts and texts can be changed without recompiling; only the release uploaded to GitHub is packed"
+    decided: 2026-08-02
+    by: maintainer
+    provenance: 'Brain lesson Unpackaged_Dev_Build_Inject_Dont_Full_Compile (2026-08-02, verified then: no omni.ja in obj*/dist/bin); recorded in the register 2026-10-15 at the owner''s request (translated from Romanian): "on Linux we had a convention that when we compile, omni.ja and the rest are not compressed and archived, especially because we need to modify CSS styles and everything ... this saves us from recompiling during fine tweaking and troubleshooting. Only the binary uploaded to GitHub comes with a zipped omni.ja and the rest. Is the decision still enforced or noted somewhere? If not, this needs to be part of the harness."'
+    status: enforced
+    platforms: [linux]
+    why: >
+      A full build of Firefox on the VAIO takes about 90 minutes (C++ compile and libxul link); a change to a .css,
+      .mjs, .ftl or a pref needs none of that. The dev build keeps those as loose files in dist/bin and the local .deb
+      copies them as they are, so a style tweak is `./mach build faster` (minutes) or a direct edit in dist/bin
+      (seconds). The Fieldkit build stage decides by itself (firefox_linux.build_mode): it compares the tree with the
+      commit of the last successful build (obj-*/.gorilla-built-commit) and runs the full build only when a compiled
+      source changed (C/C++, Rust, WebIDL, IPDL, moz.build, jar.mn, StaticPrefList.yaml, mozconfig). The release for
+      GitHub is the one packed build (omni.ja); that packing step belongs to the release stage (S9), never to the
+      working build.
+    verify:
+      - installed_absent: [omni.ja, browser/omni.ja]
+      - fieldkit_test: tests/test_build_mode.py
+
+  - id: D-158-12
+    title: "Segoe UI is the default text font on every machine (the clearest on small screens); not locked"
+    decided: 2026-10-15
+    by: maintainer
+    provenance: 'chat 2026-10-15, screenshot of Settings > Accessibility > Fonts showing "Inter": "you need to look at the fonts for settings as normally in the previous ones we set the best font for clarity and that was set by default ... the segoe fonts are the clearest one especially for smaller screen"'
+    status: enforced
+    why: >
+      Firefox's default family is serif, and serif is whatever the machine's fontconfig names (Inter on the VAIO, where
+      sans-serif happened to be Segoe UI Variable), so the text font changed from machine to machine. The Segoe fonts
+      ship inside the package (11.FONT.SYSTEM), so the build names them: default family sans-serif, sans-serif = Segoe UI.
+      Not locked, so a person who needs another font for reading can still choose it.
+    verify:
+      - pref: {name: font.default.x-western, value: sans-serif, locked: false}
+      - pref: {name: font.name.sans-serif.x-western, value: Segoe UI, locked: false}
+
+  - id: D-158-13
+    title: "Google (google.com) is the only built-in search engine"
+    decided: 2026-10-15
+    by: maintainer
+    provenance: 'chat 2026-10-15, after the screenshot of Settings > Search showing Google, Bing, DuckDuckGo, eBay, Perplexity and Wikipedia all switched on ("it still brings in a lot of other search engines and they are enabled by default"); asked which to keep: "just google. american . dot.com"'
+    status: enforced
+    why: >
+      One engine, the one the owner chose, at its .com address (the google record searches https://www.google.com/search
+      in every region). The other 130 engine records of Mozilla's built-in list are removed from
+      services/settings/dumps/main/search-config-v2.json, so they are neither listed nor switched on. A person can still
+      add an engine by hand ("Add search engine"). No partner code is sent (D-157-23).
+    correction_2026_10_15: >
+      Correction, owner 2026-10-15 (the line above stays as the earlier state): "one search engine remains, Google.
+      We close the manual add as well; we do not trust sites that offer functions like this." No engine can be added
+      at all: not offered by a page (OpenSearch), not from a form field ("Add Search Engine"), not in Settings ("Add",
+      "Find more search engines"), not by a policy, and an engine saved by an earlier profile is not loaded.
+      SearchService.#addEngineToStore keeps only the application's own engines.
+    verify:
+      - tree_contains: {path: services/settings/dumps/main/search-config-v2.json, text: '"identifier": "google"'}
+      - tree_contains: {path: services/settings/dumps/main/search-config-v2.json, text: 'https://www.google.com/search'}
+      - tree_lacks: {path: services/settings/dumps/main/search-config-v2.json, text: '"identifier": "bing"'}
+      - tree_lacks: {path: services/settings/dumps/main/search-config-v2.json, text: '"identifier": "ddg"'}
+      - tree_lacks: {path: services/settings/dumps/main/search-config-v2.json, text: '"identifier": "wikipedia"'}
+      - tree_lacks: {path: services/settings/dumps/main/search-config-v2.json, text: '"identifier": "perplexity"'}
+      - tree_lacks: {path: services/settings/dumps/main/search-config-v2.json, text: '"identifier": "ebay"'}
+      - tree_contains: {path: toolkit/components/search/SearchService.sys.mjs, text: "GORILLA UNLEASHED - PHYSICAL LOCK: one search engine"}
+      - tree_contains: {path: toolkit/components/search/SearchService.sys.mjs, text: "if (!(engine instanceof lazy.AppProvidedConfigEngine)) {"}
+      - tree_contains: {path: browser/components/search/OpenSearchManager.sys.mjs, text: "no page offers a search engine (D-158-13, Google only)"}
+      - tree_contains: {path: browser/base/content/nsContextMenu.sys.mjs, text: 'this.showItem("context-add-engine", false);'}
+      - tree_contains: {path: browser/components/preferences/search.inc.xhtml, text: '<hbox id="addEnginesBox" pack="start" hidden="true">'}
+
+  - id: D-158-14
+    title: "The Windows Fable's appended dark layer in tokens-shared.css (patch 078) stays: an accepted exception to THEME-001"
+    decided: 2026-10-15
+    by: maintainer
+    provenance: 'chat 2026-10-15, asked whether THEME-001 (theme colours only in master-redirect.css, 2026-08-27) or patch 078 (2026-10-07) wins: "the fable work seems to be fine... it was fine work no? everything worked so we keep the fable work"'
+    status: enforced
+    why: >
+      Patch 078 appends one layered block to toolkit/themes/shared/design-system/dist/tokens-shared.css (two grays set to
+      pure black in the last foundation layer) and leaves the rest of the file as upstream's own, so a later Firefox
+      needs no merge. It worked on Windows. The August gate THEME-001 forbade any change to the generated token files;
+      it now accepts this file when the divergence is exactly that appended GORILLA block, and still fails on anything
+      else.
+    verify:
+      - tree_contains: {path: toolkit/themes/shared/design-system/dist/tokens-shared.css, text: 'GORILLA (2026-10-07): the Gorilla dark look on top of upstream'}
+
+  - id: D-158-15
+    title: "WhatsApp Web calls work (voice and video): every fix that made them work is in the build, never only in a profile"
+    decided: 2026-08-27
+    by: maintainer
+    provenance: 'calls solved 2026-08-26/27 (DTLS 1.3 transport, AudioContext 48000 force vs WhatsApp 16000, worker limit, WebCodecs VP8); owner 2026-10-15: "I want the whatsapp webrtc calls ... We worked REALLY HARD to achieve that. that was already settled. IT SHOULD BE DETERMINISTICALLY ENFORCED INTO THE HARNESS"'
+    status: enforced
+    why: >
+      Four fixes, each convicted live in August 2026: DTLS capped at 1.2 (771: WhatsApp's DataChannel never completed a
+      DTLS 1.3 handshake, "connecting forever"); dom.workers.maxPerDomain 512 (the call UI hung on the worker limit);
+      AudioContext honours a page's requested sample rate (forcing 48000 silently broke WhatsApp's 16 kHz WASM call
+      audio; only no-preference contexts are steered to the ALC269's 48000); WebCodecs may decode VP8 in software
+      (HD 4000 has no VP8 hardware; <video>, MSE and WebRTC stay hardware-only). The VP8 switch lived only in the
+      owner's user.js until 2026-10-15, so a fresh profile would have had broken video calls. Not checked here yet:
+      a live call (the publish gate's recorded real call on the same build).
+    platform_2026_10_16: >
+      Linux only (owner 2026-10-16: "on Windows WhatsApp installs as a desktop app; on Linux we were forced to use
+      WebRTC because there is NO desktop app for Linux"). Its patches live in 01.MEDIA, which the policy marks
+      platforms [linux]; the Windows port does not apply them, by design.
+    verify:
+      - pref: {name: media.peerconnection.dtls.version.max, value: 771}
+      - pref: {name: dom.workers.maxPerDomain, value: 512}
+      - pref: {name: media.gorilla.webcodecs_software_vp8, value: true}
+      - tree_contains: {path: dom/media/webaudio/AudioContext.cpp, text: 'RULE: honor-or-throw, NEVER silently'}
+      - tree_contains: {path: dom/media/platforms/PDMFactory.cpp, text: 'StaticPrefs::media_gorilla_webcodecs_software_vp8()'}
+
+  - id: D-158-16
+    title: "Loud laptop speakers: the SC4 loudness compressor ships in the browser (on by default), and the YouTube bypass stays removed"
+    decided: 2026-08-10
+    by: maintainer
+    provenance: 'solved and mic-verified 2026-08-10 (+10.5 dB RMS on the SVE14A3AJ), soft knee 2026-08-11; brain: Loudness_compressor_shipped_in_source..., Whisper_quiet_YouTube_traced_to_DynamicsCompressorNode_bypass...; owner 2026-10-15: "we found a solution that actually work. Shouldnt that one be in the patches, in the brain, in lessons learned and in the harness"'
+    status: enforced
+    why: >
+      Old laptop speakers are too quiet for mastered content; gain alone clips, compression adds loudness. The browser
+      path: an envelope compressor with the SC4 parameters in AudioStream (Stage 5b) and a FastTanh soft limiter, on by
+      default so every machine gets audible speakers. The system path, for a machine that has it: a PipeWire SC4
+      loudness sink (installed on the VAIO as loudness-sink.service); with both, either alone suffices, so a machine
+      running the sink turns the browser one off (media.gorilla.loudness_compressor.enabled false) to avoid two
+      compressors in series. The GORILLA bypass in DynamicsCompressorNode that made YouTube whisper-quiet stays removed.
+    platform_2026_10_16: >
+      Linux only (owner 2026-10-16: "audio works well on Windows as it is"). The "every machine" above means every
+      Linux machine; its patches live in 01.MEDIA, which the policy marks platforms [linux].
+    verify:
+      # its default is compiled in (StaticPrefList.yaml), not in the shipped .js prefs, so it is checked at its source
+      - tree_contains: {path: modules/libpref/init/StaticPrefList.yaml, text: "- name: media.gorilla.loudness_compressor.enabled\n  type: RelaxedAtomicBool\n  value: true"}
+      - tree_contains: {path: dom/media/AudioStream.cpp, text: 'GORILLA PATCH 2026-08-10: envelope loudness compressor'}
+      - tree_contains: {path: dom/media/AudioStream.cpp, text: 'FastTanh'}
+      - tree_contains: {path: dom/media/webaudio/DynamicsCompressorNode.cpp, text: 'GORILLA PATCH removed 2026-08-10: the hardware-only bypass'}
+
+  - id: D-158-17
+    title: "Only Gorilla's own policies: no /etc/firefox/policies, no Windows registry (GPO), no alternate path"
+    decided: 2026-10-15
+    by: maintainer
+    provenance: 'chat 2026-10-15: audit found /etc/firefox/policies/policies.json is read FIRST on Linux (app name firefox, MOZ_SYSTEM_POLICIES) and replaces the Gorilla file, and its Preferences policy can unlock locked prefs; owner: "close this avenue, record the decision, turn it into a patch and make it a deterministic tool"'
+    status: enforced
+    why: >
+      Anything that can write a system policies file (a distro Firefox package, an installer, malware with root or
+      administrator rights) would reconfigure the browser without the person knowing, and could undo Gorilla's locks.
+      The browser reads distribution/policies.json in its own install folder and nothing else. On Windows the same
+      door is the registry (GPO), which Mozilla ranks above the file: closed the same way. Cost: an organisation
+      cannot manage Gorilla with system policies; Gorilla is not built for managed fleets.
+    verify:
+      - tree_contains: {path: toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs, text: "GORILLA UNLEASHED - PHYSICAL LOCK: only Gorilla's own policies (D-158-17"}
+      - tree_contains: {path: toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs, text: "if (AppConstants.MOZ_SYSTEM_POLICIES && provider === null) {"}
+      - tree_contains: {path: toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs, text: "this === null"}
+      - tree_contains: {path: toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs, text: "let perUserPath = false;"}
+      - installed_present: [distribution/policies.json]
+
+  - id: D-158-18
+    title: "No PKCS#11 module is ever loaded (Settings > Security Devices > Load is gone and refused in code)"
+    decided: 2026-10-15
+    by: maintainer
+    provenance: 'chat 2026-10-15, install-surface audit; owner: "if you cut it, create a patch for it, add it to the list of patches, update the source code as well as the harness"'
+    status: enforced
+    why: >
+      A PKCS#11 module is a native library (.so on Linux, .dll on Windows), a smart-card or crypto-token driver, that
+      runs inside the browser process with all of its rights. The Load button, an add-on's pkcs11 API or a policy
+      could load one, and a person can be talked into it. PKCS11ModuleDB::DoAddModule refuses every load, whichever
+      route. Mozilla's own built-in modules (the root certificates, the OS client-certificate module) are part of the
+      browser and unaffected. Cost: no smart cards or hardware tokens for client certificates.
+    verify:
+      - tree_contains: {path: security/manager/ssl/PKCS11ModuleDB.cpp, text: "GORILLA UNLEASHED - PHYSICAL LOCK: no PKCS#11 module is loaded (D-158-18"}
+      - tree_contains: {path: security/manager/pki/resources/content/device_manager.xhtml, text: 'data-l10n-id="devmgr-button-load" hidden="true"'}

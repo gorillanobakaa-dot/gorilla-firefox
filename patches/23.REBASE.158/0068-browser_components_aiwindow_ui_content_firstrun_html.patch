@@ -1,0 +1,20 @@
+# Gorilla 158 rebase: browser/components/aiwindow/ui/content/firstrun.html as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/aiwindow/ui/content/firstrun.html b/browser/components/aiwindow/ui/content/firstrun.html
+index 071fe5c7f96b5122856b50e0fbc1edb9c9b8cc06..b2ca2fb100b2429e524ee61eb76a750ed9f4067c 100644
+--- a/browser/components/aiwindow/ui/content/firstrun.html
++++ b/browser/components/aiwindow/ui/content/firstrun.html
+@@ -12,11 +12,6 @@
+       content="default-src 'none'; object-src 'none'; script-src resource: chrome:; img-src chrome:; style-src resource: chrome:;"
+     />
+     <title data-l10n-id="aiwindow-firstrun-title"></title>
+-    <link
+-      rel="icon"
+-      type="image/png"
+-      href="chrome://branding/content/icon32.png"
+-    />
+     <link rel="stylesheet" href="chrome://global/skin/in-content/common.css" />
+     <link
+       rel="stylesheet"

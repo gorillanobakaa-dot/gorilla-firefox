@@ -1,0 +1,19 @@
+# Gorilla 158 rebase: toolkit/components/resistfingerprinting/jar.mn as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/components/resistfingerprinting/jar.mn b/toolkit/components/resistfingerprinting/jar.mn
+index 3d71f08c19a4b2a491341983100283605571bf23..9467c6dc3d48bd3efb0a9357bd4f4f294657adb7 100644
+--- a/toolkit/components/resistfingerprinting/jar.mn
++++ b/toolkit/components/resistfingerprinting/jar.mn
+@@ -4,9 +4,4 @@
+ 
+ toolkit.jar:
+   content/global/resistfingerprinting/letterboxing.css (content/letterboxing.css)
+-  content/global/usercharacteristics/gl-matrix.js (content/gl-matrix.js)
+-  content/global/usercharacteristics/ssdeep.js (content/ssdeep.js)
+-  content/global/usercharacteristics/usercharacteristics.css (content/usercharacteristics.css)
+-  content/global/usercharacteristics/usercharacteristics.html (content/usercharacteristics.html)
+-  content/global/usercharacteristics/usercharacteristics.js (content/usercharacteristics.js)
+-  content/global/usercharacteristics/usercharacteristics.woff (content/usercharacteristics.woff)
++# GORILLA D-157-40: the user-characteristics measuring page (about:fingerprintingprotection) is not packaged

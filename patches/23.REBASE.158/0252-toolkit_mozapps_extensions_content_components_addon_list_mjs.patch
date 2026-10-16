@@ -1,0 +1,25 @@
+# Gorilla 158 rebase: toolkit/mozapps/extensions/content/components/addon-list.mjs as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/mozapps/extensions/content/components/addon-list.mjs b/toolkit/mozapps/extensions/content/components/addon-list.mjs
+index d598aec8376344e24f21df2cf39af8e6f098dcc8..45f018da92688147b1cea2e3c242752aaa764784 100644
+--- a/toolkit/mozapps/extensions/content/components/addon-list.mjs
++++ b/toolkit/mozapps/extensions/content/components/addon-list.mjs
+@@ -218,6 +218,16 @@ export class AddonList extends HTMLElement {
+   }
+ 
+   createEmptyListMessage() {
++    // GORILLA UNLEASHED - NO ADD-ON OFFERS (D-157-05): the empty list says why nothing can be added, instead of
++    // linking to addons.mozilla.org and showing the "Find your first extension" promo.
++    let gorillaMessage = document.createElement("p");
++    gorillaMessage.id = "empty-addons-message";
++    document.l10n.setAttributes(gorillaMessage, "gorilla-addons-none-installable");
++    const gorillaFragment = document.createDocumentFragment();
++    gorillaFragment.appendChild(gorillaMessage);
++    if (Services.prefs.getBoolPref("extensions.webapi.enabled", false) === false) {
++      return gorillaFragment;
++    }
+     let emptyMessage = "list-empty-get-extensions-message";
+     let linkPref = "extensions.getAddons.link.url";
+ 
