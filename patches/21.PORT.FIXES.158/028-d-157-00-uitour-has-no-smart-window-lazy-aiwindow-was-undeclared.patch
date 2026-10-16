@@ -1,0 +1,35 @@
+# Gorilla 158 port fix
+# D-157-00: UITour's showFirefoxAccountsForAIWindow is inert. The 158 rebase removed the Smart Window and its lazy getter but kept two lazy.AIWindow uses (undefined when the line runs), and the case let a web page switch browser.ai.control.smartWindow back to 'available'. Found by the owner's preflight (lazy-getters) at build-run on Windows 2026-10-16; the gate's symbols check now catches it (undeclared lazy names the port introduced). lesson: an excision must remove every use of what it removes, and the gate must look for undeclared lazy names
+# Files: browser/components/uitour/UITour.sys.mjs
+
+diff --git a/browser/components/uitour/UITour.sys.mjs b/browser/components/uitour/UITour.sys.mjs
+index cb1a551963..55f1d9deb3 100644
+--- a/browser/components/uitour/UITour.sys.mjs
++++ b/browser/components/uitour/UITour.sys.mjs
+@@ -510,22 +510,10 @@ export var UITour = {
+           break;
+         }
+ 
+-        // if user "Blocked" Smart Window feature from AI Control or global AI Control default
+-        // override Smart Window feature to "available"
+-        if (lazy.AIWindow.isBlocked) {
+-          Services.prefs.setStringPref(
+-            "browser.ai.control.smartWindow",
+-            "available"
+-          );
+-        }
+-
+-        lazy.AIWindow.launchWindow(browser, false, "bedrock").then(success => {
+-          if (!success) {
+-            lazy.log.warn(
+-              "showFirefoxAccountsForAIWindow: Failed to launch Smart Window"
+-            );
+-          }
+-        });
++        // GORILLA D-157-00 (2026-10-16): the Smart Window is excised and its getter with it; these upstream lines
++        // threw on lazy.AIWindow and let a web page switch browser.ai.control.smartWindow back to "available".
++        // A page asking for it gets nothing.
++        lazy.log.warn("showFirefoxAccountsForAIWindow: there is no Smart Window in this build");
+         break;
+       }
+ 

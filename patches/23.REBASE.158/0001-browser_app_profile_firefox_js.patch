@@ -1056,7 +1056,7 @@ index e3e12782d0e5dba405198447400a47833787395b..0e224c736baa4117cd1e1619989f0360
  
  // Forward Rust component logs to the JS console (comma separate list of crate names)
  // The empty string defaults to forwarding error-level messages.
-@@ -3813,17 +3870,416 @@ pref("widget.support-xdg-config", true, locked);
+@@ -3813,17 +3870,414 @@ pref("widget.support-xdg-config", true, locked);
  pref("browser.contentsharing.enabled", false);
  
  // Preferences for the Firefox Referral program #2051647).
@@ -1142,8 +1142,6 @@ index e3e12782d0e5dba405198447400a47833787395b..0e224c736baa4117cd1e1619989f0360
 +pref("browser.ml.modelHubRootUrl", "", locked);
 +pref("browser.newtabpage.activity-stream.telemetry", false, locked);
 +pref("browser.safebrowsing.downloads.remote.enabled", false, locked);
-+pref("browser.safebrowsing.malware.enabled",        true);
-+pref("browser.safebrowsing.phishing.enabled",       true);
 +pref("browser.safebrowsing.provider.google4.gethashURL", "");
 +pref("browser.sessionhistory.max_total_viewers",    1);
 +pref("browser.sessionstore.interval",               120000);

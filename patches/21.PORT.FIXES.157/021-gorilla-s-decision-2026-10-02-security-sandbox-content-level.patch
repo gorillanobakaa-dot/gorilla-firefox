@@ -6,7 +6,7 @@ diff --git a/modules/libpref/init/all.js b/modules/libpref/init/all.js
 index 845a0c8c4e..604409922b 100644
 --- a/modules/libpref/init/all.js
 +++ b/modules/libpref/init/all.js
-@@ -4296,7 +4296,11 @@ pref("gfx.blacklist.all", 0);
+@@ -4296,8 +4296,11 @@ pref("gfx.blacklist.all", 0);
  pref("gfx.blacklist.suggested-driver-version", "0.0.0.0");
  
  // --- Sandbox & Performance Overrides ---
@@ -15,6 +15,7 @@ index 845a0c8c4e..604409922b 100644
 +#ifdef XP_LINUX
  pref("security.sandbox.content.level", 4);
 +#endif
- pref("javascript.options.mem.max", 1024);
+-pref("javascript.options.mem.max", 1024);
  
  // --- Bundled Font Preferences ---
+ // GORILLA/WIN: fontconfig is the Linux font backend; Windows uses DWrite

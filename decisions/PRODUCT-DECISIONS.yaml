@@ -1201,6 +1201,14 @@ decisions:
     verify:
       - pref: {name: font.default.x-western, value: sans-serif, locked: false}
       - pref: {name: font.name.sans-serif.x-western, value: Segoe UI, locked: false}
+      - tree_pref_all: {name: font.name.sans-serif.x-western, value: Segoe UI}
+      - tree_pref_all: {name: font.default.x-western, value: sans-serif}
+    audit: >
+      2026-10-16 (owner, after the same question was raised again on Windows: "is always SEGOE... ALWAYS. Firefox fonts
+      are shit and not very readable. it was supposed to have been recorded and made a deterministic check"): the
+      shipped value held (firefox.js), but 05.PREFS still wrote the 157 "Inter" into all.js, so the Windows preflight
+      saw two values and the question came back. 05.PREFS now says Segoe UI, and tree_pref_all fails on ANY
+      definition the set adds that is not Segoe UI, in any pref file, on every system, before a build.
 
   - id: D-158-13
     title: "Google (google.com) is the only built-in search engine"

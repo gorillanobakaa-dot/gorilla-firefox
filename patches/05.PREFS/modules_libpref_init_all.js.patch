@@ -97,17 +97,10 @@ index d740a8988b..845a0c8c4e 100644
  
    pref("font.name-list.serif.ar", "Noto Naskh Arabic, Noto Serif, Droid Serif");
    pref("font.name-list.sans-serif.ar", "Noto Naskh Arabic, Roboto, Google Sans, Droid Sans");
-@@ -3025,6 +3051,20 @@ pref("signon.storage.rust.restoreAttemptsVersion", 0);
+@@ -3025,6 +3051,13 @@ pref("signon.storage.rust.restoreAttemptsVersion", 0);
  pref("signon.storage.rust.restoreVersion", 0);
  pref("signon.storage.rust.restoreTargetVersion", 1);
  
-+#ifdef NIGHTLY_BUILD
-+  pref("signon.rustMirror.enabled", true);
-+  pref("signon.rustMirror.collectFailedOrigins", true);
-+#else
-+  pref("signon.rustMirror.enabled", false);
-+  pref("signon.rustMirror.collectFailedOrigins", false);
-+#endif
 +// GORILLA: rustMirror is a login-failure-origin COLLECTION surface. Upstream enables it
 +// on NIGHTLY_BUILD (which this build identifies as). Egress is dead here (telemetry jarred),
 +// but the mission kills collection surfaces no matter the name — and this stops the login-store
@@ -118,7 +111,7 @@ index d740a8988b..845a0c8c4e 100644
  // Satchel (Form Manager) prefs
  pref("browser.formfill.debug",            false);
  pref("browser.formfill.enable",           true);
-@@ -4027,13 +4067,6 @@ pref("dom.postMessage.sharedArrayBuffer.bypassCOOP_COEP.insecure.enabled", false
+@@ -4027,13 +4060,6 @@ pref("dom.postMessage.sharedArrayBuffer.bypassCOOP_COEP.insecure.enabled", false
  pref("dom.postMessage.sharedArrayBuffer.bypassCOOP_COEP.insecure.enabled", false, locked);
  #endif
  
@@ -132,7 +125,7 @@ index d740a8988b..845a0c8c4e 100644
  // Preferences for the form autofill toolkit component.
  // The truthy values of "extensions.formautofill.addresses.available"
  // is "on" and "detect",
-@@ -4053,16 +4086,8 @@ pref("extensions.formautofill.available", "detect");
+@@ -4053,16 +4079,8 @@ pref("extensions.formautofill.available", "detect");
  pref("extensions.formautofill.addresses.supported", "detect");
  #endif
  
@@ -150,7 +143,7 @@ index d740a8988b..845a0c8c4e 100644
  
  // Set at runtime once we have asked the inference process whether the native
  // ONNX runtime is available. Until then we stay on the regex heuristics.
-@@ -4221,3 +4246,123 @@ pref("general.smoothScroll", true, sticky);
+@@ -4221,3 +4239,123 @@ pref("general.smoothScroll", true, sticky);
  #ifdef MOZ_ARTIFACT_BUILDS
    pref("telemetry.fog.artifact_build", true);
  #endif
@@ -212,7 +205,7 @@ index d740a8988b..845a0c8c4e 100644
 +#ifndef XP_WIN
 +pref("gfx.font_rendering.fontconfig.max_generic_substitutions", 5);
 +#endif
-+pref("font.name.sans-serif.x-western", "Inter");
++pref("font.name.sans-serif.x-western", "Segoe UI");
 +pref("font.name.monospace.x-western", "JetBrains Mono");
 +pref("font.name.sans-serif.ja", "Meiryo, Yu Gothic, Source Han Sans, Source Han Sans J");
 +pref("font.name.serif.ja", "Yu Mincho, MS Mincho, Source Han Serif");
