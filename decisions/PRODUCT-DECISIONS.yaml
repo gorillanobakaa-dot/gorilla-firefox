@@ -440,14 +440,34 @@ decisions:
       - pref: {name: extensions.update.enabled, value: false, locked: true}
 
   - id: D-157-28
-    title: "Cookies, sessions and site storage are kept on shutdown (accepted as is)"
+    title: "Saved passwords, cookies, sessions and site storage are kept on shutdown, and a new build opens the same profile"
     decided: 2026-10-03
     by: maintainer
     provenance: 'chat 2026-10-03, consistency briefs CONS-001..005, owner answer: "1 build, 2 restore, 3 build, 4 as is, 5 make true"'
-    status: trade-off
+    status: enforced
+    audit: >
+      2026-10-16 (owner: "make sure that 158 does not erase our passwords and login details every time when you close
+      the browser"): the entry had no checks, so nothing would have caught a port that switched clearing on. Measured on
+      the Windows laptop the same day, read-only row counts: the 157 profile kept 60 saved logins and 147 cookies across
+      restarts since 2026-10-08; the 155.0.1 profile has 0. The logins that "disappeared" were never erased: 155 was
+      installed in Program Files\Gorilla Unleashed and 157 in %USERPROFILE%\Gorilla Unleashed, and Firefox gives every install folder its own new profile (installs.ini,
+      dedicated profiles). The install-folder half is enforced by `fieldkit build-harness profile-keep`, run before
+      and after every install; the prefs half by the checks below, on the installed build.
     why: >
-      Users stay logged in after a restart. Clearing on shutdown is better for privacy but logs everyone out every time;
-      users can still clear data themselves. Recorded so the shipped value is a decision, not an accident.
+      Users stay logged in after a restart, and saved passwords stay saved. Clearing on shutdown is better for privacy
+      but logs everyone out every time; users can still clear data themselves. Recorded so the shipped value is a
+      decision, not an accident.
+    verify:
+      - pref: {name: privacy.sanitize.sanitizeOnShutdown, value: null}
+      - pref: {name: browser.privatebrowsing.autostart, value: null}
+      - pref: {name: privacy.clearOnShutdown_v2.cookiesAndStorage, value: false}
+      - pref: {name: privacy.clearOnShutdown.cookies, value: false}
+      - pref: {name: privacy.clearOnShutdown.sessions, value: false}
+      - pref: {name: signon.rememberSignons, value: true}
+      - tree_lacks: {path: distribution/policies.json, text: '"SanitizeOnShutdown"'}
+      - tree_lacks: {path: distribution/policies.json, text: '"PasswordManagerEnabled"'}
+      - tree_lacks: {path: distribution/policies.json, text: '"OfferToSaveLogins"'}
+      - fieldkit_test: tests/test_buildh_profilekeep.py
 
   - id: D-157-29
     title: "Glean instrumentation is cut from nsSocketTransport2 at the source, so the public wording (removed) is true"
@@ -1229,6 +1249,8 @@ decisions:
       - tree_contains: {path: toolkit/themes/shared/design-system/dist/tokens-shared.css, text: 'GORILLA (2026-10-07): the Gorilla dark look on top of upstream'}
 
   - id: D-158-15
+
+    platforms: [linux]   # owner, 2026-10-15: on Windows WhatsApp has a desktop app, and the audio is fine as it is (01.MEDIA is Linux-only)
     title: "WhatsApp Web calls work (voice and video): every fix that made them work is in the build, never only in a profile"
     decided: 2026-08-27
     by: maintainer
@@ -1254,6 +1276,8 @@ decisions:
       - tree_contains: {path: dom/media/platforms/PDMFactory.cpp, text: 'StaticPrefs::media_gorilla_webcodecs_software_vp8()'}
 
   - id: D-158-16
+
+    platforms: [linux]   # owner, 2026-10-15: on Windows WhatsApp has a desktop app, and the audio is fine as it is (01.MEDIA is Linux-only)
     title: "Loud laptop speakers: the SC4 loudness compressor ships in the browser (on by default), and the YouTube bypass stays removed"
     decided: 2026-08-10
     by: maintainer

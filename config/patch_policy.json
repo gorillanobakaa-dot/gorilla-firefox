@@ -243,6 +243,8 @@
       "status": "enabled",
       "reason": "Every privacy cut made in source for 157 (telemetry, Remote Settings, Normandy, hidden about: pages). Cross-platform; 80 patches, 57 files touched by more than one patch: a stacked series, apply in order only.",
       "exclude": [
+        "096-d-157-38-part-2-help-about-reads-157-0-64-bit-build-29-built.patch",
+        "098-d-157-42-built-in-security-lists-refreshed-from-mozilla-s-re.patch",
         "006-the-ported-excision-hunk-left-a-half-removed-aitab-block-syn.patch",
         "009-157-references-to-excised-ai-modules-that-fired-at-startup-w.patch",
         "010-157-keeps-toolkit-components-ml-for-ipc-utilityprocess-hwinf.patch",
@@ -284,6 +286,8 @@
         "094-d-157-40-round-2-the-profile-switcher-is-never-forced-on-sto.patch"
       ],
       "superseded_158": [
+        "096-d-157-38-part-2-help-about-reads-157-0-64-bit-build-29-built.patch",
+        "098-d-157-42-built-in-security-lists-refreshed-from-mozilla-s-re.patch",
         "006-the-ported-excision-hunk-left-a-half-removed-aitab-block-syn.patch",
         "009-157-references-to-excised-ai-modules-that-fired-at-startup-w.patch",
         "010-157-keeps-toolkit-components-ml-for-ipc-utilityprocess-hwinf.patch",
@@ -331,6 +335,7 @@
       "reason": "The 158 port's repairs and Gorilla changes made on the Linux 158 tree (2026-10-14/15), exported by build-harness export-hand: build fixes for 158 API moves, the GPU blocklist unlock carried from 155, About stamp, Settings layout, the single search engine. Cross-platform source unless a patch names its platform.",
       "exclude_on": {
         "windows": [
+          "008-build-fix-findinreadable-pattern-text-comparator-caseinsensi.patch",
           "009-build-fix-browser-fonts-moz-build-wires-the-7-microsoft-font.patch",
           "010-gpu-widget-gtk-gfxinfo-cpp-blocklist-short-circuit-for-intel.patch"
         ]
