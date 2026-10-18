@@ -1,0 +1,103 @@
+# Gorilla 158 change on top of the set
+# D-158-19 on the running browser (probe theme-diag, fast loop on the unpacked build, 2026-10-18): every menu black/cyan with a cyan border (right-click menus were the system's white), Satellite menu hover #65568C (was cyan 25%), every button hover var #65568C (zoom 100%), app menu sized by its real rule #appMenu-popup panelview 27em (--menu-panel-width never sized it; back to 26em)
+# Files: browser/themes/shared/master-redirect.css, browser/themes/shared/toolbarbuttons.css
+# Exported-by: build-harness export-hand firefox-158.0
+
+diff --git a/browser/themes/shared/master-redirect.css b/browser/themes/shared/master-redirect.css
+index bd117c2c4f..a91aeb63da 100644
+--- a/browser/themes/shared/master-redirect.css
++++ b/browser/themes/shared/master-redirect.css
+@@ -47,10 +47,15 @@
+ 
+ /* GORILLA 2026-10-15: the app menu is wide enough for its Gorilla labels. "Gorilla Extensions and Gorilla Themes"
+    with Ctrl+Shift+A did not fit Mozilla's 22.35em and was cut ("...Gorilla Them...", owner's screenshot 18:30).
+-   26em fitted it on Linux; on Windows with Segoe UI (D-158-12) it was still cut (probe ui-contrast, 2026-10-18), so
+-   30em; static, no effect on drawing cost. Proven by the ui clip check (themecheck: no label cut short). */
++   26em fitted it on Linux. On Windows (Segoe UI, D-158-12) it was still cut, and the probe theme-diag showed why
++   (2026-10-18): in 158 the app menu's views are sized by panelUI-shared.css "#appMenu-popup panelview { width: 25em }",
++   not by --menu-panel-width (30em there changed nothing: the view stayed 300 px, the label needed 198 px of 192).
++   27em gives it room; static, no effect on drawing cost. Proven on the unpacked build with probe theme-diag. */
+ :root {
+-  --menu-panel-width: 30em !important;
++  --menu-panel-width: 26em !important;
++}
++#appMenu-popup panelview {
++  width: 27em !important;
+ }
+ 
+ /* Override standard illustration classes and elements. GORILLA D-157-35: not the 16-42 px icon classes
+@@ -529,21 +534,34 @@ panel[type="arrow"] {
+   color-scheme: dark !important;
+ }
+ 
++/* THEME.yaml (D-158-19, 2026-10-18): every menu is the Gorilla constant, as the Satellite menu already was:
++   black, cyan text and a cyan border, so it is not a flat black box (the reason the native restoration above was
++   made). Before, right-click menus were the system's Menu colours: dark text on white on Windows, a hover Windows
++   drew, the one surface the probe found off the palette. */
+ menupopup {
+-  appearance: auto !important;
+-  -moz-default-appearance: auto !important;
+-  background-color: Menu !important;
+-  color: MenuText !important;
++  appearance: none !important;
++  -moz-default-appearance: none !important;
++  --panel-background-color: #000000 !important;
++  --panel-text-color: #00FFFF !important;
++  --panel-border-color: #00FFFF !important;
++  background-color: #000000 !important;
++  color: #00FFFF !important;
+ }
+ 
+ menupopup menuitem,
+ menupopup menu {
+-  appearance: auto !important;
+-  -moz-default-appearance: auto !important;
++  appearance: none !important;
++  -moz-default-appearance: none !important;
+   background-color: transparent !important;
+   color: inherit !important;
+ }
+ 
++menupopup menuseparator {
++  appearance: none !important;
++  -moz-default-appearance: none !important;
++  border-top: 1px solid #1A4D4D !important;
++}
++
+ /* ===========================================================================
+  * GORILLA THEME, ONE CONSTANT (gorilla-patchset/decisions/THEME.yaml; owner 2026-10-18)
+  * Black #000000 surfaces, cyan #00FFFF text, the highlight #65568C behind every hovered or selected row, a cyan
+@@ -561,6 +579,8 @@ panel-list,
+   --panel-list-background-color: #000000 !important;
+   --panel-list-text-color: #00FFFF !important;
+   --panel-list-border-color: #00FFFF !important;
++  --button-background-color-hover: #65568C !important;
++  --button-text-color-hover: #00FFFF !important;
+   --button-background-color-menu-hover: #65568C !important;
+   --button-text-color-menu-hover: #00FFFF !important;
+   --button-background-color-menu-active: #65568C !important;
+@@ -572,7 +592,9 @@ panel-list,
+ menupopup menuitem[_moz-menuactive]:not([disabled]),
+ menupopup menu[_moz-menuactive]:not([disabled]),
+ .subviewbutton:not([disabled]):hover,
+-.subviewbutton:not([disabled]):focus-visible {
++.subviewbutton:not([disabled]):focus-visible,
++#appMenu-popup toolbarbutton:not([disabled]):hover,
++#appMenu-popup toolbarbutton:not([disabled]):focus-visible {
+   background-color: #65568C !important;
+   color: #00FFFF !important;
+ }
+diff --git a/browser/themes/shared/toolbarbuttons.css b/browser/themes/shared/toolbarbuttons.css
+index 455d05bc31..331896b350 100644
+--- a/browser/themes/shared/toolbarbuttons.css
++++ b/browser/themes/shared/toolbarbuttons.css
+@@ -872,7 +872,8 @@ toolbar[keyNav]:not([collapsed], [customizing]) toolbartabstop,
+       color: inherit !important;
+ 
+       &[_moz-menuactive] {
+-        background-color: color-mix(in srgb, var(--toolbar-text-color, #00ffff) 25%, transparent) !important;
++        /* THEME.yaml (D-158-19): every hovered row is the highlight; was cyan at 25% (probe theme-diag, 2026-10-18) */
++        background-color: #65568C !important;
+       }
+     }
+ 

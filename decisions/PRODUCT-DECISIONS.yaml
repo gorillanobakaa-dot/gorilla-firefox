@@ -1367,5 +1367,11 @@ decisions:
       - tree_contains: {path: browser/themes/shared/master-redirect.css, text: "--panel-list-background-color: #000000 !important;"}
       - tree_contains: {path: browser/themes/shared/master-redirect.css, text: "--button-background-color-menu-hover: #65568C !important;"}
       - tree_contains: {path: browser/themes/shared/master-redirect.css, text: "--focus-outline-color: #00FFFF !important;"}
-      - tree_contains: {path: browser/themes/shared/master-redirect.css, text: "--menu-panel-width: 30em !important;"}
+      - tree_contains: {path: browser/themes/shared/master-redirect.css, text: "--button-background-color-hover: #65568C !important;"}
+      - tree_contains: {path: browser/themes/shared/master-redirect.css, text: "--panel-background-color: #000000 !important;"}
+      - tree_contains: {path: browser/themes/shared/master-redirect.css, text: "#appMenu-popup panelview {"}
+      - tree_contains: {path: browser/themes/shared/master-redirect.css, text: "width: 27em !important;"}
+      - tree_contains: {path: browser/themes/shared/toolbarbuttons.css, text: "background-color: #65568C !important;"}
+      - tree_lacks: {path: browser/themes/shared/master-redirect.css, text: "background-color: Menu !important;"}
       - fieldkit_test: tests/test_buildh_themecheck.py
+      - fieldkit_test: tests/test_buildh_fastloop.py
