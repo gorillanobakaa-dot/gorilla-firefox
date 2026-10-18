@@ -1,0 +1,75 @@
+# Gorilla 158 port fix
+# D-157-38: about dialog build id label and build number
+# Files: browser/base/content/aboutDialog.js, browser/base/content/aboutDialog.xhtml, browser/locales/en-US/browser/aboutDialog.ftl
+
+diff --git a/browser/base/content/aboutDialog.js b/browser/base/content/aboutDialog.js
+index fc48b71e32..2d343a997a 100644
+--- a/browser/base/content/aboutDialog.js
++++ b/browser/base/content/aboutDialog.js
+@@ -92,6 +92,7 @@ function init() {
+       `${buildStamp.slice(0, 4)}-${buildStamp.slice(4, 6)}-${buildStamp.slice(6, 8)}-` +
+       `${buildStamp.slice(8, 10)}${buildStamp.slice(10, 12)}hrs`;
+     versionIdKey += "-gorilla";
++    // GORILLA D-157-38 (2026-10-09): the build number (branding pref, raised per release candidate)
+     versionAttributes.build = Services.prefs.getIntPref("gorilla.build.number", 0);
+   }
+ 
+@@ -104,14 +105,14 @@ function init() {
+     versionAttributes
+   );
+ 
+-  // GORILLA D-157-38 part 2 (2026-10-09): under the version line, the build's own BuildID in full, the string
+-  // the harness reports, so the owner can tell which build is installed.
+-  let gorillaBuildId = document.getElementById("gorilla-buildid");
+-  if (gorillaBuildId && /^\d{14}$/.test(buildStamp)) {
+-    document.l10n.setAttributes(gorillaBuildId, "aboutDialog-buildid-gorilla", {
++  // GORILLA D-157-38 (2026-10-09): under the version line, the build's own BuildID in full - the string the build
++  // harness reports - so anyone can match this browser to a report or a release page.
++  let buildIdField = document.getElementById("gorilla-buildid");
++  if (buildIdField && /^\d{14}$/.test(buildStamp)) {
++    document.l10n.setAttributes(buildIdField, "aboutDialog-buildid-gorilla", {
+       buildid: buildStamp,
+     });
+-    gorillaBuildId.hidden = false;
++    buildIdField.hidden = false;
+   }
+ 
+   // Show a release notes link if we have a URL.
+diff --git a/browser/base/content/aboutDialog.xhtml b/browser/base/content/aboutDialog.xhtml
+index 1bd96dfafc..fcbf0090f9 100644
+--- a/browser/base/content/aboutDialog.xhtml
++++ b/browser/base/content/aboutDialog.xhtml
+@@ -53,6 +53,8 @@
+           <label id="releasenotes" is="text-link" hidden="true" data-l10n-id="releaseNotes-link"/>
+         </hbox>
+ #endif
++        <!-- GORILLA D-157-38 (2026-10-09): the build's own BuildID, under the version line -->
++        <label id="gorilla-buildid" class="text-blurb" hidden="true"/>
+ 
+         <label id="distribution" class="text-blurb"/>
+         <label id="distributionId" class="text-blurb"/>
+diff --git a/browser/locales/en-US/browser/aboutDialog.ftl b/browser/locales/en-US/browser/aboutDialog.ftl
+index c06e7e9254..75d067d180 100644
+--- a/browser/locales/en-US/browser/aboutDialog.ftl
++++ b/browser/locales/en-US/browser/aboutDialog.ftl
+@@ -89,15 +89,18 @@ bottom-links-privacy = Privacy Notice
+ #   $bits (Number): bits of the architecture (32 or 64)
+ aboutDialog-version = { $version } ({ $bits }-bit)
+ 
+-## GORILLA D-157-38 (2026-10-08): the version line with the build stamp, taken from the build's own BuildID.
++## GORILLA D-157-38 (2026-10-08, build number 2026-10-09): the version line with the build number and the build
++## stamp, taken from the build's own BuildID, and the BuildID itself under it.
+ ## Variables:
+-##   $built (String): when this build was made, YY:MM:DD:HH:MM:SS, e.g. 26:10:08:10:37:25
++##   $build (Number): the build number, raised once per release candidate, e.g. 29
++##   $built (String): when this build was made, YY:MM:DD:HH:MM:SS, e.g. 26:10:09:12:51:07
++##   $buildid (String): the build's own BuildID, e.g. 20261009125107
+ 
+ aboutDialog-version-gorilla = { $version } ({ $bits }-bit) build { $build }, built { $built }
+-aboutDialog-buildid-gorilla = Build ID { $buildid }
+ aboutDialog-version-nightly-gorilla = { $version } ({ $isodate }) ({ $bits }-bit) build { $build }, built { $built }
+ aboutdialog-version-arch-gorilla = { $version } ({ $arch }) build { $build }, built { $built }
+ aboutdialog-version-arch-nightly-gorilla = { $version } ({ $isodate }) ({ $arch }) build { $build }, built { $built }
++aboutDialog-buildid-gorilla = Build ID { $buildid }
+ 
+ ##

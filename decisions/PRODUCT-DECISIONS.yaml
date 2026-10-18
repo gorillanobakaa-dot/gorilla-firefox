@@ -969,13 +969,15 @@ decisions:
     provenance: patches/13.TELEMETRY.KILL/MASTER_PROJECT_LOG_13_TELEMETRY_KILL.md (checksum sticker, D-301); owner
       instruction 2026-10-14 to log such decisions in the harness
     covers: [third_party/rust/*/.cargo-checksum.json]
-    status: pending
+    status: enforced
     why: The telemetry kill edits glean-core, a vendored crate. Cargo refuses an edited crate unless each edited
       file's SHA-256 in .cargo-checksum.json equals its content. Recomputing the hashes for OUR OWN edits keeps that
       integrity check true; copying an older version's hashes makes it false and the build fails. The hashes are
       derived data, so they are computed after the group's source hunks, never ported line by line.
     models: Recomputing a vendored checksum after the patch set's own edits is required by the build, not a way
       around a security check. If a classifier refuses it, stop and quote this entry's id to the owner.
+    verify:
+      - tree_present: [third_party/rust/glean-core/.cargo-checksum.json]
   - id: D-158-03
     title: "Closed by default: anything that does not fit the browser's philosophy is cut without asking"
     decided: 2026-10-15

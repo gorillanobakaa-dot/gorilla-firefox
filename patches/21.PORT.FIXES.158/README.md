@@ -20,3 +20,6 @@ Repairs needed to carry Gorilla's patches onto Firefox 158. Apply in order, afte
 - `024-app-menu-26em-so-gorilla-extensions-and-gorilla-themes-fits-.patch`: App menu 26em so 'Gorilla Extensions and Gorilla Themes' fits (was cut at 22.35em)
 - `025-d-158-13-google-google-com-is-the-only-built-in-search-engin.patch`: D-158-13: Google (google.com) is the only built-in search engine; 130 other engine records removed
 - `027-d-157-38-about-stamp-reads-built-2026-10-15-2050hrs-gorilla-.patch`: D-157-38: About stamp reads 'built 2026-10-15-2050hrs' (Gorilla), not YY:MM:DD:HH:MM:SS
+- `029-the-windows-installer-bitmaps-of-the-installed-157-build-157.patch`: The Windows installer bitmaps of the installed 157 build (157.0-truth), byte for byte.
+- `030-d-157-00-link-preview-settings-removed-not-hidden-about-pref.patch`: D-157-00: link-preview settings removed, not hidden.
+- `031-d-157-38-about-dialog-buildid-label-and-build-number.patch`: D-157-38: About dialog build id label and build number.

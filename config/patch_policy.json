@@ -345,6 +345,7 @@
       "exclude": [
         "001-five-plural-messages-in-places-ftl-delete-folder-page-bookma.patch",
         "002-newtab-stocks-menu-learn-more-restored-from-pristine-158-pat.patch",
+        "003-one-pref-one-value-uitour-segoe-ui-only-d-158-12-safe-browsi.patch",
         "003-search-config-v2-json-was-not-valid-json-the-07-toolkit-hunk.patch",
         "011-d-158-09-the-recommended-stories-feed-discoverystream-enable.patch",
         "016-mark-001-about-addons-watermark-back-to-450px-decided-2026-0.patch",
@@ -356,6 +357,7 @@
       "superseded_158": [
         "001-five-plural-messages-in-places-ftl-delete-folder-page-bookma.patch",
         "002-newtab-stocks-menu-learn-more-restored-from-pristine-158-pat.patch",
+        "003-one-pref-one-value-uitour-segoe-ui-only-d-158-12-safe-browsi.patch",
         "003-search-config-v2-json-was-not-valid-json-the-07-toolkit-hunk.patch",
         "011-d-158-09-the-recommended-stories-feed-discoverystream-enable.patch",
         "016-mark-001-about-addons-watermark-back-to-450px-decided-2026-0.patch",

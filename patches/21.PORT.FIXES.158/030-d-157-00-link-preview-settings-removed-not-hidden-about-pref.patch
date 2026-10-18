@@ -1,0 +1,78 @@
+# Gorilla 158 port fix
+# D-157-00: link-preview settings removed, not hidden (about:preferences errors at build-verify 2026-10-17); same change as 21.PORT.FIXES.158/029
+# Files: browser/components/preferences/config/tabs-browsing.mjs
+
+diff --git a/browser/components/preferences/config/tabs-browsing.mjs b/browser/components/preferences/config/tabs-browsing.mjs
+index a5a1fc3e75..b55591ce7d 100644
+--- a/browser/components/preferences/config/tabs-browsing.mjs
++++ b/browser/components/preferences/config/tabs-browsing.mjs
+@@ -424,23 +424,8 @@ Preferences.addSetting({
+   pref: "accessibility.typeaheadfind",
+ });
+ 
+-Preferences.addSetting({
+-  id: "linkPreviewEnabled",
+-  pref: "browser.ml.linkPreview.enabled",
+-  deps: ["aiControlDefault", "aiControlLinkPreviews"],
+-  // GORILLA OVERRIDE: genai excised — link-preview settings never show.
+-  visible: () => false,
+-});
+-Preferences.addSetting({
+-  id: "linkPreviewKeyPoints",
+-  pref: "browser.ml.linkPreview.optin",
+-  // GORILLA OVERRIDE: genai excised — key-points setting never shows.
+-  visible: () => false,
+-});
+-Preferences.addSetting({
+-  id: "linkPreviewLongPress",
+-  pref: "browser.ml.linkPreview.longPress",
+-});
++// GORILLA D-157-00 (2026-10-17): link preview (genai) excised; its settings and rows are gone, not hidden:
++// hidden rows still named AI-control settings that do not exist and Fluent ids this page does not load.
+ 
+ // Keyboard shortcuts settings
+ Preferences.addSetting({
+@@ -675,21 +660,6 @@ SettingGroupManager.registerGroups({
+     items: [
+       { id: "useCursorNavigation", l10nId: "browsing-use-cursor-navigation" },
+       { id: "searchStartTyping", l10nId: "browsing-search-on-start-typing" },
+-      {
+-        id: "linkPreviewEnabled",
+-        l10nId: "link-preview-settings-enable",
+-        subcategory: "link-preview",
+-        items: [
+-          {
+-            id: "linkPreviewKeyPoints",
+-            l10nId: "link-preview-settings-key-points",
+-          },
+-          {
+-            id: "linkPreviewLongPress",
+-            l10nId: "link-preview-settings-long-press",
+-          },
+-        ],
+-      },
+     ],
+   },
+   keyboardShortcuts: {
+@@ -809,21 +779,6 @@ SettingGroupManager.registerGroups({
+         supportPage: "extensionrecommendations",
+         subcategory: "cfrfeatures",
+       },
+-      {
+-        id: "linkPreviewEnabled",
+-        l10nId: "link-preview-settings-enable",
+-        subcategory: "link-preview",
+-        items: [
+-          {
+-            id: "linkPreviewKeyPoints",
+-            l10nId: "link-preview-settings-key-points",
+-          },
+-          {
+-            id: "linkPreviewLongPress",
+-            l10nId: "link-preview-settings-long-press",
+-          },
+-        ],
+-      },
+     ],
+   },
+ });
