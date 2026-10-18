@@ -1,0 +1,214 @@
+# Gorilla 158 change on top of the set
+# THEME.yaml one constant (Gorilla 2026-10-18): popups black/cyan (the search-mode list was white, 1.25:1), every hover #65568C, focus ring cyan, app menu 30em (label was cut), 18 off-theme colors in Gorilla lines set to their roles by fieldkit.buildh.themecheck.apply; and D-158-13: only the Google engine is stored, by identifier (a 157 profile brought back Perplexity, Bing, DuckDuckGo, Wikipedia and eBay)
+# Files: browser/base/content/aboutDialog.css, browser/branding/gorilla/content/aboutDialog.css, browser/themes/shared/addons/unified-extensions.css, browser/themes/shared/master-redirect.css, browser/themes/shared/preferences/preferences.css, browser/themes/shared/privatebrowsing/aboutPrivateBrowsing.css, toolkit/components/normandy/content/about-studies/about-studies.css, toolkit/components/search/SearchService.sys.mjs, toolkit/themes/shared/findbar.css
+# Exported-by: build-harness export-hand firefox-158.0
+
+diff --git a/browser/base/content/aboutDialog.css b/browser/base/content/aboutDialog.css
+index 498da9925f..726c036fe6 100644
+--- a/browser/base/content/aboutDialog.css
++++ b/browser/base/content/aboutDialog.css
+@@ -1,5 +1,5 @@
+ #aboutDialogContainer {
+-  background-color: #20123a !important;
++  background-color: #000000 !important;
+   color: #fff !important;
+   display: flex !important;
+   flex-direction: column !important;
+diff --git a/browser/branding/gorilla/content/aboutDialog.css b/browser/branding/gorilla/content/aboutDialog.css
+index 498da9925f..726c036fe6 100644
+--- a/browser/branding/gorilla/content/aboutDialog.css
++++ b/browser/branding/gorilla/content/aboutDialog.css
+@@ -1,5 +1,5 @@
+ #aboutDialogContainer {
+-  background-color: #20123a !important;
++  background-color: #000000 !important;
+   color: #fff !important;
+   display: flex !important;
+   flex-direction: column !important;
+diff --git a/browser/themes/shared/addons/unified-extensions.css b/browser/themes/shared/addons/unified-extensions.css
+index 1dbfbc8eea..1b298349ed 100644
+--- a/browser/themes/shared/addons/unified-extensions.css
++++ b/browser/themes/shared/addons/unified-extensions.css
+@@ -359,7 +359,7 @@ unified-extensions-item.unified-extensions-item {
+ }
+ 
+ #unified-extensions-empty-state > description {
+-  color: #b0b0b8 !important;
++  color: #00FFFF !important;
+   text-align: center !important;
+ }
+ 
+@@ -367,11 +367,11 @@ unified-extensions-item.unified-extensions-item {
+ #unified-extensions-discover-extensions {
+   background-color: #121214 !important;
+   color: #ffffff !important;
+-  border: 1px solid #2b2b2e !important;
++  border: 1px solid #1A4D4D !important;
+   border-radius: 8px !important;
+   margin: 10px auto !important;
+ }
+ 
+ #unified-extensions-discover-extensions:hover {
+-  background-color: #1c1c1f !important;
++  background-color: #000000 !important;
+ }
+diff --git a/browser/themes/shared/master-redirect.css b/browser/themes/shared/master-redirect.css
+index 9d5b391d98..bd117c2c4f 100644
+--- a/browser/themes/shared/master-redirect.css
++++ b/browser/themes/shared/master-redirect.css
+@@ -47,9 +47,10 @@
+ 
+ /* GORILLA 2026-10-15: the app menu is wide enough for its Gorilla labels. "Gorilla Extensions and Gorilla Themes"
+    with Ctrl+Shift+A did not fit Mozilla's 22.35em and was cut ("...Gorilla Them...", owner's screenshot 18:30).
+-   26em fits it with room for the shortcut; static, no effect on drawing cost. Proven by the ui clip check. */
++   26em fitted it on Linux; on Windows with Segoe UI (D-158-12) it was still cut (probe ui-contrast, 2026-10-18), so
++   30em; static, no effect on drawing cost. Proven by the ui clip check (themecheck: no label cut short). */
+ :root {
+-  --menu-panel-width: 26em !important;
++  --menu-panel-width: 30em !important;
+ }
+ 
+ /* Override standard illustration classes and elements. GORILLA D-157-35: not the 16-42 px icon classes
+@@ -542,3 +543,36 @@ menupopup menu {
+   background-color: transparent !important;
+   color: inherit !important;
+ }
++
++/* ===========================================================================
++ * GORILLA THEME, ONE CONSTANT (gorilla-patchset/decisions/THEME.yaml; owner 2026-10-18)
++ * Black #000000 surfaces, cyan #00FFFF text, the highlight #65568C behind every hovered or selected row, a cyan
++ * focus ring. Flat colours: no transitions. Before this block:
++ *  - the search-mode list beside the address bar (a panel-list) painted Firefox's default box background: white
++ *    under cyan text, about 1.25:1 (user feedback "heavy on the eye", 2026-10-18);
++ *  - the hover and the focus ring came from Windows' accent colour, so they differed from machine to machine;
++ *  - the app menu at 26em still cut "Gorilla Extensions and Gorilla Themes" short with Segoe UI.
++ * Checked before the build (themecheck static) and after it (probe ui-contrast, themecheck judge_popups).
++ * =========================================================================== */
++:root,
++panel-list,
++.searchmode-switcher-panel {
++  --background-color-box: #000000 !important;
++  --panel-list-background-color: #000000 !important;
++  --panel-list-text-color: #00FFFF !important;
++  --panel-list-border-color: #00FFFF !important;
++  --button-background-color-menu-hover: #65568C !important;
++  --button-text-color-menu-hover: #00FFFF !important;
++  --button-background-color-menu-active: #65568C !important;
++  --button-text-color-menu-active: #00FFFF !important;
++  --panel-item-hover-bgcolor: #65568C !important;
++  --panel-item-active-bgcolor: #65568C !important;
++  --focus-outline-color: #00FFFF !important;
++}
++menupopup menuitem[_moz-menuactive]:not([disabled]),
++menupopup menu[_moz-menuactive]:not([disabled]),
++.subviewbutton:not([disabled]):hover,
++.subviewbutton:not([disabled]):focus-visible {
++  background-color: #65568C !important;
++  color: #00FFFF !important;
++}
+diff --git a/browser/themes/shared/preferences/preferences.css b/browser/themes/shared/preferences/preferences.css
+index e02ef0777b..1b6fb4e4f2 100644
+--- a/browser/themes/shared/preferences/preferences.css
++++ b/browser/themes/shared/preferences/preferences.css
+@@ -1669,7 +1669,7 @@ label, description, .text-link, .help-button, h1, h2 {
+ }
+ 
+ .text-link {
+-  color: #35b3ee !important;
++  color: #00FFFF !important;
+ }
+ 
+ /* Global Background Force */
+diff --git a/browser/themes/shared/privatebrowsing/aboutPrivateBrowsing.css b/browser/themes/shared/privatebrowsing/aboutPrivateBrowsing.css
+index e1788c0664..ac0de95937 100644
+--- a/browser/themes/shared/privatebrowsing/aboutPrivateBrowsing.css
++++ b/browser/themes/shared/privatebrowsing/aboutPrivateBrowsing.css
+@@ -10,7 +10,7 @@
+     --link-color: white;
+     --link-color-hover: white;
+     --link-color-active: white;
+-    --in-content-banner-background: #1c1c1f;
++    --in-content-banner-background: #000000;
+     --in-content-banner-text-color: #ffffff;
+     --button-background-color-hover: rgba(255, 255, 255, 0.1);
+     --button-background-color-active: rgba(255, 255, 255, 0.15);
+@@ -166,9 +166,9 @@ content-search-handoff-ui {
+   --content-search-handoff-ui-color: #ffffff;
+   --content-search-handoff-ui-fill: rgba(255, 255, 255, 0.4);
+   --content-search-handoff-ui-caret-color: #ffffff;
+-  --content-search-handoff-ui-fakefocus-border-color: #0080ff;
+-  --content-search-handoff-ui-fakefocus-box-shadow-inner: #0080ff;
+-  --content-search-handoff-ui-fakefocus-box-shadow-outer: rgba(0, 128, 255, 0.3);
++  --content-search-handoff-ui-fakefocus-border-color: #00FFFF;
++  --content-search-handoff-ui-fakefocus-box-shadow-inner: #00FFFF;
++  --content-search-handoff-ui-fakefocus-box-shadow-outer: rgba(0, 255, 255, 0.3);
+ 
+   /* stylelint-disable-next-line media-query-no-invalid */
+   @media -moz-pref("browser.privatebrowsing.felt-privacy-v1") {
+@@ -177,10 +177,10 @@ content-search-handoff-ui {
+     --content-search-handoff-ui-fill: rgb(251, 251, 254);
+     --content-search-handoff-ui-caret-color: #ffffff;
+     --content-search-handoff-ui-border-width: 1px;
+-    --content-search-handoff-ui-unfocused-border-color: #2b2b2e;
+-    --content-search-handoff-ui-fakefocus-border-color: #0080ff;
+-    --content-search-handoff-ui-fakefocus-box-shadow-inner: #0080ff;
+-    --content-search-handoff-ui-fakefocus-box-shadow-outer: rgba(0, 128, 255, 0.3);
++    --content-search-handoff-ui-unfocused-border-color: #00FFFF;
++    --content-search-handoff-ui-fakefocus-border-color: #00FFFF;
++    --content-search-handoff-ui-fakefocus-box-shadow-inner: #00FFFF;
++    --content-search-handoff-ui-fakefocus-box-shadow-outer: rgba(0, 255, 255, 0.3);
+     --content-search-handoff-ui-engine-icon: url(chrome://global/skin/icons/search-glass.svg);
+   }
+ 
+diff --git a/toolkit/components/normandy/content/about-studies/about-studies.css b/toolkit/components/normandy/content/about-studies/about-studies.css
+index f1954614b4..691d36f2a8 100644
+--- a/toolkit/components/normandy/content/about-studies/about-studies.css
++++ b/toolkit/components/normandy/content/about-studies/about-studies.css
+@@ -183,7 +183,7 @@ body, .info-box-content, .study-description, .study-name, .study-status,
+ .study-header, p, h1, h2, span, div {
+   color: #00FFFF !important;
+ }
+-a, .learn-more-link { color: #35b3ee !important; }
++a, .learn-more-link { color: #00FFFF !important; }
+ 
+ /* GORILLA OVERRIDE 2026-07-31 (2nd pass): the crisp gorilla the author specified
+    for this page — same fixed-bottom mechanism as aboutTelemetry.css. */
+diff --git a/toolkit/components/search/SearchService.sys.mjs b/toolkit/components/search/SearchService.sys.mjs
+index 8ddfded38b..bd9ce5a24c 100644
+--- a/toolkit/components/search/SearchService.sys.mjs
++++ b/toolkit/components/search/SearchService.sys.mjs
+@@ -2609,7 +2609,11 @@ export const SearchService = new (class SearchService {
+   #addEngineToStore(engine, skipDuplicateCheck = false) {
+     // GORILLA UNLEASHED - PHYSICAL LOCK: one search engine. Google (the built-in configuration, D-158-13) is the only search engine; no engine is added from a site, a form, a policy or by hand (owner 2026-10-15: "we do not trust sites that offer functions like this"). Every add, and every
+     // engine an earlier profile saved, passes here: only the application's own engines are stored.
+-    if (!(engine instanceof lazy.AppProvidedConfigEngine)) {
++    // 2026-10-18: "app-provided" was not enough. A profile carried over from 157 still listed Perplexity, Bing,
++    // DuckDuckGo, Wikipedia and eBay as configuration engines, and they came back from the profile's own stored
++    // configuration although the built-in one holds Google alone. Only the Google engine itself is stored, by
++    // identifier, whatever configuration source offers the others.
++    if (!(engine instanceof lazy.AppProvidedConfigEngine) || !/^google(-|$)/.test(engine.id || "")) {
+       lazy.logConsole.warn("[GORILLA] search engine refused (Google only):", engine.name);
+       return;
+     }
+diff --git a/toolkit/themes/shared/findbar.css b/toolkit/themes/shared/findbar.css
+index 06da76ddae..bca87aa052 100644
+--- a/toolkit/themes/shared/findbar.css
++++ b/toolkit/themes/shared/findbar.css
+@@ -295,14 +295,14 @@ xul|findbar {
+ 
+ .findbar-textbox {
+   &:focus {
+-    background-color: #006666 !important;
++    background-color: #000000 !important;
+   }
+ }
+ 
+ .findbar-textbox {
+   &:focus {
+-    background-color: #1A0000 !important;
+-    color: #FF6B6B !important;
++    background-color: #000000 !important;
++    color: #00FFFF !important;
+   }
+ }
+ 

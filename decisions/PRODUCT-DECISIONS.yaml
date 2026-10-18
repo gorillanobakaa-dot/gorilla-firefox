@@ -977,7 +977,7 @@ decisions:
     models: Recomputing a vendored checksum after the patch set's own edits is required by the build, not a way
       around a security check. If a classifier refuses it, stop and quote this entry's id to the owner.
     verify:
-      - tree_present: [third_party/rust/glean-core/.cargo-checksum.json]
+      - cargo_checksums: [third_party/rust/glean-core]
   - id: D-158-03
     title: "Closed by default: anything that does not fit the browser's philosophy is cut without asking"
     decided: 2026-10-15
@@ -1230,6 +1230,9 @@ decisions:
       "Find more search engines"), not by a policy, and an engine saved by an earlier profile is not loaded.
       SearchService.#addEngineToStore keeps only the application's own engines.
     verify:
+      - tree_contains: {path: toolkit/components/search/SearchService.sys.mjs, text: "!/^google(-|$)/.test(engine.id || \"\")"}
+      - fieldkit_test: tests/test_buildh_searchstrip.py
+      - tree_absent: [browser/themes/shared/urlbar/engine-wordmarks/Perplexity.svg, browser/themes/shared/urlbar/engine-wordmarks/Bing.svg]
       - tree_contains: {path: services/settings/dumps/main/search-config-v2.json, text: '"identifier": "google"'}
       - tree_contains: {path: services/settings/dumps/main/search-config-v2.json, text: 'https://www.google.com/search'}
       - tree_lacks: {path: services/settings/dumps/main/search-config-v2.json, text: '"identifier": "bing"'}
@@ -1238,7 +1241,6 @@ decisions:
       - tree_lacks: {path: services/settings/dumps/main/search-config-v2.json, text: '"identifier": "perplexity"'}
       - tree_lacks: {path: services/settings/dumps/main/search-config-v2.json, text: '"identifier": "ebay"'}
       - tree_contains: {path: toolkit/components/search/SearchService.sys.mjs, text: "GORILLA UNLEASHED - PHYSICAL LOCK: one search engine"}
-      - tree_contains: {path: toolkit/components/search/SearchService.sys.mjs, text: "if (!(engine instanceof lazy.AppProvidedConfigEngine)) {"}
       - tree_contains: {path: browser/components/search/OpenSearchManager.sys.mjs, text: "no page offers a search engine (D-158-13, Google only)"}
       - tree_contains: {path: browser/base/content/nsContextMenu.sys.mjs, text: 'this.showItem("context-add-engine", false);'}
       - tree_contains: {path: browser/components/preferences/search.inc.xhtml, text: '<hbox id="addEnginesBox" pack="start" hidden="true">'}
@@ -1344,3 +1346,26 @@ decisions:
     verify:
       - tree_contains: {path: security/manager/ssl/PKCS11ModuleDB.cpp, text: "GORILLA UNLEASHED - PHYSICAL LOCK: no PKCS#11 module is loaded (D-158-18"}
       - tree_contains: {path: security/manager/pki/resources/content/device_manager.xhtml, text: 'data-l10n-id="devmgr-button-load" hidden="true"'}
+
+  - id: D-158-19
+    title: "The Gorilla theme is one constant: black surfaces, cyan text, #65568C behind every hover, a cyan focus ring, everywhere"
+    decided: 2026-10-18
+    by: maintainer
+    provenance: 'chat 2026-10-18 after user feedback on the white search-mode list ("heavy on the eye"): "the theme itself will never change and it will always remain the same across all firefox versions"; "maximum brightness, maximum contrast, nice colors, super readable"; hover "the same color everywhere ... so it does not require additional processing power"; focus ring "#00FFFF since we have used it and we know it works with the black themes"; "make sure it becomes deterministic ... a patch as well so it will be enforced and becomes permanent part of the gorilla code"'
+    status: enforced
+    why: >
+      The theme's colours are one spec (decisions/THEME.yaml): black #000000 surfaces, cyan #00FFFF text, the highlight
+      #65568C behind a hovered or selected row, pink #FFC0CB with black text allowed for popups, a cyan focus ring;
+      flat colours, no transitions. Before this the search-mode list painted Firefox's default white box under cyan
+      text (about 1.25:1), the hover and the focus ring came from Windows' accent colour (different on every machine),
+      the app menu cut a label, and 18 colours in Gorilla's own stylesheet lines were outside the theme. The static
+      check (before the build) fails any colour a Gorilla line sets outside the spec; the rendered check (after the
+      build) fails any menu, popup or panel item painted outside the allowed pairs, a hover other than the highlight,
+      text below the palette's weakest pair, or a label cut short.
+    verify:
+      - tree_contains: {path: browser/themes/shared/master-redirect.css, text: "GORILLA THEME, ONE CONSTANT"}
+      - tree_contains: {path: browser/themes/shared/master-redirect.css, text: "--panel-list-background-color: #000000 !important;"}
+      - tree_contains: {path: browser/themes/shared/master-redirect.css, text: "--button-background-color-menu-hover: #65568C !important;"}
+      - tree_contains: {path: browser/themes/shared/master-redirect.css, text: "--focus-outline-color: #00FFFF !important;"}
+      - tree_contains: {path: browser/themes/shared/master-redirect.css, text: "--menu-panel-width: 30em !important;"}
+      - fieldkit_test: tests/test_buildh_themecheck.py

@@ -1,0 +1,15 @@
+# Gorilla 158 port fix
+# D-157-38: 158.0 build 2 (theme one constant D-158-19, Google-only store and dead engine data removed D-158-13); Help > About reads build 2
+# Files: browser/branding/gorilla/pref/firefox-branding.js
+# Exported-by: build-harness export-hand firefox-158.0
+
+diff --git a/browser/branding/gorilla/pref/firefox-branding.js b/browser/branding/gorilla/pref/firefox-branding.js
+index e44577eb6c..95233b260a 100644
+--- a/browser/branding/gorilla/pref/firefox-branding.js
++++ b/browser/branding/gorilla/pref/firefox-branding.js
+@@ -35,4 +35,4 @@ pref("app.update.badgeWaitTime", 0);
+ pref("devtools.selfxss.count", 0);
+ 
+ // GORILLA D-157-38 part 2 (2026-10-09): the build number Help > About shows ("build N"); raised once per release candidate.
+-pref("gorilla.build.number", 1);
++pref("gorilla.build.number", 2);

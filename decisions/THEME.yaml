@@ -1,0 +1,39 @@
+# The Gorilla theme, as one constant (owner, 2026-10-18): "the theme itself will never change and it will always
+# remain the same across all firefox versions"; "maximum brightness, maximum contrast, nice colors, super readable";
+# hover/selected "the same color everywhere ... so it does not require additional processing power and GPU usage";
+# popups may also use "the same pink we used for the active tab, pink and letters black". Flat colours only: no
+# gradients, transitions or animations on these surfaces.
+#
+# Read by Fieldkit's theme checks (fieldkit/buildh/themecheck.py): the static check before the build (every colour
+# the Gorilla CSS sets is one of these) and the rendered check after it (probe ui-contrast: every menu, popup and
+# panel a person opens is painted in an allowed pair, hovers in the highlight, no label clipped).
+# Measured 2026-10-18 from the owner's screenshot of the app menu on build 158.0 20261017095206.
+
+version: 1
+
+colours:
+  black:     "#000000"   # every surface background: toolbars, menus, popups, panels
+  cyan:      "#00FFFF"   # text, icons and borders on black or on the highlight
+  highlight: "#65568C"   # hovered / selected row, everywhere (measured; until now it came from Windows, not the theme)
+  pink:      "#FFC0CB"   # the active tab; allowed as a popup background with black text
+  page:      "#0F0F0F"   # behind content (measured around the app menu)
+  teal_dark: "#1A4D4D"   # subtle borders and separators (--color-gray-10/20)
+  navy:      "#000080"   # icon on pink (the active tab's close button)
+  red:       "#FF3750"   # the window close button on hover (Windows convention)
+  white:     "#FFFFFF"   # --lwt-tab-text only
+
+# text on background: the only pairs a menu, popup or panel item may be painted in (text, background)
+pairs:
+  - [cyan, black]        # ~16:1
+  - [cyan, highlight]    # ~5:1 (hover / selected)
+  - [black, pink]        # ~13:1
+  - [cyan, page]
+hover: highlight         # a hovered or selected row in any menu, popup or panel
+focus: cyan              # the focus ring (owner, 2026-10-18: "#00FFFF, since we have used it and we know it works
+                         # with the black themes"); until now Windows' accent colour drew it purple
+
+# the floor: no text anywhere below the weakest allowed pair (the owner: today's palette is the floor)
+contrast_floor_from_pairs: true
+
+# colour distance tolerated when measuring painted pixels (anti-aliasing, colour management): per channel
+tolerance: 6

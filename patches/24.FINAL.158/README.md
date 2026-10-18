@@ -1,0 +1,6 @@
+# 24.FINAL.158
+
+Gorilla changes made on the finished 158 tree that edit files a later group (rebase-set) writes, so they apply last, on top of every other group. Files the edits delete are listed in DELETED_FILES.manifest.txt (96), removed after the patches are applied. Apply in order, after the snapshot groups.
+
+- `034-theme-yaml-one-constant-gorilla-2026-10-18-popups-black-cyan.patch`: THEME.yaml one constant (Gorilla 2026-10-18): popups black/cyan (the search-mode list was white, 1.25:1), every hover #65568C, focus ring cyan, app menu 30em (label was cut), 18 off-theme colors in Gorilla lines set to their roles by fieldkit.buildh.themecheck.apply; and D-158-13: only the Google engine is stored, by identifier (a 157 profile brought back Perplexity, Bing, DuckDuckGo, Wikipedia and eBay)
+- `035-d-158-13-to-the-end-gorilla-2026-10-18-remove-everything-els.patch`: D-158-13 to the end (Gorilla 2026-10-18: remove everything else from the source as well): the search data of every engine but Google removed by fieldkit build-harness search-strip: 70 icon records, 90 icon files and their moz.build lines, 6 wordmark images, their jar.inc.mn lines and urlbar.css rules, the wordmark family list
