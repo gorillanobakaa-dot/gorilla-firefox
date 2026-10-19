@@ -28,6 +28,9 @@ pairs:
   - [cyan, highlight]    # ~5:1 (hover / selected)
   - [black, pink]        # ~13:1
   - [cyan, page]
+# colours for text only: an opaque one on a background property fails the static check (2026-10-19: a white popup
+# background passed it, because white is in the palette as --lwt-tab-text)
+text_only: [white]
 hover: highlight         # a hovered or selected row in any menu, popup or panel
 focus: cyan              # the focus ring (owner, 2026-10-18: "#00FFFF, since we have used it and we know it works
                          # with the black themes"); until now Windows' accent colour drew it purple
