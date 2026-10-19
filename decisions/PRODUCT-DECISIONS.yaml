@@ -1375,3 +1375,21 @@ decisions:
       - tree_lacks: {path: browser/themes/shared/master-redirect.css, text: "background-color: Menu !important;"}
       - fieldkit_test: tests/test_buildh_themecheck.py
       - fieldkit_test: tests/test_buildh_fastloop.py
+  - id: D-158-20
+    title: "Linux turns RLBox off to run on very old computers; Windows keeps it"
+    decided: 2026-10-19
+    by: maintainer
+    platforms: [linux, windows]
+    provenance: 'chat 2026-10-19 (worker session): "for the linux build other considerations happen. it needs to be small enough (in memory and ram and cpu usage) to be able to run on very very old computers like my sony vaio sve. is about 15 years old ... firefox is a monster as it is"; "i remember at that time that we took this decision to avoid RLBox on Linux"; "Yes: record Linux RLBox off as a deliberate decision with its cost, close UNPROVEN L6 and state it on the Linux release page."; recorded on the owner''s yes in the orchestrator session, 2026-10-19: "yes record D-158-20"'
+    status: enforced
+    why: >
+      The Linux build sets --without-wasm-sandboxed-libraries so it stays small in memory, CPU and size on a
+      15-year-old laptop (the owner's Sony VAIO SVE). The cost: the RLBox wasm sandbox around graphite, ogg,
+      hunspell, woff2 and expat is not there on Linux, so a bug in one of those parsers, fed untrusted bytes by a
+      page, reaches the content process directly (it is still inside the content-process sandbox). Windows keeps
+      RLBox: config/mozconfig.win64 does not set the option. Not measured on the VAIO (the owner did not choose the
+      measurement). The trade is stated on the Linux release page.
+    verify:
+      - mozconfig_has: {file: gorilla-patchset/mozconfig, platform: linux, text: "ac_add_options --without-wasm-sandboxed-libraries"}
+      - mozconfig_lacks: {file: config/mozconfig.win64, platform: windows, text: "ac_add_options --without-wasm-sandboxed-libraries"}
+      - fieldkit_test: tests/test_buildh_decisions.py
