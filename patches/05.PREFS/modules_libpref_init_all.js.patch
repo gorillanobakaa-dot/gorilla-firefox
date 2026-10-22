@@ -206,7 +206,7 @@ index d740a8988b..845a0c8c4e 100644
 +pref("gfx.font_rendering.fontconfig.max_generic_substitutions", 5);
 +#endif
 +pref("font.name.sans-serif.x-western", "Segoe UI");
-+pref("font.name.monospace.x-western", "JetBrains Mono");
++pref("font.name.monospace.x-western", "Consolas");
 +pref("font.name.sans-serif.ja", "Meiryo, Yu Gothic, Source Han Sans, Source Han Sans J");
 +pref("font.name.serif.ja", "Yu Mincho, MS Mincho, Source Han Serif");
 +pref("font.name.monospace.ja", "MS Gothic, Source Han Sans J");

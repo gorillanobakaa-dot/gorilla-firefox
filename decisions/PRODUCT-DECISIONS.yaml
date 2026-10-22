@@ -1393,3 +1393,23 @@ decisions:
       - mozconfig_has: {file: gorilla-patchset/mozconfig, platform: linux, text: "ac_add_options --without-wasm-sandboxed-libraries"}
       - mozconfig_lacks: {file: config/mozconfig.win64, platform: windows, text: "ac_add_options --without-wasm-sandboxed-libraries"}
       - fieldkit_test: tests/test_buildh_decisions.py
+
+  - id: D-158-21
+    title: "Text in Segoe UI, monospace in Consolas, on every machine; neither locked"
+    decided: 2026-10-22
+    by: maintainer
+    provenance: 'chat 2026-10-22 (Linux session, test4 on the MacBook Air): asked which is better, Segoe UI Variable or Segoe UI, "we want to go for the most crispiest and clearest font that can be displayed on small screens AND on the tiny windows like 11 inch windows and terminals"; after the measurement on the Air, "yes, Segoe UI for text and Consolas for monospace"; after what monospace is used for: "yes, apply it and record it in the register"'
+    status: enforced
+    why: >
+      Text: D-158-12 holds (Segoe UI). Segoe UI Variable was measured against it on the MacBook Air 4,1 (1366x768,
+      macOS 10.13.6, test4) at 10 to 16 px: the pixels were almost the same and the line widths matched (309 vs
+      308 px at 10 px), so the Variable font's size-tuned designs were not in use there and gave nothing. Not
+      measured on Windows 11, which does use them. Monospace (code, logs, view-source, about:config, web consoles,
+      text files) must keep every character the same width, which no Segoe does; the set named JetBrains Mono,
+      which is bundled nowhere, so the Air fell back to a system font. Consolas is in the bundled set
+      (11.FONT.SYSTEM), keeps Il1 and O0 apart, and rendered clean at 13 px on the Air. Not locked, so a person who
+      needs another font for reading can still choose it.
+    verify:
+      - pref: {name: font.name.monospace.x-western, value: Consolas, locked: false}
+      - tree_pref_all: {name: font.name.monospace.x-western, value: Consolas}
+      - pref: {name: font.name.sans-serif.x-western, value: Segoe UI, locked: false}
