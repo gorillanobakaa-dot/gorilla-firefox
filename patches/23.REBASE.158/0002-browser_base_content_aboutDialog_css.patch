@@ -3,16 +3,9 @@
 # exclude_reason_158); this patch carries the file from the remaining set to the built tree.
 
 diff --git a/browser/base/content/aboutDialog.css b/browser/base/content/aboutDialog.css
-index 97aab3e1248e6d34ebfd68e2cfdc7f4efbac53a0..726c036fe61cc986a2e7548d53654249bfcfd1cb 100644
+index 97aab3e1248e6d34ebfd68e2cfdc7f4efbac53a0..498da9925fce7e577a2bc40c8058c3089c3a66dd 100644
 --- a/browser/base/content/aboutDialog.css
 +++ b/browser/base/content/aboutDialog.css
-@@ -1,5 +1,5 @@
- #aboutDialogContainer {
--  background-color: #20123a !important;
-+  background-color: #000000 !important;
-   color: #fff !important;
-   display: flex !important;
-   flex-direction: column !important;
 @@ -21,6 +21,7 @@
  }
  

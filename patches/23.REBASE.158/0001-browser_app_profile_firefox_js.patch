@@ -3,7 +3,7 @@
 # exclude_reason_158); this patch carries the file from the remaining set to the built tree.
 
 diff --git a/browser/app/profile/firefox.js b/browser/app/profile/firefox.js
-index e3e12782d0e5dba405198447400a47833787395b..5ae39b99b8b69faae8c41155ba0f190d67d9449b 100644
+index e3e12782d0e5dba405198447400a47833787395b..0e224c736baa4117cd1e1619989f036068eda3b2 100644
 --- a/browser/app/profile/firefox.js
 +++ b/browser/app/profile/firefox.js
 @@ -36,11 +36,11 @@ pref("extensions.webextOptionalPermissionPrompts", true);

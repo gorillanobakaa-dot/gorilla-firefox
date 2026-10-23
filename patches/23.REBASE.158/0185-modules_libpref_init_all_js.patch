@@ -3,7 +3,7 @@
 # exclude_reason_158); this patch carries the file from the remaining set to the built tree.
 
 diff --git a/modules/libpref/init/all.js b/modules/libpref/init/all.js
-index 1dfb0db62bd2e0a9e68fc33544f4a03ed5672335..3fa1b704f38d88d318f3924efe3851e5c170cd4e 100644
+index 744e0421b3e5f2f3040703d8008e55879e238e7a..5e2b941651dce8be9771feccc04740ccd3b67dd3 100644
 --- a/modules/libpref/init/all.js
 +++ b/modules/libpref/init/all.js
 @@ -586,10 +586,11 @@ pref("toolkit.telemetry.user_characteristics_ping.current_version", 0);
@@ -20,7 +20,7 @@ index 1dfb0db62bd2e0a9e68fc33544f4a03ed5672335..3fa1b704f38d88d318f3924efe3851e5
  // A unique identifier for the user characteristics ping. This is not the same as
  // the telemetry client id (which is not sent in this ping), it is cleared when a
  // user opts-out of telemetry, it is set upon first telemetry submission
-@@ -3738,7 +3739,8 @@ pref("toolkit.aboutProcesses.showAllSubframes", false);
+@@ -3745,7 +3746,8 @@ pref("toolkit.aboutProcesses.showAllSubframes", false);
    pref("toolkit.aboutProcesses.showThreads", false);
  #endif
  // If `true`, about:processes will offer to profile processes.

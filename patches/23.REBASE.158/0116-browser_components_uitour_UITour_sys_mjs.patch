@@ -3,7 +3,7 @@
 # exclude_reason_158); this patch carries the file from the remaining set to the built tree.
 
 diff --git a/browser/components/uitour/UITour.sys.mjs b/browser/components/uitour/UITour.sys.mjs
-index 81d51b834500d8e84b282de1188c96460a2fdbfe..55f1d9deb380052b1ebe887401baa71e46b60b98 100644
+index 378a3a8660ee30eb8f2740e37807b98993eb4cb0..cb1a55196324b806d4fbe8160c7ad82bb82995c2 100644
 --- a/browser/components/uitour/UITour.sys.mjs
 +++ b/browser/components/uitour/UITour.sys.mjs
 @@ -8,8 +8,6 @@ const lazy = {};

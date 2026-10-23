@@ -1,0 +1,37 @@
+# Gorilla 158 rebase: browser/themes/shared/master-redirect.css as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/themes/shared/master-redirect.css b/browser/themes/shared/master-redirect.css
+index 3855fa461a02e54ae23ea5ba6bf8e65fd4a007ac..9d5b391d98043f91c92d824af423a7b645c33dbd 100644
+--- a/browser/themes/shared/master-redirect.css
++++ b/browser/themes/shared/master-redirect.css
+@@ -42,14 +42,25 @@
+ /* Zero-CPU Theme Architecture for Intel HD 4000 */
+ 
+ :root {
+-  --gorilla-master-icon: url("chrome://branding/content/about-logo.svg");
++  --gorilla-master-icon: url("chrome://branding/content/about-logo.png");
+ }
+ 
+-/* Override standard illustration classes and elements */
+-.illustration, .info-icon, .error-icon, .panel-illustration, .category-icon, moz-promo img, #extensions-empty-illustration {
++/* GORILLA 2026-10-15: the app menu is wide enough for its Gorilla labels. "Gorilla Extensions and Gorilla Themes"
++   with Ctrl+Shift+A did not fit Mozilla's 22.35em and was cut ("...Gorilla Them...", owner's screenshot 18:30).
++   26em fits it with room for the shortcut; static, no effect on drawing cost. Proven by the ui clip check. */
++:root {
++  --menu-panel-width: 26em !important;
++}
++
++/* Override standard illustration classes and elements. GORILLA D-157-35: not the 16-42 px icon classes
++   (.info-icon, .error-icon, .category-icon): the artwork is lost at that size and only costs decoding. */
++.illustration, .panel-illustration, moz-promo img, #extensions-empty-illustration {
+   content: var(--gorilla-master-icon) !important;
+   background-image: var(--gorilla-master-icon) !important;
+   background-size: contain !important;
++  /* GORILLA 157: clamp the injected 1200 px master (no oversized illustration); upstream ones are <= 300 px. */
++  max-width: 320px !important;
++  max-height: 320px !important;
+   background-repeat: no-repeat !important;
+   background-position: center !important;
+   -moz-context-properties: none !important;

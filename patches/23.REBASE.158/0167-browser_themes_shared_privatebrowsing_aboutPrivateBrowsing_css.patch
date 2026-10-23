@@ -3,7 +3,7 @@
 # exclude_reason_158); this patch carries the file from the remaining set to the built tree.
 
 diff --git a/browser/themes/shared/privatebrowsing/aboutPrivateBrowsing.css b/browser/themes/shared/privatebrowsing/aboutPrivateBrowsing.css
-index 7086bc256333e402d5f5556fa78243798eebdeff..ac0de959375d8c0616406f50812118aece44ce71 100644
+index 7086bc256333e402d5f5556fa78243798eebdeff..e1788c0664634deac93cd1ccb9f2682579291911 100644
 --- a/browser/themes/shared/privatebrowsing/aboutPrivateBrowsing.css
 +++ b/browser/themes/shared/privatebrowsing/aboutPrivateBrowsing.css
 @@ -6,14 +6,14 @@
@@ -19,7 +19,7 @@ index 7086bc256333e402d5f5556fa78243798eebdeff..ac0de959375d8c0616406f50812118ae
 -    --in-content-banner-text-color: #0c0c0d;
 -    --button-background-color-hover: rgba(12, 12, 13, 0.1);
 -    --button-background-color-active: rgba(12, 12, 13, 0.15);
-+    --in-content-banner-background: #000000;
++    --in-content-banner-background: #1c1c1f;
 +    --in-content-banner-text-color: #ffffff;
 +    --button-background-color-hover: rgba(255, 255, 255, 0.1);
 +    --button-background-color-active: rgba(255, 255, 255, 0.15);
@@ -101,9 +101,9 @@ index 7086bc256333e402d5f5556fa78243798eebdeff..ac0de959375d8c0616406f50812118ae
 +  --content-search-handoff-ui-color: #ffffff;
 +  --content-search-handoff-ui-fill: rgba(255, 255, 255, 0.4);
 +  --content-search-handoff-ui-caret-color: #ffffff;
-+  --content-search-handoff-ui-fakefocus-border-color: #00FFFF;
-+  --content-search-handoff-ui-fakefocus-box-shadow-inner: #00FFFF;
-+  --content-search-handoff-ui-fakefocus-box-shadow-outer: rgba(0, 255, 255, 0.3);
++  --content-search-handoff-ui-fakefocus-border-color: #0080ff;
++  --content-search-handoff-ui-fakefocus-box-shadow-inner: #0080ff;
++  --content-search-handoff-ui-fakefocus-box-shadow-outer: rgba(0, 128, 255, 0.3);
 +
 +  /* stylelint-disable-next-line media-query-no-invalid */
 +  @media -moz-pref("browser.privatebrowsing.felt-privacy-v1") {
@@ -112,10 +112,10 @@ index 7086bc256333e402d5f5556fa78243798eebdeff..ac0de959375d8c0616406f50812118ae
 +    --content-search-handoff-ui-fill: rgb(251, 251, 254);
 +    --content-search-handoff-ui-caret-color: #ffffff;
 +    --content-search-handoff-ui-border-width: 1px;
-+    --content-search-handoff-ui-unfocused-border-color: #00FFFF;
-+    --content-search-handoff-ui-fakefocus-border-color: #00FFFF;
-+    --content-search-handoff-ui-fakefocus-box-shadow-inner: #00FFFF;
-+    --content-search-handoff-ui-fakefocus-box-shadow-outer: rgba(0, 255, 255, 0.3);
++    --content-search-handoff-ui-unfocused-border-color: #2b2b2e;
++    --content-search-handoff-ui-fakefocus-border-color: #0080ff;
++    --content-search-handoff-ui-fakefocus-box-shadow-inner: #0080ff;
++    --content-search-handoff-ui-fakefocus-box-shadow-outer: rgba(0, 128, 255, 0.3);
 +    --content-search-handoff-ui-engine-icon: url(chrome://global/skin/icons/search-glass.svg);
 +  }
  

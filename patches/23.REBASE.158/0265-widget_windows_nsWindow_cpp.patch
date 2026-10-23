@@ -1,0 +1,24 @@
+# Gorilla 158 rebase: widget/windows/nsWindow.cpp as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/widget/windows/nsWindow.cpp b/widget/windows/nsWindow.cpp
+index eb3baef67739bf7660e0104d19908108ba8277d7..43d1a634387b02ed248916c109cbf88a86529586 100644
+--- a/widget/windows/nsWindow.cpp
++++ b/widget/windows/nsWindow.cpp
+@@ -1170,6 +1170,15 @@ nsresult nsWindow::Create(nsIWidget* aParent, const LayoutDeviceIntRect& aRect,
+     SetSmallIcon(icon);
+   }
+ 
++  // GORILLA D-157-35 (2026-10-08): no small Gorilla in a native title bar. Windows with the system caption (the
++  // Library, Page Info, dialogs) drew the program icon at 16 px beside their title. The icon stays set on the window,
++  // so the taskbar, Alt+Tab and the system menu (Alt+Space) keep it; only the caption no longer draws it.
++  if (mWindowType == WindowType::TopLevel || mWindowType == WindowType::Dialog) {
++    WTA_OPTIONS noCaptionIcon = {WTNCA_NODRAWICON, WTNCA_NODRAWICON};
++    ::SetWindowThemeAttribute(mWnd, WTA_NONCLIENT, &noCaptionIcon,
++                              sizeof(noCaptionIcon));
++  }
++
+   // If mDefaultScale is set before mWnd has been set, it will have the scale of
+   // the primary monitor, rather than the monitor that the window is actually
+   // on. For non-popup windows this gets corrected by the WM_DPICHANGED message

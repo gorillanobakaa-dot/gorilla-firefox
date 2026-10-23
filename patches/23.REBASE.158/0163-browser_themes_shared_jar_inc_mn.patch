@@ -3,7 +3,7 @@
 # exclude_reason_158); this patch carries the file from the remaining set to the built tree.
 
 diff --git a/browser/themes/shared/jar.inc.mn b/browser/themes/shared/jar.inc.mn
-index 52b3ccee12462530907d74c4c6dad39ef8047bd2..f06f8c51200ee71c83a143fe86903886e51fb1c0 100644
+index adf4b9161560ca9cbd795d01b238e9a4eee87efd..a8c1e35002f14507f409eaba29b0061dc4ce3d82 100644
 --- a/browser/themes/shared/jar.inc.mn
 +++ b/browser/themes/shared/jar.inc.mn
 @@ -16,8 +16,8 @@
@@ -27,7 +27,7 @@ index 52b3ccee12462530907d74c4c6dad39ef8047bd2..f06f8c51200ee71c83a143fe86903886
    skin/classic/browser/toolbarbuttons.css                      (../shared/toolbarbuttons.css)
    skin/classic/browser/toolbarbutton-icons.css                 (../shared/toolbarbutton-icons.css)
    skin/classic/browser/urlbar/badge-bookmark.svg               (../shared/urlbar/icons/badge-bookmark.svg)
-@@ -181,7 +180,7 @@
+@@ -187,7 +186,7 @@
    skin/classic/browser/preferences/vpn-logo.svg                (../shared/preferences/vpn-logo.svg)
    skin/classic/browser/preferences/search.css                  (../shared/preferences/search.css)
    skin/classic/browser/preferences/siteDataSettings.css        (../shared/preferences/siteDataSettings.css)
@@ -36,7 +36,7 @@ index 52b3ccee12462530907d74c4c6dad39ef8047bd2..f06f8c51200ee71c83a143fe86903886
    skin/classic/browser/fxa/fxa-spinner.svg                     (../shared/fxa/fxa-spinner.svg)
    skin/classic/browser/fxa/sync-illustration.svg               (../shared/fxa/sync-illustration.svg)
    skin/classic/browser/fxa/sync-illustration-issue.svg         (../shared/fxa/sync-illustration-issue.svg)
-@@ -287,7 +286,7 @@
+@@ -293,7 +292,7 @@
    skin/classic/browser/send-tab.svg                   (../shared/icons/send-tab.svg)
    skin/classic/browser/tab.svg                        (../shared/icons/tab.svg)
    skin/classic/browser/tabs.svg                       (../shared/icons/tabs.svg)
