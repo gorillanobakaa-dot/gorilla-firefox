@@ -1464,7 +1464,7 @@ decisions:
       - tree_pref_all: {name: font.name.monospace.x-western, value: Consolas}
       - pref: {name: font.name.sans-serif.x-western, value: Segoe UI, locked: false}
 
-  - id: D-158-22
+  - id: D-158-23
     title: "The uninstaller contacts nothing: no survey, no uninstall ping, no Mozilla help link; Publisher is Gorilla"
     decided: 2026-10-23
     by: maintainer
