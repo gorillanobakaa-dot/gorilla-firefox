@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Version: 1.0.2 · updated 26-10-23-07-20
+# Version: 1.1.0 · updated 26-10-23-08-10
 # =====================================================================================================================
 # recreate-mac.sh: Gorilla Unleashed for old Intel Macs (built for the MacBook Air 2011, macOS 10.13 High Sierra)
 # =====================================================================================================================
@@ -20,8 +20,8 @@
 #          PATCHES_TARBALL=/path/patches-mac.tar.xz   use a local copy instead of downloading it
 #          FONTS_FROM=/path/to/folder                 a folder that already holds the 7 Microsoft font files
 # NEEDS:   64-bit Linux, about 45 GB free disk, 12 GB RAM or more (16 better), git, curl, python3, unzip, xz, 7z
-#          (fonts). Measured on the author's 2012 laptop (i7-3632QM, 16 GB): build 2 h 13 min (no compiler cache, on
-#          purpose: a shared cache once mixed old and new code and the browser crashed at start).
+#          (fonts). Measured on the author's 2012 laptop (i7-3632QM, 16 GB): build 2 h 13 min the first time; a rebuild of the
+#          SAME configuration reuses its own compiler cache (one cache per configuration, never shared).
 # ENDS:    one line  VERDICT  READY: <zip>  (or the stage that stopped and why)
 # =====================================================================================================================
 set -euo pipefail
@@ -52,6 +52,22 @@ SDK="$HOME/.mozbuild/MacOSX26.5.sdk"
 export MOZBUILD_STATE_PATH="$HOME/.mozbuild-legacy-mac"     # kept apart from any Linux Firefox build's toolchain
 export MOZCONFIG="$HERE/mozconfig.air"
 export RUSTC_BOOTSTRAP=mozglue_static,qcms,encoding_rs,any_all_workaround,coremidi_sys,cubeb_coreaudio
+
+# One compiler cache per configuration (owner 2026-10-23, after a shared cache crashed every clean build): the folder is
+# named by a hash of the build settings, the source commit and the patch series. Same configuration: the cache is
+# reused (fast). Anything changed: a new, empty cache (never another configuration's objects). Own server port, so the
+# author's other builds' sccache server is never reused with the wrong folder.
+cache_setup() {
+  local sc="$HOME/.mozbuild/sccache/sccache" key
+  [ -x "$sc" ] || { unset GORILLA_AIR_SCCACHE_DIR; return 0; }
+  key=$( { sha256sum "$MOZCONFIG" | cut -c1-64; git -C "$SRC" rev-parse HEAD 2>/dev/null; echo "$PATCHES_SHA256"; } \
+         | sha256sum | cut -c1-16)
+  export GORILLA_AIR_SCCACHE_DIR="$HOME/.cache/sccache-gorilla-air/$key"
+  export SCCACHE_DIR="$GORILLA_AIR_SCCACHE_DIR" SCCACHE_SERVER_PORT=4231 SCCACHE_CACHE_SIZE=20G
+  mkdir -p "$SCCACHE_DIR"
+  SCCACHE_SERVER_PORT=4231 "$sc" --stop-server >/dev/null 2>&1 || true     # a running server keeps its old folder
+  echo "  compiler cache: $SCCACHE_DIR (this configuration only)"
+}
 FONTS=(consola.ttf segoeui.ttf segoeuib.ttf seguisb.ttf SegUIVar.ttf YuGothR.ttc YuGothB.ttc)
 
 say()  { echo "$*"; }
@@ -138,6 +154,7 @@ sdk() {
 }
 
 configure() {
+  cache_setup
   say "== configure (downloads Mozilla's toolchain the first time, into $MOZBUILD_STATE_PATH)"
   (cd "$SRC" && ./mach --no-interactive configure > "$WORK/configure.log" 2>&1) \
       || { tail -25 "$WORK/configure.log"; stop configure "see $WORK/configure.log" "fix what it names, run: $0 configure"; }
@@ -152,6 +169,7 @@ configure() {
 }
 
 build() {
+  cache_setup
   say "== build (about 2 hours on a 2012 laptop; log: $WORK/build.log)"
   (cd "$SRC" && ./mach --no-interactive build -j"$(nproc)" > "$WORK/build.log" 2>&1) \
       || { tail -30 "$WORK/build.log"; stop build "see $WORK/build.log" "fix what it names, run: $0 build (it resumes)"; }
