@@ -1,0 +1,77 @@
+From ac6479ca2cd4ae2b0ea273d68f10bbf30a2bfd62 Mon Sep 17 00:00:00 2001
+From: Your GitHub Username <your-email@example.com>
+Date: Fri, 23 Oct 2026 21:51:09 +0100
+Subject: [PATCH] Mac: no Mozilla in the app's identity (owner 2026-10-23:
+ 'remove mozilla', 'keep gorilla'). Bundle ID org.gorilla.unleashed (was
+ org.mozilla.gorilla.unleashed), vendor Gorilla (macOS ignores the vendor for
+ the profile folder), Info.plist names no Mozilla updater or DMG helper
+ (neither ships). For the next Mac build, not the Stage D build running now.
+
+---
+ browser/branding/gorilla/configure.sh         | 2 +-
+ browser/moz.configure                         | 4 +++-
+ build/moz.configure/update-programs.configure | 7 +++----
+ toolkit/moz.configure                         | 4 +++-
+ 4 files changed, 10 insertions(+), 7 deletions(-)
+
+diff --git a/browser/branding/gorilla/configure.sh b/browser/branding/gorilla/configure.sh
+index 4ee31f1470..b28c26f0f4 100644
+--- a/browser/branding/gorilla/configure.sh
++++ b/browser/branding/gorilla/configure.sh
+@@ -3,4 +3,4 @@
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ 
+ MOZ_APP_DISPLAYNAME="Gorilla Unleashed"
+-MOZ_MACBUNDLE_ID=gorilla.unleashed
++MOZ_MACBUNDLE_ID=unleashed
+diff --git a/browser/moz.configure b/browser/moz.configure
+index 446e8637d0..92f00b6985 100644
+--- a/browser/moz.configure
++++ b/browser/moz.configure
+@@ -11,7 +11,9 @@ imply_option("MOZ_NORMANDY", True)
+ imply_option("MOZ_PROFILE_MIGRATOR", True)
+ 
+ 
+-imply_option("MOZ_APP_VENDOR", "Mozilla")
++# GORILLA MAC (owner 2026-10-23): the vendor is Gorilla. macOS ignores the vendor for the profile folder
++# (nsXREDirProvider), so profiles stay where they are.
++imply_option("MOZ_APP_VENDOR", "Gorilla")
+ imply_option("MOZ_APP_ID", "{ec8030f7-c20a-464f-9b0e-13a3a9e97384}")
+ # Include the DevTools client, not just the server (which is the default)
+ imply_option("MOZ_DEVTOOLS", "all")
+diff --git a/build/moz.configure/update-programs.configure b/build/moz.configure/update-programs.configure
+index 3b9d6553f3..1e1422c857 100644
+--- a/build/moz.configure/update-programs.configure
++++ b/build/moz.configure/update-programs.configure
+@@ -122,10 +122,9 @@ def requirements_string(exec_id, relaxed):
+ @imports(_from="xml.sax.saxutils", _import="escape")
+ def generate_smprivilegedexec_requirements(relaxed):
+     requirements = ""
+-    smprivilegedexecutables_list = [
+-        "org.mozilla.dmgInstallHelper",
+-        "org.mozilla.updater",
+-    ]
++    # GORILLA MAC (owner 2026-10-23): no updater and no DMG install helper ship (--disable-updater), so Info.plist
++    # names no Mozilla helper signed with Mozilla's team ID.
++    smprivilegedexecutables_list = []
+ 
+     for executable in smprivilegedexecutables_list:
+         requirements += f"<key>{escape(executable)}</key>"
+diff --git a/toolkit/moz.configure b/toolkit/moz.configure
+index 62dd09914c..3d24051cae 100644
+--- a/toolkit/moz.configure
++++ b/toolkit/moz.configure
+@@ -87,7 +87,9 @@ set_config("MOZ_INCLUDE_SOURCE_INFO", True, when="MOZ_INCLUDE_SOURCE_INFO")
+ option(
+     "--with-distribution-id",
+     nargs=1,
+-    default="org.mozilla",
++    # GORILLA MAC (owner 2026-10-23, "remove mozilla ... keep gorilla"): the app is org.gorilla.unleashed, not
++    # org.mozilla.gorilla.unleashed.
++    default="org.gorilla",
+     help="Set distribution-specific id",
+ )
+ set_config("MOZ_DISTRIBUTION_ID", depends("--with-distribution-id")(lambda v: v[0]))
+-- 
+2.47.3
+
