@@ -1,4 +1,4 @@
-<!-- Version: 1.1.0 · updated 26-10-23-07-30 -->
+<!-- Version: 1.2.0 · updated 26-10-23-15-40 -->
 # Gorilla Unleashed for old Macs (MacBook Air 2011, macOS 10.13 High Sierra)
 
 Apple stopped updating these Macs years ago, and Firefox stopped supporting macOS 10.13. This is the Gorilla browser
@@ -58,7 +58,8 @@ bash macos-legacy/recreate-mac.sh
 
 It checks your machine first (64-bit Linux, about 45 GB free, 12 GB of memory or more), then downloads Momiji, our
 patch series (checked against `patches-mac.sha256`), Apple's macOS SDK (the version Mozilla pins), and Mozilla's
-build tools, builds (about 2 hours on a 2012 laptop), and checks that every program file runs on macOS 10.13. It
+build tools, builds (2 h 15 to 2 h 35 min the first time on a 2012 laptop; a rebuild of the same configuration reuses its own
+compiler cache, one per configuration, so code from another configuration can never be mixed in), and checks that every program file runs on macOS 10.13. It
 ends with one line: `VERDICT READY: <zip>`.
 
 - **The Microsoft fonts** (Segoe UI, Consolas, Yu Gothic) are not ours to hand out. The script fetches them from
