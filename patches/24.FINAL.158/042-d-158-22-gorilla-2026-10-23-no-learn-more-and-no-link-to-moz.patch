@@ -1,0 +1,389 @@
+# Gorilla 158 change on top of the set
+# D-158-22 (Gorilla 2026-10-23): no Learn more and no link to Mozilla anywhere a person clicks; 55 link prefs empty and locked, moz-support-link hidden, one CSS rule for older Learn more anchors and hard-coded Mozilla links, About window without donate/get involved/Terms/Privacy. Kept: about:license, devtools MDN links. lesson: a git grep -E watch must be tested with git grep against pristine; \w inside brackets is literal in ERE
+# Files: browser/app/profile/firefox.js, browser/base/content/aboutDialog.js, browser/base/content/aboutDialog.xhtml, modules/libpref/init/all.js, toolkit/components/pdfjs/PdfJsDefaultPrefs.js, toolkit/content/widgets/moz-support-link/moz-support-link.mjs, toolkit/themes/shared/global-shared.css, toolkit/themes/shared/in-content/common-shared.css
+# Exported-by: build-harness export-hand firefox-158-linux
+
+diff --git a/browser/app/profile/firefox.js b/browser/app/profile/firefox.js
+index 5ae39b99b8..979240d867 100644
+--- a/browser/app/profile/firefox.js
++++ b/browser/app/profile/firefox.js
+@@ -38,16 +38,16 @@ pref("extensions.postDownloadThirdPartyPrompt", true);
+ // Preferences for AMO integration
+ pref("extensions.getAddons.cache.enabled", false, locked);
+ pref("extensions.getAddons.get.url", "https://services.addons.mozilla.org/api/v4/addons/search/?guid=%IDS%&lang=%LOCALE%");
+-pref("extensions.getAddons.search.browseURL", "https://addons.mozilla.org/%LOCALE%/firefox/search?q=%TERMS%&platform=%OS%&appver=%VERSION%");
+-pref("extensions.getAddons.link.url", "https://addons.mozilla.org/%LOCALE%/firefox/");
++pref("extensions.getAddons.search.browseURL", "", locked);
++pref("extensions.getAddons.link.url", "", locked);
+ pref("extensions.getAddons.langpacks.url", "http://127.0.0.1/");
+ pref("extensions.getAddons.discovery.api_url", "https://services.addons.mozilla.org/api/v4/discovery/?lang=%LOCALE%&edition=%DISTRIBUTION%");
+ pref("extensions.getAddons.browserMappings.url", "https://services.addons.mozilla.org/api/v5/addons/browser-mappings/?browser=%BROWSER%");
+ 
+ // The URL for the privacy policy related to recommended extensions.
+-pref("extensions.recommendations.privacyPolicyUrl", "https://www.mozilla.org/privacy/firefox/?utm_source=firefox-browser&utm_medium=firefox-browser&utm_content=privacy-policy-link#addons");
++pref("extensions.recommendations.privacyPolicyUrl", "", locked);
+ // The URL for Firefox Color, recommended on the theme page in about:addons.
+-pref("extensions.recommendations.themeRecommendationUrl", "https://color.firefox.com/?utm_source=firefox-browser&utm_medium=firefox-browser&utm_content=theme-footer-link");
++pref("extensions.recommendations.themeRecommendationUrl", "", locked);
+ 
+ pref("extensions.update.autoUpdateDefault", true);
+ 
+@@ -247,7 +247,7 @@ pref("extensions.update.interval", 86400);  // Check for updates to Extensions a
+ // UI tour experience.
+ pref("browser.uitour.enabled", false, locked);
+ pref("browser.uitour.loglevel", "Error");
+-pref("browser.uitour.url", "https://www.mozilla.org/%LOCALE%/firefox/%VERSION%/tour/");
++pref("browser.uitour.url", "", locked);
+ // How long to show a Hearbeat survey (two hours, in seconds)
+ pref("browser.uitour.surveyDuration", 7200);
+ 
+@@ -1543,9 +1543,9 @@ pref("intl.regional_prefs.use_os_locales", false);
+ 
+ pref("browser.send_pings", false, locked);
+ 
+-pref("browser.geolocation.warning.infoURL", "https://www.mozilla.org/%LOCALE%/firefox/geolocation/");
+-pref("browser.xr.warning.infoURL", "https://www.mozilla.org/%LOCALE%/firefox/xr/");
+-pref("browser.lna.warning.infoURL", "https://support.mozilla.org/%LOCALE%/kb/control-personal-device-local-network-permissions-firefox");
++pref("browser.geolocation.warning.infoURL", "", locked);
++pref("browser.xr.warning.infoURL", "", locked);
++pref("browser.lna.warning.infoURL", "", locked);
+ 
+ pref("browser.sessionstore.resume_from_crash", true);
+ pref("browser.sessionstore.resume_session_once", false);
+@@ -1658,17 +1658,16 @@ pref("browser.zoom.full", true);
+ pref("browser.zoom.updateBackgroundTabs", true);
+ 
+ // The breakpad report server to link to in about:crashes
+-pref("breakpad.reportURL", "https://crash-stats.mozilla.org/report/index/");
++pref("breakpad.reportURL", "", locked);
+ 
+ // URL for "Learn More" for DataCollection
+-pref("toolkit.datacollection.infoURL",
+-     "https://www.mozilla.org/legal/privacy/firefox.html");
++pref("toolkit.datacollection.infoURL", "", locked);
+ 
+ // base URL for web-based support pages
+-pref("app.support.baseURL", "https://support.mozilla.org/1/firefox/%VERSION%/%OS%/%LOCALE%/");
++pref("app.support.baseURL", "", locked);
+ 
+ // base url for web-based feedback pages
+-pref("app.feedback.baseURL", "https://ideas.mozilla.org/");
++pref("app.feedback.baseURL", "", locked);
+ 
+ pref("security.certerrors.permanentOverride", true);
+ pref("security.certerrors.mitm.priming.enabled", false, locked);
+@@ -2545,13 +2544,13 @@ pref("identity.sync.tokenserver.uri", "https://token.services.mozilla.com/1.0/sy
+ pref("identity.fxaccounts.autoconfig.uri", "");
+ 
+ // URL for help link about Send Tab.
+-pref("identity.sendtabpromo.url", "https://support.mozilla.org/1/firefox/%VERSION%/%OS%/%LOCALE%/send-tab");
+-pref("identity.sendtab.deviceissues.url", "https://support.mozilla.org/1/firefox/%VERSION%/%OS%/%LOCALE%/send-tab#w_i-dont-see-my-device-listed");
++pref("identity.sendtabpromo.url", "", locked);
++pref("identity.sendtab.deviceissues.url", "", locked);
+ 
+ // URLs for promo links to mobile browsers. Note that consumers are expected to
+ // append a value for utm_campaign.
+-pref("identity.mobilepromo.android", "https://www.mozilla.org/firefox/android/?utm_source=firefox-browser&utm_medium=firefox-browser&utm_campaign=");
+-pref("identity.mobilepromo.ios", "https://www.mozilla.org/firefox/ios/?utm_source=firefox-browser&utm_medium=firefox-browser&utm_campaign=");
++pref("identity.mobilepromo.android", "", locked);
++pref("identity.mobilepromo.ios", "", locked);
+ 
+ // How often should we try to fetch missed FxA commands on sync (in seconds).
+ // Default is 24 hours.
+@@ -2786,28 +2785,28 @@ pref("browser.promo.relay.enabled", false, locked);
+ pref("browser.contentblocking.report.hide_vpn_banner", false);
+ pref("browser.contentblocking.report.vpn_sub_id", "sub_HrfCZF7VPHzZkA");
+ 
+-pref("browser.contentblocking.report.monitor.url", "https://monitor.firefox.com/?entrypoint=protection_report_monitor&utm_source=about-protections");
+-pref("browser.contentblocking.report.monitor.how_it_works.url", "https://monitor.firefox.com/about");
+-pref("browser.contentblocking.report.monitor.sign_in_url", "https://monitor.firefox.com/oauth/init?entrypoint=protection_report_monitor&utm_source=about-protections&email=");
+-pref("browser.contentblocking.report.monitor.preferences_url", "https://monitor.firefox.com/user/preferences");
+-pref("browser.contentblocking.report.monitor.home_page_url", "https://monitor.firefox.com/user/dashboard");
+-pref("browser.contentblocking.report.manage_devices.url", "https://accounts.firefox.com/settings/clients");
++pref("browser.contentblocking.report.monitor.url", "", locked);
++pref("browser.contentblocking.report.monitor.how_it_works.url", "", locked);
++pref("browser.contentblocking.report.monitor.sign_in_url", "", locked);
++pref("browser.contentblocking.report.monitor.preferences_url", "", locked);
++pref("browser.contentblocking.report.monitor.home_page_url", "", locked);
++pref("browser.contentblocking.report.manage_devices.url", "", locked);
+ pref("browser.contentblocking.report.endpoint_url", "https://monitor.firefox.com/user/breach-stats?includeResolved=true");
+-pref("browser.contentblocking.report.proxy_extension.url", "https://fpn.firefox.com/browser?utm_source=firefox-desktop&utm_medium=referral&utm_campaign=about-protections&utm_content=about-protections");
++pref("browser.contentblocking.report.proxy_extension.url", "", locked);
+ pref("browser.contentblocking.report.mobile-ios.url", "https://apps.apple.com/app/firefox-private-safe-browser/id989804926");
+ pref("browser.contentblocking.report.mobile-android.url", "https://play.google.com/store/apps/details?id=org.mozilla.firefox&referrer=utm_source%3Dprotection_report%26utm_content%3Dmobile_promotion");
+-pref("browser.contentblocking.report.vpn.url", "https://vpn.mozilla.org/?utm_source=firefox-browser&utm_medium=firefox-browser&utm_campaign=about-protections-card");
+-pref("browser.contentblocking.report.vpn-promo.url", "https://vpn.mozilla.org/?utm_source=firefox-browser&utm_medium=firefox-browser&utm_campaign=about-protections-top-promo");
++pref("browser.contentblocking.report.vpn.url", "", locked);
++pref("browser.contentblocking.report.vpn-promo.url", "", locked);
+ pref("browser.contentblocking.report.vpn-android.url", "https://play.google.com/store/apps/details?id=org.mozilla.firefox.vpn&referrer=utm_source%3Dfirefox-browser%26utm_medium%3Dfirefox-browser%26utm_campaign%3Dabout-protections-mobile-vpn%26anid%3D--");
+ pref("browser.contentblocking.report.vpn-ios.url", "https://apps.apple.com/us/app/firefox-private-network-vpn/id1489407738");
+ 
+ // Protection Report's SUMO urls
+-pref("browser.contentblocking.report.lockwise.how_it_works.url", "https://support.mozilla.org/1/firefox/%VERSION%/%OS%/%LOCALE%/password-manager-report");
+-pref("browser.contentblocking.report.social.url", "https://support.mozilla.org/1/firefox/%VERSION%/%OS%/%LOCALE%/social-media-tracking-report");
+-pref("browser.contentblocking.report.cookie.url", "https://support.mozilla.org/1/firefox/%VERSION%/%OS%/%LOCALE%/cross-site-tracking-report");
+-pref("browser.contentblocking.report.tracker.url", "https://support.mozilla.org/1/firefox/%VERSION%/%OS%/%LOCALE%/tracking-content-report");
+-pref("browser.contentblocking.report.fingerprinter.url", "https://support.mozilla.org/1/firefox/%VERSION%/%OS%/%LOCALE%/fingerprinters-report");
+-pref("browser.contentblocking.report.cryptominer.url", "https://support.mozilla.org/1/firefox/%VERSION%/%OS%/%LOCALE%/cryptominers-report");
++pref("browser.contentblocking.report.lockwise.how_it_works.url", "", locked);
++pref("browser.contentblocking.report.social.url", "", locked);
++pref("browser.contentblocking.report.cookie.url", "", locked);
++pref("browser.contentblocking.report.tracker.url", "", locked);
++pref("browser.contentblocking.report.fingerprinter.url", "", locked);
++pref("browser.contentblocking.report.cryptominer.url", "", locked);
+ 
+ pref("browser.contentblocking.cfr-milestone.enabled", true);
+ pref("browser.contentblocking.cfr-milestone.milestone-achieved", 0);
+@@ -3003,8 +3002,7 @@ pref("extensions.formautofill.creditCards.os-auth.locked.enabled", false);
+ // The utm_creative value is appended within the code (specific to the location on
+ // where it is clicked). Be sure that if these two prefs are updated, that
+ // the utm_creative param be last.
+-pref("signon.management.page.breachAlertUrl",
+-     "https://monitor.firefox.com/breach-details/");
++pref("signon.management.page.breachAlertUrl", "", locked);
+ pref("signon.passwordEditCapture.enabled", true);
+ pref("signon.relatedRealms.enabled", false);
+ pref("signon.showAutoCompleteFooter", true);
+@@ -3087,7 +3085,7 @@ pref("app.normandy.enabled", false, locked);            // 🔒 Chest Shot 1
+ pref("app.normandy.first_run", true);
+ pref("app.normandy.logging.level", 50); // Warn
+ pref("app.normandy.run_interval_seconds", 1893456000, locked); // 🔒 Headshot
+-pref("app.normandy.shieldLearnMoreUrl", "https://support.mozilla.org/1/firefox/%VERSION%/%OS%/%LOCALE%/shield");
++pref("app.normandy.shieldLearnMoreUrl", "", locked);
+ pref("app.normandy.last_seen_buildid", "");
+ pref("app.normandy.onsync_skew_sec", 600);
+ #ifdef MOZ_DATA_REPORTING
+@@ -3740,11 +3738,11 @@ pref("browser.backup.sqlite.pages_per_step", 50);
+ pref("browser.backup.sqlite.step_delay_ms", 50);
+ pref("browser.backup.scheduled.idle-threshold-seconds", 15);
+ pref("browser.backup.scheduled.minimum-time-between-backups-seconds", 86400);
+-pref("browser.backup.template.fallback-download.release", "https://www.firefox.com/?utm_medium=firefox-desktop&utm_source=html-backup");
+-pref("browser.backup.template.fallback-download.beta", "https://www.firefox.com/channel/desktop/?utm_medium=firefox-desktop&utm_source=html-backup");
+-pref("browser.backup.template.fallback-download.aurora", "https://www.firefox.com/channel/desktop/?utm_medium=firefox-desktop&utm_source=html-backup");
+-pref("browser.backup.template.fallback-download.nightly", "https://www.firefox.com/channel/desktop/?utm_medium=firefox-desktop&utm_source=html-backup");
+-pref("browser.backup.template.fallback-download.esr", " https://www.firefox.com/download/all/desktop-esr/?utm_medium=firefox-desktop&utm_source=html-backup");
++pref("browser.backup.template.fallback-download.release", "", locked);
++pref("browser.backup.template.fallback-download.beta", "", locked);
++pref("browser.backup.template.fallback-download.aurora", "", locked);
++pref("browser.backup.template.fallback-download.nightly", "", locked);
++pref("browser.backup.template.fallback-download.esr", "", locked);
+ pref("browser.backup.errorCode", 0);
+ pref("browser.backup.backup-retry-limit", 10);
+ pref("browser.backup.disabled-on-idle-backup-retry", false);
+diff --git a/browser/base/content/aboutDialog.js b/browser/base/content/aboutDialog.js
+index 2d343a997a..ffa263bd9a 100644
+--- a/browser/base/content/aboutDialog.js
++++ b/browser/base/content/aboutDialog.js
+@@ -151,11 +151,12 @@ function init() {
+     "browser.referrals.enabled",
+     false
+   );
+-  document.getElementById("contributeDesc").hidden = referralsEnabled;
++  // GORILLA D-158-22: both help-us lines link to Mozilla; neither shows.
++  document.getElementById("contributeDesc").hidden = true;
+   let contributeDescReferrals = document.getElementById(
+     "contributeDescReferrals"
+   );
+-  contributeDescReferrals.hidden = !referralsEnabled;
++  contributeDescReferrals.hidden = true;
+ 
+   // An element named directly by aria-describedby is still read out while it
+   // is hidden, so the list has to name whichever blurb is shown. Rewrite
+diff --git a/browser/base/content/aboutDialog.xhtml b/browser/base/content/aboutDialog.xhtml
+index fcbf0090f9..7a6f4b9993 100644
+--- a/browser/base/content/aboutDialog.xhtml
++++ b/browser/base/content/aboutDialog.xhtml
+@@ -123,15 +123,16 @@
+           <vbox id="experimental" hidden="true">
+             <description class="text-blurb" id="warningDesc" data-l10n-id="warningDesc-version"></description>
+             <description class="text-blurb" id="communityExperimentalDesc" data-l10n-id="community-exp">
+-              <label is="text-link" href="https://www.mozilla.org/?utm_source=firefox-browser&#38;utm_medium=firefox-desktop&#38;utm_campaign=about-dialog" data-l10n-name="community-exp-mozillaLink"/>
++              <label data-l10n-name="community-exp-mozillaLink"/>
+               <label is="text-link" useoriginprincipal="true" href="about:credits" data-l10n-name="community-exp-creditsLink"/>
+             </description>
+           </vbox>
+           <description class="text-blurb" id="communityDesc" data-l10n-id="community-2">
+-            <label is="text-link" href="https://www.mozilla.org/?utm_source=firefox-browser&#38;utm_medium=firefox-desktop&#38;utm_campaign=about-dialog" data-l10n-name="community-mozillaLink"/>
++            <label data-l10n-name="community-mozillaLink"/>
+             <label is="text-link" useoriginprincipal="true" href="about:credits" data-l10n-name="community-creditsLink"/>
+           </description>
+-          <description class="text-blurb" id="contributeDesc" data-l10n-id="helpus">
++          <!-- GORILLA D-158-22: "Make a donation" and "get involved" pointed at Mozilla; the lines are hidden -->
++          <description class="text-blurb" id="contributeDesc" data-l10n-id="helpus" hidden="true">
+             <label is="text-link" href="https://foundation.mozilla.org/?form=firefox-about" data-l10n-name="helpus-donateLink"/>
+             <label is="text-link" href="https://www.mozilla.org/contribute/?utm_source=firefox-browser&#38;utm_medium=firefox-desktop&#38;utm_campaign=about-dialog" data-l10n-name="helpus-getInvolvedLink"/>
+           </description>
+@@ -146,9 +147,8 @@
+     </hbox>
+     <vbox id="bottomBox">
+       <hbox pack="center">
++        <!-- GORILLA D-158-22: Mozilla's Terms of Use and Privacy Notice links removed; the licence (about:license) stays -->
+         <label is="text-link" class="bottom-link" useoriginprincipal="true" href="about:license" data-l10n-id="bottomLinks-license"/>
+-        <label is="text-link" class="bottom-link" href="https://www.mozilla.org/about/legal/terms/firefox/" data-l10n-id="bottom-links-terms"/>
+-        <label is="text-link" class="bottom-link" href="https://www.mozilla.org/privacy/firefox/?utm_source=firefox-browser&#38;utm_medium=firefox-desktop&#38;utm_campaign=about-dialog" data-l10n-id="bottom-links-privacy"/>
+       </hbox>
+       <description id="trademark" data-l10n-id="trademarkInfo"></description>
+     </vbox>
+diff --git a/modules/libpref/init/all.js b/modules/libpref/init/all.js
+index 3fa1b704f3..f7d146f0c7 100644
+--- a/modules/libpref/init/all.js
++++ b/modules/libpref/init/all.js
+@@ -1778,14 +1778,14 @@ pref("services.common.uptake.sampleRate", 1);   // 1%
+ 
+ pref("extensions.abuseReport.enabled", false);
+ // Whether Firefox integrated abuse reporting feature should be opening the new abuse report form hosted on AMO.
+-pref("extensions.abuseReport.amoFormURL", "https://addons.mozilla.org/%LOCALE%/firefox/feedback/addon/%addonID%/");
+-pref("extensions.addonAbuseReport.url", "https://services.addons.mozilla.org/api/v5/abuse/report/addon/");
++pref("extensions.abuseReport.amoFormURL", "", locked);
++pref("extensions.addonAbuseReport.url", "", locked);
+ 
+ // Blocklist preferences
+ pref("extensions.blocklist.enabled", true);
+-pref("extensions.blocklist.detailsURL", "https://blocked.cdn.mozilla.net/");
+-pref("extensions.blocklist.itemURL", "https://blocked.cdn.mozilla.net/%blockID%.html");
+-pref("extensions.blocklist.addonItemURL", "https://addons.mozilla.org/%LOCALE%/firefox/blocked-addon/%addonID%/%addonVersion%/");
++pref("extensions.blocklist.detailsURL", "", locked);
++pref("extensions.blocklist.itemURL", "", locked);
++pref("extensions.blocklist.addonItemURL", "", locked);
+ // Controls what level the blocklist switches from warning about items to forcibly
+ // blocking them.
+ pref("extensions.blocklist.level", 2);
+@@ -3028,10 +3028,10 @@ pref("signon.includeOtherSubdomainsInLookup",     true);
+ pref("signon.masterPasswordReprompt.timeout_ms", 900000); // 15 Minutes
+ pref("signon.showAutoCompleteFooter",             false);
+ pref("signon.firefoxRelay.base_url", "https://relay.firefox.com/api/v1/");
+-pref("signon.firefoxRelay.learn_more_url", "https://support.mozilla.org/1/firefox/%VERSION%/%OS%/%LOCALE%/firefox-relay-integration");
+-pref("signon.firefoxRelay.manage_url", "https://relay.firefox.com/accounts/profile/?utm_medium=firefox-desktop&utm_source=modal&utm_campaign=limit&utm_content=manage-masks-global");
+-pref("signon.firefoxRelay.terms_of_service_url", "https://www.mozilla.org/%LOCALE%/about/legal/terms/subscription-services/");
+-pref("signon.firefoxRelay.privacy_policy_url", "https://www.mozilla.org/%LOCALE%/privacy/subscription-services/");
++pref("signon.firefoxRelay.learn_more_url", "", locked);
++pref("signon.firefoxRelay.manage_url", "", locked);
++pref("signon.firefoxRelay.terms_of_service_url", "", locked);
++pref("signon.firefoxRelay.privacy_policy_url", "", locked);
+ pref("signon.signupDetection.confidenceThreshold",     "0.75");
+ 
+ // Logins Rust storage backend is enabled by default
+@@ -3437,7 +3437,7 @@ pref("browser.safebrowsing.provider.google.lists", "goog-badbinurl-shavar,goog-d
+ pref("browser.safebrowsing.provider.google.updateURL", "https://safebrowsing.google.com/safebrowsing/downloads?client=SAFEBROWSING_ID&appver=%MAJOR_VERSION%&pver=2.2&key=%GOOGLE_SAFEBROWSING_API_KEY%");
+ pref("browser.safebrowsing.provider.google.gethashURL", "https://safebrowsing.google.com/safebrowsing/gethash?client=SAFEBROWSING_ID&appver=%MAJOR_VERSION%&pver=2.2");
+ pref("browser.safebrowsing.provider.google.reportURL", "https://safebrowsing.google.com/safebrowsing/diagnostic?site=");
+-pref("browser.safebrowsing.provider.google.reportPhishMistakeURL", "https://%LOCALE%.phish-error.mozilla.com/?url=");
++pref("browser.safebrowsing.provider.google.reportPhishMistakeURL", "", locked);
+ pref("browser.safebrowsing.provider.google.reportMalwareMistakeURL", "https://%LOCALE%.malware-error.mozilla.com/?url=");
+ pref("browser.safebrowsing.provider.google.advisoryURL", "https://developers.google.com/safe-browsing/v4/advisory");
+ pref("browser.safebrowsing.provider.google.advisoryName", "Google Safe Browsing");
+@@ -3448,7 +3448,7 @@ pref("browser.safebrowsing.provider.google4.lists", "goog-badbinurl-proto,goog-d
+ pref("browser.safebrowsing.provider.google4.updateURL", "https://safebrowsing.googleapis.com/v4/threatListUpdates:fetch?$ct=application/x-protobuf&key=%GOOGLE_SAFEBROWSING_API_KEY%&$httpMethod=POST");
+ pref("browser.safebrowsing.provider.google4.gethashURL", "https://safebrowsing.googleapis.com/v4/fullHashes:find?$ct=application/x-protobuf&key=%GOOGLE_SAFEBROWSING_API_KEY%&$httpMethod=POST");
+ pref("browser.safebrowsing.provider.google4.reportURL", "https://safebrowsing.google.com/safebrowsing/diagnostic?site=");
+-pref("browser.safebrowsing.provider.google4.reportPhishMistakeURL", "https://%LOCALE%.phish-error.mozilla.com/?url=");
++pref("browser.safebrowsing.provider.google4.reportPhishMistakeURL", "", locked);
+ pref("browser.safebrowsing.provider.google4.reportMalwareMistakeURL", "https://%LOCALE%.malware-error.mozilla.com/?url=");
+ pref("browser.safebrowsing.provider.google4.advisoryURL", "https://developers.google.com/safe-browsing/v4/advisory");
+ pref("browser.safebrowsing.provider.google4.advisoryName", "Google Safe Browsing");
+@@ -3461,14 +3461,14 @@ pref("browser.safebrowsing.provider.google5.lists", "goog-badbinurl-proto,goog-d
+ pref("browser.safebrowsing.provider.google5.updateURL", "https://safebrowsing.googleapis.com/v5/hashLists:batchGet?key=%GOOGLE_SAFEBROWSING_API_KEY%");
+ pref("browser.safebrowsing.provider.google5.gethashURL", "https://safebrowsing.googleapis.com/v5/hashes:search?key=%GOOGLE_SAFEBROWSING_API_KEY%");
+ pref("browser.safebrowsing.provider.google5.reportURL", "https://safebrowsing.google.com/safebrowsing/diagnostic?site=");
+-pref("browser.safebrowsing.provider.google5.reportPhishMistakeURL", "https://%LOCALE%.phish-error.mozilla.com/?url=");
++pref("browser.safebrowsing.provider.google5.reportPhishMistakeURL", "", locked);
+ pref("browser.safebrowsing.provider.google5.reportMalwareMistakeURL", "https://%LOCALE%.malware-error.mozilla.com/?url=");
+ pref("browser.safebrowsing.provider.google5.advisoryURL", "https://developers.google.com/safe-browsing/v4/advisory");
+ pref("browser.safebrowsing.provider.google5.advisoryName", "Google Safe Browsing");
+ 
+ #endif // ifndef MOZ_WIDGET_ANDROID
+ 
+-pref("browser.safebrowsing.reportPhishURL", "https://%LOCALE%.phish-report.mozilla.com/?url=");
++pref("browser.safebrowsing.reportPhishURL", "", locked);
+ 
+ // Mozilla Safe Browsing provider (for tracking protection)
+ pref("browser.safebrowsing.provider.mozilla.pver", "2.2");
+@@ -3783,13 +3783,13 @@ pref("toolkit.legacyUserProfileCustomizations.stylesheets", false);
+   pref("datareporting.policy.currentPolicyVersion", 2);
+   pref("datareporting.policy.minimumPolicyVersion", 1);
+   pref("datareporting.policy.minimumPolicyVersion.channel-beta", 2);
+-  pref("datareporting.policy.firstRunURL", "https://www.mozilla.org/privacy/firefox/");
++  pref("datareporting.policy.firstRunURL", "", locked);
+   pref("datareporting.policy.dataSubmissionPolicyBypassNotification", false);
+ #endif
+ 
+ #ifdef MOZ_SERVICES_HEALTHREPORT
+   #if !defined(ANDROID)
+-    pref("datareporting.healthreport.infoURL", "https://www.mozilla.org/legal/privacy/firefox.html#health-report");
++    pref("datareporting.healthreport.infoURL", "", locked);
+ 
+     // Health Report is enabled by default on all channels.
+     // Do note that the toggle on Fenix and Focus does NOT reflect to this pref.
+diff --git a/toolkit/components/pdfjs/PdfJsDefaultPrefs.js b/toolkit/components/pdfjs/PdfJsDefaultPrefs.js
+index ebd27a0de7..e145e473ce 100644
+--- a/toolkit/components/pdfjs/PdfJsDefaultPrefs.js
++++ b/toolkit/components/pdfjs/PdfJsDefaultPrefs.js
+@@ -17,11 +17,11 @@
+ //
+ // Any overrides should be placed in `PdfJsOverridePrefs.js`.
+ 
+-pref("pdfjs.altTextLearnMoreUrl", "https://support.mozilla.org/1/firefox/%VERSION%/%OS%/%LOCALE%/pdf-alt-text");
++pref("pdfjs.altTextLearnMoreUrl", "", locked);
+ pref("pdfjs.annotationEditorMode", 0);
+ pref("pdfjs.annotationMode", 2);
+ pref("pdfjs.capCanvasAreaFactor", 200);
+-pref("pdfjs.commentLearnMoreUrl", "https://support.mozilla.org/%LOCALE%/kb/view-pdf-files-firefox-or-choose-another-viewer#w_add-a-comment-to-a-pdf");
++pref("pdfjs.commentLearnMoreUrl", "", locked);
+ pref("pdfjs.cursorToolOnLoad", 0);
+ pref("pdfjs.defaultZoomDelay", 400);
+ pref("pdfjs.defaultZoomValue", "");
+diff --git a/toolkit/content/widgets/moz-support-link/moz-support-link.mjs b/toolkit/content/widgets/moz-support-link/moz-support-link.mjs
+index e2f78e0da0..eb532e368b 100644
+--- a/toolkit/content/widgets/moz-support-link/moz-support-link.mjs
++++ b/toolkit/content/widgets/moz-support-link/moz-support-link.mjs
+@@ -63,6 +63,9 @@ export default class MozSupportLink extends StylesMixin(
+ 
+   connectedCallback() {
+     super.connectedCallback();
++    // GORILLA D-158-22 (owner 2026-10-23): no "Learn more" and no link to Mozilla anywhere a person clicks. Every
++    // support link is this element, so it never shows; app.support.baseURL is "" (locked) for any other caller.
++    this.hidden = true;
+     this.#register();
+     this.#setHref();
+     this.setAttribute("target", "_blank");
+diff --git a/toolkit/themes/shared/global-shared.css b/toolkit/themes/shared/global-shared.css
+index 6d38ea7ee2..c0e24c8157 100644
+--- a/toolkit/themes/shared/global-shared.css
++++ b/toolkit/themes/shared/global-shared.css
+@@ -35,6 +35,16 @@
+   display: none !important;
+ }
+ 
++/* GORILLA D-158-22 (owner 2026-10-23): "let's get rid of 'learn more' or any links to mozilla in the build". The older
++   "Learn more" anchors (class learnMore, data-l10n-name learn-more) and any link a page hard-codes to a Mozilla
++   site never show. moz-support-link hides itself (moz-support-link.mjs); the link prefs are "" and locked. */
++html|a.learnMore, html|a[data-l10n-name="learn-more"], html|a[data-l10n-name="learnMore"],
++html|a[href*="mozilla.org"], html|a[href*="mozilla.com"], html|a[href*="mozilla.net"], html|a[href*="firefox.com"],
++xul|label.text-link[href*="mozilla.org"], xul|label.text-link[href*="firefox.com"],
++xul|label[is="text-link"][href*="mozilla.org"], xul|label[is="text-link"][href*="firefox.com"] {
++  display: none !important;
++}
++
+ :root {
+   --default-focusring-width: 2px;
+   --default-focusring: var(--default-focusring-width) dotted;
+diff --git a/toolkit/themes/shared/in-content/common-shared.css b/toolkit/themes/shared/in-content/common-shared.css
+index 0567ceeb4c..ae769f1ed1 100644
+--- a/toolkit/themes/shared/in-content/common-shared.css
++++ b/toolkit/themes/shared/in-content/common-shared.css
+@@ -8,6 +8,15 @@
+ @namespace html "http://www.w3.org/1999/xhtml";
+ @namespace xul "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
+ 
++/* GORILLA D-158-22 (owner 2026-10-23): "let's get rid of 'learn more' or any links to mozilla in the build". In-content
++   pages (about:preferences, about:addons, about:protections, ...): the older "Learn more" anchors and any link a page
++   hard-codes to a Mozilla site never show. moz-support-link hides itself; the link prefs are "" and locked. */
++html|a.learnMore, html|a[data-l10n-name="learn-more"], html|a[data-l10n-name="learnMore"],
++html|a[href*="mozilla.org"], html|a[href*="mozilla.com"], html|a[href*="mozilla.net"], html|a[href*="firefox.com"],
++xul|label[is="text-link"][href*="mozilla.org"], xul|label[is="text-link"][href*="firefox.com"] {
++  display: none !important;
++}
++
+ :host(.anonymous-content-host),
+ :root {
+   /* Keep these in sync with:
