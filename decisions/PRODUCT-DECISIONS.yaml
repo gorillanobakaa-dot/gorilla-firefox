@@ -1464,6 +1464,35 @@ decisions:
       - tree_pref_all: {name: font.name.monospace.x-western, value: Consolas}
       - pref: {name: font.name.sans-serif.x-western, value: Segoe UI, locked: false}
 
+  - id: D-158-22
+    title: "No \"Learn more\" and no link to Mozilla anywhere a person clicks; the licence page and developer tools keep theirs"
+    decided: 2026-10-23
+    by: maintainer
+    provenance: 'chat 2026-10-23 (Linux 158.0-2 session), after the Windows uninstaller finding (survey and Mozilla support links): "let''s get rid of \"learn more\" or any links to mozilla in the build. that would clear the controversy"; scope asked and answered: "Everything a person clicks" (kept: about:license, whose MPL text must keep its notice, and the developer tools'' MDN documentation links); then "the next builds will not have any of this crap anymore ... the decision is recorded. the harness will need to know about it and a patch will have to be created so the experience survive across versions and builds"'
+    status: enforced
+    platforms: [linux, windows]
+    why: >
+      A link to Mozilla is a door to a company's site that the person did not choose, and every "Learn more" sends
+      them to it. Measured on Linux 158.0-2 (before this decision): 83 preferences with a Mozilla address and about
+      555 Mozilla addresses in pages and strings. What changes: the 55 link preferences (support, feedback, info,
+      report, privacy and terms pages, the first-run privacy notice, the Relay, Monitor and VPN pages, the PDF viewer's
+      help, the add-on blocklist pages, the safe-browsing mistake reports, the breach alert and data-collection pages) are empty and locked (the PDF viewer's two in a GORILLA block at the end of the generated PdfJsDefaultPrefs.js), so an old profile cannot bring them back; every
+      moz-support-link hides itself; one rule in global-shared.css and in-content/common-shared.css hides the older
+      "Learn more" anchors and any link a page hard-codes to a Mozilla site; the About window names Mozilla as plain
+      text and drops "Make a donation", "get involved", "Terms of Use" and "Privacy Notice". Kept on purpose: the
+      licence page (about:license, the MPL requires its notice) and the developer tools' MDN links. Preferences that
+      are service endpoints, not links, are not part of this decision (their features are off; the egress check holds
+      them). Cost: a person who wants Mozilla's help page for a feature has to search for it.
+    verify:
+      - tree_contains: {path: toolkit/content/widgets/moz-support-link/moz-support-link.mjs, text: "this.hidden = true;"}
+      - tree_contains: {path: toolkit/themes/shared/global-shared.css, text: "GORILLA D-158-22"}
+      - tree_contains: {path: toolkit/themes/shared/in-content/common-shared.css, text: "GORILLA D-158-22"}
+      - tree_lacks: {path: browser/base/content/aboutDialog.xhtml, text: "https://www.mozilla.org/about/legal/terms/firefox/"}
+      - pref: {name: app.support.baseURL, value: "", locked: true}
+      - pref: {name: datareporting.policy.firstRunURL, value: "", locked: true}
+      - pref: {name: app.feedback.baseURL, value: "", locked: true}
+      - fieldkit_test: tests/test_buildh_mozilla_links.py
+
   - id: D-158-23
     title: "The uninstaller contacts nothing: no survey, no uninstall ping, no Mozilla help link; Publisher is Gorilla"
     decided: 2026-10-23
