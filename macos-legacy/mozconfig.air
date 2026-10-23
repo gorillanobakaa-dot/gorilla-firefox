@@ -1,0 +1,97 @@
+# Version: 1.3.0 · updated 26-10-23-08-10
+# PUBLIC COPY for recreate-mac.sh (gorilla-firefox/macos-legacy): no path of the author's machine; one compiler
+# cache per configuration (see below); all CPU cores. The author's own copy is the same settings.
+# AIR PROFILE build config (MacBookAir4,1). Derived from legacy-macos-to-linux-261020/mozconfig.legacy-mac
+# (the proven Test 1 config, kept unchanged). Gorilla legacy-macOS build: Momiji v157.0-mj source, cross-compiled on Debian
+# for macOS 10.12-10.14 (target machine: MacBook Air 4,1, Sandy Bridge, macOS 10.13.6).
+# Use ONLY with MOZCONFIG=<path to this file>. Never mix with the Linux Gorilla mozconfig.
+#
+# Deliberate differences from Momiji's own config (evidence/momiji-157-mozconfig.sh):
+#   - minimum macOS 10.12, not 10.7: stock Rust works (Momiji's custom Rust only patches 10.7-10.11)
+#   - lld instead of Apple ld64 / -ld_classic: there is no ld64 on Linux
+#   - sandbox ON: Momiji turns it off only because of video on OS X 10.7
+#   - extension signing stays required (Momiji empties MOZ_REQUIRE_SIGNING)
+#   - no buildcache download
+
+mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj-legacy-mac
+
+# EDIT 2026-10-20 (Linux session): Mozilla's own toolchains (clang, wasi sysroot, cbindgen, node) are
+# fetched into MOZBUILD_STATE_PATH=~/.mozbuild-legacy-mac, never into ~/.mozbuild, so the Linux 158
+# build's clang is not replaced. Without it configure fell back to Debian clang 19, which has no wasi
+# headers (RLBox). See REPORT-legacy-mac-*.md, question 4.
+ac_add_options --enable-bootstrap
+
+# EDIT 2026-10-20 (Linux session), build attempt 1 failed at 6:55: Momiji's patches use unstable Rust
+# features that its custom compiler allows and stock Rust refuses (E0554): #![feature(linkage)] in
+# coremidi-sys (weak-linked CoreMIDI symbols newer than 10.13) and #![feature(result_option_inspect)] in
+# cubeb-coreaudio. Firefox's own list (config/makefiles/rust.mk: mozglue_static,qcms,encoding_rs,
+# any_all_workaround) is kept and Momiji's two crates are added, by name, not RUSTC_BOOTSTRAP=1.
+# Attempt 2 showed a mozconfig export reaches configure only, not make; run-build.sh exports it for the build.
+export RUSTC_BOOTSTRAP=mozglue_static,qcms,encoding_rs,any_all_workaround,coremidi_sys,cubeb_coreaudio
+
+# EDIT 2026-10-20 (Linux session), check-app.sh after attempt 3: libonnxruntime.dylib (Mozilla's prebuilt on-device AI
+# engine, fetched by bootstrap) needs macOS 10.15 (minos 10.15), so it cannot load on the Air's 10.13; every other
+# Mach-O passed. Left out: Gorilla removes those AI features anyway (D-158-08), lighter wins (D-157-30).
+ac_add_options --without-onnx-runtime
+
+ac_add_options --enable-application=browser
+ac_add_options --target=x86_64-apple-darwin
+export MACOSX_DEPLOYMENT_TARGET=10.12
+
+# SDK unpacked by fetch-sdk.sh from Apple's public package, sha512 pinned by Mozilla.
+ac_add_options --with-macos-sdk=$HOME/.mozbuild/MacOSX26.5.sdk
+ac_add_options --enable-linker=lld
+
+# Gorilla branding (owner 2026-10-20: the whole Gorilla product on the Mac), as the Linux build sets it.
+ac_add_options --disable-official-branding
+ac_add_options --with-branding=browser/branding/gorilla
+
+# AIR PROFILE (owner 2026-10-20: "make a special profile for the macbook air kept separately from the linux one").
+# The target is ONE machine, the MacBook Air 4,1 (i5-2467M, Sandy Bridge; see HARDWARE.md): its own CPU by name.
+# sandybridge = SSE4.1/4.2, POPCNT, AES-NI, PCLMUL, AVX. It never emits AVX2/FMA/F16C/RDRAND (Ivy Bridge and newer).
+# NEVER -march=native: the build host is the Ivy Bridge VAIO, so "native" would crash the Air.
+export CFLAGS="-march=sandybridge -mtune=sandybridge"
+export CXXFLAGS="$CFLAGS"
+export RUSTFLAGS="-C target-cpu=sandybridge"
+
+ac_add_options --disable-crashreporter
+ac_add_options --disable-updater
+ac_add_options --disable-tests
+ac_add_options --disable-dmd
+ac_add_options --disable-geckodriver
+ac_add_options --disable-profiling
+
+ac_add_options --disable-debug
+ac_add_options --enable-optimize="-Os -w"
+export RUSTC_OPT_LEVEL="s"
+
+# AIR PROFILE: the Linux build's speed and size settings that apply to this target (owner 2026-10-20: "use CCACHE
+# and all the other tricks we use on linux"). From gorilla-firefox/mozconfig; each one is build-only (no behaviour
+# change for the user) or removes something already banned.
+# Compiler cache: ONE CACHE PER CONFIGURATION (owner, 2026-10-23: "varianta 2"). A single shared sccache handed stale
+# objects to a fresh build folder after the configure options changed (the code asked for module 77 = mozIntl
+# instead of 86 = AppStartup) and every such build crashed at start (BUILD-LOG T49-T51). recreate-mac.sh now names
+# the cache folder by a hash of this file, the source commit and the patch series, so two configurations can never
+# mix; it sets GORILLA_AIR_SCCACHE_DIR only when Mozilla's bootstrap installed sccache. Without it: no cache.
+if [ -n "$GORILLA_AIR_SCCACHE_DIR" ] && [ -x "$HOME/.mozbuild/sccache/sccache" ]; then
+  ac_add_options --with-ccache="$HOME/.mozbuild/sccache/sccache"
+fi
+ac_add_options --enable-lto=thin
+ac_add_options --enable-strip
+ac_add_options --enable-rust-simd
+ac_add_options --disable-webspeech
+ac_add_options --disable-necko-wifi
+mk_add_options AUTOCLOBBER=0
+mk_add_options MOZ_MAKE_FLAGS="-j$(nproc)"
+# NOT taken from Linux: -O3 (Momiji's -Os stays: smaller code, less memory on 4 GB, D-157-30); -march=native (VAIO);
+# clang-21 / GTK / Wayland / MALLOC_CONF (Linux). Owner's call, not taken yet: --disable-accessibility (also disables
+# VoiceOver on the Mac).
+# RLBox OFF (owner 2026-10-20: "we talked about rblox... should that not be in the decision already?"): D-158-20's
+# reason is "very very old computers like my sony vaio"; the 2011 Air is the same class. Recorded as linux-only
+# because no Mac build existed; the macos entry is added in Stage E. Cost (from D-158-20): no wasm sandbox around
+# graphite, ogg, hunspell, woff2, expat; still inside the content-process sandbox.
+ac_add_options --without-wasm-sandboxed-libraries
+
+# GORILLA OVERRIDE: Gorilla fonts inside the app (11.FONT.SYSTEM, D-158-12); upstream turns this on for
+# Windows and Linux only (toolkit/moz.configure bundled_fonts_default). 2026-10-22
+ac_add_options --enable-bundled-fonts

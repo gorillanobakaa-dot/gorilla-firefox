@@ -85,6 +85,14 @@ decisions:
     why: >
       One language means no translation engine (which downloads models and sends text) and no language-pack add-ons
       (a side door for extensions). Cost: the interface is English only.
+    # app_absent: paths inside the BUILT app's omni.ja archives that must not exist (fnmatch, * crosses folders).
+    # Added 2026-10-22: test4 (an incremental Mac build) still shipped them from an old build folder although the
+    # source had removed them; the source checks above could not see it. Read by fieldkit macair app-check.
+    app_absent:
+      - 'chrome/toolkit/content/global/translations/*'
+      - 'chrome/browser/content/browser/translations/*'
+      - 'chrome/browser/skin/classic/browser/translations/*'
+      - 'chrome/browser/skin/classic/browser/translations-companion.svg'
     verify:
       - pref: {name: intl.multilingual.enabled, value: false, locked: true}
       - pref: {name: intl.multilingual.downloadEnabled, value: false, locked: true}
@@ -106,6 +114,13 @@ decisions:
     why: >
       One approved look, no theme add-ons (themes are add-ons: a side door), nothing for a page to fingerprint by
       theme. Cost: no choice of look. Web pages keep their own dark mode: this is about the browser's frame.
+    # app_absent: paths inside the BUILT app's omni.ja archives that must not exist (fnmatch, * crosses folders).
+    # Added 2026-10-22: test4 (an incremental Mac build) still shipped them from an old build folder although the
+    # source had removed them; the source checks above could not see it. Read by fieldkit macair app-check.
+    app_absent:
+      - 'chrome/browser/content/builtin-themes/alpenglow/*'
+      - 'chrome/browser/content/builtin-themes/dark/*'
+      - 'chrome/browser/content/builtin-themes/light/*'
     verify:
       - omni_absent: [chrome/browser/content/builtin-themes/light/, chrome/browser/content/builtin-themes/dark/, chrome/browser/content/builtin-themes/alpenglow/]
       - pref: {name: ui.systemUsesDarkTheme, value: 1, locked: true}
@@ -659,6 +674,17 @@ decisions:
       program icon at 16 px beside their title (WTNCA_NODRAWICON; the taskbar, Alt+Tab and the system menu keep
       it), and the error card of blocked and failed pages, which draws its picture inside its own shadow root
       where the theme's override cannot reach, names the master instead of Mozilla's illustrations.
+    # app_absent (2026-10-22, owner: "drop them. gorilla has its own pdf icon ... those look HUGE. we do not want extra
+    # cpu and gpu usage"): test4 shipped Momiji's maple-leaf branding (about.png, about-logo@2x, the private-mode pair,
+    # about-logo.svg with two 1024 px pictures inside, document_pdf.svg) from an old build folder. Only about-logo.png,
+    # the one Gorilla master, belongs in the app. Read by fieldkit macair app-check.
+    app_absent:
+      - 'chrome/browser/content/branding/about.png'
+      - 'chrome/browser/content/branding/about-logo@2x.png'
+      - 'chrome/browser/content/branding/about-logo-private.png'
+      - 'chrome/browser/content/branding/about-logo-private@2x.png'
+      - 'chrome/browser/content/branding/about-logo.svg'
+      - 'chrome/browser/content/branding/document_pdf.svg'
     verify:
       - tree_lacks: {path: toolkit/components/aboutpdf/content/aboutPDF.html, text: "chrome://branding/content/icon"}
       - fieldkit_test: tests/test_buildh_techniques_one_logo.py
@@ -700,6 +726,14 @@ decisions:
       environment still logs to a file (the leak gate's HTTP log uses it), and the Gecko profiler itself stays
       compiled. Cost: no built-in profiler or logging page; profile with the harness (build-harness weigh, the
       probes) or a profiler viewer run locally.
+    # app_absent: paths inside the BUILT app's omni.ja archives that must not exist (fnmatch, * crosses folders).
+    # Added 2026-10-22: test4 (an incremental Mac build) still shipped them from an old build folder although the
+    # source had removed them; the source checks above could not see it. Read by fieldkit macair app-check.
+    app_absent:
+      - 'chrome/toolkit/content/global/usercharacteristics/*'
+      - 'chrome/browser/content/browser/asrouter/asrouter-admin*'
+      - 'chrome/browser/content/browser/asrouter/components/ASRouterAdmin/*'
+      - 'chrome/browser/content/browser/messagepreview/*'
     verify:
       - tree_lacks: {path: docshell/base/nsAboutRedirector.cpp, text: '{"glean", "chrome://global/content/aboutGlean.html",'}
       - tree_lacks: {path: docshell/base/nsAboutRedirector.cpp, text: '{"logging", "chrome://global/content/aboutLogging/aboutLogging.html",'}
@@ -1121,6 +1155,22 @@ decisions:
       the Smartbar's SmartbarInput.mjs is deleted, so the classic bar is the only bar; the AI texts and the AI sidebar
       stylesheet are neither shipped nor loaded by any window; the ML engine, smart tab groups and semantic history
       are switched off and locked. Each Firefox version: re-check these with the register, adapt, never re-argue.
+    # app_absent: paths inside the BUILT app's omni.ja archives that must not exist (fnmatch, * crosses folders).
+    # Added 2026-10-22: test4 (an incremental Mac build) still shipped them from an old build folder although the
+    # source had removed them; the source checks above could not see it. Read by fieldkit macair app-check.
+    app_absent:
+      - 'chrome/browser/content/browser/aiwindow/*'
+      - 'chrome/toolkit/content/global/ml/*'
+      - 'chrome/browser/content/browser/genai/*'
+      - 'chrome/browser/content/browser/preferences/config/aiFeatures.mjs'
+      - 'chrome/browser/content/browser/preferences/OnDeviceModelManager.mjs'
+      - 'chrome/browser/content/browser/firefoxview/*chats*'
+      - 'chrome/browser/content/builtin-themes/aiwindow*'
+      - 'chrome/browser/skin/classic/browser/aiWindowSidebar.css'
+      - 'chrome/browser/skin/classic/browser/smartwindowGroupTabs.css'
+      - 'localization/*/preview/aiWindow.ftl'
+      - 'localization/*/preview/smartTabGroups.ftl'
+      - 'localization/*/locales-preview/smartWindow-aboutAddons.ftl'
     verify:
       - tree_absent: [browser/components/urlbar/content/SmartbarInput.mjs]
       - tree_present: [browser/modules/AIWindowStub.sys.mjs]
@@ -1393,6 +1443,26 @@ decisions:
       - mozconfig_has: {file: gorilla-patchset/mozconfig, platform: linux, text: "ac_add_options --without-wasm-sandboxed-libraries"}
       - mozconfig_lacks: {file: config/mozconfig.win64, platform: windows, text: "ac_add_options --without-wasm-sandboxed-libraries"}
       - fieldkit_test: tests/test_buildh_decisions.py
+
+  - id: D-158-21
+    title: "Text in Segoe UI, monospace in Consolas, on every machine; neither locked"
+    decided: 2026-10-22
+    by: maintainer
+    provenance: 'chat 2026-10-22 (Linux session, test4 on the MacBook Air): asked which is better, Segoe UI Variable or Segoe UI, "we want to go for the most crispiest and clearest font that can be displayed on small screens AND on the tiny windows like 11 inch windows and terminals"; after the measurement on the Air, "yes, Segoe UI for text and Consolas for monospace"; after what monospace is used for: "yes, apply it and record it in the register"'
+    status: enforced
+    why: >
+      Text: D-158-12 holds (Segoe UI). Segoe UI Variable was measured against it on the MacBook Air 4,1 (1366x768,
+      macOS 10.13.6, test4) at 10 to 16 px: the pixels were almost the same and the line widths matched (309 vs
+      308 px at 10 px), so the Variable font's size-tuned designs were not in use there and gave nothing. Not
+      measured on Windows 11, which does use them. Monospace (code, logs, view-source, about:config, web consoles,
+      text files) must keep every character the same width, which no Segoe does; the set named JetBrains Mono,
+      which is bundled nowhere, so the Air fell back to a system font. Consolas is in the bundled set
+      (11.FONT.SYSTEM), keeps Il1 and O0 apart, and rendered clean at 13 px on the Air. Not locked, so a person who
+      needs another font for reading can still choose it.
+    verify:
+      - pref: {name: font.name.monospace.x-western, value: Consolas, locked: false}
+      - tree_pref_all: {name: font.name.monospace.x-western, value: Consolas}
+      - pref: {name: font.name.sans-serif.x-western, value: Segoe UI, locked: false}
 
   - id: D-158-22
     title: "The uninstaller contacts nothing: no survey, no uninstall ping, no Mozilla help link; Publisher is Gorilla"
