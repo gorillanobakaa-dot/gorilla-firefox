@@ -1,4 +1,4 @@
-<!-- Version: 1.2.0 · updated 26-10-23-15-40 -->
+<!-- Version: 1.2.0 · updated 26-10-23-22-30 -->
 # Gorilla Unleashed for old Macs (MacBook Air 2011, macOS 10.13 High Sierra)
 
 Apple stopped updating these Macs years ago, and Firefox stopped supporting macOS 10.13. This is the Gorilla browser
@@ -72,6 +72,8 @@ ends with one line: `VERDICT READY: <zip>`.
 
 ## Known limits (measured on the Air, 4 GB of memory)
 
-- Memory: about 540 MB for a blank page, 1.6 GB playing a 1080p60 video. The goal is 500 MB or less; work continues.
+- Memory (all browser processes, Macs Fan Control off, 2026-10-23): 499 MB for a blank page two minutes after start,
+  about 1.0 GB playing a 1080p60 H.264 video. The home page and new-tab page are blank and no spare content process
+  is started ahead of need; together these took 162 MB off the idle total.
 - Hardware video decoding works for H.264 (the Intel HD 3000 has no VP9 or AV1 hardware).
 - Not yet measured: running temperature over a long session with the latest build.

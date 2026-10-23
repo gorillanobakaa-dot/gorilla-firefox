@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Version: 1.1.0 · updated 26-10-23-08-10
+# Version: 1.2.0 · updated 26-10-23-19-21
 # =====================================================================================================================
 # recreate-mac.sh: Gorilla Unleashed for old Intel Macs (built for the MacBook Air 2011, macOS 10.13 High Sierra)
 # =====================================================================================================================
@@ -95,7 +95,17 @@ preflight() {
 
 source_tree() {
   say "== source: Momiji $MOMIJI_TAG + route $ROUTE"
-  if [ -f "$SRC/.gorilla-route" ]; then done_ "already prepared ($(cat "$SRC/.gorilla-route"))"; return; fi
+  # The marker names the series it was made from. A tree made from an older series is put back to Momiji and the
+  # new series applied (2026-10-23: a changed series was skipped as "already prepared" and the build would have
+  # shipped the old patches).
+  if [ -f "$SRC/.gorilla-route" ]; then
+    if grep -q "series $PATCHES_SHA256" "$SRC/.gorilla-route"; then done_ "already prepared ($(cat "$SRC/.gorilla-route"))"; return; fi
+    [ -z "$(git -C "$SRC" status --porcelain --untracked-files=no)" ] || stop source "$SRC has uncommitted changes and an older series" \
+        "look at git -C $SRC status; move the tree to the trash if nothing there is yours, then run again"
+    say "  the tree was made from another series ($(cat "$SRC/.gorilla-route")): back to Momiji, then the new series"
+    git -C "$SRC" reset -q --hard "$MOMIJI_COMMIT" || stop source "could not go back to Momiji $MOMIJI_COMMIT" "move $SRC to the trash and run again"
+    rm -f "$SRC/.gorilla-route"
+  fi
   if [ ! -d "$SRC/.git" ]; then
     say "  downloading Momiji (shallow, about 5.9 GB on disk)"
     git clone --depth 1 --branch "$MOMIJI_TAG" "$MOMIJI_URL" "$SRC"
@@ -122,7 +132,7 @@ source_tree() {
     git -C "$SRC" am --quiet -3 "${all[@]:2}" || stop source "route B: a Mac commit did not apply on your set" \
         "resolve it (git -C $SRC status), git am --continue, then run this stage again"
   fi
-  echo "route $ROUTE $(date -u +%FT%TZ)" > "$SRC/.gorilla-route"
+  echo "route $ROUTE $(date -u +%FT%TZ) series $PATCHES_SHA256" > "$SRC/.gorilla-route"
   done_ "source ready, route $ROUTE, $(git -C "$SRC" log --oneline | wc -l) commits"
 }
 
