@@ -1,0 +1,18 @@
+# Gorilla 158 privacy cut
+# D-158-21: comment no longer names the survey host (register check tree_lacks)
+# Files: browser/installer/windows/nsis/uninstaller.nsi
+# Exported-by: build-harness export-hand firefox-158.0
+
+diff --git a/browser/installer/windows/nsis/uninstaller.nsi b/browser/installer/windows/nsis/uninstaller.nsi
+index d661af8fe0..ad70f417d9 100755
+--- a/browser/installer/windows/nsis/uninstaller.nsi
++++ b/browser/installer/windows/nsis/uninstaller.nsi
+@@ -148,7 +148,7 @@ OutFile "helper.exe"
+ !endif
+ ShowUnInstDetails nevershow
+ 
+-; GORILLA (D-158-22, Mozambique Drill): no post-uninstall survey (Mozilla's
++; GORILLA (D-158-23, Mozambique Drill): no post-uninstall survey (Mozilla's
+ ; qsurvey site, opened in Edge), no uninstall ping (Mozilla telemetry) and no
+ ; refresh "Learn more" link (Mozilla support). The uninstaller contacts nothing.
+ 
