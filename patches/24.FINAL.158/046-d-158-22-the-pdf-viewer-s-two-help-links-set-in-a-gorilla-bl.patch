@@ -1,0 +1,19 @@
+# Gorilla 158 change on top of the set
+# D-158-22: the PDF viewer's two help links set in a GORILLA block at the end of the generated PdfJsDefaultPrefs.js, upstream's lines restored (T-157-34-A)
+# Files: toolkit/components/pdfjs/PdfJsDefaultPrefs.js
+# Exported-by: build-harness export-hand firefox-158-linux
+
+diff --git a/toolkit/components/pdfjs/PdfJsDefaultPrefs.js b/toolkit/components/pdfjs/PdfJsDefaultPrefs.js
+index 629bda3bf0..7ded9521b6 100644
+--- a/toolkit/components/pdfjs/PdfJsDefaultPrefs.js
++++ b/toolkit/components/pdfjs/PdfJsDefaultPrefs.js
+@@ -72,7 +72,7 @@ pref("pdfjs.viewerCssTheme", 0);
+ 
+ #include PdfJsOverridePrefs.js
+ 
+-// GORILLA D-158-22 (owner 2026-10-23): no Learn more and no link to Mozilla; the PDF viewer's help links are empty
+-// and locked. This file is generated from pdf.js, so the values are set here at its end (T-157-34-A).
++/* GORILLA D-158-22 (owner 2026-10-23): no Learn more and no link to Mozilla; the PDF viewer's help links are empty
++   and locked. This file is generated from pdf.js, so the values are set here at its end (T-157-34-A). */
+ pref("pdfjs.altTextLearnMoreUrl", "", locked);
+ pref("pdfjs.commentLearnMoreUrl", "", locked);
