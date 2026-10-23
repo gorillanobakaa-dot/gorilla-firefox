@@ -3,10 +3,16 @@
 # exclude_reason_158); this patch carries the file from the remaining set to the built tree.
 
 diff --git a/toolkit/components/normandy/content/about-studies/about-studies.css b/toolkit/components/normandy/content/about-studies/about-studies.css
-index f1701598833d6c232d751aae57650d0805ef16e5..f1954614b4f4443f9373b7abfe2b39b33933992e 100644
+index f1701598833d6c232d751aae57650d0805ef16e5..691d36f2a8fe9648bff617d5821613b59268c174 100644
 --- a/toolkit/components/normandy/content/about-studies/about-studies.css
 +++ b/toolkit/components/normandy/content/about-studies/about-studies.css
-@@ -188,5 +188,5 @@ a, .learn-more-link { color: #35b3ee !important; }
+@@ -183,10 +183,10 @@ body, .info-box-content, .study-description, .study-name, .study-status,
+ .study-header, p, h1, h2, span, div {
+   color: #00FFFF !important;
+ }
+-a, .learn-more-link { color: #35b3ee !important; }
++a, .learn-more-link { color: #00FFFF !important; }
+ 
  /* GORILLA OVERRIDE 2026-07-31 (2nd pass): the crisp gorilla the author specified
     for this page — same fixed-bottom mechanism as aboutTelemetry.css. */
  body {

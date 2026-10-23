@@ -1,0 +1,31 @@
+# Gorilla 158 rebase: browser/base/content/aboutDialog.js as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/base/content/aboutDialog.js b/browser/base/content/aboutDialog.js
+index da516e3d37283b067cdc02eb251dd435c335870c..2d343a997acf32157d42a910f5580f5d3e8f1c62 100644
+--- a/browser/base/content/aboutDialog.js
++++ b/browser/base/content/aboutDialog.js
+@@ -84,17 +84,13 @@ function init() {
+   }
+ 
+   // GORILLA D-157-38 (2026-10-08): every version line also says when this build was made, from the build's own
+-  // BuildID (application.ini; the harness records and checks the same number): "built YY:MM:DD:HH:MM:SS".
++  // BuildID (application.ini; the harness records and checks the same number): "built YYYY-MM-DD-HHMMhrs".
+   let buildStamp = Services.appinfo.appBuildID;
+   if (/^\d{14}$/.test(buildStamp)) {
+-    versionAttributes.built = [
+-      buildStamp.slice(2, 4),
+-      buildStamp.slice(4, 6),
+-      buildStamp.slice(6, 8),
+-      buildStamp.slice(8, 10),
+-      buildStamp.slice(10, 12),
+-      buildStamp.slice(12, 14),
+-    ].join(":");
++    // GORILLA 2026-10-15 (owner): "2026-10-15-2050hrs", not "26:10:15:20:50:14" (hard to read). Seconds left out.
++    versionAttributes.built =
++      `${buildStamp.slice(0, 4)}-${buildStamp.slice(4, 6)}-${buildStamp.slice(6, 8)}-` +
++      `${buildStamp.slice(8, 10)}${buildStamp.slice(10, 12)}hrs`;
+     versionIdKey += "-gorilla";
+     // GORILLA D-157-38 (2026-10-09): the build number (branding pref, raised per release candidate)
+     versionAttributes.build = Services.prefs.getIntPref("gorilla.build.number", 0);

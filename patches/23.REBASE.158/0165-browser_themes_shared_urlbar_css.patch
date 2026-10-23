@@ -3,7 +3,7 @@
 # exclude_reason_158); this patch carries the file from the remaining set to the built tree.
 
 diff --git a/browser/themes/shared/urlbar.css b/browser/themes/shared/urlbar.css
-index 61ef517759225ef44b42b535fef6dacbfd0f6285..1ded03a1895cd549b13ad3fd789e02ccf84ab745 100644
+index 9b292578ad024f64c21cad61fd42b69b14cf3052..f9c46ffd772c99e2529bf4b2cfe6c7d7d8c76508 100644
 --- a/browser/themes/shared/urlbar.css
 +++ b/browser/themes/shared/urlbar.css
 @@ -1040,7 +1040,8 @@ toolbar[inactive="true"] .urlbar,

@@ -1,0 +1,31 @@
+# Gorilla 158 rebase: browser/themes/shared/addons/unified-extensions.css as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/themes/shared/addons/unified-extensions.css b/browser/themes/shared/addons/unified-extensions.css
+index 1dbfbc8eea6a2fc1fe0274fba07e3fe61a7d96ee..1b298349ed43470925867797eaebd95ce6ab3af8 100644
+--- a/browser/themes/shared/addons/unified-extensions.css
++++ b/browser/themes/shared/addons/unified-extensions.css
+@@ -359,7 +359,7 @@ unified-extensions-item.unified-extensions-item {
+ }
+ 
+ #unified-extensions-empty-state > description {
+-  color: #b0b0b8 !important;
++  color: #00FFFF !important;
+   text-align: center !important;
+ }
+ 
+@@ -367,11 +367,11 @@ unified-extensions-item.unified-extensions-item {
+ #unified-extensions-discover-extensions {
+   background-color: #121214 !important;
+   color: #ffffff !important;
+-  border: 1px solid #2b2b2e !important;
++  border: 1px solid #1A4D4D !important;
+   border-radius: 8px !important;
+   margin: 10px auto !important;
+ }
+ 
+ #unified-extensions-discover-extensions:hover {
+-  background-color: #1c1c1f !important;
++  background-color: #000000 !important;
+ }

@@ -3,7 +3,7 @@
 # exclude_reason_158); this patch carries the file from the remaining set to the built tree.
 
 diff --git a/browser/themes/shared/preferences/preferences.css b/browser/themes/shared/preferences/preferences.css
-index 708e03097bf22863911ad27135343eb02c5ab77b..e02ef0777b7245d435b0579d8a1afae3a885518b 100644
+index 708e03097bf22863911ad27135343eb02c5ab77b..1b6fb4e4f230076471c8ec5763e843953215e8fb 100644
 --- a/browser/themes/shared/preferences/preferences.css
 +++ b/browser/themes/shared/preferences/preferences.css
 @@ -1651,15 +1651,8 @@ setting-pane[onsearchpane] {
@@ -24,6 +24,15 @@ index 708e03097bf22863911ad27135343eb02c5ab77b..e02ef0777b7245d435b0579d8a1afae3
  
  /* ==========================================================================
     GORILLA REJECTED 2026-08-01: privacy-pane promo gorilla injection
+@@ -1676,7 +1669,7 @@ label, description, .text-link, .help-button, h1, h2 {
+ }
+ 
+ .text-link {
+-  color: #35b3ee !important;
++  color: #00FFFF !important;
+ }
+ 
+ /* Global Background Force */
 @@ -1702,6 +1695,7 @@ label, description, .text-link, .help-button, h1, h2 {
      top: 180px !important;
      width: 500px !important;

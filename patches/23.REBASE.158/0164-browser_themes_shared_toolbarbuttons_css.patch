@@ -3,10 +3,10 @@
 # exclude_reason_158); this patch carries the file from the remaining set to the built tree.
 
 diff --git a/browser/themes/shared/toolbarbuttons.css b/browser/themes/shared/toolbarbuttons.css
-index 67773c7421982215171dce0bfc93c3c2c18d7c80..455d05bc31620fb8789a4edabaeee8ca79f0428e 100644
+index 67773c7421982215171dce0bfc93c3c2c18d7c80..331896b350a62a194d9cb7efa24d9add876b2d92 100644
 --- a/browser/themes/shared/toolbarbuttons.css
 +++ b/browser/themes/shared/toolbarbuttons.css
-@@ -854,4 +854,31 @@ toolbar[keyNav]:not([collapsed], [customizing]) toolbartabstop,
+@@ -854,4 +854,32 @@ toolbar[keyNav]:not([collapsed], [customizing]) toolbartabstop,
    &:is([gorilla-level="1"], [gorilla-level="2"]) > :is(.toolbarbutton-icon, .toolbarbutton-text) {
      background-color: var(--toolbarbutton-background-color-active);
    }
@@ -28,7 +28,8 @@ index 67773c7421982215171dce0bfc93c3c2c18d7c80..455d05bc31620fb8789a4edabaeee8ca
 +      color: inherit !important;
 +
 +      &[_moz-menuactive] {
-+        background-color: color-mix(in srgb, var(--toolbar-text-color, #00ffff) 25%, transparent) !important;
++        /* THEME.yaml (D-158-19): every hovered row is the highlight; was cyan at 25% (probe theme-diag, 2026-10-18) */
++        background-color: #65568C !important;
 +      }
 +    }
 +

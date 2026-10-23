@@ -1,0 +1,16 @@
+# Gorilla 158 rebase: browser/base/content/aboutDialog.xhtml as built on Firefox 158
+# The earlier patches of this file do not apply to pristine 158 (superseded in the policy with
+# exclude_reason_158); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/base/content/aboutDialog.xhtml b/browser/base/content/aboutDialog.xhtml
+index 83ed0d7cf8d9c6b2b185afc513ded65653bdfa78..fcbf0090f9d58433d5bb80b3d44673538e2aa615 100644
+--- a/browser/base/content/aboutDialog.xhtml
++++ b/browser/base/content/aboutDialog.xhtml
+@@ -49,6 +49,7 @@
+         <!-- This HBOX is duplicated below with class="update" -->
+         <hbox align="baseline">
+           <label id="version"/>
++          <label id="gorilla-buildid" class="text-blurb" hidden="true"/>
+           <label id="releasenotes" is="text-link" hidden="true" data-l10n-id="releaseNotes-link"/>
+         </hbox>
+ #endif

@@ -3,7 +3,7 @@
 # exclude_reason_158); this patch carries the file from the remaining set to the built tree.
 
 diff --git a/browser/components/preferences/config/tabs-browsing.mjs b/browser/components/preferences/config/tabs-browsing.mjs
-index 4ddb7b5a0cfe3eb93c90fc86837cdeab51923288..a5a1fc3e7551bb4cb24ceebd4670420f8eeb8dd4 100644
+index 342a5f5c4047739dd857e5a96b77fc6720c34ec6..b55591ce7d0041c207cd0264dabf4953fccea7d9 100644
 --- a/browser/components/preferences/config/tabs-browsing.mjs
 +++ b/browser/components/preferences/config/tabs-browsing.mjs
 @@ -258,19 +258,8 @@ Preferences.addSetting({
@@ -28,7 +28,7 @@ index 4ddb7b5a0cfe3eb93c90fc86837cdeab51923288..a5a1fc3e7551bb4cb24ceebd4670420f
  });
  Preferences.addSetting({
    id: "tabGroupDragToCreate",
-@@ -631,10 +620,7 @@ SettingGroupManager.registerGroups({
+@@ -616,10 +605,7 @@ SettingGroupManager.registerGroups({
              id: "tabPreviewShowThumbnails",
              l10nId: "settings-tabs-show-image-in-preview",
            },
