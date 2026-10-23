@@ -1463,3 +1463,28 @@ decisions:
       - pref: {name: font.name.monospace.x-western, value: Consolas, locked: false}
       - tree_pref_all: {name: font.name.monospace.x-western, value: Consolas}
       - pref: {name: font.name.sans-serif.x-western, value: Segoe UI, locked: false}
+
+  - id: D-158-23
+    title: "The uninstaller contacts nothing: no survey, no uninstall ping, no Mozilla help link; Publisher is Gorilla"
+    decided: 2026-10-23
+    by: maintainer
+    platforms: [windows]
+    provenance: 'chat 2026-10-23, after a user report (finish-page checkbox "Tell Gorilla why you uninstalled Gorilla Unleashed" led to a "you need a new app" dialog): "Yes, remove the survey, uninstall ping and Mozilla links from uninstaller.nsi and set the publisher to Gorilla."; "Mozambique that thing. we have our technique"'
+    status: enforced
+    why: >
+      The checkbox said "Gorilla" but opened Edge (microsoft-edge: via ExecInExplorer, forced even when Edge is not
+      the default) at qsurvey.mozilla.com with channel, version and the exact Windows build; without Edge, Windows
+      showed "you need a new app". After any uninstall the uninstaller also posted a queued uninstall ping to
+      incoming.telemetry.mozilla.org, and the refresh page's "Learn more" opened support.mozilla.org. All removed
+      (survey, ping, link); TELEMETRY_BASE_URL emptied (Mozambique Drill shot 2) so any installer ping left upstream
+      posts nowhere. Settings > Installed apps showed Publisher "Mozilla"; it is now the branding CompanyName. The
+      Mozilla Maintenance Service entry keeps "Mozilla" (Mozilla's shared service, not installed by Gorilla).
+      Cost: none; the refresh button stays. Not yet proven on a built helper.exe.
+    verify:
+      - tree_lacks: {path: browser/installer/windows/nsis/uninstaller.nsi, text: "qsurvey.mozilla.com"}
+      - tree_lacks: {path: browser/installer/windows/nsis/uninstaller.nsi, text: "ExecInExplorer::Exec"}
+      - tree_lacks: {path: browser/installer/windows/nsis/uninstaller.nsi, text: "HttpPostFile::Post"}
+      - tree_lacks: {path: browser/installer/windows/nsis/uninstaller.nsi, text: "support.mozilla.org/kb/refresh"}
+      - tree_lacks: {path: browser/installer/windows/nsis/defines.nsi.in, text: "incoming.telemetry.mozilla.org"}
+      - tree_lacks: {path: browser/installer/windows/nsis/shared.nsh, text: "\"Publisher\" \"Mozilla\""}
+      - tree_contains: {path: browser/installer/windows/nsis/shared.nsh, text: "\"Publisher\" \"${CompanyName}\""}

@@ -1,0 +1,349 @@
+# Gorilla 158 privacy cut
+# Gorilla 2026-10-23 (user report: 'Tell Gorilla why you uninstalled' checkbox): uninstaller contacts nothing. Removed post-uninstall survey (qsurvey.mozilla.com via microsoft-edge: + ExecInExplorer), uninstall ping (HttpPostFile to incoming.telemetry.mozilla.org), refresh 'Learn more' link (support.mozilla.org); TELEMETRY_BASE_URL emptied (Mozambique Drill shot 2); uninstall Publisher = CompanyName (Gorilla) instead of Mozilla.
+# Files: browser/installer/windows/nsis/defines.nsi.in, browser/installer/windows/nsis/shared.nsh, browser/installer/windows/nsis/uninstaller.nsi
+# Exported-by: build-harness export-hand firefox-158.0
+
+diff --git a/browser/installer/windows/nsis/defines.nsi.in b/browser/installer/windows/nsis/defines.nsi.in
+index e57cb6b971..b16d9733e5 100644
+--- a/browser/installer/windows/nsis/defines.nsi.in
++++ b/browser/installer/windows/nsis/defines.nsi.in
+@@ -151,7 +151,9 @@ VIAddVersionKey "ProductVersion"  "${AppVersion}"
+ !define APPROXIMATE_REQUIRED_SPACE_MB "145"
+ 
+ # Constants for parts of the telemetry submission URL
+-!define TELEMETRY_BASE_URL https://incoming.telemetry.mozilla.org/submit
++# GORILLA (Mozambique Drill, shot 2): no endpoint. The uninstall ping code is
++# removed; any installer ping left upstream posts to nothing. 2026-10-23.
++!define TELEMETRY_BASE_URL ""
+ !define TELEMETRY_NAMESPACE firefox-installer
+ !define TELEMETRY_INSTALL_PING_VERSION 1
+ !define TELEMETRY_INSTALL_PING_DOCTYPE install
+diff --git a/browser/installer/windows/nsis/shared.nsh b/browser/installer/windows/nsis/shared.nsh
+index b85e73da77..82f4622b35 100755
+--- a/browser/installer/windows/nsis/shared.nsh
++++ b/browser/installer/windows/nsis/shared.nsh
+@@ -703,7 +703,8 @@ FunctionEnd
+     ${WriteRegStr2} $RegHive "$0" "DisplayName" "${BrandFullNameInternal}$3 (${ARCH} ${AB_CD})" 0
+     ${WriteRegStr2} $RegHive "$0" "HelpLink" "${HelpLink}" 0
+     ${WriteRegStr2} $RegHive "$0" "InstallLocation" "$8" 0
+-    ${WriteRegStr2} $RegHive "$0" "Publisher" "Mozilla" 0
++    ; GORILLA: Publisher is the branding CompanyName ("Gorilla"), not "Mozilla".
++    ${WriteRegStr2} $RegHive "$0" "Publisher" "${CompanyName}" 0
+     ${WriteRegStr2} $RegHive "$0" "UninstallString" "$\"$8\uninstall\helper.exe$\"" 0
+     DeleteRegValue SHCTX "$0" "URLInfoAbout"
+ ; Don't add URLUpdateInfo which is the release notes url except for the release
+diff --git a/browser/installer/windows/nsis/uninstaller.nsi b/browser/installer/windows/nsis/uninstaller.nsi
+index 7a39e2f813..4e512ee2b6 100755
+--- a/browser/installer/windows/nsis/uninstaller.nsi
++++ b/browser/installer/windows/nsis/uninstaller.nsi
+@@ -45,8 +45,6 @@ ManifestDPIAware true
+ 
+ Var TmpVal
+ Var MaintCertKey
+-Var ShouldOpenSurvey
+-Var ShouldSendPing
+ Var InstalledVersion
+ Var InstalledBuildID
+ Var ShouldPromptForRefresh
+@@ -150,10 +148,9 @@ OutFile "helper.exe"
+ !endif
+ ShowUnInstDetails nevershow
+ 
+-!define URLUninstallSurvey "https://qsurvey.mozilla.com/s3/FF-Desktop-Post-Uninstall?channel=${UpdateChannel}&version=${AppVersion}&osversion="
+-
+-; Support for the profile refresh feature
+-!define URLProfileRefreshHelp "https://support.mozilla.org/kb/refresh-firefox-reset-add-ons-and-settings"
++; GORILLA: no post-uninstall survey (qsurvey.mozilla.com via Edge), no
++; uninstall ping (incoming.telemetry.mozilla.org) and no refresh "Learn more"
++; link (support.mozilla.org). The uninstaller contacts nothing. 2026-10-23.
+ 
+ ; Arguments to add to the command line when launching FileMainEXE for profile refresh
+ !define ArgsProfileRefresh "-reset-profile -migration -uninstaller-profile-refresh"
+@@ -198,11 +195,7 @@ UninstPage custom un.preConfirm
+ ; Remove Files Page
+ !insertmacro MUI_UNPAGE_INSTFILES
+ 
+-; Finish Page
+-!define MUI_FINISHPAGE_SHOWREADME
+-!define MUI_FINISHPAGE_SHOWREADME_NOTCHECKED
+-!define MUI_FINISHPAGE_SHOWREADME_TEXT $(UN_SURVEY_CHECKBOX_LABEL)
+-!define MUI_FINISHPAGE_SHOWREADME_FUNCTION un.Survey
++; Finish Page (GORILLA: no survey checkbox)
+ !define MUI_PAGE_CUSTOMFUNCTION_PRE un.preFinish
+ !define MUI_PAGE_CUSTOMFUNCTION_SHOW un.showFinish
+ !insertmacro MUI_UNPAGE_FINISH
+@@ -213,15 +206,6 @@ ChangeUI IDD_VERIFY "${NSISDIR}\Contrib\UIs\default.exe"
+ ################################################################################
+ # Helper Functions
+ 
+-Function un.Survey
+-  ; We can't actually call ExecInExplorer here because it's going to have to
+-  ; make some marshalled COM calls and those are not allowed from within a
+-  ; synchronous message handler (where we currently are); we'll be thrown
+-  ; RPC_E_CANTCALLOUT_ININPUTSYNCCALL if we try. So all we can do is record
+-  ; that we need to make the call later, which we'll do from un.onGUIEnd.
+-  StrCpy $ShouldOpenSurvey "1"
+-FunctionEnd
+-
+ ; This function is used to uninstall the maintenance service if the
+ ; application currently being uninstalled is the last application to use the
+ ; maintenance service.
+@@ -307,100 +291,6 @@ Function un.LaunchAppForRefreshFromElevatedProcess
+   ${ExecAndWaitForInputIdle} "$\"$INSTDIR\${FileMainEXE}$\" ${ArgsProfileRefresh}"
+ FunctionEnd
+ 
+-Function un.LaunchRefreshHelpPage
+-  Push $0
+-  Push $1
+-  ClearErrors
+-  ${GetParameters} $0
+-  ${GetOptions} "$0" "/UAC:" $1
+-  ${If} ${Errors}
+-    Call un.OpenRefreshHelpURL
+-  ${Else}
+-    GetFunctionAddress $0 un.OpenRefreshHelpURL
+-    UAC::ExecCodeSegment $0
+-  ${EndIf}
+-  Pop $1
+-  Pop $0
+-FunctionEnd
+-
+-Function un.OpenRefreshHelpURL
+-  ExecShell "open" "${URLProfileRefreshHelp}"
+-FunctionEnd
+-
+-Function un.SendUninstallPing
+-  ; Notably, we only check the non-private AUMID here. There's no good reason
+-  ; to send the uninstall ping twice.
+-  ${If} $AppUserModelID == ""
+-    Return
+-  ${EndIf}
+-
+-  Push $0   ; $0 = Find handle
+-  Push $1   ; $1 = Found ping file name
+-  Push $2   ; $2 = Directory containing the pings
+-  Push $3   ; $3 = Ping file name filespec
+-  Push $4   ; $4 = Offset of ID in file name
+-  Push $5   ; $5 = URL, POST result
+-  Push $6   ; $6 = Full path to the ping file
+-
+-  Call un.GetCommonDirectory
+-  Pop $2
+-
+-  ; The ping ID is in the file name, so that we can get it for the submission URL
+-  ; without having to parse the ping. Since we don't know the exact name, use FindFirst
+-  ; to locate the file.
+-  ; Format is uninstall_ping_$AppUserModelID_$PingUUID.json
+-
+-  ; File name base
+-  StrCpy $3 "uninstall_ping_$AppUserModelID_"
+-  ; Get length of the fixed prefix, this is the offset of ping ID in the file name
+-  StrLen $4 $3
+-  ; Finish building filespec
+-  StrCpy $3 "$2\$3*.json"
+-
+-  ClearErrors
+-  FindFirst $0 $1 $3
+-  ; Build the full path
+-  StrCpy $6 "$2\$1"
+-
+-  ${IfNot} ${Errors}
+-    ; Copy the ping ID, starting after $AppUserModelID_, ending 5 from the end to remove .json
+-    StrCpy $5 $1 -5 $4
+-
+-    ; Build the full submission URL from the ID
+-    ; https://docs.telemetry.mozilla.org/concepts/pipeline/http_edge_spec.html#special-handling-for-firefox-desktop-telemetry
+-    ; It's possible for the path components to disagree with the contents of the ping,
+-    ; but this should be rare, and shouldn't affect the collection.
+-    StrCpy $5 "${TELEMETRY_BASE_URL}/${TELEMETRY_UNINSTALL_PING_NAMESPACE}/$5/${TELEMETRY_UNINSTALL_PING_DOCTYPE}/${AppName}/$InstalledVersion/${UpdateChannel}/$InstalledBuildID?v=4"
+-
+-    HttpPostFile::Post $6 "Content-Type: application/json$\r$\n" $5
+-    ; Pop the result. This could indicate an error if it's something other than
+-    ; "success", but we don't have any recovery path here anyway.
+-    Pop $5
+-
+-    ${Do}
+-      Delete $6
+-
+-      ; Continue to delete any other pings from this install. Only the first found will be sent:
+-      ; there should only be one ping, if there are more than one then something has gone wrong,
+-      ; it seems preferable to not try to send them all.
+-      ClearErrors
+-      FindNext $0 $1
+-      ; Build the full path
+-      StrCpy $6 "$2\$1"
+-    ${LoopUntil} ${Errors}
+-
+-    FindClose $0
+-  ${Endif}
+-
+-  Pop $6
+-  Pop $5
+-  Pop $4
+-  Pop $3
+-  Pop $2
+-  Pop $1
+-  Pop $0
+-FunctionEnd
+-
+ ################################################################################
+ # Install Sections
+ ; Empty section required for the installer to compile as an uninstaller
+@@ -815,31 +705,22 @@ Function un.preWelcome
+     ; Convert to translate newlines, this includes $PLUGINSDIR internally.
+     !insertmacro INSTALLOPTIONS_WRITE_UNCONVERT "ioSpecial.ini" "Field 3" Text "$(UN_REFRESH_PAGE_EXPLANATION)"
+ 
+-    ; Make room for the link and button
++    ; Make room for the button (GORILLA: no "Learn more" link to
++    ; support.mozilla.org; the refresh button is Field 4)
+     StrCpy $0 "148"
+     WriteINIStr "$PLUGINSDIR\ioSpecial.ini" "Field 3" Bottom  $0
+ 
+-    ; Show the help link
++    ; Show the refresh button.
+     IntOp $1 $0 + 14
+-    WriteINIStr "$PLUGINSDIR\ioSpecial.ini" "Field 4" Type    "link"
+-    WriteINIStr "$PLUGINSDIR\ioSpecial.ini" "Field 4" Text    "$(UN_REFRESH_LEARN_MORE)"
++    WriteINIStr "$PLUGINSDIR\ioSpecial.ini" "Field 4" Type    "button"
++    WriteINIStr "$PLUGINSDIR\ioSpecial.ini" "Field 4" Text    "$(UN_REFRESH_BUTTON)"
+     WriteINIStr "$PLUGINSDIR\ioSpecial.ini" "Field 4" Left    "120"
+     WriteINIStr "$PLUGINSDIR\ioSpecial.ini" "Field 4" Top     $0
+-    WriteINIStr "$PLUGINSDIR\ioSpecial.ini" "Field 4" Right   "315"
++    WriteINIStr "$PLUGINSDIR\ioSpecial.ini" "Field 4" Right   "240"
+     WriteINIStr "$PLUGINSDIR\ioSpecial.ini" "Field 4" Bottom  $1
+     WriteINIStr "$PLUGINSDIR\ioSpecial.ini" "Field 4" Flags   "NOTIFY"
+ 
+-    ; Show the refresh button.
+-    IntOp $2 $1 + 14
+-    WriteINIStr "$PLUGINSDIR\ioSpecial.ini" "Field 5" Type    "button"
+-    WriteINIStr "$PLUGINSDIR\ioSpecial.ini" "Field 5" Text    "$(UN_REFRESH_BUTTON)"
+-    WriteINIStr "$PLUGINSDIR\ioSpecial.ini" "Field 5" Left    "120"
+-    WriteINIStr "$PLUGINSDIR\ioSpecial.ini" "Field 5" Top     $1
+-    WriteINIStr "$PLUGINSDIR\ioSpecial.ini" "Field 5" Right   "240"
+-    WriteINIStr "$PLUGINSDIR\ioSpecial.ini" "Field 5" Bottom  $2
+-    WriteINIStr "$PLUGINSDIR\ioSpecial.ini" "Field 5" Flags   "NOTIFY"
+-
+-    WriteINIStr "$PLUGINSDIR\ioSpecial.ini" "Settings" NumFields 5
++    WriteINIStr "$PLUGINSDIR\ioSpecial.ini" "Settings" NumFields 4
+   ${EndIf}
+ FunctionEnd
+ 
+@@ -854,12 +735,6 @@ Function un.ShowWelcome
+   ReadINIStr $0 "$PLUGINSDIR\ioSpecial.ini" "Field 3" "HWND"
+   SetCtlColors $0 SYSCLR:WINDOWTEXT SYSCLR:WINDOW
+ 
+-  ${If} $ShouldPromptForRefresh == "1"
+-    ; Field 4 is the profile refresh help link
+-    ReadINIStr $0 "$PLUGINSDIR\ioSpecial.ini" "Field 4" "HWND"
+-    SetCtlColors $0 SYSCLR:HOTLIGHT SYSCLR:WINDOW
+-  ${EndIf}
+-
+   ; We need to overwrite the sidebar image so that we get it drawn with proper
+   ; scaling if the display is scaled at anything above 100%.
+   ${un.ChangeMUISidebarImage} "$PLUGINSDIR\modern-wizard.bmp"
+@@ -870,13 +745,9 @@ Function un.leaveWelcome
+ 
+   ${If} $ShouldPromptForRefresh == "1"
+     ReadINIStr $0 "$PLUGINSDIR\ioSpecial.ini" "Settings" "State"
+-    ${If} $0 == "5"
++    ${If} $0 == "4"
+       ; Refresh button
+       StrCpy $RefreshRequested "1"
+-    ${ElseIf} $0 == "4"
+-      ; Launch refresh help link, stay on this page
+-      Call un.LaunchRefreshHelpPage
+-      Abort
+     ${EndIf}
+   ${EndIf}
+ 
+@@ -993,28 +864,7 @@ Function un.preConfirm
+   !insertmacro MUI_INSTALLOPTIONS_SHOW
+ FunctionEnd
+ 
+-Function un.onUninstSuccess
+-  ; Send a ping at un.onGUIEnd, to avoid freezing the GUI.
+-  StrCpy $ShouldSendPing "1"
+-
+-  ${If} ${Silent}
+-    ; If this is a silent uninstall then un.onGUIEnd doesn't run, so do it now.
+-    Call un.SendUninstallPing
+-  ${EndIf}
+-FunctionEnd
+-
+ Function un.preFinish
+-  ; Need to give the survey (readme) checkbox a few extra DU's of height
+-  ; to accommodate a potentially multi-line label. If the reboot flag is set,
+-  ; then we're not showing the survey checkbox and Field 4 is the "reboot now"
+-  ; radio button; setting it to go from 90 to 120 (instead of 90 to 100) would
+-  ; cover up Field 5 which is "reboot later", running from 110 to 120. For
+-  ; whatever reason child windows get created at the bottom of the z-order, so
+-  ; 4 overlaps 5.
+-  ${IfNot} ${RebootFlag}
+-    WriteINIStr "$PLUGINSDIR\ioSpecial.ini" "Field 4" Bottom "120"
+-  ${EndIf}
+-
+   ; We don't want the header bitmap showing on the finish page.
+   GetDlgItem $0 $HWNDPARENT 1046
+   ShowWindow $0 ${SW_HIDE}
+@@ -1031,12 +881,15 @@ Function un.ShowFinish
+   ; scaling if the display is scaled at anything above 100%.
+   ${un.ChangeMUISidebarImage} "$PLUGINSDIR\modern-wizard.bmp"
+ 
+-  ; Either Fields 4 and 5 are the reboot option radio buttons, or Field 4 is
+-  ; the survey checkbox and Field 5 doesn't exist. Either way, we need to
+-  ; clear the theme from them before we can set their background colors.
++  ; Fields 4 and 5 are the reboot option radio buttons when a reboot is
++  ; needed (GORILLA: there is no survey checkbox); clear the theme from them
++  ; before we can set their background colors.
++  ClearErrors
+   ReadINIStr $0 "$PLUGINSDIR\ioSpecial.ini" "Field 4" "HWND"
+-  System::Call 'uxtheme::SetWindowTheme(i $0, w " ", w " ")'
+-  SetCtlColors $0 SYSCLR:WINDOWTEXT SYSCLR:WINDOW
++  ${IfNot} ${Errors}
++    System::Call 'uxtheme::SetWindowTheme(i $0, w " ", w " ")'
++    SetCtlColors $0 SYSCLR:WINDOWTEXT SYSCLR:WINDOW
++  ${EndIf}
+ 
+   ClearErrors
+   ReadINIStr $0 "$PLUGINSDIR\ioSpecial.ini" "Field 5" "HWND"
+@@ -1066,7 +919,6 @@ Function un.onInit
+   System::Call 'kernel32::SetDllDirectoryW(w "")'
+ 
+   StrCpy $LANGUAGE 0
+-  StrCpy $ShouldOpenSurvey "0"
+ 
+   ${un.UninstallUnOnInitCommon}
+ 
+@@ -1119,32 +971,4 @@ FunctionEnd
+ 
+ Function un.onGUIEnd
+   ${un.OnEndCommon}
+-
+-  ${If} $ShouldOpenSurvey == "1"
+-    ; Though these values are sometimes incorrect due to bug 444664 it happens
+-    ; so rarely it isn't worth working around it by reading the registry values.
+-    ${WinVerGetMajor} $0
+-    ${WinVerGetMinor} $1
+-    ${WinVerGetBuild} $2
+-    ${WinVerGetServicePackLevel} $3
+-    StrCpy $R1 "${URLUninstallSurvey}$0.$1.$2.$3"
+-
+-    ; We can't just open the URL normally because we are most likely running
+-    ; elevated without an unelevated process to redirect through, and we're
+-    ; not going to go around starting elevated web browsers. But to start an
+-    ; unelevated process directly from here we need a pretty nasty hack; see
+-    ; the ExecInExplorer plugin code itself for the details.
+-    ; If we were the default browser and we've now been uninstalled, we need
+-    ; to take steps to make sure the user doesn't see an "open with" dialog;
+-    ; they're helping us out by answering this survey, they don't need more
+-    ; friction.
+-    ; Windows 10 always seems to just clear the default browser, so for it
+-    ; we'll manually invoke Edge using Edge's custom URI scheme.
+-    ExecInExplorer::Exec "microsoft-edge:$R1"
+-  ${EndIf}
+-
+-  ; Finally send the ping, there's no GUI to freeze in case it is slow.
+-  ${If} $ShouldSendPing == "1"
+-    Call un.SendUninstallPing
+-  ${EndIf}
+ FunctionEnd

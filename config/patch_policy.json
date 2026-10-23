@@ -371,6 +371,14 @@
     "22.EGRESS.LOCKDOWN.158": {
       "status": "enabled",
       "reason": "Privacy cuts and lockdowns made on the 158 tree (2026-10-14/15): AI features excised (D-158-08), Smart Window removed, GenAI startup hook, Sync promo, add-on refusal message (D-157-05). Deleted files are listed in DELETED_FILES.manifest.txt. Cross-platform; apply in order.",
+      "exclude_on": {
+        "linux": [
+          "038-gorilla-2026-10-23-user-report-tell-gorilla-why-you-uninstal.patch",
+          "039-d-158-21-comment-no-longer-names-the-survey-host-register-ch.patch",
+          "040-d-158-21-comment-no-longer-names-the-survey-host-register-ch.patch",
+          "041-d-158-21-comment-no-longer-names-the-survey-host-register-ch.patch"
+        ]
+      },
       "exclude": [
         "005-about-smartpage-unregistered-d-157-00-158-renamed-about-aita.patch",
         "012-d-158-08-ai-texts-and-the-ai-sidebar-stylesheet-are-neither-.patch",
