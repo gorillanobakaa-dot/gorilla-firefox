@@ -1394,7 +1394,7 @@ decisions:
       - mozconfig_lacks: {file: config/mozconfig.win64, platform: windows, text: "ac_add_options --without-wasm-sandboxed-libraries"}
       - fieldkit_test: tests/test_buildh_decisions.py
 
-  - id: D-158-21
+  - id: D-158-22
     title: "The uninstaller contacts nothing: no survey, no uninstall ping, no Mozilla help link; Publisher is Gorilla"
     decided: 2026-10-23
     by: maintainer
