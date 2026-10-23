@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Version: 1.0.1 · updated 26-10-22-20-05
+# Version: 1.0.2 · updated 26-10-23-07-20
 # =====================================================================================================================
 # recreate-mac.sh: Gorilla Unleashed for old Intel Macs (built for the MacBook Air 2011, macOS 10.13 High Sierra)
 # =====================================================================================================================
@@ -20,7 +20,8 @@
 #          PATCHES_TARBALL=/path/patches-mac.tar.xz   use a local copy instead of downloading it
 #          FONTS_FROM=/path/to/folder                 a folder that already holds the 7 Microsoft font files
 # NEEDS:   64-bit Linux, about 45 GB free disk, 12 GB RAM or more (16 better), git, curl, python3, unzip, xz, 7z
-#          (fonts). Measured on the author's 2012 laptop (i7-3632QM, 16 GB): build about 2 hours.
+#          (fonts). Measured on the author's 2012 laptop (i7-3632QM, 16 GB): build 2 h 13 min (no compiler cache, on
+#          purpose: a shared cache once mixed old and new code and the browser crashed at start).
 # ENDS:    one line  VERDICT  READY: <zip>  (or the stage that stopped and why)
 # =====================================================================================================================
 set -euo pipefail

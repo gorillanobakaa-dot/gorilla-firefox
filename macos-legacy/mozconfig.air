@@ -1,6 +1,6 @@
-# Version: 1.1.0 · updated 26-10-22-19-10
-# PUBLIC COPY for recreate-mac.sh (gorilla-firefox/macos-legacy): no path of the author's machine; sccache only if
-# Mozilla's bootstrap installed it; all CPU cores. The author's own copy is the same settings.
+# Version: 1.2.0 · updated 26-10-23-07-20
+# PUBLIC COPY for recreate-mac.sh (gorilla-firefox/macos-legacy): no path of the author's machine; no compiler cache
+# (see below); all CPU cores. The author's own copy is the same settings.
 # AIR PROFILE build config (MacBookAir4,1). Derived from legacy-macos-to-linux-261020/mozconfig.legacy-mac
 # (the proven Test 1 config, kept unchanged). Gorilla legacy-macOS build: Momiji v157.0-mj source, cross-compiled on Debian
 # for macOS 10.12-10.14 (target machine: MacBook Air 4,1, Sandy Bridge, macOS 10.13.6).
@@ -68,11 +68,12 @@ export RUSTC_OPT_LEVEL="s"
 # AIR PROFILE: the Linux build's speed and size settings that apply to this target (owner 2026-10-20: "use CCACHE
 # and all the other tricks we use on linux"). From gorilla-firefox/mozconfig; each one is build-only (no behaviour
 # change for the user) or removes something already banned.
-# sccache: its OWN cache folder and server port (run-build.sh exports SCCACHE_DIR and SCCACHE_SERVER_PORT), so the
-# Linux 158 build's cache is never mixed or evicted.
-if [ -x "$HOME/.mozbuild/sccache/sccache" ]; then
-  ac_add_options --with-ccache="$HOME/.mozbuild/sccache/sccache"
-fi
+# NO compiler cache (2026-10-23): a shared sccache handed stale objects to a fresh build folder after the configure
+# options changed (the code asked for module 77 = mozIntl instead of 86 = AppStartup) and every such build crashed
+# at start (BUILD-LOG T49-T51). The build is slower (2 h 13 min on the 2012 laptop) and always correct.
+# OPEN FOR THE OWNER: this overrides the 2026-10-20 "use CCACHE" instruction above, as a safety measure taken while
+# the owner slept. Options: keep it off, or a cache per configuration (its folder named by a hash of this file and
+# the source commit) so two configurations can never mix.
 ac_add_options --enable-lto=thin
 ac_add_options --enable-strip
 ac_add_options --enable-rust-simd

@@ -1,4 +1,4 @@
-<!-- Version: 1.0.0 · updated 26-10-22-20-15 -->
+<!-- Version: 1.1.0 · updated 26-10-23-07-30 -->
 # Gorilla Unleashed for old Macs (MacBook Air 2011, macOS 10.13 High Sierra)
 
 Apple stopped updating these Macs years ago, and Firefox stopped supporting macOS 10.13. This is the Gorilla browser
@@ -21,6 +21,20 @@ made for an 11-inch, 1366x768 screen.
 3. First start: the app is not signed by Apple. Right-click it, choose **Open**, then **Open** again. On newer
    macOS: System Settings > Privacy & Security > **Open Anyway**.
 
+## Screenshots (click for full size)
+
+The browser's own pages in Segoe UI with thin, greyscale text, on the MacBook Air's 1366x768 screen:
+
+[![about:about on the MacBook Air in Segoe UI, thin greyscale text, no coloured fringes](https://raw.githubusercontent.com/gorillanobakaa-dot/gorilla-firefox/macbook-air/macos-legacy/screenshots/air-about-about-segoe-ui.png)](https://raw.githubusercontent.com/gorillanobakaa-dot/gorilla-firefox/macbook-air/macos-legacy/screenshots/air-about-about-segoe-ui.png)
+
+The add-ons page: the Gorilla picture fits the 11-inch screen (before, it ran off the bottom corner):
+
+[![about:addons on the MacBook Air with the Gorilla picture fully on screen](https://raw.githubusercontent.com/gorillanobakaa-dot/gorilla-firefox/macbook-air/macos-legacy/screenshots/air-addons-logo-fits.png)](https://raw.githubusercontent.com/gorillanobakaa-dot/gorilla-firefox/macbook-air/macos-legacy/screenshots/air-addons-logo-fits.png)
+
+The same sentence, enlarged 3x without smoothing: Linux on top, the MacBook Air below. Strokes 2.12 px and 2.13 px:
+
+[![The same about:about sentence on Linux (top) and the MacBook Air (bottom), 3x, equal stroke width](https://raw.githubusercontent.com/gorillanobakaa-dot/gorilla-firefox/macbook-air/macos-legacy/screenshots/linux-vs-air-same-sentence-3x.png)](https://raw.githubusercontent.com/gorillanobakaa-dot/gorilla-firefox/macbook-air/macos-legacy/screenshots/linux-vs-air-same-sentence-3x.png)
+
 ## What is different from the Linux and Windows versions
 
 - **Built on Momiji 157**, a Firefox kept alive for old macOS by its own maintainer, not on Firefox 158. The Gorilla
@@ -29,7 +43,8 @@ made for an 11-inch, 1366x768 screen.
   run would crash it.
 - **Readability on 11 inches:** the browser's own pages and menus use Segoe UI (like the rest of the Gorilla
   browser), monospace text uses Consolas, and text is smoothed in greyscale, which keeps strokes as thin as on Linux.
-  Measured on the Air: 2.11 px stroke, against 2.97 px with macOS's own font and smoothing.
+  Measured on the Air: 2.13 px stroke on the browser's own pages, the same as Linux (2.12 px), against 2.97 px
+  with macOS's own font and smoothing.
 - **Fits the screen:** the About window and the large Gorilla pictures are sized from the Air's usable screen
   (768 px minus the menu bar and the Dock), not from a desktop monitor.
 
