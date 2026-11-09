@@ -1,0 +1,26 @@
+{
+ "patch-format": [
+  {
+   "item": "intents/port-158.0/patchset-158.0-groups-01-14/10.OVERRIDES.patch",
+   "reason": "0-byte placeholder in the port-158.0 intents folder, present before the CI checks"
+  },
+  {
+   "item": "intents/port-158.0/patchset-158.0-groups-01-14/14.EGRESS.LOCKDOWN.patch",
+   "reason": "0-byte placeholder in the port-158.0 intents folder, present before the CI checks"
+  }
+ ],
+ "policy-listing": [
+  {
+   "item": "16.SNAPSHOT.DELTA.2026-08-12/exclude/browser_extensions_newtab_data_content_activity-stream.bundle.js.patch",
+   "reason": "policy entry for a patch never exported to this folder, present before the CI checks"
+  },
+  {
+   "item": "21.PORT.FIXES.158/exclude/003-one-pref-one-value-uitour-segoe-ui-only-d-158-12-safe-browsi.patch",
+   "reason": "policy entry for a patch not in the folder, present before the CI checks"
+  },
+  {
+   "item": "21.PORT.FIXES.158/superseded_158/003-one-pref-one-value-uitour-segoe-ui-only-d-158-12-safe-browsi.patch",
+   "reason": "same missing patch, listed again as superseded"
+  }
+ ]
+}

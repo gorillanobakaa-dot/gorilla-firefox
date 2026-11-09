@@ -1,0 +1,26 @@
+# Cheap, deterministic checks of the patch set (ci/check_patchset.py, stdlib only), on Linux and on Windows.
+# Every action is pinned by full commit SHA; nothing here calls a third-party service. The check names
+# "checks (ubuntu-latest)" and "checks (windows-latest)" are required on master (ruleset).
+name: checks
+on:
+  pull_request:
+  push:
+    branches: [master]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  checks:
+    name: checks (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      # actions/checkout v4.3.1
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+      - name: the checks can fail (a broken fixture per check)
+        run: python -m unittest discover -s ci -p "test_*.py" -v
+      - name: patch format, policy and README listing, decisions JSON, secrets, telemetry endpoints
+        run: python ci/check_patchset.py all
