@@ -1,0 +1,61 @@
+# Gorilla 158 privacy cut
+# P11 (owner 2026-10-31, idea I-08): the DevTools debugger server remote door is locked in code like Marionette (23.REBASE.158/0188): -start-debugger-server is read and discarded, no SocketListener can open. Browser Toolbox stops working (accepted)
+# Files: devtools/server/devtools-server.js devtools/shared/security/socket.js devtools/startup/DevToolsStartup.sys.mjs
+# Exported-by: build-harness export-hand firefox-158.0
+
+diff --git a/devtools/server/devtools-server.js b/devtools/server/devtools-server.js
+index 89bcab6803..1877ee2619 100644
+--- a/devtools/server/devtools-server.js
++++ b/devtools/server/devtools-server.js
+@@ -241,6 +241,9 @@ var DevToolsServer = {
+    * SocketListeners.  This is called by a SocketListener after it is opened.
+    */
+   addSocketListener(listener) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK (P11): second lock behind SocketListener.open(); never true.
++    throw new Error("GORILLA: the DevTools socket listener is locked out of this build");
++    // eslint-disable-next-line no-unreachable
+     if (!Services.prefs.getBoolPref("devtools.debugger.remote-enabled")) {
+       throw new Error("Can't add a SocketListener, remote debugging disabled");
+     }
+diff --git a/devtools/shared/security/socket.js b/devtools/shared/security/socket.js
+index 17d4ced7e4..3dbb64d2ce 100644
+--- a/devtools/shared/security/socket.js
++++ b/devtools/shared/security/socket.js
+@@ -404,6 +404,10 @@ class SocketListener extends EventEmitter {
+    * Listens on the given port or socket file for remote debugger connections.
+    */
+   open() {
++    // GORILLA UNLEASHED - PHYSICAL LOCK (P11, owner 2026-10-31)
++    // No DevTools socket listener (TCP, Unix socket or WebSocket) can be opened in this build, whatever the prefs.
++    throw new Error("GORILLA: the DevTools socket listener is locked out of this build");
++    // eslint-disable-next-line no-unreachable
+     this._validateOptions();
+     this._devToolsServer.addSocketListener(this);
+ 
+diff --git a/devtools/startup/DevToolsStartup.sys.mjs b/devtools/startup/DevToolsStartup.sys.mjs
+index 954be464f2..2557680f2b 100644
+--- a/devtools/startup/DevToolsStartup.sys.mjs
++++ b/devtools/startup/DevToolsStartup.sys.mjs
+@@ -1166,6 +1166,12 @@ export class DevToolsStartup {
+   }
+ 
+   _isRemoteDebuggingEnabled() {
++    // GORILLA UNLEASHED - PHYSICAL LOCK (P11, owner 2026-10-31)
++    // The DevTools debugger server (-start-debugger-server, -jsdebugger / Browser Toolbox) is a remote door: a
++    // program or login running as the user could unlock the prefs through policies.json and get a no-prompt
++    // debugger. Hard-coded to false: no pref, policy, registry/GPO or environment variable can reopen it.
++    return false;
++    // eslint-disable-next-line no-unreachable
+     let remoteDebuggingEnabled = false;
+     try {
+       remoteDebuggingEnabled = kDebuggerPrefs.every(pref => {
+@@ -1264,6 +1270,9 @@ export class DevToolsStartup {
+    * @param {boolean|string} portOrPath
+    */
+   handleDevToolsServerFlag(cmdLine, portOrPath) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK (P11): the flag was read and is discarded; no listener is ever created.
++    return;
++    // eslint-disable-next-line no-unreachable
+     if (!this._isRemoteDebuggingEnabled()) {
+       return;
+     }

@@ -21,3 +21,4 @@ Every network caller, identifier and helper executable cut from Firefox 158 at t
 - `039-d-158-21-comment-no-longer-names-the-survey-host-register-ch.patch`: D-158-21: comment no longer names the survey host (register check tree_lacks)
 - `040-d-158-21-comment-no-longer-names-the-survey-host-register-ch.patch`: D-158-21: comment no longer names the survey host (register check tree_lacks)
 - `041-d-158-21-comment-no-longer-names-the-survey-host-register-ch.patch`: D-158-21: comment no longer names the survey host (register check tree_lacks)
+- `047-p11-devtools-debugger-server-remote-door-locked-in-code.patch`: P11 (owner 2026-10-31): DevTools debugger server remote door locked in code, PHYSICAL LOCK like Marionette: `-start-debugger-server` discarded, `SocketListener.open()` and `addSocketListener` throw; no pref, policy, registry/GPO or env var reopens it; Browser Toolbox stops working (accepted)
