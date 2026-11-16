@@ -1,0 +1,51 @@
+# Gorilla 160 rebase: browser/components/customizableui/CustomizeMode.sys.mjs as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/customizableui/CustomizeMode.sys.mjs b/browser/components/customizableui/CustomizeMode.sys.mjs
+index 443061243b70c13cc545c9515164a6b9f278bf85..4abbde7a9b919fc2ea273c11185c06762093ae2e 100644
+--- a/browser/components/customizableui/CustomizeMode.sys.mjs
++++ b/browser/components/customizableui/CustomizeMode.sys.mjs
+@@ -353,6 +353,7 @@ export class CustomizeMode {
+ 
+     gTab = aTab;
+ 
++    console.warn(`CustomizeMode.setTab claiming tab uri=${aTab.linkedBrowser?.currentURI?.spec} stack=${new Error().stack}`);
+     gTab.setAttribute("customizemode", "true");
+ 
+     if (gTab.linkedPanel) {
+@@ -395,6 +396,7 @@ export class CustomizeMode {
+    *   "other" is set as the entrypoint.
+    */
+   enter(aEntryPoint) {
++    console.warn(`CustomizeMode.enter called, customizing=${this.#customizing} stack=${new Error().stack}`);
+     if (
+       !this.#window.toolbar.visible ||
+       this.#window.document.documentElement.hasAttribute("taskbartab") ||
+@@ -603,23 +605,18 @@ export class CustomizeMode {
+     this._wantToBeInCustomizeMode = false;
+ 
+     if (!this.#customizing || this.#handler.isExitingCustomizeMode) {
++      console.warn(`CustomizeMode.exit early-return #1: customizing=${this.#customizing} isExiting=${this.#handler.isExitingCustomizeMode} stack=${new Error().stack}`);
+       return;
+     }
+ 
+     // Entering; want to exit once we've done that.
+     if (this.#handler.isEnteringCustomizeMode) {
+-      lazy.log.debug(
+-        "Attempted to exit while we're in the middle of entering. " +
+-          "We'll exit after we've entered"
+-      );
++      console.warn("CustomizeMode.exit early-return #2: still entering — enter never completed");
+       return;
+     }
+ 
+     if (this.resetting) {
+-      lazy.log.debug(
+-        "Attempted to exit while we're resetting. " +
+-          "We'll exit after resetting has finished."
+-      );
++      console.warn("CustomizeMode.exit early-return #3: resetting still true");
+       return;
+     }
+ 

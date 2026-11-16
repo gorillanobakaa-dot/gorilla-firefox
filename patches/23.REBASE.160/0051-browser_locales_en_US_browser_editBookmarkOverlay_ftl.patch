@@ -1,0 +1,29 @@
+# Gorilla 160 rebase: browser/locales/en-US/browser/editBookmarkOverlay.ftl as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/locales/en-US/browser/editBookmarkOverlay.ftl b/browser/locales/en-US/browser/editBookmarkOverlay.ftl
+index be7572c3c3d85bd8ca76a66d20fd3931155e6369..1bd23bbbec5f900d4b7a4f0747311b2ed4b740a1 100644
+--- a/browser/locales/en-US/browser/editBookmarkOverlay.ftl
++++ b/browser/locales/en-US/browser/editBookmarkOverlay.ftl
+@@ -20,7 +20,7 @@ bookmark-overlay-choose =
+   .label = Choose…
+ 
+ bookmark-overlay-folders-expander2 =
+-  .tooltiptext = Show all the bookmarks folders
++  .tooltiptext = Show all the Gorilla bookmarks folders
+ 
+ bookmark-overlay-folders-expander-hide =
+   .tooltiptext = Hide
+@@ -50,9 +50,9 @@ bookmark-overlay-keyword-2 =
+   .value = Keyword
+   .accesskey = K
+ 
+-bookmark-overlay-tags-caption-label = Use tags to organize and search for bookmarks from the address bar
++bookmark-overlay-tags-caption-label = Use tags to organize and search for Gorilla bookmarks from the address bar
+ 
+-bookmark-overlay-keyword-caption-label-2 = Use a single keyword to open bookmarks directly from the address bar
++bookmark-overlay-keyword-caption-label-2 = Use a single keyword to open Gorilla bookmarks directly from the address bar
+ 
+ ## Bookmark properties dialog
+ 

@@ -1,0 +1,17 @@
+# Gorilla 160 rebase: browser/themes/shared/preferences/preferences.css as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/themes/shared/preferences/preferences.css b/browser/themes/shared/preferences/preferences.css
+index 214bffacfdd7c209b3b57d25f731edc15e3344a8..a931dd4480f683951e6e3134c27739d6be00dead 100644
+--- a/browser/themes/shared/preferences/preferences.css
++++ b/browser/themes/shared/preferences/preferences.css
+@@ -1679,7 +1679,7 @@ label, description, .text-link, .help-button, h1, h2 {
+ }
+ 
+ .text-link {
+-  color: #35b3ee !important;
++  color: #00FFFF !important;
+ }
+ 
+ /* Global Background Force */

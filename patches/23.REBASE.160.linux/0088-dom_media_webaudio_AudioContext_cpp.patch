@@ -1,0 +1,52 @@
+# Gorilla 160 rebase: dom/media/webaudio/AudioContext.cpp as built on Firefox 160 (linux only: a linux-only patch touches this file)
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/dom/media/webaudio/AudioContext.cpp b/dom/media/webaudio/AudioContext.cpp
+index 4c9157247f5600328b8071b47e7d9e890636a408..1f72cbb98f87bf48ab7d312a9b15b4a9679d9b5c 100644
+--- a/dom/media/webaudio/AudioContext.cpp
++++ b/dom/media/webaudio/AudioContext.cpp
+@@ -149,6 +149,15 @@ static float GetSampleRateForAudioContext(bool aIsOffline, float aSampleRate,
+   if (aIsOffline || aSampleRate != 0.0) {
+     return aSampleRate;
+   } else {
++    // GORILLA TWEAK 2026-08-26: steer only NO-PREFERENCE contexts to the
++    // ALC269's native 48000 Hz. RULE: honor-or-throw, NEVER silently
++    // substitute a page-requested rate. The previous form of this tweak
++    // forced 48000 for ALL realtime contexts and silently broke WhatsApp's
++    // 16 kHz WASM call audio (convicted by live WebAudioAPI:5 capture).
++    // Record: FIrefox.154.Hardware.decode.WEBRTC/CALL-TRANSPORT-BLACKHOLE.DEVELOPER.md
++    if (StaticPrefs::media_gorilla_hardware_only_mode()) {
++      return 48000.0f;
++    }
+     return static_cast<float>(
+         CubebUtils::PreferredSampleRate(aShouldResistFingerprinting));
+   }
+@@ -572,7 +581,7 @@ double AudioContext::OutputLatency() {
+ #elif XP_WIN
+     latency_s = 0.04;
+ #else  // Catchall for other OSes, including Linux.
+-    latency_s = 0.025;
++    latency_s = StaticPrefs::media_gorilla_hardware_only_mode() ? 0.010 : 0.025;
+ #endif
+   } else {
+     return Graph()->AudioOutputLatency();
+@@ -1129,8 +1138,17 @@ already_AddRefed<Promise> AudioContext::Resume(ErrorResult& aRv) {
+     return promise.forget();
+   }
+ 
+-  // A page resume() clears only the page's own suspend.
+   mSuspendedByContent = false;
++  // TODO(bug 2047321): while the tab is under an audio-focus interruption we
++  // have lost focus, and the platform does not expect us to restart on our
++  // own, so a page resume() should be gated until focus is regained. That
++  // gating, tied to the Web Audio interrupted state, is handled in bug 2047321.
++  if (mSuspendedByMediaControl) {
++    MEDIA_CONTROL_LOG(
++        "AudioContext {} page resume() takes over an interruption suspend",
++        fmt::ptr(this));
++    mSuspendedByMediaControl = false;
++  }
+   mPendingResumePromises.AppendElement(promise);
+ 
+   // IsAllowedToPlay() is false while the platform has interrupted the tab's

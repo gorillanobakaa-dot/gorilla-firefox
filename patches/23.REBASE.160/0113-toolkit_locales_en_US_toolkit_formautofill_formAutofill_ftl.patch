@@ -1,0 +1,33 @@
+# Gorilla 160 rebase: toolkit/locales/en-US/toolkit/formautofill/formAutofill.ftl as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/locales/en-US/toolkit/formautofill/formAutofill.ftl b/toolkit/locales/en-US/toolkit/formautofill/formAutofill.ftl
+index f97a77593962c12c1a30c0858e43b1e167c3fa72..e46df403b60d411843752bd37c312d93bae679eb 100644
+--- a/toolkit/locales/en-US/toolkit/formautofill/formAutofill.ftl
++++ b/toolkit/locales/en-US/toolkit/formautofill/formAutofill.ftl
+@@ -7,14 +7,14 @@
+ # The macos string is preceded by the operating system (macOS) with "Firefox is trying to ",
+ # and has a period added to its end. Make sure to test in your locale.
+ autofill-use-payment-method-os-prompt-macos = use stored payment method information
+-autofill-use-payment-method-os-prompt-windows = { -brand-short-name } is trying to use stored payment method information. Confirm access to this Windows account below.
++autofill-use-payment-method-os-prompt-windows = { -brand-short-name } is trying to use stored payment method information. Confirm access to this Gorilla Windows account below.
+ autofill-use-payment-method-os-prompt-other = { -brand-short-name } is trying to use stored payment method information.
+ 
+ 
+ # In macOS, this string is preceded by the operating system with "Firefox is trying to ",
+ # and has a period added to its end. Make sure to test in your locale.
+ autofill-edit-payment-method-os-prompt-macos = show stored payment method information
+-autofill-edit-payment-method-os-prompt-windows = { -brand-short-name } is trying to show stored payment method information. Confirm access to this Windows account below.
++autofill-edit-payment-method-os-prompt-windows = { -brand-short-name } is trying to show stored payment method information. Confirm access to this Gorilla Windows account below.
+ autofill-edit-payment-method-os-prompt-other = { -brand-short-name } is trying to show stored payment method information.
+ 
+ # In macOS, this string is preceded by the operating system with "Firefox is trying to ",
+@@ -54,7 +54,6 @@ credit-card-capture-never-save-button =
+     .accessKey = N
+ 
+ # Used on the doorhanger when an credit card change is detected.
+-
+ credit-card-update-doorhanger-header = Update card?
+ credit-card-update-doorhanger-description = Card to update:
+ 

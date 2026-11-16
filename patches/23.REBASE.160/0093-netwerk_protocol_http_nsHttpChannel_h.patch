@@ -1,0 +1,17 @@
+# Gorilla 160 rebase: netwerk/protocol/http/nsHttpChannel.h as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/netwerk/protocol/http/nsHttpChannel.h b/netwerk/protocol/http/nsHttpChannel.h
+index 0a6c3a49ae7c36bbedb502c1515b64093cff0135..4f8345bbdd0054e972a5474e6d73f50ed334e935 100644
+--- a/netwerk/protocol/http/nsHttpChannel.h
++++ b/netwerk/protocol/http/nsHttpChannel.h
+@@ -566,6 +566,8 @@ class nsHttpChannel final : public HttpBaseChannel,
+   void SetOriginHeader();
+   void SetDoNotTrack();
+   void SetGlobalPrivacyControl();
++  // GORILLA UNLEASHED - SATELLITE MODE: Save-Data header (gorilla.network.save_data, default off).
++  void SetSaveData();
+ 
+   already_AddRefed<nsChannelClassifier> GetOrCreateChannelClassifier();
+ 

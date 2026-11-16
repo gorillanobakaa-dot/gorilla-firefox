@@ -1,0 +1,17 @@
+# Gorilla 160 rebase: browser/components/urlbar/content/UrlbarInputBase.mjs as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/urlbar/content/UrlbarInputBase.mjs b/browser/components/urlbar/content/UrlbarInputBase.mjs
+index d8a26721fd0320423484029f9709ae5cee35e13c..a48dc7707aa07d5f3bce5dc1a5b080f73d09c73b 100644
+--- a/browser/components/urlbar/content/UrlbarInputBase.mjs
++++ b/browser/components/urlbar/content/UrlbarInputBase.mjs
+@@ -85,7 +85,7 @@ const { XPCOMUtils } =
+ 
+ const lazy = XPCOMUtils?.declareLazy({
+   AIWindow:
+-    "moz-src:///browser/components/aiwindow/ui/modules/AIWindow.sys.mjs",
++      "resource:///modules/AIWindowStub.sys.mjs", // GORILLA: aiwindow excised, stub answers
+   BrowserUIUtils: "resource:///modules/BrowserUIUtils.sys.mjs",
+   CustomizableUI:
+     "moz-src:///browser/components/customizableui/CustomizableUI.sys.mjs",

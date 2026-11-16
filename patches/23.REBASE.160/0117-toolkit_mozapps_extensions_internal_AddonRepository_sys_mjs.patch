@@ -1,0 +1,56 @@
+# Gorilla 160 rebase: toolkit/mozapps/extensions/internal/AddonRepository.sys.mjs as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/mozapps/extensions/internal/AddonRepository.sys.mjs b/toolkit/mozapps/extensions/internal/AddonRepository.sys.mjs
+index 903c892739d03c5bc87d7a9e3ef76e460df1698a..d4ef9814d874b293fa0dae7614ab6819a5997561 100644
+--- a/toolkit/mozapps/extensions/internal/AddonRepository.sys.mjs
++++ b/toolkit/mozapps/extensions/internal/AddonRepository.sys.mjs
+@@ -850,43 +850,10 @@ export var AddonRepository = {
+   },
+ 
+   async getAvailableLangpacks() {
+-    // This should be the API endpoint documented at:
+-    // http://addons-server.readthedocs.io/en/latest/topics/api/addons.html#language-tools
+-    let url = this._formatURLPref(PREF_GET_LANGPACKS);
+-
+-    let response = await fetch(url, { credentials: "omit" });
+-    if (!response.ok) {
+-      throw new Error("fetching available language packs failed");
+-    }
+-
+-    let data = await response.json();
+-
+-    let result = [];
+-    for (let entry of data.results) {
+-      if (
+-        !entry.current_compatible_version ||
+-        !entry.current_compatible_version.files
+-      ) {
+-        continue;
+-      }
+-
+-      for (let file of entry.current_compatible_version.files) {
+-        if (
+-          file.platform == "all" ||
+-          file.platform == Services.appinfo.OS.toLowerCase()
+-        ) {
+-          result.push({
+-            id: entry.guid,
+-            hash: file.hash,
+-            target_locale: entry.target_locale,
+-            url: file.url,
+-            version: entry.current_compatible_version.version,
+-          });
+-        }
+-      }
+-    }
+-
+-    return result;
++    // 🦍 GORILLA UNLEASHED - PHYSICAL LOCK
++    // All language pack fetching is permanently disabled to ensure monolinguality.
++    // No network requests to AMO will be made.
++    return [];
+   },
+ };
+ 

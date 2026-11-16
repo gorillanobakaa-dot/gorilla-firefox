@@ -1,0 +1,52 @@
+# Gorilla 160 rebase: browser/extensions/newtab/lib/TemporaryMerinoClientShim.sys.mjs as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/extensions/newtab/lib/TemporaryMerinoClientShim.sys.mjs b/browser/extensions/newtab/lib/TemporaryMerinoClientShim.sys.mjs
+index b5e860ff696ba660873fb70c02540fa99422b151..d1a19c10a02cdb97ae0e777a59f520212c1a5588 100644
+--- a/browser/extensions/newtab/lib/TemporaryMerinoClientShim.sys.mjs
++++ b/browser/extensions/newtab/lib/TemporaryMerinoClientShim.sys.mjs
+@@ -196,6 +196,10 @@ export class TemporaryMerinoClientShim {
+     endpointUrl = null,
+     acceptLanguage = null,
+   }) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no Merino request (suggestions, weather, sports, stocks), whatever the endpoint pref says
++    if (true) {
++      return [];
++    }
+     this.#lazy.logger.debug("Fetch start", { query });
+ 
+     // If endpointUrl is explicitly provided, use it as-is
+@@ -453,6 +457,10 @@ export class TemporaryMerinoClientShim {
+    *   response.
+    */
+   async autoCompleteWeatherLocation({ source, query, timeoutMs = undefined }) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no Merino weather lookup
++    if (true) {
++      return null;
++    }
+     let response = await this.fetch({
+       providers: ["accuweather"],
+       query: query || "",
+@@ -593,6 +601,10 @@ export class TemporaryMerinoClientShim {
+     country = undefined,
+     endpointUrl = undefined,
+   }) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no Merino hourly forecast lookup, whatever the endpoint says
++    if (true) {
++      return null;
++    }
+     const hourlyEndpointURL = endpointUrl;
+ 
+     if (!hourlyEndpointURL) {
+@@ -680,6 +692,10 @@ export class TemporaryMerinoClientShim {
+    *   (deliberate skip).
+    */
+   async fetchPictureOfTheDay({ source, endpointUrl, acceptLanguage }) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no Merino picture-of-the-day lookup, whatever the endpoint says
++    if (true) {
++      return { data: null, error: null };
++    }
+     if (!endpointUrl) {
+       return { data: null, error: null };
+     }

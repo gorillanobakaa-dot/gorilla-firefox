@@ -1,0 +1,25 @@
+# Gorilla 160 rebase: browser/locales/en-US/chrome/browser/taskbar.properties as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/locales/en-US/chrome/browser/taskbar.properties b/browser/locales/en-US/chrome/browser/taskbar.properties
+index d838e2a2e3987aba25aaa3739cc4eaa3f77d1603..f1ef9b738ff455166f90f45c5e71ac8828cae311 100644
+--- a/browser/locales/en-US/chrome/browser/taskbar.properties
++++ b/browser/locales/en-US/chrome/browser/taskbar.properties
+@@ -2,10 +2,10 @@
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ 
+-taskbar.tasks.newTab.label=Open new tab
+-taskbar.tasks.newTab.description=Open a new browser tab.
+-taskbar.tasks.newWindow.label=Open new window
+-taskbar.tasks.newWindow.description=Open a new browser window.
+-taskbar.tasks.newPrivateWindow.label=New private window
+-taskbar.tasks.newPrivateWindow.description=Open a new window in private browsing mode.
++taskbar.tasks.newTab.label=Open new Gorilla tab
++taskbar.tasks.newTab.description=Open a new Gorilla browser tab.
++taskbar.tasks.newWindow.label=Open new Gorilla window
++taskbar.tasks.newWindow.description=Open a new Gorilla browser window.
++taskbar.tasks.newPrivateWindow.label=New Private Gorilla Window
++taskbar.tasks.newPrivateWindow.description=Open a new Gorilla window in private browsing mode.
+ taskbar.frequent.label=Frequent

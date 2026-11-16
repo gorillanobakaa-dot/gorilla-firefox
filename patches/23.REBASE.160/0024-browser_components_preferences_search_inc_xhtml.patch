@@ -1,0 +1,27 @@
+# Gorilla 160 rebase: browser/components/preferences/search.inc.xhtml as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/preferences/search.inc.xhtml b/browser/components/preferences/search.inc.xhtml
+index 3468a71368ca922987a705caec488ed956791d9d..0efdbe0ac5a0875018ff918575d1d803951fad4b 100644
+--- a/browser/components/preferences/search.inc.xhtml
++++ b/browser/components/preferences/search.inc.xhtml
+@@ -42,7 +42,9 @@
+                 data-l10n-id="search-restore-default"
+                 />
+         <spacer flex="1"/>
++        <!-- GORILLA UNLEASHED (D-158-13): no Add button, Google is the only search engine -->
+         <button id="addEngineButton"
++                hidden="true"
+                 is="highlightable-button"
+                 class="searchEngineAction"
+                 data-l10n-id="search-add-engine"
+@@ -68,7 +70,7 @@
+                 />
+ 
+       </hbox>
+-      <hbox id="addEnginesBox" pack="start">
++      <hbox id="addEnginesBox" pack="start" hidden="true">
+         <label id="addEngines" data-l10n-id="search-find-more-link" is="text-link"></label>
+       </hbox>
+     </groupbox>

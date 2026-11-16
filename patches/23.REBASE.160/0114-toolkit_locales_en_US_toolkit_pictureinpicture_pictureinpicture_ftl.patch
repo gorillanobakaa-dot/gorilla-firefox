@@ -1,0 +1,34 @@
+# Gorilla 160 rebase: toolkit/locales/en-US/toolkit/pictureinpicture/pictureinpicture.ftl as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/locales/en-US/toolkit/pictureinpicture/pictureinpicture.ftl b/toolkit/locales/en-US/toolkit/pictureinpicture/pictureinpicture.ftl
+index 6d819d41441a8c7073ffd708b0e5b88411ea2f69..e591ad9c673e40d8cb457b96d04a52ea47cc3747 100644
+--- a/toolkit/locales/en-US/toolkit/pictureinpicture/pictureinpicture.ftl
++++ b/toolkit/locales/en-US/toolkit/pictureinpicture/pictureinpicture.ftl
+@@ -1,7 +1,6 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-
+ pictureinpicture-player-title = Picture-in-Picture
+ 
+ ## Note that this uses .tooltip rather than the standard '.title'
+@@ -28,7 +27,7 @@ pictureinpicture-unmute-btn =
+ 
+ pictureinpicture-unpip-btn =
+   .aria-label = Send back to tab
+-  .tooltip = Back to tab
++  .tooltip = Back to Gorilla tab
+ 
+ pictureinpicture-close-btn =
+   .aria-label = Close
+@@ -74,7 +73,7 @@ pictureinpicture-playback-rate-btn =
+ # This string is never displayed on the window. Is intended to be announced by
+ # a screen reader whenever a user opens the subtitles settings panel
+ # after selecting the subtitles button.
+-pictureinpicture-subtitles-panel-accessible = Subtitles settings
++pictureinpicture-subtitles-panel-accessible = Subtitles Gorilla settings
+ 
+ pictureinpicture-subtitles-toggle =
+   .label = Subtitles

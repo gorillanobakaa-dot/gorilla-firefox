@@ -1,0 +1,17 @@
+# Gorilla 160 rebase: security/manager/pki/resources/content/device_manager.xhtml as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/security/manager/pki/resources/content/device_manager.xhtml b/security/manager/pki/resources/content/device_manager.xhtml
+index 30bcdfb5f14d2d1642a613c31f0c85907a8686a3..51792bd9b1e36741d161c0edabab2040f8e065bf 100644
+--- a/security/manager/pki/resources/content/device_manager.xhtml
++++ b/security/manager/pki/resources/content/device_manager.xhtml
+@@ -87,7 +87,7 @@
+           data-l10n-id="devmgr-button-changepw"
+           disabled="true"
+         />
+-        <button id="load_button" data-l10n-id="devmgr-button-load" />
++        <button id="load_button" data-l10n-id="devmgr-button-load" hidden="true" /><!-- GORILLA UNLEASHED (D-158-18): no PKCS#11 module is loaded -->
+         <button
+           id="unload_button"
+           data-l10n-id="devmgr-button-unload"

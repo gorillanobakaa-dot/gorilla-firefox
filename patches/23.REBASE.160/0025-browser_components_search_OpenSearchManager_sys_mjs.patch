@@ -1,0 +1,19 @@
+# Gorilla 160 rebase: browser/components/search/OpenSearchManager.sys.mjs as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/search/OpenSearchManager.sys.mjs b/browser/components/search/OpenSearchManager.sys.mjs
+index feb8b7627dd53ddc72e9db75dadb5ef2107cbe37..7ba83da229142216c3dfd45fb4eeb2cc4c8682c7 100644
+--- a/browser/components/search/OpenSearchManager.sys.mjs
++++ b/browser/components/search/OpenSearchManager.sys.mjs
+@@ -236,6 +236,10 @@ class _OpenSearchManager {
+    *   The installable open search engines.
+    */
+   getInstallableEngines(browser) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no page offers a search engine (D-158-13, Google only).
++    if (browser) {
++      return [];
++    }
+     if (!Services.policies.isAllowed("installSearchEngine")) {
+       return [];
+     }

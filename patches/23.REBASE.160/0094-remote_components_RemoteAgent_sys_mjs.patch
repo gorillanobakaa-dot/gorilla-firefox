@@ -1,0 +1,72 @@
+# Gorilla 160 rebase: remote/components/RemoteAgent.sys.mjs as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/remote/components/RemoteAgent.sys.mjs b/remote/components/RemoteAgent.sys.mjs
+index 8808375919720c9ecad2527c47a99f21f9eea567..75162ffdf550183055af1fb6de8cde617f6f246a 100644
+--- a/remote/components/RemoteAgent.sys.mjs
++++ b/remote/components/RemoteAgent.sys.mjs
+@@ -57,7 +57,12 @@ class RemoteAgentParentProcess {
+   constructor() {
+     this.#allowHosts = null;
+     this.#allowOrigins = null;
+-    this.#allowSystemAccess = Services.env.get(ENV_ALLOW_SYSTEM_ACCESS) == "1";
++
++    // GORILLA UNLEASHED - PHYSICAL LOCK
++    // The Remote Agent / WebDriver BiDi system-access backdoor is disabled.
++    // Upstream reads it from an environment variable; here it is hard-coded
++    // to false so no flag or env var can wake it.
++    this.#allowSystemAccess = false;
+ 
+     this.#browserStartupFinished = lazy.Deferred();
+     this.#enabled = false;
+@@ -112,6 +117,12 @@ class RemoteAgentParentProcess {
+     return this.#allowSystemAccess;
+   }
+ 
++  set allowSystemAccess(value) {
++    // 🦍 GORILLA UNLEASHED - PHYSICAL LOCK
++    // This setter is now a dead end. Nothing can grant system access.
++    this.#allowSystemAccess = false;
++  }
++
+   /**
+    * A promise that resolves when the initial application window has been opened.
+    *
+@@ -236,6 +247,14 @@ class RemoteAgentParentProcess {
+     }
+   }
+ 
++  #handleAllowSystemAccessFlag(cmdLine) {
++    try {
++      return cmdLine.handleFlag("remote-allow-system-access", false);
++    } catch (e) {
++      return false;
++    }
++  }
++
+   /**
+    * Check if the provided URI's host is an IP address.
+    *
+@@ -459,10 +478,17 @@ class RemoteAgentParentProcess {
+           break;
+         }
+ 
+-        this.#allowHosts = this.#handleAllowHostsFlag(subject);
+-        this.#allowOrigins = this.#handleAllowOriginsFlag(subject);
+-
+-        this.#enabled = this.#handleRemoteDebuggingPortFlag(subject);
++        // 🦍 GORILLA UNLEASHED - PHYSICAL LOCK
++        // All remote-debugging and system access flags are now ignored.
++        this.#handleAllowHostsFlag(subject);
++        this.#handleAllowOriginsFlag(subject);
++        this.#handleAllowSystemAccessFlag(subject);
++        this.#handleRemoteDebuggingPortFlag(subject);
++
++        this.#allowHosts = null;
++        this.#allowOrigins = null;
++        this.allowSystemAccess = false;
++        this.#enabled = false;
+ 
+         if (this.#enabled) {
+           // Add annotation to crash report to indicate whether the

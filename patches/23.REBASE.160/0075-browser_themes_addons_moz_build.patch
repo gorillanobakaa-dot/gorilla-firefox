@@ -1,0 +1,50 @@
+# Gorilla 160 rebase: browser/themes/addons/moz.build as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/themes/addons/moz.build b/browser/themes/addons/moz.build
+index ce1b2d1996d1839884decdacb8bc5587d02a867e..f8a9e344efc4b7101f804f9e11eb8fbf32dce44b 100644
+--- a/browser/themes/addons/moz.build
++++ b/browser/themes/addons/moz.build
+@@ -4,15 +4,7 @@
+ 
+ JAR_MANIFESTS += ["jar.mn"]
+ 
+-GeneratedFile(
+-    "aiwindow/manifest.json",
+-    script="process_tokens.py",
+-    entry_point="process_tokens",
+-    inputs=[
+-        "aiwindow/manifest.in.json",
+-        "/toolkit/themes/shared/design-system/src/tokens/base/color.tokens.json",
+-    ],
+-)
++# GORILLA excised: "aiwindow/manifest.json" GeneratedFile (aiwindow theme)
+ 
+ GeneratedFile(
+     "privatewindow/manifest.json",
+@@ -24,23 +16,4 @@ GeneratedFile(
+     ],
+ )
+ 
+-GeneratedFile(
+-    "aiwindow-nova/manifest.json",
+-    script="process_tokens.py",
+-    entry_point="process_tokens",
+-    inputs=[
+-        "aiwindow-nova/manifest.in.json",
+-        "/browser/themes/shared/tabbrowser/tab.nova.tokens.json",
+-        "/toolkit/themes/shared/design-system/src/tokens/base/background.tokens.json",
+-        "/toolkit/themes/shared/design-system/src/tokens/base/color.tokens.json",
+-        "/toolkit/themes/shared/design-system/src/tokens/base/color.nova.tokens.json",
+-        "/toolkit/themes/shared/design-system/src/tokens/base/focus.tokens.json",
+-        "/toolkit/themes/shared/design-system/src/tokens/base/text.tokens.json",
+-        "/toolkit/themes/shared/design-system/src/tokens/components/card.tokens.json",
+-        "/toolkit/themes/shared/design-system/src/tokens/components/card.nova.tokens.json",
+-        "/toolkit/themes/shared/design-system/src/tokens/components/sidebar.tokens.json",
+-        "/toolkit/themes/shared/design-system/src/tokens/components/toolbar.tokens.json",
+-        "/toolkit/themes/shared/design-system/src/tokens/components/toolbar.nova.tokens.json",
+-        "/toolkit/themes/shared/design-system/src/tokens/components/toolbarbutton.nova.tokens.json",
+-    ],
+-)
++# GORILLA excised: "aiwindow-nova/manifest.json" GeneratedFile (aiwindow theme)

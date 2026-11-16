@@ -1,0 +1,27 @@
+# Gorilla 160 rebase: toolkit/modules/RustSharedRemoteSettingsService.sys.mjs as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/modules/RustSharedRemoteSettingsService.sys.mjs b/toolkit/modules/RustSharedRemoteSettingsService.sys.mjs
+index cfcd3b0803caf2364948e9e9f847a80127c95b9b..228eabd047b850adbcfe9901a0faf8580d970a8d 100644
+--- a/toolkit/modules/RustSharedRemoteSettingsService.sys.mjs
++++ b/toolkit/modules/RustSharedRemoteSettingsService.sys.mjs
+@@ -160,9 +160,15 @@ class _SharedRemoteSettingsService {
+     //
+     // * In contrast, `RemoteSettingsService::update_config` returns the error
+     //   when it parses a cannot-be-a-base `config.server.url`.
+-    return !Utils.shouldSkipRemoteActivity || url != Utils.SERVER_URL
+-      ? new RemoteSettingsServer.Custom({ url })
+-      : null;
++    // GORILLA UNLEASHED - PHYSICAL LOCK (egress): never null. A null server makes the Rust component fall
++    // back to the PRODUCTION server (firefox.settings.services.mozilla.com). The dummy data: URI cannot be
++    // parsed by update_config, so the locked case gets an address that routes nowhere.
++    return new RemoteSettingsServer.Custom({
++      url:
++        Utils.shouldSkipRemoteActivity && url == Utils.SERVER_URL
++          ? "http://0.0.0.0/v1"
++          : url,
++    });
+   }
+ }
+ 

@@ -1,0 +1,22 @@
+# Gorilla 160 rebase: security/manager/ssl/PKCS11ModuleDB.cpp as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/security/manager/ssl/PKCS11ModuleDB.cpp b/security/manager/ssl/PKCS11ModuleDB.cpp
+index 3ec21265d06064a7e5cdab95a0742cc496e7b274..9d8be413d63325ee0768980d34fe9eb88856c531 100644
+--- a/security/manager/ssl/PKCS11ModuleDB.cpp
++++ b/security/manager/ssl/PKCS11ModuleDB.cpp
+@@ -292,6 +292,13 @@ nsresult PKCS11ModuleDB::DoAddModule(const nsCString& moduleName,
+                                      const nsCString& libraryPath,
+                                      uint32_t mechanismFlags,
+                                      uint32_t cipherFlags) {
++  // GORILLA UNLEASHED - PHYSICAL LOCK: no PKCS#11 module is loaded (D-158-18, owner 2026-10-15). A module is a
++  // native library (.so / .dll) that runs inside the browser with all its rights; Settings > Security Devices >
++  // Load, an add-on (pkcs11 API) or a policy could load one, and a person can be talked into it. Every route
++  // (main process and the socket-process IPC) ends here.
++  if (!moduleName.IsEmpty() || moduleName.IsEmpty()) {
++    return NS_ERROR_NOT_AVAILABLE;
++  }
+   if (!NSS_IsInitialized()) {
+     return NS_ERROR_NOT_AVAILABLE;
+   }

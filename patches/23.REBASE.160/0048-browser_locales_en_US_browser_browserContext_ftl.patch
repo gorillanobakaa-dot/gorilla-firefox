@@ -1,0 +1,288 @@
+# Gorilla 160 rebase: browser/locales/en-US/browser/browserContext.ftl as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/locales/en-US/browser/browserContext.ftl b/browser/locales/en-US/browser/browserContext.ftl
+index 5767f9d048e8be754d7aa0532cf2a8b19c028082..85c44b4fe358a9a9d4c52bec367024d5d223b000 100644
+--- a/browser/locales/en-US/browser/browserContext.ftl
++++ b/browser/locales/en-US/browser/browserContext.ftl
+@@ -3,17 +3,18 @@
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ 
+ navbar-tooltip-instruction =
+-    .value = { PLATFORM() ->
+-        [macos] Pull down to show history
+-       *[other] Right-click or pull down to show history
+-    }
++    .value =
++        { PLATFORM() ->
++        [macos] Pull down to show Gorilla history
++        *[other] Right-click or pull down to show Gorilla history
++        }
+ 
+ ## Back
+ 
+ # Variables
+ #   $shortcut (String) - A keyboard shortcut for the Go Back command.
+ main-context-menu-back-3 =
+-    .tooltiptext = Go back one page ({ $shortcut })
++    .tooltiptext = Go back one Gorilla page ({ $shortcut })
+     .aria-label = Back
+ 
+ # This menuitem is only visible on macOS
+@@ -34,7 +35,7 @@ toolbar-button-back-3 =
+ # Variables
+ #   $shortcut (String) - A keyboard shortcut for the Go Forward command.
+ main-context-menu-forward-3 =
+-    .tooltiptext = Go forward one page ({ $shortcut })
++    .tooltiptext = Go forward one Gorilla page ({ $shortcut })
+     .aria-label = Forward
+ 
+ # This menuitem is only visible on macOS
+@@ -90,51 +91,51 @@ toolbar-button-account =
+ ## Save Page
+ 
+ main-context-menu-page-save =
+-    .label = Save Page As…
++    .label = Save Gorilla Page As…
+     .accesskey = P
+ 
+ ## Simple menu items
+ 
+ main-context-menu-bookmark-page-2 =
+-    .aria-label = Bookmark Page…
+-    .tooltiptext = Bookmark page
++    .aria-label = Gorilla Bookmark Page…
++    .tooltiptext = Gorilla Bookmark page
+ 
+ # This menuitem is only visible on macOS
+ # Cannot be shown at the same time as main-context-menu-edit-bookmark-mac,
+ # so should probably have the same access key if possible.
+ main-context-menu-bookmark-page-mac =
+-    .label = Bookmark Page…
++    .label = Gorilla Bookmark Page…
+     .accesskey = m
+ 
+ # This menuitem is only visible on macOS
+ # Cannot be shown at the same time as main-context-menu-bookmark-page-mac,
+ # so should probably have the same access key if possible.
+ main-context-menu-edit-bookmark-mac =
+-    .label = Edit Bookmark…
++    .label = Edit Gorilla Bookmark…
+     .accesskey = m
+ 
+ # Variables
+ #   $shortcut (String) - A keyboard shortcut for the add bookmark command.
+ main-context-menu-bookmark-page-with-shortcut-2 =
+-    .aria-label = Bookmark Page…
+-    .tooltiptext = Bookmark page ({ $shortcut })
++    .aria-label = Gorilla Bookmark Page…
++    .tooltiptext = Gorilla Bookmark page ({ $shortcut })
+ 
+ main-context-menu-edit-bookmark-2 =
+-    .aria-label = Edit Bookmark…
+-    .tooltiptext = Edit bookmark
++    .aria-label = Edit Gorilla Bookmark…
++    .tooltiptext = Edit Gorilla bookmark
+ 
+ # Variables
+ #   $shortcut (String) - A keyboard shortcut for the edit bookmark command.
+ main-context-menu-edit-bookmark-with-shortcut-2 =
+-    .aria-label = Edit Bookmark…
+-    .tooltiptext = Edit bookmark ({ $shortcut })
++    .aria-label = Edit Gorilla Bookmark…
++    .tooltiptext = Edit Gorilla bookmark ({ $shortcut })
+ 
+ main-context-menu-open-link =
+     .label = Open Link
+     .accesskey = O
+ 
+ main-context-menu-open-link-new-tab =
+-    .label = Open Link in New Tab
++    .label = Open Link in New Gorilla Tab
+     .accesskey = T
+ 
+ main-context-menu-open-link-split-view =
+@@ -142,19 +143,19 @@ main-context-menu-open-link-split-view =
+     .accesskey = M
+ 
+ main-context-menu-open-link-container-tab =
+-    .label = Open Link in New Container Tab
++    .label = Open Link in New Container Gorilla Tab
+     .accesskey = w
+ 
+ main-context-menu-open-link-new-window =
+-    .label = Open Link in New Window
++    .label = Open Link in New Gorilla Window
+     .accesskey = d
+ 
+ main-context-menu-open-link-new-private-window =
+-    .label = Open Link in New Private Window
++    .label = Open Link in New Private Gorilla Window
+     .accesskey = P
+ 
+ main-context-menu-bookmark-link-2 =
+-    .label = Bookmark Link…
++    .label = Gorilla Bookmark Link…
+     .accesskey = B
+ 
+ main-context-menu-save-link =
+@@ -164,7 +165,6 @@ main-context-menu-save-link =
+ ## The access keys for "Copy Link" and "Copy Email Address"
+ ## should be the same if possible; the two context menu items
+ ## are mutually exclusive.
+-
+ main-context-menu-copy-email =
+     .label = Copy Email Address
+     .accesskey = l
+@@ -174,7 +174,6 @@ main-context-menu-copy-link-simple =
+     .accesskey = L
+ 
+ ##
+-
+ main-context-menu-copy-phone =
+     .label = Copy Phone Number
+     .accesskey = o
+@@ -195,7 +194,6 @@ main-context-menu-copy-clean-link =
+ ## The accesskey for "Play" and "Pause" are the
+ ## same because the two context-menu items are
+ ## mutually exclusive.
+-
+ main-context-menu-media-play =
+     .label = Play
+     .accesskey = P
+@@ -205,7 +203,6 @@ main-context-menu-media-pause =
+     .accesskey = P
+ 
+ ##
+-
+ main-context-menu-media-mute =
+     .label = Mute
+     .accesskey = M
+@@ -239,7 +236,6 @@ main-context-menu-media-loop =
+ 
+ ## The access keys for "Show Controls" and "Hide Controls" are the same
+ ## because the two context-menu items are mutually exclusive.
+-
+ main-context-menu-media-show-controls =
+     .label = Show Controls
+     .accesskey = C
+@@ -249,7 +245,6 @@ main-context-menu-media-hide-controls =
+     .accesskey = C
+ 
+ ##
+-
+ main-context-menu-media-video-fullscreen =
+     .label = Full Screen
+     .accesskey = F
+@@ -269,11 +264,11 @@ main-context-menu-image-reload =
+     .accesskey = R
+ 
+ main-context-menu-image-view-new-tab =
+-    .label = Open Image in New Tab
++    .label = Open Image in New Gorilla Tab
+     .accesskey = I
+ 
+ main-context-menu-video-view-new-tab =
+-    .label = Open Video in New Tab
++    .label = Open Video in New Gorilla Tab
+     .accesskey = i
+ 
+ main-context-menu-image-copy =
+@@ -351,22 +346,20 @@ main-context-menu-send-to-mobile-2 =
+     .accesskey = n
+ 
+ ## Displayed within the send tab submenu to prompt users to sign in, enable sync, pair a device, or troubleshoot device issues.
+-
+-main-context-menu-send-to-mobile-sign-in = Sign in to Send Tabs
+-main-context-menu-send-to-mobile-enable-sync2 = Enable sync to send a tab
++main-context-menu-send-to-mobile-sign-in = Sign in to Send Gorilla Tabs
++main-context-menu-send-to-mobile-enable-sync2 = Enable sync to send a Gorilla tab
+ main-context-menu-send-to-mobile-connect-phone2 = Connect your phone
+ main-context-menu-send-to-mobile-device-missing2 = Don’t See Your Device?
+ main-context-menu-send-to-mobile-sign-in-from-link = Sign in to Send a Link
+-main-context-menu-send-to-mobile-sign-in-from-page = Sign in to Send a Page
+-main-context-menu-send-to-mobile-enable-sync3 = Turn on Sync to Send Tabs
++main-context-menu-send-to-mobile-sign-in-from-page = Sign in to Send a Gorilla Page
++main-context-menu-send-to-mobile-enable-sync3 = Turn on Sync to Send Gorilla Tabs
+ main-context-menu-send-to-mobile-enable-sync-from-link = Turn on Sync to Send a Link
+-main-context-menu-send-to-mobile-enable-sync-from-page = Turn on Sync to Send a Page
+-main-context-menu-send-to-mobile-connect-phone3 = Connect a Device to Send Tabs
++main-context-menu-send-to-mobile-enable-sync-from-page = Turn on Sync to Send a Gorilla Page
++main-context-menu-send-to-mobile-connect-phone3 = Connect a Device to Send Gorilla Tabs
+ main-context-menu-send-to-mobile-connect-phone-from-link = Connect a Device to Send a Link
+-main-context-menu-send-to-mobile-connect-phone-from-page = Connect a Device to Send a Page
++main-context-menu-send-to-mobile-connect-phone-from-page = Connect a Device to Send a Gorilla Page
+ 
+ ##
+-
+ # Displayed when there are saved passwords and the user clicks inside a username or password field
+ main-context-menu-use-saved-password =
+     .label = Use Saved Password
+@@ -405,11 +398,11 @@ main-context-menu-frame-show-this =
+     .accesskey = S
+ 
+ main-context-menu-frame-open-tab =
+-    .label = Open Frame in New Tab
++    .label = Open Frame in New Gorilla Tab
+     .accesskey = T
+ 
+ main-context-menu-frame-open-window =
+-    .label = Open Frame in New Window
++    .label = Open Frame in New Gorilla Window
+     .accesskey = W
+ 
+ main-context-menu-frame-reload =
+@@ -417,7 +410,7 @@ main-context-menu-frame-reload =
+     .accesskey = R
+ 
+ main-context-menu-frame-add-bookmark =
+-    .label = Bookmark Frame…
++    .label = Gorilla Bookmark Frame…
+     .accesskey = m
+ 
+ main-context-menu-frame-save-as =
+@@ -449,7 +442,7 @@ main-context-menu-take-screenshot =
+     .accesskey = T
+ 
+ main-context-menu-view-page-source =
+-    .label = View Page Source
++    .label = View Gorilla Page Source
+     .accesskey = V
+ 
+ main-context-menu-bidi-switch-text =
+@@ -457,7 +450,7 @@ main-context-menu-bidi-switch-text =
+     .accesskey = w
+ 
+ main-context-menu-bidi-switch-page =
+-    .label = Switch Page Direction
++    .label = Switch Gorilla Page Direction
+     .accesskey = D
+ 
+ main-context-menu-inspect =
+@@ -477,7 +470,7 @@ main-context-menu-eme-learn-more =
+ # Variables
+ #   $containerName (String): The name of the current container
+ main-context-menu-open-link-in-container-tab =
+-    .label = Open Link in New { $containerName } Tab
++    .label = Open Link in New { $containerName } Gorilla Tab
+     .accesskey = T
+ 
+ main-context-menu-reveal-password =
+@@ -491,13 +484,13 @@ main-context-menu-new-feature-badge = New
+ main-context-menu-beta-feature-badge = Beta
+ 
+ main-context-menu-pdfjs-copy-page =
+-    .label = Copy page
++    .label = Copy Gorilla page
+ 
+ main-context-menu-pdfjs-cut-page =
+-    .label = Cut page
++    .label = Cut Gorilla page
+ 
+ main-context-menu-pdfjs-delete-page =
+-    .label = Delete page
++    .label = Delete Gorilla page
+ 
+ main-context-menu-pdfjs-save-page =
+     .label = Save selection as…

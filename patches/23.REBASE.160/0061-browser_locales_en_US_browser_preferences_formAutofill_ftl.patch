@@ -1,0 +1,54 @@
+# Gorilla 160 rebase: browser/locales/en-US/browser/preferences/formAutofill.ftl as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/locales/en-US/browser/preferences/formAutofill.ftl b/browser/locales/en-US/browser/preferences/formAutofill.ftl
+index 8d1922d42886513c9ddb58c3e5938d3b5e2f2335..51921ea5fe651bc8e54aeb178c691dc5049f739b 100644
+--- a/browser/locales/en-US/browser/preferences/formAutofill.ftl
++++ b/browser/locales/en-US/browser/preferences/formAutofill.ftl
+@@ -1,9 +1,7 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-
+ ## The address and credit card autofill management dialog in browser preferences
+-
+ autofill-manage-addresses-title = Saved addresses
+ autofill-manage-addresses-list-header = Addresses
+ 
+@@ -39,7 +37,7 @@ address-capture-update-button =
+     .label = Update
+     .accessKey = U
+ address-capture-manage-address-button =
+-    .label = Address settings
++    .label = Address Gorilla settings
+ address-capture-learn-more-button =
+     .label = Learn more
+ address-capture-open-menu-button =
+@@ -56,7 +54,6 @@ autofill-edit-address-title = Edit address
+ ## Labels for address fields (e.g. for a mailing address) used as part of the form
+ ## autofill feature. For more information on the address structure (e.g. levels),
+ ## see also https://developers.google.com/maps/documentation/javascript/geocoding
+-
+ autofill-address-name = Name
+ autofill-address-organization = Organization
+ autofill-address-street-address = Street address
+@@ -125,9 +122,17 @@ autofill-add-card-title = Add card
+ # The dialog title for editing credit cards in browser preferences.
+ autofill-edit-card-title2 = Edit card
+ 
++autofill-card-number = Card Number
++autofill-card-invalid-number = Please enter a valid card number
++autofill-card-name-on-card = Name on Card
++autofill-card-expires-month = Exp. Month
++autofill-card-expires-year = Exp. Year
++autofill-card-billing-address = Billing Address
++
++# GORILLA REPAIR: messages required by this Firefox version,
++# grafted verbatim from the vanilla vault (branding flows via -brand terms).
+ autofill-card-number-2 =
+     .label = Card number
+-autofill-card-invalid-number = Please enter a valid card number
+ autofill-card-name-on-card-2 =
+     .label = Name on card
+ autofill-card-expires-month-2 =

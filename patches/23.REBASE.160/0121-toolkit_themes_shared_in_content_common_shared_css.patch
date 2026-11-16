@@ -1,0 +1,24 @@
+# Gorilla 160 rebase: toolkit/themes/shared/in-content/common-shared.css as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/themes/shared/in-content/common-shared.css b/toolkit/themes/shared/in-content/common-shared.css
+index 4f6bd979a2ace4ac9cdc4ba2003e98751b666efc..9d2632dd7052b6305ce32f81746cabf1991ff1f9 100644
+--- a/toolkit/themes/shared/in-content/common-shared.css
++++ b/toolkit/themes/shared/in-content/common-shared.css
+@@ -8,6 +8,15 @@
+ @namespace html "http://www.w3.org/1999/xhtml";
+ @namespace xul "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
+ 
++/* GORILLA D-158-22 (owner 2026-10-23): "let's get rid of 'learn more' or any links to mozilla in the build". In-content
++   pages (about:preferences, about:addons, about:protections, ...): the older "Learn more" anchors and any link a page
++   hard-codes to a Mozilla site never show. moz-support-link hides itself; the link prefs are "" and locked. */
++html|a.learnMore, html|a[data-l10n-name="learn-more"], html|a[data-l10n-name="learnMore"],
++html|a[href*="mozilla.org"], html|a[href*="mozilla.com"], html|a[href*="mozilla.net"], html|a[href*="firefox.com"],
++xul|label[is="text-link"][href*="mozilla.org"], xul|label[is="text-link"][href*="firefox.com"] {
++  display: none !important;
++}
++
+ :host(.anonymous-content-host),
+ :root {
+   /* Keep these in sync with:

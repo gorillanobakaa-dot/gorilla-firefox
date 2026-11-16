@@ -1,0 +1,25 @@
+# Gorilla 160 rebase: browser/themes/shared/icons/gorilla-satellite.svg as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/themes/shared/icons/gorilla-satellite.svg b/browser/themes/shared/icons/gorilla-satellite.svg
+new file mode 100644
+index 0000000000000000000000000000000000000000..72e7bd693e80e7e718b744db6f4e888a02d824e4
+--- /dev/null
++++ b/browser/themes/shared/icons/gorilla-satellite.svg
+@@ -0,0 +1,15 @@
++<!-- This Source Code Form is subject to the terms of the Mozilla Public
++   - License, v. 2.0. If a copy of the MPL was not distributed with this
++   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
++<!-- GORILLA UNLEASHED - SATELLITE MODE: toolbar icon, a satellite with two solar panels and an antenna -->
++<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="context-fill" fill-opacity="context-fill-opacity">
++  <g transform="rotate(-45 8 8)">
++    <rect x="0.5" y="6" width="4.5" height="4" rx="0.5"/>
++    <rect x="5" y="7.5" width="1.5" height="1"/>
++    <rect x="6.5" y="5.75" width="3" height="4.5" rx="0.75"/>
++    <rect x="9.5" y="7.5" width="1.5" height="1"/>
++    <rect x="11" y="6" width="4.5" height="4" rx="0.5"/>
++    <rect x="7.5" y="3.75" width="1" height="2"/>
++    <circle cx="8" cy="3" r="1.25"/>
++  </g>
++</svg>

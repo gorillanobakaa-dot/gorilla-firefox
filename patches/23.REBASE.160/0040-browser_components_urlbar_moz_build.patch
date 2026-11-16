@@ -1,0 +1,36 @@
+# Gorilla 160 rebase: browser/components/urlbar/moz.build as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/urlbar/moz.build b/browser/components/urlbar/moz.build
+index 83ac3ea9f8c896f33f0819829b04bab3bf423894..88febb343aae46ba31a76b43f6b385f115e5eb9f 100644
+--- a/browser/components/urlbar/moz.build
++++ b/browser/components/urlbar/moz.build
+@@ -19,7 +19,6 @@ MOZ_SRC_FILES += [
+     "MerinoClient.sys.mjs",
+     "QuickActionsLoaderDefault.sys.mjs",
+     "QuickSuggest.sys.mjs",
+-    "SmartbarMentionsPanelSearch.sys.mjs",
+     "UrlbarMuxerStandard.sys.mjs",
+     "UrlbarNewTabComponentRegistrant.sys.mjs",
+     "UrlbarParentController.sys.mjs",
+@@ -27,7 +26,6 @@ MOZ_SRC_FILES += [
+     "UrlbarProviderAboutPages.sys.mjs",
+     "UrlbarProviderActionsSearchMode.sys.mjs",
+     "UrlbarProviderAddonsShortcutMoved.sys.mjs",
+-    "UrlbarProviderAiChat.sys.mjs",
+     "UrlbarProviderAliasEngines.sys.mjs",
+     "UrlbarProviderAutofill.sys.mjs",
+     "UrlbarProviderBookmarkKeywords.sys.mjs",
+@@ -73,11 +71,9 @@ MOZ_SRC_FILES += [
+     "private/ImpressionCaps.sys.mjs",
+     "private/MarketSuggestions.sys.mjs",
+     "private/MDNSuggestions.sys.mjs",
+-    "private/MLSuggest.sys.mjs",
+     "private/RealtimeSuggestProvider.sys.mjs",
+     "private/SportsSuggestions.sys.mjs",
+     "private/SuggestBackendMerino.sys.mjs",
+-    "private/SuggestBackendMl.sys.mjs",
+     "private/SuggestBackendRust.sys.mjs",
+     "private/SuggestFeature.sys.mjs",
+     "private/TemporalSuggestions.sys.mjs",

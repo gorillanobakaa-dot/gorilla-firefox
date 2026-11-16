@@ -1,0 +1,148 @@
+# Gorilla 160 privacy cut
+# Excision creep in 160: upstream 160 added toolkit/components/ml/textgeneration (TextGenerator, an on-device LLM API) built on the llama.cpp backend Gorilla already excised; configure stopped on LOCAL_INCLUDES /third_party/llama.cpp/include. Cut the textgeneration dir, the chrome-only TextGenerator.webidl and the NewTextGeneration message of PHWInference with its child/parent glue
+# Files: dom/chrome-webidl/moz.build, toolkit/components/ml/ipc/HWInferenceChild.cpp, toolkit/components/ml/ipc/HWInferenceChild.h, toolkit/components/ml/ipc/HWInferenceParent.cpp, toolkit/components/ml/ipc/HWInferenceParent.h, toolkit/components/ml/ipc/PHWInference.ipdl, toolkit/components/ml/moz.build
+# Exported-by: build-harness export-hand firefox-160-linux
+
+diff --git a/dom/chrome-webidl/moz.build b/dom/chrome-webidl/moz.build
+index ab69b1a0bd..041bb31ca8 100644
+--- a/dom/chrome-webidl/moz.build
++++ b/dom/chrome-webidl/moz.build
+@@ -134,10 +134,7 @@ if CONFIG["MOZ_BUILD_APP"] != "mobile/android":
+         "UniFFI.webidl",
+     ]
+ 
+-if CONFIG["MOZ_WIDGET_TOOLKIT"] != "android":
+-    WEBIDL_FILES += [
+-        "TextGenerator.webidl",
+-    ]
++# GORILLA excised (160): textgeneration (TextGenerator, upstream 160's on-device LLM API on the llama.cpp backend, already excised)
+ 
+ if CONFIG["MOZ_PLACES"]:
+     WEBIDL_FILES += [
+diff --git a/toolkit/components/ml/ipc/HWInferenceChild.cpp b/toolkit/components/ml/ipc/HWInferenceChild.cpp
+index 652060dfdf..09d49fb52d 100644
+--- a/toolkit/components/ml/ipc/HWInferenceChild.cpp
++++ b/toolkit/components/ml/ipc/HWInferenceChild.cpp
+@@ -4,7 +4,6 @@
+  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+ 
+ #include "HWInferenceChild.h"
+-#include "mozilla/hwinference/TextGenerationChild.h"
+ #include "mozilla/Logging.h"
+ #ifdef MOZ_WEBSPEECH
+ #  include "mozilla/hwinference/SpeechRecognitionParent.h"
+@@ -39,20 +38,7 @@ ipc::IPCResult HWInferenceChild::RecvNewContentSpeechRecognition(
+ }
+ #endif  // MOZ_WEBSPEECH
+ 
+-ipc::IPCResult HWInferenceChild::RecvNewTextGeneration(
+-    Endpoint<hwinference::PTextGenerationChild>&& aEndpoint,
+-    const ipc::FileDescriptor& aModel, const TextGenerationOptions& aOptions) {
+-  LOGD("[{} - {}]", fmt::ptr(this), __func__);
+-
+-  RefPtr<TextGenerationChild> actor = new TextGenerationChild(aModel, aOptions);
+-  if (!aEndpoint.Bind(actor)) {
+-    LOGE("[{} - {}] Failed to bind TextGenerationChild", fmt::ptr(this),
+-         __func__);
+-    return IPC_FAIL(this, "Failed to bind TextGenerationChild");
+-  }
+-  actor->Initialize();
+-  return IPC_OK();
+-}
++// GORILLA excised (160): textgeneration (TextGenerator, upstream 160's on-device LLM API on the llama.cpp backend, already excised)
+ 
+ RefPtr<HWInferenceChild::IsModelAvailablePromise>
+ HWInferenceChild::SendIsModelAvailable(const nsCString& aTask,
+diff --git a/toolkit/components/ml/ipc/HWInferenceChild.h b/toolkit/components/ml/ipc/HWInferenceChild.h
+index d6755caac3..9a69b0582f 100644
+--- a/toolkit/components/ml/ipc/HWInferenceChild.h
++++ b/toolkit/components/ml/ipc/HWInferenceChild.h
+@@ -26,9 +26,7 @@ class HWInferenceChild final : public PHWInferenceChild {
+       const dom::ContentParentId& aContentId);
+ #endif
+ 
+-  mozilla::ipc::IPCResult RecvNewTextGeneration(
+-      Endpoint<hwinference::PTextGenerationChild>&& aEndpoint,
+-      const ipc::FileDescriptor& aModel, const TextGenerationOptions& aOptions);
++  // GORILLA excised (160): textgeneration (TextGenerator, upstream 160's on-device LLM API on the llama.cpp backend, already excised)
+ 
+   RefPtr<IsModelAvailablePromise> SendIsModelAvailable(const nsCString& aTask,
+                                                        const nsCString& aId);
+diff --git a/toolkit/components/ml/ipc/HWInferenceParent.cpp b/toolkit/components/ml/ipc/HWInferenceParent.cpp
+index 4fa1a2cf30..7d1a58dc6f 100644
+--- a/toolkit/components/ml/ipc/HWInferenceParent.cpp
++++ b/toolkit/components/ml/ipc/HWInferenceParent.cpp
+@@ -195,14 +195,7 @@ void HWInferenceParent::StartContentSpeechRecognition(
+ }
+ #endif  // MOZ_WEBSPEECH
+ 
+-void HWInferenceParent::StartTextGeneration(
+-    Endpoint<PTextGenerationChild>&& aEndpoint,
+-    const ipc::FileDescriptor& aModel, const TextGenerationOptions& aOptions) {
+-  SendWhenReady([endpoint = std::move(aEndpoint), model = aModel,
+-                 options = aOptions](HWInferenceParent& aSelf) mutable {
+-    return aSelf.SendNewTextGeneration(std::move(endpoint), model, options);
+-  });
+-}
++// GORILLA excised (160): textgeneration (TextGenerator, upstream 160's on-device LLM API on the llama.cpp backend, already excised)
+ 
+ void HWInferenceParent::ActorDestroy(ActorDestroyReason aReason) {
+   LOGD("{} - reason={}", __func__, static_cast<int>(aReason));
+diff --git a/toolkit/components/ml/ipc/HWInferenceParent.h b/toolkit/components/ml/ipc/HWInferenceParent.h
+index f85dcc50cf..487cb859ae 100644
+--- a/toolkit/components/ml/ipc/HWInferenceParent.h
++++ b/toolkit/components/ml/ipc/HWInferenceParent.h
+@@ -57,10 +57,7 @@ class HWInferenceParent final : public PHWInferenceParent {
+       dom::ContentParentId aChildId);
+ #endif
+ 
+-  // Same for a text generator; aModel is the model file the parent opened.
+-  void StartTextGeneration(Endpoint<PTextGenerationChild>&& aEndpoint,
+-                           const ipc::FileDescriptor& aModel,
+-                           const TextGenerationOptions& aOptions);
++  // GORILLA excised (160): textgeneration (TextGenerator, upstream 160's on-device LLM API on the llama.cpp backend, already excised)
+ 
+  private:
+   friend PHWInferenceParent;
+diff --git a/toolkit/components/ml/ipc/PHWInference.ipdl b/toolkit/components/ml/ipc/PHWInference.ipdl
+index 62027fb0af..4b704cf80a 100644
+--- a/toolkit/components/ml/ipc/PHWInference.ipdl
++++ b/toolkit/components/ml/ipc/PHWInference.ipdl
+@@ -6,10 +6,9 @@
+ #ifdef MOZ_WEBSPEECH
+ include protocol PSpeechRecognition;
+ #endif
+-include protocol PTextGeneration;
+ include protocol PUtilityProcess;
+ 
+-include TextGenerationTypes;
++// GORILLA excised (160): textgeneration (TextGenerator, upstream 160's on-device LLM API on the llama.cpp backend, already excised)
+ 
+ using mozilla::dom::ContentParentId from "mozilla/dom/ipc/IdType.h";
+ using mozilla::hwinference::ModelInstallResult from "mozilla/hwinference/HWInferenceTypes.h";
+@@ -82,12 +81,6 @@ protocol PHWInference
+                                       ContentParentId contentId);
+ #endif
+ 
+-    // The model file is resolved and opened by the parent, the utility never
+-    // learns its path.
+-    async NewTextGeneration(Endpoint<PTextGenerationChild> endpoint,
+-                            FileDescriptor model,
+-                            TextGenerationOptions options);
+-
+     async __delete__();
+ };
+ 
+diff --git a/toolkit/components/ml/moz.build b/toolkit/components/ml/moz.build
+index ccff47db49..5e3538f958 100644
+--- a/toolkit/components/ml/moz.build
++++ b/toolkit/components/ml/moz.build
+@@ -26,7 +26,7 @@ DIRS += [
+ if CONFIG["MOZ_WIDGET_TOOLKIT"] != "android":
+     DIRS += [
+         "ipc",
+-        "textgeneration",
++        # GORILLA excised (160): textgeneration (TextGenerator, upstream 160's on-device LLM API on the llama.cpp backend, already excised)
+     ]
+     if CONFIG["ENABLE_TESTS"]:
+         TEST_DIRS += ["tests/gtest"]

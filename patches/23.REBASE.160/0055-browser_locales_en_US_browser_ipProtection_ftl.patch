@@ -1,0 +1,180 @@
+# Gorilla 160 rebase: browser/locales/en-US/browser/ipProtection.ftl as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/locales/en-US/browser/ipProtection.ftl b/browser/locales/en-US/browser/ipProtection.ftl
+index 22986b4f4c4b07f7e93e486860efb0b70dc6ebd6..121c5b304e91e350a5b07d262d735a605d5f2be4 100644
+--- a/browser/locales/en-US/browser/ipProtection.ftl
++++ b/browser/locales/en-US/browser/ipProtection.ftl
+@@ -1,33 +1,28 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-
+ ## Toolbar button tooltip reflects VPN state
+-
+ ipprotection-button =
+-  .label = VPN
+-  .tooltiptext = VPN
++    .label = VPN
++    .tooltiptext = VPN
+ 
+ ipprotection-button-error =
+-  .label = Turn VPN on
+-  .tooltiptext = Turn VPN on
++    .label = Turn VPN on
++    .tooltiptext = Turn VPN on
+ 
+ ##
+-
+ # The word "Beta" is intended to be uppercase in the experiment label.
+ ipprotection-experiment-badge =
+-  .label = BETA
++    .label = BETA
+ 
+ ipprotection-help-button =
+-  .tooltiptext = Open VPN support page
++    .tooltiptext = Open VPN support Gorilla page
+ 
+ ipprotection-title = VPN
+ 
+ ## Feature introduction callout
+-
+ # Original strings
+-
+-ipprotection-feature-introduction-title = Introducing VPN, now right inside your browser
++ipprotection-feature-introduction-title = Introducing VPN, now right inside your Gorilla browser
+ ipprotection-feature-introduction-title-1 = Try { -brand-product-name }’s built-in VPN
+ ipprotection-feature-introduction-link-text-2 = Use our new <a data-l10n-name="learn-more-vpn">built-in VPN</a> to hide your location and protect your data.
+ 
+@@ -77,8 +72,8 @@ ipprotection-summer-promo-offramp-dismiss-secondary-button = Dismiss
+ ## Callout shown when the user opens a private browsing window
+ 
+ ipprotection-feature-introduction-title-private-browsing = Maximize privacy with { -brand-product-name }’s built-in VPN
+-ipprotection-feature-introduction-link-text-private-browsing-2 = Use our new <a data-l10n-name="learn-more-vpn">built-in VPN</a> to hide your location and protect your data, even when you’re in a Private Window.
+-ipprotection-feature-introduction-description-private-browsing = Browse with extra protection by hiding your location, even when you’re in a Private Window.
++ipprotection-feature-introduction-link-text-private-browsing-2 = Use our new <a data-l10n-name="learn-more-vpn">built-in VPN</a> to hide your location and protect your data, even when you’re in a Private Gorilla Window.
++ipprotection-feature-introduction-description-private-browsing = Browse with extra protection by hiding your location, even when you’re in a Private Gorilla Window.
+ # Alternate version of the feature discovery callout copy used after we've released site inclusions for the VPN. Users have the option to turn the VPN on for specific sites only
+ ipprotection-feature-introduction-description-private-browsing-3 = Help hide your location as you browse. Set rules to turn on VPN when you want <a data-l10n-name="learn-more-vpn">extra privacy</a> or location-based browsing, and off when you don’t.
+ 
+@@ -100,7 +95,6 @@ ipprotection-feature-introduction-description-inclusions = Help hide your locati
+ ipprotection-feature-introduction-link-text-captive-portal-1 = Get <a data-l10n-name="learn-more-vpn">extra privacy</a> by choosing from several locations to hide where you browse.
+ 
+ ## Buttons used for all feature introduction callouts
+-
+ ipprotection-feature-introduction-button-primary = Next
+ ipprotection-feature-introduction-button-secondary-not-now = Not now
+ ipprotection-feature-introduction-button-secondary-not-now-menuitem =
+@@ -108,9 +102,9 @@ ipprotection-feature-introduction-button-secondary-not-now-menuitem =
+ ipprotection-feature-introduction-button-secondary-no-thanks = No thanks
+ ipprotection-feature-introduction-button-secondary-no-thanks-menuitem =
+     .label = No thanks
+-ipprotection-feature-introduction-button-secondary-remove = Remove VPN from toolbar
++ipprotection-feature-introduction-button-secondary-remove = Remove VPN from Gorilla toolbar
+ ipprotection-feature-introduction-button-secondary-remove-1 =
+-    .label = Remove VPN from toolbar
++    .label = Remove VPN from Gorilla toolbar
+ ipprotection-feature-introduction-button-open-vpn = Open VPN
+ ipprotection-feature-introduction-button-get-started = Get started
+ 
+@@ -189,7 +183,7 @@ site-rules-inclusion-prompt =
+   .message = Update your rules anytime in settings.
+ 
+ ipprotection-settings-link =
+-  .label = Settings
++  .label = Gorilla Settings
+ 
+ ## Status card
+ 
+@@ -213,7 +207,6 @@ ipprotection-button-turn-vpn-on-1 = Turn on
+ ipprotection-button-connecting = Turning on…
+ 
+ ## Location controls
+-
+ # The button displays the selected VPN location.
+ # This shows the default selection, "Recommended" which is the recommended location as determined by Firefox.
+ ipprotection-recommended-location-button = Location: Recommended
+@@ -248,7 +241,7 @@ ipprotection-connection-status-paused-title-2 = VPN is paused
+ # Variables
+ #   $maxUsage (number) - The maximum amount of data a user can use in a month (in GB)
+ ipprotection-connection-status-paused-description-1 = You’ve used all { $maxUsage } GB of your VPN data. Access resets next month.
+-upgrade-vpn-title = Get extra protection beyond the browser
++upgrade-vpn-title = Get extra protection beyond the Gorilla browser
+ upgrade-vpn-description = Choose your VPN location, use VPN for all of your apps and up to 5 devices, and stay secure on any network — at home or on public Wi-Fi.
+ upgrade-vpn-button = Try { -mozilla-vpn-brand-name }
+ 
+@@ -294,12 +287,10 @@ ipprotection-come-back-title = Come back to try built-in VPN
+ ipprotection-message-body-hide-location = Hide your location when you browse in { -brand-product-name } for more privacy and control.
+ 
+ ## IP Protection bandwidth callouts
+-
+ ipprotection-bandwidth-upgrade-title = Like built-in VPN? Get even more protection outside { -brand-product-name } with { -mozilla-vpn-brand-name }.
+ ipprotection-bandwidth-upgrade-text = Choose a VPN location and add protection to all your apps on up to 5 devices, whether you’re at home or on public Wi-Fi.
+ 
+ ## IP Protection bandwidth warning infobar
+-
+ # Variables
+ #   $usageLeft (string) - The amount of data a user has left in a month (in GB)
+ ip-protection-bandwidth-warning-infobar-message-75 = <strong>Getting close to your VPN limit.</strong> You have { $usageLeft } GB left. Your data will reset at the start of next month.
+@@ -335,7 +326,7 @@ ip-protection-not-opted-in-button = Get started
+ # Variables:
+ #   $count (number) - The number of sites saved as VPN exclusions.
+ ip-protection-site-exceptions-all-sites-button =
+-  .label = Manage website settings
++  .label = Manage website Gorilla settings
+   .description =
+     { $count ->
+         [one] { $count } website
+@@ -379,7 +370,7 @@ ip-protection-autostart =
+ ip-protection-autostart-checkbox =
+   .label = When I open { -brand-short-name }
+ ip-protection-autostart-private-checkbox =
+-  .label = In private windows
++  .label = In private Gorilla windows
+ 
+ ip-protection-vpn-upgrade-link =
+   .label = Get even more protection outside { -brand-short-name } with { -mozilla-vpn-brand-name }
+@@ -391,7 +382,7 @@ ip-protection-vpn-upgrade-link-1 =
+ ## IP Protection dialogs
+ 
+ ip-protection-exceptions-dialog-window =
+-  .title = Manage website settings
++  .title = Manage website Gorilla settings
+ ip-protection-exclusions-desc = Use VPN for all websites except ones on this list. Add a website here or by opening VPN.
+ 
+ ip-protection-site-rule-window =
+@@ -476,7 +467,6 @@ ip-protection-bandwidth-hit-for-the-month = You’ve used all { $maxUsage } GB o
+ ip-protection-bandwidth-help-text = Resets to { $maxUsage } GB on the first of every month.
+ 
+ ## IP Protection bandwidth reset callout
+-
+ # Variables
+ #  $maxUsage (number) - The maximum amount of data a user can use in a month (in GB)
+ ipprotection-bandwidth-reset-title = { $maxUsage } GB of VPN, refreshed and ready to go
+@@ -484,12 +474,10 @@ ipprotection-bandwidth-reset-text = Turn on VPN for an extra privacy boost, free
+ ipprotection-bandwidth-reset-button = Got it
+ 
+ ## IP Protection add-on breakage warnings
+-
+ ipp-activator-breakage-sign-in-warning = <strong>This website may not work with a VPN.</strong> Try signing in or turning VPN off while you use this website.
+ ipp-activator-breakage-turn-off-warning = <strong>This website may not work with a VPN.</strong> Try turning VPN off while you use this website.
+ 
+ ## IP Protection alerts
+-
+ vpn-paused-alert-title = VPN paused
+ 
+ # Variables
+@@ -503,10 +491,11 @@ vpn-error-page-continue-description = Choose how to continue without VPN
+ vpn-error-page-keep-browsing = Keep browsing in this session
+ vpn-error-page-new-session = Start a new session
+ 
+-vpn-paused-alert-close-tabs-button = Close all tabs
++vpn-paused-alert-close-tabs-button = Close all Gorilla tabs
+ vpn-paused-alert-continue-wo-vpn-button = Continue without VPN
+ 
+ vpn-error-alert-title = VPN isn’t working right now.
+ vpn-error-alert-body = Try again later.
+ 
+ ##
++
