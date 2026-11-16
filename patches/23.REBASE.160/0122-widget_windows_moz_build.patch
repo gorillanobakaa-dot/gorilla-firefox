@@ -1,0 +1,16 @@
+# Gorilla 160 rebase: widget/windows/moz.build as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/widget/windows/moz.build b/widget/windows/moz.build
+index 4657a1037dae502977e525a66ad2408b2e196ede..f4398a1740b977a3c58b94389d02aba42e5876ad 100644
+--- a/widget/windows/moz.build
++++ b/widget/windows/moz.build
+@@ -238,7 +238,6 @@ if CONFIG["MOZ_WINDOWSAPPSDK_DIR"]:
+             "Microsoft.UI.Input.dll",
+             "Microsoft.UI.Windowing.Core.dll",
+             "Microsoft.UI.Windowing.dll",
+-            "Microsoft.WindowsAppRuntime.dll",
+             "Microsoft.WindowsAppRuntime.Insights.Resource.dll",
+         )
+     ]

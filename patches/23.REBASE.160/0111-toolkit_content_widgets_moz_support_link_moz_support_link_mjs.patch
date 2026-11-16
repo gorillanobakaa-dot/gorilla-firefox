@@ -1,0 +1,18 @@
+# Gorilla 160 rebase: toolkit/content/widgets/moz-support-link/moz-support-link.mjs as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/content/widgets/moz-support-link/moz-support-link.mjs b/toolkit/content/widgets/moz-support-link/moz-support-link.mjs
+index 20d93a76e59d36e56e768402cfaabf10390915e0..eb653148dd7b3b50c2a89c4a0c533bc9430e8cab 100644
+--- a/toolkit/content/widgets/moz-support-link/moz-support-link.mjs
++++ b/toolkit/content/widgets/moz-support-link/moz-support-link.mjs
+@@ -60,6 +60,9 @@ export class MozSupportLink extends StylesMixin(HTMLAnchorElement, styles) {
+ 
+   connectedCallback() {
+     super.connectedCallback();
++    // GORILLA D-158-22 (owner 2026-10-23): no "Learn more" and no link to Mozilla anywhere a person clicks. Every
++    // support link is this element, so it never shows; app.support.baseURL is "" (locked) for any other caller.
++    this.hidden = true;
+     this.#register();
+     this.#setHref();
+     this.setAttribute("target", "_blank");

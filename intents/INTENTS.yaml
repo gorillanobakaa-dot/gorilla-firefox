@@ -10,7 +10,7 @@
 # BUILD-CONTRADICTED, EXPLAINED). See fieldkit/migrate/ledger.py and MIGRATION-PLAN.md.
 
 version: 1
-generated: '2026-10-03'
+generated: '2026-11-15'
 stats: {patch_files: 435, hunks: 1825, added_lines: 8481, removed_lines: 11912, pref_lines: 531, pref_lines_added: 415, new_files: 742, deleted_files: 432}
 intents:
 - id: I-663e5f54a5
@@ -7061,6 +7061,10 @@ intents:
   decisions: []
   claims: []
   status: {'157.0': TREE-CHECK-FAILS}
+  checks_manual:
+  - tree_contains: {path: browser/locales/en-US/browser/customkeys.ftl, text: customkeys-key-invalid = Invalid}
+  - tree_contains: {path: browser/components/customkeys/content/customkeys.js, text: formatValue("customkeys-key-invalid")}
+  review: 'Zero 2026-11-15, Firefox 160 S4: the 157 removal of customkeys-key-invalid was a side effect of the 08.Look whole-file re-layout; customkeys.js (157, 158, 160) shows that string in the shortcut editor when a key is invalid, and our 158 kept it. Removing it would leave the field blank. The intent (Gorilla''s customkeys layout) holds; the string stays while the code uses it.'
 - id: I-e0f137ead4
   group: 08.Look
   patch: 08.Look/browser_locales_en-US_browser_customkeys.ftl.patch
@@ -21074,6 +21078,10 @@ intents:
   decisions: []
   claims: []
   status: {'157.0': VERIFIED-IN-TREE}
+  checks_manual:
+  - tree_present: [browser/branding/gorilla/PrivateBrowsing_150.png, browser/branding/gorilla/PrivateBrowsing_70.png, browser/branding/gorilla/VisualElements_150.png, browser/branding/gorilla/VisualElements_70.png, browser/branding/gorilla/branding.nsi, browser/branding/gorilla/configure.sh, browser/branding/gorilla/content/about-logo-private.png, browser/branding/gorilla/content/about-logo-private@2x.png, browser/branding/gorilla/content/about-logo.png, browser/branding/gorilla/content/about-logo@2x.png, browser/branding/gorilla/content/about-wordmark.svg, browser/branding/gorilla/content/aboutDialog.css, browser/branding/gorilla/content/firefox-wordmark.svg, browser/branding/gorilla/content/icon128.png, browser/branding/gorilla/content/icon16.png, browser/branding/gorilla/content/icon32.png, browser/branding/gorilla/content/icon48.png, browser/branding/gorilla/content/icon64.png, browser/branding/gorilla/content/jar.mn, browser/branding/gorilla/content/moz.build, browser/branding/gorilla/default128.png, browser/branding/gorilla/default16.png, browser/branding/gorilla/default22.png, browser/branding/gorilla/default24.png, browser/branding/gorilla/default256.png, browser/branding/gorilla/default32.png, browser/branding/gorilla/default48.png, browser/branding/gorilla/default64.png, browser/branding/gorilla/document.ico, browser/branding/gorilla/document_pdf.ico, browser/branding/gorilla/firefox.VisualElementsManifest.xml, browser/branding/gorilla/firefox.ico, browser/branding/gorilla/firefox64.ico, browser/branding/gorilla/icon1024.png, browser/branding/gorilla/icon128.png, browser/branding/gorilla/icon16.png, browser/branding/gorilla/icon22.png, browser/branding/gorilla/icon24.png, browser/branding/gorilla/icon256.png, browser/branding/gorilla/icon32.png, browser/branding/gorilla/icon48.png, browser/branding/gorilla/icon512.png, browser/branding/gorilla/icon64.png, browser/branding/gorilla/locales/en-US/brand.ftl, browser/branding/gorilla/locales/en-US/brand.properties, browser/branding/gorilla/locales/jar.mn, browser/branding/gorilla/locales/moz.build, browser/branding/gorilla/moz.build, browser/branding/gorilla/msix/Assets/Document44x44.png, browser/branding/gorilla/msix/Assets/LargeTile.scale-200.png, browser/branding/gorilla/msix/Assets/MedTile.scale-200.png, browser/branding/gorilla/msix/Assets/SmallTile.scale-200.png, browser/branding/gorilla/msix/Assets/Square150x150Logo.scale-200.png, browser/branding/gorilla/msix/Assets/Square44x44Logo.altform-lightunplated_targetsize-256.png, browser/branding/gorilla/msix/Assets/Square44x44Logo.altform-unplated_targetsize-256.png, browser/branding/gorilla/msix/Assets/Square44x44Logo.scale-200.png, browser/branding/gorilla/msix/Assets/Square44x44Logo.targetsize-256.png, browser/branding/gorilla/msix/Assets/StoreLogo.scale-200.png, browser/branding/gorilla/msix/Assets/Wide310x150Logo.scale-200.png, browser/branding/gorilla/newtab.ico, browser/branding/gorilla/newwindow.ico, browser/branding/gorilla/pbmode.ico, browser/branding/gorilla/pref/firefox-branding.js, browser/branding/gorilla/private_browsing.VisualElementsManifest.xml, browser/branding/gorilla/stubinstaller/bgstub.jpg, browser/branding/gorilla/stubinstaller/installing_page.css, browser/branding/gorilla/stubinstaller/profile_cleanup_page.css, browser/branding/gorilla/wizHeader.bmp, browser/branding/gorilla/wizHeaderRTL.bmp, browser/branding/gorilla/wizWatermark.bmp]
+  - tree_absent: [browser/branding/gorilla/content/about-logo.svg, browser/branding/gorilla/content/about.png, browser/branding/gorilla/content/document_pdf.svg]
+  review: 'Zero 2026-11-15, Firefox 160 S4: 3 of the 80 new branding files were deleted later on purpose by decision D-157-35 (no Gorilla drawn small; 22.EGRESS.LOCKDOWN.157 patches 080/081 and DELETED_FILES.manifest.txt). The later owner decision wins: the other 77 must be present and these 3 must be absent.'
 - id: I-145232cba6
   group: 08.Look
   patch: 08.Look/NEW_FILES
@@ -24158,6 +24166,11 @@ intents:
   decisions: []
   claims: []
   status: {'157.0': TREE-CHECK-FAILS}
+  checks_manual:
+  - tree_lacks: {path: toolkit/modules/LightweightThemeConsumer.sys.mjs, text: this._isAIWindow = this._doc.documentElement.hasAttribute("ai-window");}
+  - tree_lacks: {path: toolkit/modules/LightweightThemeConsumer.sys.mjs, text: 'this._aiWindowObserver = new this._win.MutationObserver(() => {'}
+  - tree_lacks: {path: toolkit/modules/LightweightThemeConsumer.sys.mjs, text: ai-window}
+  review: 'Zero 2026-11-15, Firefox 160 S4: the generated tree_lacks ''this._update(this._lastData);'' was too broad: that line is the theme consumer''s generic refresh, used 5 times in 160 outside the AI window code. Kept the two AI-window checks and added a stricter one: no ''ai-window'' anywhere in the file.'
 - id: I-757fc008cf
   group: 16.SNAPSHOT.DELTA.2026-08-12
   patch: 16.SNAPSHOT.DELTA.2026-08-12/toolkit_modules_LightweightThemeConsumer.sys.mjs.patch
@@ -25554,6 +25567,10 @@ intents:
   decisions: []
   claims: []
   status: {'157.0': TREE-CHECK-FAILS}
+  checks_manual:
+  - tree_contains: {path: toolkit/components/places/PlacesSemanticHistoryManager.sys.mjs, text: "    this.semanticDB = null;\n    if (true) {\n      return;\n    }\n    this.embedder = lazy.embeddingsGeneratorFactory.forPlaces();"}
+  - tree_contains: {path: toolkit/components/places/PlacesSemanticHistoryManager.sys.mjs, text: '// GORILLA OVERRIDE: ml stack excised'}
+  review: 'Zero 2026-11-15, Firefox 160 S4: the patch moved the GORILLA OVERRIDE return ABOVE the embedder line; it does not delete that line. The generated tree_lacks of it was too strict. Replaced by: the override block and its early return sit directly before the embedder line (so it never runs).'
 - id: I-8886becbbe
   group: 21.PORT.FIXES.157
   patch: 21.PORT.FIXES.157/007-the-gorilla-override-block-sat-in-the-middle-of-a-two-line-a.patch

@@ -1,0 +1,17 @@
+# Gorilla 160 rebase: toolkit/components/pdfjs/PdfJsDefaultPrefs.js as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/components/pdfjs/PdfJsDefaultPrefs.js b/toolkit/components/pdfjs/PdfJsDefaultPrefs.js
+index a4ff5b827a0a781da5143cbb6648f1b1e339fc3b..82061185477c42e1fe2d31c4843ac0d5114736c0 100644
+--- a/toolkit/components/pdfjs/PdfJsDefaultPrefs.js
++++ b/toolkit/components/pdfjs/PdfJsDefaultPrefs.js
+@@ -73,3 +73,8 @@ pref("pdfjs.viewOnLoad", 0);
+ pref("pdfjs.viewerCssTheme", 0);
+ 
+ #include PdfJsOverridePrefs.js
++
++/* GORILLA D-158-22 (owner 2026-10-23): no Learn more and no link to Mozilla; the PDF viewer's help links are empty
++   and locked. This file is generated from pdf.js, so the values are set here at its end (T-157-34-A). */
++pref("pdfjs.altTextLearnMoreUrl", "", locked);
++pref("pdfjs.commentLearnMoreUrl", "", locked);

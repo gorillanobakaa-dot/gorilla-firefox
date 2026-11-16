@@ -1,0 +1,40 @@
+# Gorilla 160 rebase: browser/locales/en-US/browser/browserSets.ftl as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/locales/en-US/browser/browserSets.ftl b/browser/locales/en-US/browser/browserSets.ftl
+index ac4c6a1839027e056d34b153e33379be0c5e74c6..d4927ee6dbb0b31f779fd56c8d5b949521df1acf 100644
+--- a/browser/locales/en-US/browser/browserSets.ftl
++++ b/browser/locales/en-US/browser/browserSets.ftl
+@@ -1,7 +1,6 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-
+ window-minimize-command =
+     .label = Minimize
+ 
+@@ -176,7 +175,6 @@ bookmark-show-toolbar-shortcut =
+ ## All `-alt*` messages are alternative acceleration keys for zoom.
+ ## If shift key is needed with your locale popular keyboard for them,
+ ## you can use these alternative items. Otherwise, their values should be empty.
+-
+ full-zoom-reduce-shortcut =
+     .key = -
+ 
+@@ -202,7 +200,6 @@ full-zoom-reset-shortcut-alt =
+     .key = {""}
+ 
+ ##
+-
+ bidi-switch-direction-shortcut =
+     .key = X
+ 
+@@ -214,7 +211,6 @@ search-tabs-shortcut =
+ 
+ ## The shortcuts below are for Mac specific
+ ## global menu.
+-
+ quit-app-shortcut =
+     .key = Q
+ 

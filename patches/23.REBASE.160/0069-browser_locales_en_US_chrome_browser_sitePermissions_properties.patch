@@ -1,0 +1,48 @@
+# Gorilla 160 rebase: browser/locales/en-US/chrome/browser/sitePermissions.properties as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/locales/en-US/chrome/browser/sitePermissions.properties b/browser/locales/en-US/chrome/browser/sitePermissions.properties
+index e8299674ee5f8904e2f0bd67ecb8c7ca0d684aea..7a7ef5c892a1897b245be0b4b30956cd968a860a 100644
+--- a/browser/locales/en-US/chrome/browser/sitePermissions.properties
++++ b/browser/locales/en-US/chrome/browser/sitePermissions.properties
+@@ -1,7 +1,6 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-
+ # LOCALIZATION NOTE (state.current.allowed,
+ #                    state.current.allowedForSession,
+ #                    state.current.allowedTemporarily,
+@@ -36,8 +35,6 @@ state.multichoice.autoplayallow = Allow Audio and Video
+ # Used to label the two states of the "keep site data when closing" permission
+ # in the page info dialog. "clearDataOnShutdown" is the default (the site's data
+ # is cleared when the browser closes); "persistDataOnShutdown" keeps it.
+-state.multichoice.clearDataOnShutdown = Clear when closing
+-state.multichoice.persistDataOnShutdown = Always keep site data
+ 
+ permission.autoplay.label = Autoplay
+ permission.cookie.label = Set cookies
+@@ -49,7 +46,7 @@ permission.screen.label = Share the screen
+ # Short form for (permission to) "Choose and change audio output devices".
+ permission.speaker.label = Select speakers
+ permission.install.label = Install add-ons
+-permission.popup-only.label = Open pop-up windows
++permission.popup-only.label = Open pop-up Gorilla windows
+ permission.popup-and-framebusting.label = Pop-ups and third-party redirects
+ permission.framebusting-only.label = Third-party redirects
+ permission.geo.label = Access your location
+@@ -57,12 +54,11 @@ permission.localhost.label = Access this device
+ permission.local-network.label = Access local network devices
+ permission.xr.label = Access virtual reality devices
+ permission.shortcuts.label = Override keyboard shortcuts
+-permission.focus-tab-by-prompt.label = Switch to this tab
++permission.focus-tab-by-prompt.label = Switch to this Gorilla tab
+ permission.persistent-storage.label = Store data in persistent storage
+ # LOCALIZATION NOTE (permission.persist-data-on-shutdown.label):
+ # Lets a site keep its data (cookies, cache, history, etc.) instead of being
+ # cleared when the browser closes, for users who clear data on shutdown.
+-permission.persist-data-on-shutdown.label = Keep site data when closing
+ permission.canvas.label = Extract canvas data
+ permission.midi.label = Access MIDI devices
+ permission.midi-sysex.label = Access MIDI devices with SysEx support

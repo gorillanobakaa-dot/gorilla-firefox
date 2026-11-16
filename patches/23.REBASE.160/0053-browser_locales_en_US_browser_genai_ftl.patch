@@ -1,0 +1,132 @@
+# Gorilla 160 rebase: browser/locales/en-US/browser/genai.ftl as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/locales/en-US/browser/genai.ftl b/browser/locales/en-US/browser/genai.ftl
+index 8b675507f2777a5e8c5acdcaa478bb7afdaa4d0a..40c8ad81431119266cf896fdabc08b92db4c367c 100644
+--- a/browser/locales/en-US/browser/genai.ftl
++++ b/browser/locales/en-US/browser/genai.ftl
+@@ -1,9 +1,7 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-
+ ## Generative AI (GenAI) Settings section
+-
+ genai-settings-chat-chatgpt-links = By choosing ChatGPT, you agree to the OpenAI <a data-l10n-name="link1">Terms of Use</a> and <a data-l10n-name="link2">Privacy Policy</a>.
+ genai-settings-chat-claude-links = By choosing Anthropic Claude, you agree to the Anthropic <a data-l10n-name="link1">Consumer Terms of Service</a>, <a data-l10n-name="link2">Usage Policy</a>, and <a data-l10n-name="link3">Privacy Policy</a>.
+ genai-settings-chat-copilot-links = By choosing Copilot, you agree to the <a data-l10n-name="link1">Copilot AI Experiences Terms</a> and <a data-l10n-name="link2">Microsoft Privacy Statement</a>.
+@@ -18,11 +16,10 @@ genai-settings-chat-scout-links = By choosing Yahoo Scout, you agree to the Yaho
+ ## These prompts have been made concise and direct in English because some chatbot providers
+ ## have character restrictions and being direct reduces the chance for misinterpretation.
+ ## When localizing, please be concise and direct, but not at the expense of losing meaning.
+-
+ # This prompt is added to the beginning of selection prompts sent to a chatbot.
+ # $tabTitle (string) - title of the webpage
+ # $selection (string) - selected text
+-genai-prompt-prefix-selection = I’m on page “{ $tabTitle }” with “{ $selection }” selected.
++genai-prompt-prefix-selection = I’m on Gorilla page “{ $tabTitle }” with “{ $selection }” selected.
+ 
+ # Prompt purpose: help users understand what a selection covers at a glance
+ genai-prompts-summarize =
+@@ -49,7 +46,6 @@ genai-prompts-proofread =
+     .value = Please proofread the selection for spelling and grammar errors. Identify any mistakes and provide a corrected version of the text. Maintain the meaning and factual accuracy and output the list of proposed corrections first, followed by the final, corrected version of the text.
+ 
+ ## Chatbot menu shortcuts
+-
+ genai-menu-ask-smart-window =
+     .label = Ask…
+     .accesskey = z
+@@ -76,7 +72,7 @@ genai-menu-remove-generic =
+ genai-menu-remove-provider =
+     .label = Remove { $provider }
+ genai-menu-remove-sidebar =
+-    .label = Remove from Sidebar
++    .label = Remove from Gorilla Sidebar
+ genai-shortcut-button-3 =
+     .tooltiptext = Ask about this text
+     .aria-label = Ask about this text
+@@ -93,7 +89,7 @@ genai-shortcut-more-actions-button =
+     .aria-label = More options
+ 
+ genai-menu-new-badge = New
+-genai-menu-summarize-page = Summarize Page
++genai-menu-summarize-page = Summarize Gorilla Page
+ 
+ genai-input-ask-smart-window =
+     .placeholder = Ask…
+@@ -106,28 +102,29 @@ genai-input-ask-provider =
+ # $selectionLength (number) - selected text length
+ # $maxLength (number) - max length of what can be selected
+ genai-shortcuts-selected-warning-generic =
+-    .heading = AI chatbot won’t get your full selection
+-    .message = { $selectionLength ->
++    .heading =
++        AI chatbot won’t get your full selection
++        .message = { $selectionLength ->
+         *[other] You’ve selected about { $selectionLength } characters. The number of characters we can send to the AI chatbot is about { $maxLength }.
+-    }
++        }
+ # $provider (string) - name of the provider
+ # $selectionLength (number) - selected text length
+ # $maxLength (number) - max length of what can be selected
+ genai-shortcuts-selected-warning =
+-    .heading = { $provider } won’t get your full selection
+-    .message = { $selectionLength ->
++    .heading =
++        { $provider } won’t get your full selection
++        .message = { $selectionLength ->
+         *[other] You’ve selected about { $selectionLength } characters. The number of characters we can send to { $provider } is about { $maxLength }.
+-    }
++        }
+ genai-shortcuts-hide =
+     .label = Hide chatbot shortcut
+ 
+ ## Chatbot header
+-
+ genai-chatbot-title = AI chatbot
+ genai-header-provider-menu =
+     .title = Choose a chatbot
+ genai-header-settings-button =
+-    .title = AI Chat settings
++    .title = AI Chat Gorilla settings
+ genai-header-close-button =
+     .title = Close
+ 
+@@ -209,8 +206,8 @@ genai-model-optin-cancel =
+ #   $range (String): The range of minutes as a localised string. Examples: "3-7", "~1".
+ link-preview-reading-time =
+     { $rangePlural ->
+-        [one] { $range } min reading time
+-       *[other] { $range } mins reading time
++    [one] { $range } min reading time
++    *[other] { $range } mins reading time
+     }
+ 
+ # Error message displayed when a link preview cannot be generated
+@@ -230,13 +227,13 @@ link-preview-generation-retry = Try again
+ 
+ # Button that opens the Link Preview settings
+ link-preview-settings-button =
+-    .title = Link Preview Settings
++    .title = Link Preview Gorilla Settings
+ 
+ link-preview-settings-enable =
+     .label = Enable link previews
+-    .description = See the page title, description, and more when you use the shortcut or right-click on a link.
++    .description = See the Gorilla page title, description, and more when you use the shortcut or right-click on a link.
+ link-preview-settings-key-points =
+-    .label = Allow AI to read the beginning of the page and generate key points
++    .label = Allow AI to read the beginning of the Gorilla page and generate key points
+ link-preview-settings-long-press =
+     .label = Shortcut: Click and hold the link for 1 second (long press)
+ 
+@@ -258,7 +255,7 @@ highlight-to-search-settings-search =
+ link-preview-optin-title = See more with AI?
+ 
+ # Message that appears when user is shown the opt-in flow for link previews
+-link-preview-optin-message = { -brand-short-name } uses AI to read the beginning of the page and generate a few key points. To prioritize your privacy, this happens on your device.
++link-preview-optin-message = { -brand-short-name } uses AI to read the beginning of the Gorilla page and generate a few key points. To prioritize your privacy, this happens on your device.
+ 
+ # Onboarding card title for long press
+ link-preview-onboarding-title-long-press = New: Click and hold any link for a preview

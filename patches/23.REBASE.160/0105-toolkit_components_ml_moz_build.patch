@@ -1,0 +1,50 @@
+# Gorilla 160 rebase: toolkit/components/ml/moz.build as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/components/ml/moz.build b/toolkit/components/ml/moz.build
+index d65a41a169a5539054e37fa775ef2aba48655b69..ccff47db49015e39c2b32dd6791dca4ac36badca 100644
+--- a/toolkit/components/ml/moz.build
++++ b/toolkit/components/ml/moz.build
+@@ -7,22 +7,24 @@ SPHINX_TREES["/toolkit/components/ml"] = "docs"
+ if CONFIG["ONNX_RUNTIME"]:
+     FINAL_TARGET_FILES += ["%" + CONFIG["ONNX_RUNTIME"]]
+ 
+-JAR_MANIFESTS += ["jar.mn"]
++JAR_MANIFESTS += ["jar.mn"]  # GORILLA: the manifest is EMPTIED, not dropped (mozbuild refuses an undeclared jar.mn); nothing under chrome://global/content/ml/ is packaged
+ 
+ with Files("**"):
+     BUG_COMPONENT = ("Core", "Machine Learning: On Device")
+ 
+ DIRS += [
+-    "actors",
++    # GORILLA excised: "actors" (MLEngineParent/Child; the MLEngine actor is excised in ActorManagerParent)
+     "tests",
+ ]
+ 
+ # ggml has no armv7-android CPU backend variant upstream, so there is no
+ # inference engine to run on Android, and consequently no HWInference utility
+ # process to talk to: SandboxingKind::HW_INFERENCE does not exist there.
++# GORILLA excised: backends/llama (llama.cpp C++ backend).
++# Its WebIDL (dom/webidl/LlamaRunner.webidl) and the third_party/llama.cpp
++# sources are already removed, so this would not compile.
+ if CONFIG["MOZ_WIDGET_TOOLKIT"] != "android":
+     DIRS += [
+-        "backends/llama",
+         "ipc",
+         "textgeneration",
+     ]
+@@ -44,10 +46,9 @@ XPIDL_SOURCES += [
+     "nsIMLUtils.idl",
+ ]
+ 
+-MOZ_SRC_FILES += [
+-    "MLModelHubService.sys.mjs",
+-    "textgeneration/TextGenerationEngine.sys.mjs",
+-]
++# GORILLA excised: MOZ_SRC_FILES MLModelHubService.sys.mjs (its components.conf entry is removed too)
++
++MOZ_SRC_FILES += ["textgeneration/TextGenerationEngine.sys.mjs"]
+ 
+ UNIFIED_SOURCES += [
+     "MLUtils.cpp",

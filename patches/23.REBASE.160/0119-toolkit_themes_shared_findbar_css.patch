@@ -1,0 +1,148 @@
+# Gorilla 160 rebase: toolkit/themes/shared/findbar.css as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/themes/shared/findbar.css b/toolkit/themes/shared/findbar.css
+index c1c96cc5e2a0b371af856dd9f7dc6497ca07ec0d..2bdab40caeb1a19912cd6574b8b0f84182362030 100644
+--- a/toolkit/themes/shared/findbar.css
++++ b/toolkit/themes/shared/findbar.css
+@@ -138,9 +138,9 @@ xul|findbar {
+ .findbar-find-previous,
+ .findbar-find-next {
+   appearance: none;
+-  -moz-context-properties: fill;
+-  fill: var(--toolbarbutton-icon-fill);
+-  color: inherit;
++  -moz-context-properties: fill, fill-opacity;
++  fill: #00FFFF !important;
++  color: #00FFFF !important;
+   border-radius: var(--border-radius-circle);
+   padding: var(--space-xsmall) var(--space-small);
+ 
+@@ -159,15 +159,17 @@ xul|findbar {
+   }
+ 
+   &:not([disabled]):hover {
+-    background-color: var(--toolbarbutton-background-color-hover, rgba(190, 190, 190, 0.2));
++    background-color: rgba(0, 255, 255, 0.15) !important;
++    outline: 1px solid #00FFFF !important;
++    outline-offset: -1px !important;
+   }
+ 
+   &:not([disabled]):hover:active {
+-    background-color: var(--toolbarbutton-background-color-active, rgba(190, 190, 190, 0.4));
++    background-color: rgba(0, 255, 255, 0.3) !important;
+   }
+ 
+   &[disabled] > .toolbarbutton-icon {
+-    opacity: var(--toolbarbutton-opacity-disabled);
++    opacity: 0.4;
+   }
+ }
+ 
+@@ -190,7 +192,8 @@ xul|findbar {
+ }
+ 
+ .findbar-container > checkbox {
+-  accent-color: var(--color-accent-primary);
++  accent-color: #00FFFF !important;
++  color: #00FFFF !important;
+ }
+ 
+ .findbar-find-status,
+@@ -217,20 +220,21 @@ xul|findbar {
+ /* Increase specificity to override close-icon.css */
+ .close-icon.findbar-closebutton {
+   margin: 2px 8px;
+-  fill: var(--toolbarbutton-icon-fill);
++  fill: #00FFFF !important;
++  -moz-context-properties: fill, fill-opacity !important;
+   transition: opacity 150ms ease-in-out;
+   border-radius: var(--border-radius-circle);
+-  border: var(--border-width) solid var(--toolbarbutton-outline-color);
++  border: 1px solid #00FFFF !important;
+   padding: var(--space-xsmall) var(--space-small);
+   width: auto;
+ 
+   &:hover {
+-    background-color: var(--toolbarbutton-background-color-hover, rgba(190, 190, 190, 0.2));
++    background-color: rgba(0, 255, 255, 0.15) !important;
+     outline: none;
+   }
+ 
+   &:hover:active {
+-    background-color: var(--toolbarbutton-background-color-active, rgba(190, 190, 190, 0.4));
++    background-color: rgba(0, 255, 255, 0.3) !important;
+   }
+ 
+   @media not -moz-pref("browser.nova.enabled") {
+@@ -238,3 +242,69 @@ xul|findbar {
+     width: 24px;
+   }
+ }
++
++
++/* ==========================================================
++ * GORILLA OVERRIDES
++ * Appended rather than patched in place: these are additive
++ * overrides, and the cascade already gives later rules
++ * priority. Upstream can restructure this file freely.
++ * ========================================================== */
++
++.findbar-textbox {
++  background-color: #000000 !important;
++  color: #00FFFF !important;
++  caret-color: #00FFFF !important;
++}
++
++.findbar-textbox {
++  :root[lwtheme] & {
++    background-color: #000000 !important;
++    color: #00FFFF !important;
++  }
++}
++
++.findbar-textbox {
++  border: 1px solid #00FFFF !important;
++}
++
++@media not -moz-pref("browser.nova.enabled") {
++  &:focus {
++    box-shadow: 0 1px 3px rgba(0, 255, 255, 0.23);
++    outline-color: #00FFFF;
++  }
++}
++
++.findbar-textbox {
++  &:focus {
++    background-color: #000000 !important;
++    color: #00FFFF !important;
++    border-color: #00FFFF !important;
++  }
++}
++
++.findbar-textbox {
++  &:focus {
++    background-color: #00FFFF !important;
++    color: #000000 !important;
++  }
++}
++
++.findbar-textbox {
++  &:focus {
++    background-color: #000000 !important;
++  }
++}
++
++.findbar-textbox {
++  &:focus {
++    background-color: #000000 !important;
++    color: #00FFFF !important;
++  }
++}
++
++.findbar-textbox {
++  &[flash="true"] {
++    color: #00FFFF !important;
++  }
++}

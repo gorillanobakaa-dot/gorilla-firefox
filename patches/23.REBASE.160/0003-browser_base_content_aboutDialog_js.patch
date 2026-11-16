@@ -1,0 +1,23 @@
+# Gorilla 160 rebase: browser/base/content/aboutDialog.js as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/base/content/aboutDialog.js b/browser/base/content/aboutDialog.js
+index ecf36799193cbe642f9ea59590836ad41bf41f40..2bc3d6a0a2467fa4fed4ed46d5f8012cfebbefba 100644
+--- a/browser/base/content/aboutDialog.js
++++ b/browser/base/content/aboutDialog.js
+@@ -151,11 +151,12 @@ function init() {
+     "browser.referrals.enabled",
+     false
+   );
+-  document.getElementById("contributeDesc").hidden = referralsEnabled;
++  // GORILLA D-158-22: both help-us lines link to Mozilla; neither shows.
++  document.getElementById("contributeDesc").hidden = true;
+   let contributeDescReferrals = document.getElementById(
+     "contributeDescReferrals"
+   );
+-  contributeDescReferrals.hidden = !referralsEnabled;
++  contributeDescReferrals.hidden = true;
+ 
+   // An element named directly by aria-describedby is still read out while it
+   // is hidden, so the list has to name whichever blurb is shown. Rewrite

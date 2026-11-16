@@ -1,0 +1,33 @@
+# Gorilla 160 rebase: toolkit/components/formautofill/FormAutofillParent.sys.mjs as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/components/formautofill/FormAutofillParent.sys.mjs b/toolkit/components/formautofill/FormAutofillParent.sys.mjs
+index 625d13983fecd8535b94e8fc2a38b6e76f00869e..de6a7668c6bf15924d6d1d458fd99bd949d2385f 100644
+--- a/toolkit/components/formautofill/FormAutofillParent.sys.mjs
++++ b/toolkit/components/formautofill/FormAutofillParent.sys.mjs
+@@ -71,21 +71,9 @@ XPCOMUtils.defineLazyPreferenceGetter(
+ let gLastPrimaryPasswordCancelled = Number.NEGATIVE_INFINITY;
+ 
+ // TODO Bug 2064859 - refactor this out as external provider
+-ChromeUtils.defineLazyGetter(lazy, "SmartFormFillAutocomplete", () => {
+-  if (AppConstants.MOZ_BUILD_APP != "browser") {
+-    return undefined;
+-  }
+-
+-  try {
+-    return ChromeUtils.importESModule(
+-      // eslint-disable-next-line mozilla/no-browser-refs-in-toolkit
+-      "moz-src:///browser/components/aiwindow/ui/modules/SmartFormFillAutocomplete.sys.mjs"
+-    ).SmartFormFillAutocomplete;
+-  } catch (error) {
+-    console.error(`Unable to load SmartFormFillAutocomplete.sys.mjs: ${error}`);
+-  }
+-  return undefined;
+-});
++// GORILLA UNLEASHED - PHYSICAL LOCK: Smart Form Fill (AI Window) is excised; nothing is imported, so the
++// autocomplete offers only the user's own saved entries.
++ChromeUtils.defineLazyGetter(lazy, "SmartFormFillAutocomplete", () => undefined);
+ 
+ ChromeUtils.defineLazyGetter(lazy, "log", () =>
+   FormAutofill.defineLogGetter(lazy, "FormAutofillParent")

@@ -1,0 +1,37 @@
+# Gorilla 160 rebase: gfx/thebes/gfxDWriteFontList.cpp as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/gfx/thebes/gfxDWriteFontList.cpp b/gfx/thebes/gfxDWriteFontList.cpp
+index a804e7154b7182fe73a37a94b186b50275971f5e..d294ea918f45ed1042d8b7dd11a9d821696fd8f6 100644
+--- a/gfx/thebes/gfxDWriteFontList.cpp
++++ b/gfx/thebes/gfxDWriteFontList.cpp
+@@ -1697,7 +1697,10 @@ void gfxDWriteFontList::InitSharedFontListForPlatform() {
+       forceClassicFams.Sort();
+     }
+     nsTArray<fontlist::Family::InitData> families;
+-    AppendFamiliesFromCollection(mSystemFonts, families, &forceClassicFams);
++    // [GORILLA] Skip system font collection in shared list mode when bundled fonts suffice.
++    if (!Preferences::GetBool("gfx.bundled_fonts.skip_system_scan", false)) {
++      AppendFamiliesFromCollection(mSystemFonts, families, &forceClassicFams);
++    }
+ #ifdef MOZ_BUNDLED_FONTS
+     if (mBundledFonts) {
+       TimeStamp start2 = TimeStamp::Now();
+@@ -1766,9 +1769,15 @@ nsresult gfxDWriteFontList::InitFontListForPlatform() {
+ 
+   QueryPerformanceCounter(&t2);  // system font collection
+ 
++  // [GORILLA] Skip DirectWrite system font enumeration when bundled fonts suffice.
++  bool fcSkipSysScan = Preferences::GetBool("gfx.bundled_fonts.skip_system_scan", false);
+   const uint32_t kBundledCount = mFontFamilies.Count();
+ 
+-  GetFontsFromCollection(mSystemFonts);
++  if (!fcSkipSysScan) {
++    GetFontsFromCollection(mSystemFonts);
++  } else {
++    LOG_FONTLIST(("[Gorilla] Skipped DirectWrite system font collection (bundled-only mode)"));
++  }
+   if (mFontFamilies.Count() == kBundledCount) {
+     // If no fonts are found, something is out of whack, so bail.
+     NS_ERROR("no fonts found in the system fontlist -- holy crap batman!");

@@ -1,0 +1,129 @@
+# Gorilla 160 rebase: browser/components/urlbar/UrlbarProviderSearchSuggestions.sys.mjs as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/urlbar/UrlbarProviderSearchSuggestions.sys.mjs b/browser/components/urlbar/UrlbarProviderSearchSuggestions.sys.mjs
+index 40f886f1c62d2f67da040f52121beb760047e949..9a3e768f1a8b524af0964d56b176a2eb1869a0e1 100644
+--- a/browser/components/urlbar/UrlbarProviderSearchSuggestions.sys.mjs
++++ b/browser/components/urlbar/UrlbarProviderSearchSuggestions.sys.mjs
+@@ -22,7 +22,7 @@ const lazy = XPCOMUtils.declareLazy({
+   UrlbarPrefs: "moz-src:///browser/components/urlbar/UrlbarPrefs.sys.mjs",
+   UrlbarProviderTopSites:
+     "moz-src:///browser/components/urlbar/UrlbarProviderTopSites.sys.mjs",
+-  UrlbarResult: "moz-src:///browser/components/urlbar/UrlbarResult.sys.mjs",
++  UrlbarResult: "chrome://browser/content/urlbar/UrlbarResult.mjs",
+   UrlbarShared: "chrome://browser/content/urlbar/UrlbarShared.mjs",
+   UrlbarSearchUtils:
+     "moz-src:///browser/components/urlbar/UrlbarSearchUtils.sys.mjs",
+@@ -100,9 +100,9 @@ export class UrlbarProviderSearchSuggestions extends UrlbarProvider {
+     // If the sources don't include search or the user used a restriction
+     // character other than search, don't allow any suggestions.
+     if (
+-      !queryContext.sources.includes(UrlbarUtils.RESULT_SOURCE.SEARCH) ||
++      !queryContext.sources.includes(lazy.UrlbarShared.RESULT_SOURCE.SEARCH) ||
+       (queryContext.restrictSource &&
+-        queryContext.restrictSource != UrlbarUtils.RESULT_SOURCE.SEARCH)
++        queryContext.restrictSource != lazy.UrlbarShared.RESULT_SOURCE.SEARCH)
+     ) {
+       return false;
+     }
+@@ -143,12 +143,13 @@ export class UrlbarProviderSearchSuggestions extends UrlbarProvider {
+     return (
+       queryContext.searchString.startsWith("@") ||
+       (queryContext.restrictSource &&
+-        queryContext.restrictSource == UrlbarUtils.RESULT_SOURCE.SEARCH) ||
++        queryContext.restrictSource ==
++          lazy.UrlbarShared.RESULT_SOURCE.SEARCH) ||
+       queryContext.tokens.some(
+-        t => t.type == lazy.UrlbarTokenizer.TYPE.RESTRICT_SEARCH
++        t => t.type == lazy.UrlbarShared.TOKEN_TYPE.RESTRICT_SEARCH
+       ) ||
+       (queryContext.searchMode &&
+-        queryContext.sources.includes(UrlbarUtils.RESULT_SOURCE.SEARCH))
++        queryContext.sources.includes(lazy.UrlbarShared.RESULT_SOURCE.SEARCH))
+     );
+   }
+ 
+@@ -239,7 +240,7 @@ export class UrlbarProviderSearchSuggestions extends UrlbarProvider {
+    * @param {UrlbarQueryContext} queryContext
+    * @param {(provider: UrlbarProvider, result: UrlbarResult) => void} addCallback
+    *   Callback invoked by the provider to add a new result.
+-   * @param {UrlbarController} controller The UrlbarController instance.
++   * @param {UrlbarParentController} controller The UrlbarParentController instance.
+    */
+   async startQuery(queryContext, addCallback, controller) {
+     let instance = this.queryInstance;
+@@ -269,7 +270,7 @@ export class UrlbarProviderSearchSuggestions extends UrlbarProvider {
+       lazy.UrlbarTokenizer.isRestrictionToken(queryContext.tokens[0]) &&
+       (queryContext.tokens.length > 1 ||
+         queryContext.tokens[0].type ==
+-          lazy.UrlbarTokenizer.TYPE.RESTRICT_SEARCH)
++          lazy.UrlbarShared.TOKEN_TYPE.RESTRICT_SEARCH)
+     ) {
+       leadingRestrictionToken = queryContext.tokens[0].value;
+     }
+@@ -278,7 +279,7 @@ export class UrlbarProviderSearchSuggestions extends UrlbarProvider {
+     // when the search shortcut is used and it's not user typed. Don't strip
+     // other restriction chars, so that it's possible to search for things
+     // including one of those (e.g. "c#").
+-    if (leadingRestrictionToken === lazy.UrlbarTokenizer.RESTRICT.SEARCH) {
++    if (leadingRestrictionToken === lazy.UrlbarShared.RESTRICT_TOKENS.SEARCH) {
+       query = UrlbarUtils.substringAfter(query, leadingRestrictionToken).trim();
+     }
+ 
+@@ -349,14 +350,14 @@ export class UrlbarProviderSearchSuggestions extends UrlbarProvider {
+       return /** @type {UrlbarResultCommand[]} */ ([
+         {
+           name: RESULT_MENU_COMMANDS.TRENDING_BLOCK,
+-          l10n: { id: "urlbar-result-menu-trending-dont-show" },
++          l10n: { id: "urlbar-result-menu-trending-dont-show2" },
+         },
+         {
+           name: "separator",
+         },
+         {
+           name: RESULT_MENU_COMMANDS.TRENDING_HELP,
+-          l10n: { id: "urlbar-result-menu-learn-more" },
++          l10n: { id: "urlbar-result-menu-learn-more2" },
+         },
+       ]);
+     }
+@@ -542,8 +543,8 @@ export class UrlbarProviderSearchSuggestions extends UrlbarProvider {
+ 
+         results.push(
+           new lazy.UrlbarResult({
+-            type: UrlbarUtils.RESULT_TYPE.SEARCH,
+-            source: UrlbarUtils.RESULT_SOURCE.SEARCH,
++            type: lazy.UrlbarShared.RESULT_TYPE.SEARCH,
++            source: lazy.UrlbarShared.RESULT_SOURCE.SEARCH,
+             isRichSuggestion: !!entry.icon,
+             richSuggestionIconSize: entry.icon
+               ? UrlbarProviderSearchSuggestions.RICH_ICON_SIZE
+@@ -653,6 +654,8 @@ export class UrlbarProviderSearchSuggestions extends UrlbarProvider {
+    *   Whether we should fetch trending results.
+    */
+   #shouldFetchTrending(queryContext) {
++    // GORILLA: EXCISED - no trending suggestions (the owner's 155.0.1 override, re-ported on 157's
++    // UrlbarShared-based provider instead of the 155-era copy, whose UrlbarUtils enums 157 no longer has).
+     return false;
+   }
+ 
+@@ -695,15 +698,15 @@ export class UrlbarProviderSearchSuggestions extends UrlbarProvider {
+ 
+ function makeFormHistoryResult(queryContext, engine, entry) {
+   return new lazy.UrlbarResult({
+-    type: UrlbarUtils.RESULT_TYPE.SEARCH,
+-    source: UrlbarUtils.RESULT_SOURCE.HISTORY,
++    type: lazy.UrlbarShared.RESULT_TYPE.SEARCH,
++    source: lazy.UrlbarShared.RESULT_SOURCE.HISTORY,
+     payload: {
+       engine: engine.name,
+       suggestion: entry.value,
+       title: entry.value,
+       lowerCaseSuggestion: entry.value.toLocaleLowerCase(),
+       isBlockable: true,
+-      blockL10n: { id: "urlbar-result-menu-remove-from-history" },
++      blockL10n: { id: "urlbar-result-menu-remove-from-history2" },
+       helpUrl:
+         Services.urlFormatter.formatURLPref("app.support.baseURL") +
+         "awesome-bar-result-menu",

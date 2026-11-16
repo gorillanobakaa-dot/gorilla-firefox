@@ -1,0 +1,29 @@
+# Gorilla 160 port fix
+# Upstream 160 moved about:studies from toolkit/components/normandy to browser/components/nimbus; the port carried the .sys.mjs and .html hunks but dropped the 158 about-studies.css hunk (cyan text, fixed-bottom watermark 450px, MARK-001): carried to the new path
+# Files: browser/components/nimbus/content/about-studies/about-studies.css
+# Exported-by: build-harness export-hand firefox-160-linux
+
+diff --git a/browser/components/nimbus/content/about-studies/about-studies.css b/browser/components/nimbus/content/about-studies/about-studies.css
+index 0aa64c0d8d..691d36f2a8 100644
+--- a/browser/components/nimbus/content/about-studies/about-studies.css
++++ b/browser/components/nimbus/content/about-studies/about-studies.css
+@@ -174,3 +174,19 @@ button > .button-box {
+ .opt-in-box.opt-in-error {
+   color: var(--text-color-error);
+ }
++
++/* GORILLA OVERRIDE 2026-07-31: page text rendered black-on-black under the
++   forced-black theme (user screenshot 21:19 — text only visible when
++   selected). This page's own rules sit outside the in-content token flow;
++   force readable colors directly. */
++body, .info-box-content, .study-description, .study-name, .study-status,
++.study-header, p, h1, h2, span, div {
++  color: #00FFFF !important;
++}
++a, .learn-more-link { color: #00FFFF !important; }
++
++/* GORILLA OVERRIDE 2026-07-31 (2nd pass): the crisp gorilla the author specified
++   for this page — same fixed-bottom mechanism as aboutTelemetry.css. */
++body {
++  background: #000000 url("chrome://branding/content/about-logo.png") no-repeat fixed center bottom 10px / 450px !important;
++}

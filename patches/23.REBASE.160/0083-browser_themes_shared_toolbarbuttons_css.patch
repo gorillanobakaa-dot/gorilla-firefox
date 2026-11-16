@@ -1,0 +1,68 @@
+# Gorilla 160 rebase: browser/themes/shared/toolbarbuttons.css as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/themes/shared/toolbarbuttons.css b/browser/themes/shared/toolbarbuttons.css
+index 05a66cb53eb50676d9ef964e1117d172c2e4b2ec..ad71b0d4457e093ca6cd0c38bd14b38ec1425baf 100644
+--- a/browser/themes/shared/toolbarbuttons.css
++++ b/browser/themes/shared/toolbarbuttons.css
+@@ -862,3 +862,59 @@ toolbar[keyNav]:not([collapsed], [customizing]) toolbartabstop,
+     display: none;
+   }
+ }
++
++/* GORILLA UNLEASHED - SATELLITE MODE: the toolbar switch (maintainer, 2026-10-04: easy to find, in the empty
++ * space next to the address bar). Toolbar buttons hide their words; this one shows them, because the words are
++ * the point: the name and the level in use. Icon and words share one hover shape; pressed look = a level is on. */
++#gorilla-satellite-button {
++  list-style-image: url("chrome://browser/skin/gorilla-satellite.svg");
++
++  > .toolbarbutton-icon {
++    width: calc(var(--toolbarbutton-padding-inner) + 16px + 2px);
++    padding-inline-end: 2px;
++    border-start-end-radius: 0;
++    border-end-end-radius: 0;
++  }
++
++  > .toolbarbutton-text {
++    display: flex;
++    align-items: center;
++    white-space: nowrap;
++    padding-inline-start: 2px;
++    border-start-start-radius: 0;
++    border-end-start-radius: 0;
++  }
++
++  /* a level is on: the button looks pressed, the way a switched-on toolbar button does ([checked]) */
++  &:is([gorilla-level="1"], [gorilla-level="2"]) > :is(.toolbarbutton-icon, .toolbarbutton-text) {
++    background-color: var(--toolbarbutton-background-color-active);
++  }
++
++  /* Its menu in the Gorilla colours: black, with the toolbar's cyan text. Only this menu: the theme forces every
++   * menu to the system colours with !important on purpose (master-redirect.css, "NATIVE CONTEXT MENU & POPUP
++   * RESTORATION"), so only an !important rule this specific can override it here. Without it the menu was the
++   * system grey with the toolbar's cyan text, hard to read. --toolbar-text-color is the theme's cyan (master-redirect.css, COLOR-VALUE CONVERGENCE) (maintainer, 2026-10-04). */
++  > menupopup {
++    appearance: none !important;
++    --panel-background-color: #000000 !important;
++    --panel-text-color: var(--toolbar-text-color, #00ffff) !important;
++    --panel-border-color: var(--toolbar-text-color, #00ffff) !important;
++    background-color: #000000 !important;
++    color: var(--toolbar-text-color, #00ffff) !important;
++
++    menuitem {
++      appearance: none !important;
++      color: inherit !important;
++
++      &[_moz-menuactive] {
++        /* THEME.yaml (D-158-19): every hovered row is the highlight; was cyan at 25% (probe theme-diag, 2026-10-18) */
++        background-color: #65568C !important;
++      }
++    }
++
++    menuseparator {
++      appearance: none !important;
++      border-top: 1px solid color-mix(in srgb, var(--toolbar-text-color, #00ffff) 40%, transparent) !important;
++    }
++  }
++}

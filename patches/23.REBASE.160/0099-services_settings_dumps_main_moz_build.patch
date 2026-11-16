@@ -1,0 +1,20 @@
+# Gorilla 160 rebase: services/settings/dumps/main/moz.build as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/services/settings/dumps/main/moz.build b/services/settings/dumps/main/moz.build
+index 1096caf173e20e984a56b08a2fb14bd33ff2344c..a442919eb4d96837161e60d501dc4d655c5691ef 100644
+--- a/services/settings/dumps/main/moz.build
++++ b/services/settings/dumps/main/moz.build
+@@ -31,8 +31,9 @@ if not CONFIG["MOZ_BUILD_APP"].startswith("mobile/"):
+         "search-config-v2.json",
+         "search-config-v3.json",
+         "search-default-override-allowlist.json",
+-        "translations-models.json",
+-        "translations-wasm.json",
++        # GORILLA UNLEASHED - PHYSICAL LOCK: English only
++        # Decision D-157-03: the translations-models and translations-wasm dumps are not packaged. Their only reader,
++        # TranslationsParent's Remote Settings clients, gets an empty list without them (sync is cut in this build).
+         "url-classifier-skip-urls.json",
+         "url-parser-default-unknown-schemes-interventions.json",
+         "websites-with-shared-credential-backends.json",

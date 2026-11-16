@@ -1,0 +1,74 @@
+# Gorilla 160 rebase: toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
+index b705d724eca4a7f65244b31b1ad0dbcb4887ff65..1b293c27ce8900e31c345808e2d6c9d72ef71aa3 100644
+--- a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
++++ b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
+@@ -61,7 +61,8 @@ ChromeUtils.defineLazyGetter(lazy, "log", () => {
+ // On Nightly in automation, ignore real system/user policies so a developer's
+ // local policies.json or registry entries don't leak into tests.
+ function ignoreLocalPoliciesInAutomation() {
+-  return AppConstants.NIGHTLY_BUILD && Cu.isInAutomation;
++  // GORILLA UNLEASHED (D-158-17): Gorilla's own policies are never ignored.
++  return false;
+ }
+ 
+ // We're only testing for empty objects, not
+@@ -189,7 +190,12 @@ EnterprisePoliciesManager.prototype = {
+     lazy.log.debug("Adding JSON provider.");
+     provider.push(new JSONPoliciesProvider());
+ 
+-    if (AppConstants.MOZ_SYSTEM_POLICIES) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: only Gorilla's own policies (D-158-17, owner 2026-10-15). The browser reads
++    // policies from distribution/policies.json in its install folder and from nowhere else: not
++    // /etc/firefox/policies/policies.json (Linux, read FIRST and replacing Gorilla's file, able to unlock locked prefs),
++    // not the Windows registry (GPO, higher precedence than the file), not a test or alternate path. Anything that
++    // can write there (a package, an installer, malware with admin rights) would reconfigure the browser unseen.
++    if (AppConstants.MOZ_SYSTEM_POLICIES && provider === null) {
+       if (AppConstants.platform == "win") {
+         lazy.log.debug("Adding Windows GPO platform provider.");
+         provider.push(new WindowsGPOPoliciesProvider());
+@@ -777,7 +783,16 @@ class JSONPoliciesProvider extends PoliciesProvider {
+       return null;
+     }
+ 
+-    if (AppConstants.platform == "linux" && AppConstants.MOZ_SYSTEM_POLICIES) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: only Gorilla's own policies (D-158-17, owner 2026-10-15). The browser reads
++    // policies from distribution/policies.json in its install folder and from nowhere else: not
++    // /etc/firefox/policies/policies.json (Linux, read FIRST and replacing Gorilla's file, able to unlock locked prefs),
++    // not the Windows registry (GPO, higher precedence than the file), not a test or alternate path. Anything that
++    // can write there (a package, an installer, malware with admin rights) would reconfigure the browser unseen.
++    if (
++      AppConstants.platform == "linux" &&
++      AppConstants.MOZ_SYSTEM_POLICIES &&
++      this === null
++    ) {
+       let systemConfigFile = Services.dirsvc.get("SysConfD", Ci.nsIFile);
+       systemConfigFile.append("policies");
+       systemConfigFile.append(POLICIES_FILENAME);
+@@ -788,9 +803,8 @@ class JSONPoliciesProvider extends PoliciesProvider {
+ 
+     try {
+       let configFile;
+-      let perUserPath =
+-        Cu.isInAutomation &&
+-        Services.prefs.getBoolPref(PREF_PER_USER_DIR, false);
++      // GORILLA UNLEASHED (D-158-17): never a per-user policies file.
++      let perUserPath = false;
+       if (perUserPath) {
+         configFile = Services.dirsvc.get("XREUserRunTimeDir", Ci.nsIFile);
+       } else {
+@@ -816,9 +830,10 @@ class JSONPoliciesProvider extends PoliciesProvider {
+     // testing purposes), but the Background Update Agent will be unable to
+     // detect the alternate policy file so the DisableAppUpdate policy may not
+     // work as expected.
++    // GORILLA UNLEASHED (D-158-17): no alternate policies path, in tests or Nightly either.
+     if (
+       alternatePath &&
+-      (Cu.isInAutomation || AppConstants.NIGHTLY_BUILD) &&
++      alternatePath === null &&
+       (!configFile || !configFile.exists())
+     ) {
+       if (alternatePath.startsWith(MAGIC_TEST_ROOT_PREFIX)) {

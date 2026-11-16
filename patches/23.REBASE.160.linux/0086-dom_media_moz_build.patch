@@ -1,0 +1,22 @@
+# Gorilla 160 rebase: dom/media/moz.build as built on Firefox 160 (linux only: a linux-only patch touches this file)
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/dom/media/moz.build b/dom/media/moz.build
+index c2073164ee7e6d1199ab3f956a4854f6deb2c9f6..9ea0a1d1c1da65e2f5360b70a2050b8e30bda9eb 100644
+--- a/dom/media/moz.build
++++ b/dom/media/moz.build
+@@ -448,6 +448,13 @@ FINAL_LIBRARY = "xul"
+ 
+ SPHINX_TREES["/media"] = "docs"
+ 
++# GORILLA: tune the media library for the target machine (Sony VAIO SVE14A3AJ /
++# Ivy Bridge). -march=native lets the compiler emit the CPU's specific
++# instructions, shrinking the binary and trimming decode-path CPU. Non-portable
++# by design — this build targets one laptop.
++if CONFIG["CC_TYPE"] in ("clang", "gcc"):
++    CXXFLAGS += ["-march=native"]
++
+ SOURCE_HEADERS += [
+     "AudioCaptureTrack.h",
+     "AudioGenerator.h",

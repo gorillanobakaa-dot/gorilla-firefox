@@ -1,0 +1,40 @@
+# Gorilla 160 rebase: browser/components/urlbar/UrlbarProviderQuickSuggest.sys.mjs as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/urlbar/UrlbarProviderQuickSuggest.sys.mjs b/browser/components/urlbar/UrlbarProviderQuickSuggest.sys.mjs
+index 609a3b0007117e713d912a3c9c2b3cb4dd4be594..5cb53400df2a5e422a3a23dbe22c9e3dfcde9f89 100644
+--- a/browser/components/urlbar/UrlbarProviderQuickSuggest.sys.mjs
++++ b/browser/components/urlbar/UrlbarProviderQuickSuggest.sys.mjs
+@@ -55,28 +55,9 @@ export class UrlbarProviderQuickSuggest extends UrlbarProvider {
+    * @param {UrlbarQueryContext} queryContext The query context object
+    */
+   async isActive(queryContext) {
+-    // If the sources don't include search or the user used a restriction
+-    // character other than search, don't allow any suggestions.
+-    if (
+-      !queryContext.sources.includes(lazy.UrlbarShared.RESULT_SOURCE.SEARCH) ||
+-      (queryContext.restrictSource &&
+-        queryContext.restrictSource != lazy.UrlbarShared.RESULT_SOURCE.SEARCH)
+-    ) {
+-      return false;
+-    }
+-
+-    if (
+-      !lazy.UrlbarPrefs.get("quickSuggestEnabled") ||
+-      queryContext.isPrivate ||
+-      queryContext.restrictInSearchMode()
+-    ) {
+-      return false;
+-    }
+-
+-    // Trim only the start of the search string because a trailing space can
+-    // affect the suggestions.
+-    this._trimmedSearchString = queryContext.searchString.trimStart();
+-    return true;
++    // GORILLA: EXCISED - Quick Suggest never activates (the owner's 155.0.1 override, re-ported on 157's
++    // provider; the rest of the module stays upstream so registration-time getters resolve).
++    return false;
+   }
+ 
+   /**

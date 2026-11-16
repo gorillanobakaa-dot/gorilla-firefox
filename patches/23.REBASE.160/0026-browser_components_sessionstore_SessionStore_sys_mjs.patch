@@ -1,0 +1,100 @@
+# Gorilla 160 rebase: browser/components/sessionstore/SessionStore.sys.mjs as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/sessionstore/SessionStore.sys.mjs b/browser/components/sessionstore/SessionStore.sys.mjs
+index da2abe1dedd062a8167575623d6c6212de645f23..3c957ff4a92d608a290d2aa8c9bc393235fe9ff7 100644
+--- a/browser/components/sessionstore/SessionStore.sys.mjs
++++ b/browser/components/sessionstore/SessionStore.sys.mjs
+@@ -332,8 +332,8 @@ import { GlobalState } from "moz-src:///browser/components/sessionstore/GlobalSt
+ const lazy = XPCOMUtils.declareLazy({
+   AboutNewTab: "resource:///modules/AboutNewTab.sys.mjs",
+   NimbusFeatures: "resource://nimbus/ExperimentAPI.sys.mjs",
+-  AIWindow:
+-    "moz-src:///browser/components/aiwindow/ui/modules/AIWindow.sys.mjs",
++  // GORILLA: points at the inert stub, not the excised component.
++  AIWindow: "resource:///modules/AIWindowStub.sys.mjs",
+   AsyncShutdown: "resource://gre/modules/AsyncShutdown.sys.mjs",
+   BrowserWindowTracker: "resource:///modules/BrowserWindowTracker.sys.mjs",
+   DevToolsShim: "chrome://devtools-startup/content/DevToolsShim.sys.mjs",
+@@ -1771,10 +1771,6 @@ class _SessionStore {
+       this.#windows[this.#windowIds.get(aWindow)].isMiniWindow = true;
+     }
+ 
+-    if (lazy.AIWindow.isAIWindowActiveAndEnabled(aWindow)) {
+-      this.#windows[this.#windowIds.get(aWindow)].isAIWindow = true;
+-    }
+-
+     if (aWindow.document.documentElement.hasAttribute(ARG_CHROMELESS_WINDOW)) {
+       this.#windows[this.#windowIds.get(aWindow)].args[ARG_CHROMELESS_WINDOW] =
+         true;
+@@ -5446,14 +5442,9 @@ class _SessionStore {
+       // the state we're trying to restore and then fallback to the last selected
+       // window.
+       let windowToUse = windows[lastSessionWindowID];
+-      let lastWindowIsAIWindow =
+-        lastWindow && lazy.AIWindow.isAIWindowActive(lastWindow);
+-      let thisWindowIsAIWindow =
+-        !!winState.isAIWindow && lazy.AIWindow.isAIWindowEnabled();
+       if (
+         !windowToUse &&
+         canUseLastWindow &&
+-        lastWindowIsAIWindow == thisWindowIsAIWindow &&
+         this.#canRestoreIntoExistingWindow(lastWindow, winState)
+       ) {
+         windowToUse = lastWindow;
+@@ -5767,9 +5758,7 @@ class _SessionStore {
+     if (startupPref == 1) {
+       homePages = homePages.concat(lazy.HomePage.get(aWindow).split("|"));
+     }
+-    if (lazy.AIWindow.isAIWindowActiveAndEnabled(aWindow)) {
+-      homePages.push(lazy.AIWindow.initialStartupURL);
+-    }
++    // GORILLA UNLEASHED - PHYSICAL LOCK: no AI Window start page (aiwindow excised).
+ 
+     for (let i = tabbrowser.pinnedTabCount; i < tabbrowser.tabs.length; i++) {
+       let tab = tabbrowser.tabs[i];
+@@ -5819,8 +5808,6 @@ class _SessionStore {
+     if (workspaceID) {
+       winData.workspaceID = workspaceID;
+     }
+-
+-    winData.isAIWindow = lazy.AIWindow.isAIWindowActive(aWindow);
+   }
+ 
+   /**
+@@ -7041,31 +7028,9 @@ class _SessionStore {
+    *        Options for the restoration
+    */
+   #restoreWindowFeatures(aWindow, aWinData, aOptions = {}) {
+-    // A restored window keeps its saved type: Classic stays Classic and Smart
+-    // stays Smart, for both automatic (startup.page=3 / crash) and manual
+-    // "Restore previous session" restores.
+-    // The only exception is the new startup window when Smart Window is the user's
+-    // default and we are NOT auto-restoring a session.
+-    // aOptions.firstWindow is set only for the initial startup window (manual
+-    // restores don't set it), and willRestore() is true only for automatic
+-    // restore / crash recovery — so this forces Smart for a genuinely new
+-    // default startup window, never for a window restored from a saved session.
+-    const isNewDefaultStartupWindow =
+-      aOptions.firstWindow &&
+-      !lazy.SessionStartup.willRestore() &&
+-      lazy.AIWindow.shouldOpenAsSmartWindow();
+-    const shouldBeAIWindow =
+-      isNewDefaultStartupWindow ||
+-      (!!aWinData.isAIWindow && lazy.AIWindow.isAIWindowEnabled());
+-
+-    const trigger = aOptions.trigger ?? "open_browser";
+-
+-    if (lazy.AIWindow.isAIWindowActive(aWindow) !== shouldBeAIWindow) {
+-      lazy.AIWindow.toggleAIWindow(aWindow, shouldBeAIWindow, trigger);
+-    } else if (shouldBeAIWindow) {
+-      lazy.AIWindow.recordOpenWindowTelemetry(trigger);
+-    }
+-
++    // GORILLA UNLEASHED (16.SNAPSHOT, carried to 158 by the rebase-set review 2026-10-15): no Smart Window toggle at
++    // restore. AIWindowStub has none of shouldOpenAsSmartWindow / isAIWindowEnabled / toggleAIWindow, so this threw
++    // on a non-resumed startup with pinned tabs (D-158-08, AI excised).
+     let promiseParts = Promise.withResolvers();
+     const wasMinimized = aWindow.windowState == aWindow.STATE_MINIMIZED;
+     aWindow.setTimeout(() => {

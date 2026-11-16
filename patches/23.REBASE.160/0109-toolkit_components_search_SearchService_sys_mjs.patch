@@ -1,0 +1,55 @@
+# Gorilla 160 rebase: toolkit/components/search/SearchService.sys.mjs as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/components/search/SearchService.sys.mjs b/toolkit/components/search/SearchService.sys.mjs
+index 96685fa2fe22eb6256e6cda99b1cf1c0a3c7bee3..7e6c5ed7cb1310196bd51de2939a85f7ed36610b 100644
+--- a/toolkit/components/search/SearchService.sys.mjs
++++ b/toolkit/components/search/SearchService.sys.mjs
+@@ -749,6 +749,9 @@ export const SearchService = new (class SearchService {
+    *   The generated search engine object.
+    */
+   async addUserEngine(formInfo) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: one search engine (D-158-13).
++    throw new Error("[GORILLA] Search engines cannot be added: Google is the only search engine");
++    // eslint-disable-next-line no-unreachable
+     await this.init();
+ 
+     let newEngine = new lazy.UserSearchEngine({ formInfo });
+@@ -764,6 +767,9 @@ export const SearchService = new (class SearchService {
+    *   An engine configuration definition.
+    */
+   async addSearchEngine(engine) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: one search engine (D-158-13).
++    throw new Error("[GORILLA] Search engines cannot be added: Google is the only search engine");
++    // eslint-disable-next-line no-unreachable
+     await this.init();
+     this.#addEngineToStore(engine);
+   }
+@@ -829,6 +835,9 @@ export const SearchService = new (class SearchService {
+    *   If the description file cannot be successfully loaded.
+    */
+   async addOpenSearchEngine(engineURL, iconURL, originAttributes) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: one search engine (D-158-13).
++    throw new Error("[GORILLA] Search engines cannot be added: Google is the only search engine");
++    // eslint-disable-next-line no-unreachable
+     lazy.logConsole.debug("addOpenSearchEngine: Adding", engineURL);
+     await this.init();
+     let engineData = await lazy.loadAndParseOpenSearchEngine(
+@@ -2616,6 +2625,16 @@ export const SearchService = new (class SearchService {
+    *   True to override engines with the same name.
+    */
+   #addEngineToStore(engine, skipDuplicateCheck = false) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: one search engine. Google (the built-in configuration, D-158-13) is the only search engine; no engine is added from a site, a form, a policy or by hand (owner 2026-10-15: "we do not trust sites that offer functions like this"). Every add, and every
++    // engine an earlier profile saved, passes here: only the application's own engines are stored.
++    // 2026-10-18: "app-provided" was not enough. A profile carried over from 157 still listed Perplexity, Bing,
++    // DuckDuckGo, Wikipedia and eBay as configuration engines, and they came back from the profile's own stored
++    // configuration although the built-in one holds Google alone. Only the Google engine itself is stored, by
++    // identifier, whatever configuration source offers the others.
++    if (!(engine instanceof lazy.AppProvidedConfigEngine) || !/^google(-|$)/.test(engine.id || "")) {
++      lazy.logConsole.warn("[GORILLA] search engine refused (Google only):", engine.name);
++      return;
++    }
+     if (this.#engineMatchesIgnoreLists(engine)) {
+       return;
+     }

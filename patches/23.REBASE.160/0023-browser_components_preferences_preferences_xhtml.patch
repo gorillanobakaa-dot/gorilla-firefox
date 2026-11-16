@@ -1,0 +1,17 @@
+# Gorilla 160 rebase: browser/components/preferences/preferences.xhtml as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/preferences/preferences.xhtml b/browser/components/preferences/preferences.xhtml
+index d9b068e9f601211ee74d925dbb9bf81dbe56e316..7f23479a6c34a4c763e4fdc5c3e63e66df68459c 100644
+--- a/browser/components/preferences/preferences.xhtml
++++ b/browser/components/preferences/preferences.xhtml
+@@ -46,6 +46,8 @@
+   <link rel="localization" href="browser/preferences/fonts.ftl"/>
+   <link rel="localization" href="browser/preferences/moreFromMozilla.ftl"/>
+   <link rel="localization" href="browser/preferences/preferences.ftl"/>
++  <!-- GORILLA UNLEASHED - SATELLITE MODE: the switch's words, shared with the toolbar button -->
++  <link rel="localization" href="browser/gorillaSatellite.ftl"/>
+   <link rel="localization" href="toolkit/branding/brandings.ftl"/>
+   <link rel="localization" href="toolkit/firefoxlabs/features.ftl"/>
+   <link rel="localization" href="toolkit/global/mozPageHeader.ftl"/>

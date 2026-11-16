@@ -1,0 +1,17 @@
+# Gorilla 160 rebase: browser/components/BrowserComponents.manifest as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/BrowserComponents.manifest b/browser/components/BrowserComponents.manifest
+index 6d63e8bf6e4cd70c78ec295dea7982a965cfcfea..a6d6e4afddbe616772444b2294c90e9e3450f14f 100644
+--- a/browser/components/BrowserComponents.manifest
++++ b/browser/components/BrowserComponents.manifest
+@@ -14,6 +14,8 @@ category first-startup-new-profile resource:///modules/AboutNewTabResourceMappin
+ # Browser global components initializing before UI startup
+ category browser-before-ui-startup moz-src:///browser/components/sessionstore/SessionStore.sys.mjs SessionStore.init
+ category browser-before-ui-startup resource:///modules/BuiltInThemes.sys.mjs BuiltInThemes.maybeInstallActiveBuiltInTheme
++# GORILLA UNLEASHED - SATELLITE MODE: applies gorilla.linkmode (0 = off, the default)
++category browser-before-ui-startup resource:///modules/GorillaLinkMode.sys.mjs GorillaLinkMode.init
+ #ifdef MOZ_NORMANDY
+ category browser-before-ui-startup resource://normandy/Normandy.sys.mjs Normandy.init
+ #endif

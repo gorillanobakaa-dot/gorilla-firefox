@@ -1,0 +1,18 @@
+# Gorilla 160 rebase: browser/components/urlbar/jar.mn as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/urlbar/jar.mn b/browser/components/urlbar/jar.mn
+index 64f3f0dae1c6420748163a8b41a5a7291ef5bd68..158c9601ad590fa4e74f4a5c43aa3629a4026cf9 100644
+--- a/browser/components/urlbar/jar.mn
++++ b/browser/components/urlbar/jar.mn
+@@ -6,9 +6,6 @@ browser.jar:
+         content/browser/urlbar/UrlbarInputBase.mjs         (content/UrlbarInputBase.mjs)
+         content/browser/urlbar/L10nCache.mjs               (content/L10nCache.mjs)
+         content/browser/urlbar/SearchbarInput.mjs          (content/SearchbarInput.mjs)
+-        content/browser/urlbar/SmartbarInput.mjs           (content/SmartbarInput.mjs)
+-        content/browser/urlbar/SmartbarInputController.mjs (content/SmartbarInputController.mjs)
+-        content/browser/urlbar/SmartbarInputUtils.mjs      (content/SmartbarInputUtils.mjs)
+         content/browser/urlbar/SmartbarMentionUtils.mjs    (content/SmartbarMentionUtils.mjs)
+         content/browser/urlbar/UrlbarChildController.mjs   (content/UrlbarChildController.mjs)
+         content/browser/urlbar/UrlbarChildTelemetry.mjs    (content/UrlbarChildTelemetry.mjs)

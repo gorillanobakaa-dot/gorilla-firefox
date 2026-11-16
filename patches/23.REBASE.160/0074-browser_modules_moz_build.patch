@@ -1,0 +1,17 @@
+# Gorilla 160 rebase: browser/modules/moz.build as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/modules/moz.build b/browser/modules/moz.build
+index 155601b13c061bb24c7b52c4183b804c2bbdeca2..35c926232d1320dba4224f3aef489a3ee3a94cbd 100644
+--- a/browser/modules/moz.build
++++ b/browser/modules/moz.build
+@@ -133,6 +133,8 @@ EXTRA_JS_MODULES += [
+     "FilterAdult.sys.mjs",
+     "FirefoxBridgeExtensionUtils.sys.mjs",
+     "GorillaBuiltinExtensions.sys.mjs",
++    # GORILLA UNLEASHED - SATELLITE MODE: gorilla.linkmode levels (off by default).
++    "GorillaLinkMode.sys.mjs",
+     "HomePage.sys.mjs",
+     "LaterRun.sys.mjs",
+     "LinksCache.sys.mjs",

@@ -1,0 +1,37 @@
+# Gorilla 160 rebase: toolkit/components/normandy/Normandy.sys.mjs as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/components/normandy/Normandy.sys.mjs b/toolkit/components/normandy/Normandy.sys.mjs
+index e3c05d408c32b378b137eee2127150f6f2ff1fce..bcfb005daf833eaec1197d16bac1527ed790faf4 100644
+--- a/toolkit/components/normandy/Normandy.sys.mjs
++++ b/toolkit/components/normandy/Normandy.sys.mjs
+@@ -26,6 +26,15 @@ export var Normandy = {
+ 
+   /** Initialization that needs to happen before the first paint on startup. */
+   async init({ runAsync = true } = {}) {
++    // GORILLA UNLEASHED - PHYSICAL LOCK: Normandy never initialises: no recipe runner, no preference experiments, no shield-preference-experiments.json
++    // GORILLA TECHNIQUE T-157-31-A: in Firefox 157 this init is also the only caller of ExperimentAPI.init(), so
++    //   Nimbus never starts either (wanted: D-157-31). Anything that AWAITS Nimbus readiness therefore waits
++    //   forever. Do not "fix" that by starting Nimbus here: remove the wait at the waiter (see AboutNewTab.sys.mjs
++    //   onBrowserReady). The older Mozambique Drill (group 12: prefs off and locked, 60-year timers) stays as a
++    //   second layer; it let Normandy start and sleep, which is why 155 never had this problem.
++    if (true) {
++      return;
++    }
+     // NOTE: It looks like we can see us being called twice between init(true)
+     // coming from "browser-before-ui-startup" (see BrowserComponents.manifest)
+     // and init(false) coming from FirstStartup.sys.mjs.
+@@ -65,6 +74,12 @@ export var Normandy = {
+   },
+ 
+   async finishInit() {
++    // GORILLA UNLEASHED - PHYSICAL LOCK (D-157-31): unreachable while init() returns first, and locked on its own
++    // GORILLA TECHNIQUE T-157-31-A: this is where Firefox 157 starts Nimbus (ExperimentAPI.init below); a later
++    //   caller of finishInit must not be able to start the experiment system.
++    if (true) {
++      return;
++    }
+     // Setup logging and listen for changes to logging prefs
+     lazy.LogManager.configure(
+       Services.prefs.getIntPref(PREF_LOGGING_LEVEL, Log.Level.Warn)

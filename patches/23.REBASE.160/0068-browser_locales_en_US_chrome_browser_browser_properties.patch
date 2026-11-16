@@ -1,0 +1,148 @@
+# Gorilla 160 rebase: browser/locales/en-US/chrome/browser/browser.properties as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/locales/en-US/chrome/browser/browser.properties b/browser/locales/en-US/chrome/browser/browser.properties
+index 14d961621f5005e524efa272805ee1646e5de893..22e4e68b3b31dd10809d21fee259a7446f33d194 100644
+--- a/browser/locales/en-US/chrome/browser/browser.properties
++++ b/browser/locales/en-US/chrome/browser/browser.properties
+@@ -3,7 +3,7 @@
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ 
+ nv_timeout=Timed Out
+-openFile=Open File
++openFile=Open Gorilla File
+ 
+ # context menu strings
+ 
+@@ -11,14 +11,14 @@ openFile=Open File
+ # %2$S is the selection string.
+ contextMenuSearch=Search %1$S for “%2$S”
+ contextMenuSearch.accesskey=S
+-contextMenuPrivateSearch=Search in a Private Window
++contextMenuPrivateSearch=Search in a Private Gorilla Window
+ # LOCALIZATION NOTE (contextMenuPrivateSearch2.accesskey): The access key for
+ # contextMenuPrivateSearch "Search in a Private Window".
+ contextMenuPrivateSearch2.accesskey=v
+ # LOCALIZATION NOTE (contextMenuPrivateSearchOtherEngine): %S is the search
+ # engine name as set for Private Browsing mode. This label is only used when
+ # this engine is different from the default engine name used in normal mode.
+-contextMenuPrivateSearchOtherEngine=Search with %S in a Private Window
++contextMenuPrivateSearchOtherEngine=Search with %S in a Private Gorilla Window
+ # LOCALIZATION NOTE (contextMenuPrivateSearchOtherEngine2.accesskey): The
+ # access key for contextMenuPrivateSearchOtherEngine
+ # "Search with %S in a Private Window".
+@@ -49,20 +49,20 @@ keywordURIFixup.goTo.accesskey=Y
+ update.downloadAndInstallButton.label=Update to %S
+ update.downloadAndInstallButton.accesskey=U
+ 
+-menuOpenAllInTabs.label=Open All in Tabs
++menuOpenAllInTabs.label=Open All in Gorilla Tabs
+ 
+ # Unified Back-/Forward Popup
+-tabHistory.reloadCurrent=Reload this page
+-tabHistory.goBack=Go back to this page
+-tabHistory.goForward=Go forward to this page
++tabHistory.reloadCurrent=Reload this Gorilla page
++tabHistory.goBack=Go back to this Gorilla page
++tabHistory.goForward=Go forward to this Gorilla page
+ 
+ # URL Bar
+ # LOCALIZATION NOTE (reloadButton.tooltip):
+ # %S is the keyboard shortcut for reloading the current page
+-reloadButton.tooltip=Reload current page (%S)
++reloadButton.tooltip=Reload current Gorilla page (%S)
+ # LOCALIZATION NOTE (stopButton.tooltip):
+ # %S is the keyboard shortcut for stopping loading the page
+-stopButton.tooltip=Stop loading this page (%S)
++stopButton.tooltip=Stop loading this Gorilla page (%S)
+ # LOCALIZATION NOTE (urlbar-zoom-button.tooltip):
+ # %S is the keyboard shortcut for resetting the zoom level to 100%
+ urlbar-zoom-button.tooltip=Reset zoom level (%S)
+@@ -73,7 +73,7 @@ reader-mode-button.tooltip=Toggle reader view (%S)
+ # LOCALIZATION NOTE(zoom-button.label): %S is the current page zoom level,
+ # %% will be displayed as a single % character (% is commonly used to define
+ # format specifiers, so it needs to be escaped).
+-zoom-button.label = %S%%
++zoom-button.label =  %S%%
+ 
+ # LOCALIZATION NOTE(zoom-button.aria-label): %S is the current page zoom level,
+ # %% will be displayed as a single % character (% is commonly used to define
+@@ -83,24 +83,24 @@ zoom-button.aria-label =%S%%, Reset zoom level
+ # General bookmarks button
+ # LOCALIZATION NOTE (bookmarksMenuButton.tooltip):
+ # %S is the keyboard shortcut for "Show All Bookmarks"
+-bookmarksMenuButton.tooltip=Show your bookmarks (%S)
++bookmarksMenuButton.tooltip=Show your Gorilla bookmarks (%S)
+ 
+ # Downloads button tooltip
+ # LOCALIZATION NOTE (downloads.tooltip):
+ # %S is the keyboard shortcut for "Downloads"
+-downloads.tooltip=Display the progress of ongoing downloads (%S)
++downloads.tooltip=Display the progress of ongoing Gorilla downloads (%S)
+ 
+ # New Window button tooltip
+ # LOCALIZATION NOTE (newWindowButton.tooltip):
+ # %S is the keyboard shortcut for "New Window"
+-newWindowButton.tooltip=Open a new window (%S)
++newWindowButton.tooltip=Open a new Gorilla window (%S)
+ 
+ # New Tab button tooltip
+ # LOCALIZATION NOTE (newTabButton.tooltip):
+ # %S is the keyboard shortcut for "New Tab"
+-newTabButton.tooltip=Open a new tab (%S)
+-newTabContainer.tooltip=Open a new tab (%S)\nPress and hold to open a new container tab
+-newTabAlwaysContainer.tooltip=Select container to open a new tab
++newTabButton.tooltip=Open a new Gorilla tab (%S)
++newTabContainer.tooltip=Open a new Gorilla tab (%S)\nPress and hold to open a New Container Gorilla Tab
++newTabAlwaysContainer.tooltip=Select container to open a new Gorilla tab
+ 
+ # Canvas permission prompt
+ # LOCALIZATION NOTE (canvas.siteprompt2): %S is hostname
+@@ -125,8 +125,8 @@ identity.ev.contentOwner2=Certificate issued to: %S
+ identity.notSecure.label=Not Secure
+ identity.notSecure.tooltip=Connection is not secure
+ 
+-identity.extension.label=Extension (%S)
+-identity.extension.tooltip=Loaded by extension: %S
++identity.extension.label=Gorilla Extension (%S)
++identity.extension.tooltip=Loaded by Gorilla extension: %S
+ 
+ # Application menu
+ 
+@@ -144,14 +144,14 @@ geolocation.allow.accesskey=A
+ geolocation.block=Block
+ geolocation.block.accesskey=B
+ # %S is replaced by the product name (e.g. Firefox)
+-geolocation.needsSystemSetting=This will open system location settings. Please grant location permission to %S.
++geolocation.needsSystemSetting=This will open system location Gorilla settings. Please grant location permission to %S.
+ geolocation.shareWithSite4=Allow %S to access your location?
+-geolocation.shareWithFile4=Allow this local file to access your location?
++geolocation.shareWithFile4=Allow this local Gorilla file to access your location?
+ # LOCALIZATION NOTE(geolocation.shareWithSiteUnsafeDelegation2):
+ # %1$S is the first party origin, %2$S is the third party origin.
+ geolocation.shareWithSiteUnsafeDelegation2=Allow %1$S to give %2$S permission to access your location?
+ # %S is replaced by the product name (e.g. Firefox)
+-geolocation.systemSettingsMessage=Grant %S location permission in system settings.
++geolocation.systemSettingsMessage=Grant %S location permission in system Gorilla settings.
+ geolocation.systemSettingsTitle=Awaiting Location Permission
+ # %S is replaced by the product name (e.g. Firefox)
+ geolocation.systemWillRequestPermission=The system will ask you to grant this permission to %S.
+@@ -163,7 +163,7 @@ xr.allow2.accesskey=A
+ xr.block=Block
+ xr.block.accesskey=B
+ xr.shareWithSite4=Allow %S to access virtual reality devices? This may expose sensitive information.
+-xr.shareWithFile4=Allow this local file to access virtual reality devices? This may expose sensitive information.
++xr.shareWithFile4=Allow this local Gorilla file to access virtual reality devices? This may expose sensitive information.
+ xr.remember=Remember this decision
+ 
+ # Persistent storage UI
+@@ -179,6 +179,8 @@ persistentStorage.allowWithSite2=Allow %S to store data in persistent storage?
+ # it's okay for them to have the same access key
+ webNotifications.allow2=Allow
+ webNotifications.allow2.accesskey=A
++webNotifications.notNow=Not Now
++webNotifications.notNow.accesskey=n
+ webNotifications.alwaysBlock=Always Block
+ webNotifications.alwaysBlock.accesskey=B
+ webNotifications.block=Block

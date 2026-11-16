@@ -1,0 +1,15 @@
+# Gorilla 160 rebase: browser/branding/gorilla/content/aboutDialog.css as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/branding/gorilla/content/aboutDialog.css b/browser/branding/gorilla/content/aboutDialog.css
+index 498da9925fce7e577a2bc40c8058c3089c3a66dd..726c036fe61cc986a2e7548d53654249bfcfd1cb 100644
+--- a/browser/branding/gorilla/content/aboutDialog.css
++++ b/browser/branding/gorilla/content/aboutDialog.css
+@@ -1,5 +1,5 @@
+ #aboutDialogContainer {
+-  background-color: #20123a !important;
++  background-color: #000000 !important;
+   color: #fff !important;
+   display: flex !important;
+   flex-direction: column !important;

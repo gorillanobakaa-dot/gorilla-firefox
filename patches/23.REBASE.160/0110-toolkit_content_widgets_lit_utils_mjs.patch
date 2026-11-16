@@ -1,0 +1,35 @@
+# Gorilla 160 rebase: toolkit/content/widgets/lit-utils.mjs as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/content/widgets/lit-utils.mjs b/toolkit/content/widgets/lit-utils.mjs
+index 266e49f599d309c6bb6291d92bbafd6aba72b359..34e88b2a52cab423c1f0526251360c55689d80ff 100644
+--- a/toolkit/content/widgets/lit-utils.mjs
++++ b/toolkit/content/widgets/lit-utils.mjs
+@@ -297,6 +297,8 @@ export class MozBaseInputElement extends MozLitElement {
+     parentDisabled: { type: Boolean, state: true },
+     ariaLabel: { type: String, mapped: true },
+     ariaDescription: { type: String, mapped: true },
++    // GORILLA TECHNIQUE T-157-32-B: `mapped` moves title onto the inner input only; render() below also puts it on
++    // the .label-wrapper, so hover text covers the whole row
+     title: { type: String, mapped: true },
+     inputLayout: { type: String, reflect: true, attribute: "inputlayout" },
+   };
+@@ -480,6 +482,8 @@ export class MozBaseInputElement extends MozLitElement {
+   }
+ 
+   render() {
++    // GORILLA UNLEASHED - SATELLITE MODE: the hover text (title) also covers the label and description,
++    // not only the input; upstream puts it on the 16-pixel radio circle alone, where nobody hovers.
+     return html`
+       <link
+         rel="stylesheet"
+@@ -487,7 +491,7 @@ export class MozBaseInputElement extends MozLitElement {
+       />
+       ${this.inputStylesTemplate()}
+       <div class="content-wrapper">
+-        <span class="label-wrapper">
++        <span class="label-wrapper" title=${ifDefined(this.title)}>
+           <label
+             is="moz-label"
+             id="label"

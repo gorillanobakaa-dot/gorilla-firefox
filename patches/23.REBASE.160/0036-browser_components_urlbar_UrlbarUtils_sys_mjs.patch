@@ -1,0 +1,50 @@
+# Gorilla 160 rebase: browser/components/urlbar/UrlbarUtils.sys.mjs as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/urlbar/UrlbarUtils.sys.mjs b/browser/components/urlbar/UrlbarUtils.sys.mjs
+index 8edb9acef49a2625cb83a20c307df66e237679d5..c7119842770c9af30ac7c1dbe9472f47f00b642f 100644
+--- a/browser/components/urlbar/UrlbarUtils.sys.mjs
++++ b/browser/components/urlbar/UrlbarUtils.sys.mjs
+@@ -11,15 +11,12 @@
+  * @import {UrlbarLoadRequest, URIFixupPrimitives} from "chrome://browser/content/urlbar/UrlbarShared.mjs"
+  * @import {Query} from "./UrlbarProvidersManager.sys.mjs"
+  * @import {SearchEngine} from "moz-src:///toolkit/components/search/SearchEngine.sys.mjs"
+- * @import {SmartbarInput} from "chrome://browser/content/urlbar/SmartbarInput.mjs"
+  */
+ 
+ import { UrlbarShared } from "chrome://browser/content/urlbar/UrlbarShared.mjs";
+ import { XPCOMUtils } from "resource://gre/modules/XPCOMUtils.sys.mjs";
+ 
+ const lazy = XPCOMUtils.declareLazy({
+-  AIWindow:
+-    "moz-src:///browser/components/aiwindow/ui/modules/AIWindow.sys.mjs",
+   ContextualIdentityService:
+     "moz-src:///toolkit/components/contextualidentity/ContextualIdentityService.sys.mjs",
+   CustomizableUI:
+@@ -1332,23 +1329,11 @@ export var UrlbarUtils = {
+    *
+    * @param {BrowserWindow} window
+    *   The window to get the URL bar for.
+-   * @returns {UrlbarInput | SmartbarInput }
++   * @returns {UrlbarInput}
+    *   The URL bar element that should be focused.
+    */
+   getURLBarForFocus(window) {
+-    /** @type {UrlbarInput | SmartbarInput} */
+-    let urlbar = window.gURLBar;
+-    // Check if we're in an AI window with immersive view (no address bar visible)
+-    if (
+-      lazy.AIWindow.isAIWindowActive(window) &&
+-      lazy.AIWindow.shouldUseImmersiveView(window.gBrowser.currentURI)
+-    ) {
+-      let smartbar = lazy.AIWindow.getSmartbarForWindow(window);
+-      if (smartbar) {
+-        urlbar = smartbar;
+-      }
+-    }
+-    return urlbar;
++    return window.gURLBar;
+   },
+ 
+   /**

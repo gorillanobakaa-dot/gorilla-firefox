@@ -1,0 +1,39 @@
+# Gorilla 160 rebase: browser/base/content/aboutDialog.xhtml as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/base/content/aboutDialog.xhtml b/browser/base/content/aboutDialog.xhtml
+index fcbf0090f9d58433d5bb80b3d44673538e2aa615..7a6f4b9993641ca68caf97dd03db4393ded2cd11 100644
+--- a/browser/base/content/aboutDialog.xhtml
++++ b/browser/base/content/aboutDialog.xhtml
+@@ -123,15 +123,16 @@
+           <vbox id="experimental" hidden="true">
+             <description class="text-blurb" id="warningDesc" data-l10n-id="warningDesc-version"></description>
+             <description class="text-blurb" id="communityExperimentalDesc" data-l10n-id="community-exp">
+-              <label is="text-link" href="https://www.mozilla.org/?utm_source=firefox-browser&#38;utm_medium=firefox-desktop&#38;utm_campaign=about-dialog" data-l10n-name="community-exp-mozillaLink"/>
++              <label data-l10n-name="community-exp-mozillaLink"/>
+               <label is="text-link" useoriginprincipal="true" href="about:credits" data-l10n-name="community-exp-creditsLink"/>
+             </description>
+           </vbox>
+           <description class="text-blurb" id="communityDesc" data-l10n-id="community-2">
+-            <label is="text-link" href="https://www.mozilla.org/?utm_source=firefox-browser&#38;utm_medium=firefox-desktop&#38;utm_campaign=about-dialog" data-l10n-name="community-mozillaLink"/>
++            <label data-l10n-name="community-mozillaLink"/>
+             <label is="text-link" useoriginprincipal="true" href="about:credits" data-l10n-name="community-creditsLink"/>
+           </description>
+-          <description class="text-blurb" id="contributeDesc" data-l10n-id="helpus">
++          <!-- GORILLA D-158-22: "Make a donation" and "get involved" pointed at Mozilla; the lines are hidden -->
++          <description class="text-blurb" id="contributeDesc" data-l10n-id="helpus" hidden="true">
+             <label is="text-link" href="https://foundation.mozilla.org/?form=firefox-about" data-l10n-name="helpus-donateLink"/>
+             <label is="text-link" href="https://www.mozilla.org/contribute/?utm_source=firefox-browser&#38;utm_medium=firefox-desktop&#38;utm_campaign=about-dialog" data-l10n-name="helpus-getInvolvedLink"/>
+           </description>
+@@ -146,9 +147,8 @@
+     </hbox>
+     <vbox id="bottomBox">
+       <hbox pack="center">
++        <!-- GORILLA D-158-22: Mozilla's Terms of Use and Privacy Notice links removed; the licence (about:license) stays -->
+         <label is="text-link" class="bottom-link" useoriginprincipal="true" href="about:license" data-l10n-id="bottomLinks-license"/>
+-        <label is="text-link" class="bottom-link" href="https://www.mozilla.org/about/legal/terms/firefox/" data-l10n-id="bottom-links-terms"/>
+-        <label is="text-link" class="bottom-link" href="https://www.mozilla.org/privacy/firefox/?utm_source=firefox-browser&#38;utm_medium=firefox-desktop&#38;utm_campaign=about-dialog" data-l10n-id="bottom-links-privacy"/>
+       </hbox>
+       <description id="trademark" data-l10n-id="trademarkInfo"></description>
+     </vbox>

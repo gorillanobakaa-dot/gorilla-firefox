@@ -1,0 +1,60 @@
+# Gorilla 160 rebase: browser/components/asrouter/modules/ASRouterTargeting.sys.mjs as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/asrouter/modules/ASRouterTargeting.sys.mjs b/browser/components/asrouter/modules/ASRouterTargeting.sys.mjs
+index bcaa2173a60404bdac50fa699ed35241ae593579..8d5101630d184e976ee27225ed232e974471b6f1 100644
+--- a/browser/components/asrouter/modules/ASRouterTargeting.sys.mjs
++++ b/browser/components/asrouter/modules/ASRouterTargeting.sys.mjs
+@@ -59,8 +59,6 @@ ChromeUtils.defineESModuleGetters(lazy, {
+   AddonManager: "resource://gre/modules/AddonManager.sys.mjs",
+   AgentPageDetector:
+     "moz-src:///browser/components/aiwindow/ui/modules/AgentPageDetector.sys.mjs",
+-  AIWindow:
+-    "moz-src:///browser/components/aiwindow/ui/modules/AIWindow.sys.mjs",
+   AboutNewTab: "resource:///modules/AboutNewTab.sys.mjs",
+   AppProvidedConfigEngine:
+     "moz-src:///toolkit/components/search/ConfigSearchEngine.sys.mjs",
+@@ -1080,10 +1078,12 @@ const TargetingGetters = {
+     return false;
+   },
+   get hasActiveAIWindow() {
+-    return !!lazy.AIWindow?.hasActiveAIWindows?.();
++    // GORILLA excised: aiwindow removed; no AI window can be active.
++    return false;
+   },
+   get isAutoTabGroupingAvailable() {
+-    return !!lazy.AutoTabGroupingSuggestions?.isAvailable;
++    // GORILLA excised: SmartTabGrouping.sys.mjs removed.
++    return false;
+   },
+   get hasAccessedFxAPanel() {
+     return lazy.hasAccessedFxAPanel;
+@@ -1859,19 +1859,6 @@ const TargetingGetters = {
+   },
+ };
+ 
+-function addAIWindowTargeting(targeting) {
+-  if (!targeting || targeting === "true") {
+-    // Default behavior: Classic-only if no targeting is specified
+-    return `!isAIWindow`;
+-  }
+-
+-  if (/\bisAIWindow\b/.test(targeting)) {
+-    return targeting;
+-  }
+-
+-  return `((${targeting}) && !isAIWindow)`;
+-}
+-
+ /**
+  * Sentinel rejection thrown by per-property promises in
+  * `ASRouterTargeting.getEnvironmentSnapshot` when `quit-application`
+@@ -2073,7 +2060,6 @@ export const ASRouterTargeting = {
+     );
+ 
+     let { targeting } = message;
+-    targeting = addAIWindowTargeting(targeting);
+ 
+     let result;
+     try {

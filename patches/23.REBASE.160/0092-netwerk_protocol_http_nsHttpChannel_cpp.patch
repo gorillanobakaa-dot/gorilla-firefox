@@ -1,0 +1,36 @@
+# Gorilla 160 rebase: netwerk/protocol/http/nsHttpChannel.cpp as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/netwerk/protocol/http/nsHttpChannel.cpp b/netwerk/protocol/http/nsHttpChannel.cpp
+index efdc1334b06ffce70ef38f646738b2074aeb8bc6..9415c12d43ccfb4e9eef238a18298babfa72b043 100644
+--- a/netwerk/protocol/http/nsHttpChannel.cpp
++++ b/netwerk/protocol/http/nsHttpChannel.cpp
+@@ -8239,6 +8239,7 @@ nsresult nsHttpChannel::BeginConnect() {
+   SetOriginHeader();
+   SetDoNotTrack();
+   SetGlobalPrivacyControl();
++  SetSaveData();  // GORILLA UNLEASHED - SATELLITE MODE
+ 
+   OriginAttributes originAttributes;
+   StoragePrincipalHelper::GetOriginAttributesForHttpConnection(
+@@ -12176,6 +12177,19 @@ void nsHttpChannel::SetGlobalPrivacyControl() {
+   }
+ }
+ 
++// GORILLA UNLEASHED - SATELLITE MODE: "Save-Data: on" asks the site for a
++// lighter page (only sites that honour it change anything). Off by default:
++// while on it is one more bit a site can see. No connection is made by it.
++void nsHttpChannel::SetSaveData() {
++  MOZ_ASSERT(NS_IsMainThread(), "Must be called on the main thread");
++
++  if (Preferences::GetBool("gorilla.network.save_data", false)) {
++    DebugOnly<nsresult> rv =
++        mRequestHead.SetHeader("Save-Data"_ns, "on"_ns, false);
++    MOZ_ASSERT(NS_SUCCEEDED(rv));
++  }
++}
++
+ void nsHttpChannel::ReportSystemChannelTelemetry(nsresult status) {
+   // Use status and httpStatus to determine
+   // if it was successful, and if we had connectivity / offline in this time

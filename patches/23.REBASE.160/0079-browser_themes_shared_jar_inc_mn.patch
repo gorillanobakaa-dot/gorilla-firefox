@@ -1,0 +1,17 @@
+# Gorilla 160 rebase: browser/themes/shared/jar.inc.mn as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/themes/shared/jar.inc.mn b/browser/themes/shared/jar.inc.mn
+index b68737371d966105066fc5beca3145d52034a62f..a62e50baf25b010ee9c683ccb19ab55185e62f25 100644
+--- a/browser/themes/shared/jar.inc.mn
++++ b/browser/themes/shared/jar.inc.mn
+@@ -207,6 +207,8 @@
+ 
+   skin/classic/browser/add-circle-fill.svg            (../shared/icons/add-circle-fill.svg)
+   skin/classic/browser/back.svg                       (../shared/icons/back.svg)
++# GORILLA UNLEASHED - SATELLITE MODE: the toolbar button's icon
++  skin/classic/browser/gorilla-satellite.svg          (../shared/icons/gorilla-satellite.svg)
+   skin/classic/browser/bookmark.svg                   (../shared/icons/bookmark.svg)
+   skin/classic/browser/bookmark-12.svg                (../shared/icons/bookmark-12.svg)
+   skin/classic/browser/bookmark-hollow.svg            (../shared/icons/bookmark-hollow.svg)

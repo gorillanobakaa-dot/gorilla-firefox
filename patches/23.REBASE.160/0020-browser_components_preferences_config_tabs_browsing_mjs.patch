@@ -1,0 +1,71 @@
+# Gorilla 160 rebase: browser/components/preferences/config/tabs-browsing.mjs as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/preferences/config/tabs-browsing.mjs b/browser/components/preferences/config/tabs-browsing.mjs
+index 44e47148759a4d0fa120c73d1a2ef61a617efe6c..bc3c6b6a6ed2f492543c36f18e6bed9eb5cc4ab2 100644
+--- a/browser/components/preferences/config/tabs-browsing.mjs
++++ b/browser/components/preferences/config/tabs-browsing.mjs
+@@ -14,7 +14,6 @@ const lazy = XPCOMUtils.declareLazy({
+   ContextualIdentityService:
+     "moz-src:///toolkit/components/contextualidentity/ContextualIdentityService.sys.mjs",
+   GenAI: "moz-src:///browser/components/genai/GenAI.sys.mjs",
+-  LinkPreview: "moz-src:///browser/components/genai/LinkPreview.sys.mjs",
+   ShortcutUtils: "resource://gre/modules/ShortcutUtils.sys.mjs",
+   TransientPrefs: "resource:///modules/TransientPrefs.sys.mjs",
+ });
+@@ -432,29 +431,9 @@ Preferences.addSetting({
+   pref: "accessibility.typeaheadfind",
+ });
+ 
+-Preferences.addSetting({
+-  id: "linkPreviewEnabled",
+-  pref: "browser.ml.linkPreview.enabled",
+-  deps: ["aiControlDefault", "aiControlLinkPreviews"],
+-  visible: ({ aiControlDefault, aiControlLinkPreviews }) => {
+-    return (
+-      window.canShowAiFeature(aiControlLinkPreviews, aiControlDefault) &&
+-      // @ts-ignore bug 1996860
+-      lazy.LinkPreview.canShowPreferences
+-    );
+-  },
+-});
+-Preferences.addSetting({
+-  id: "linkPreviewKeyPoints",
+-  pref: "browser.ml.linkPreview.optin",
+-  // LinkPreview.canShowKeyPoints depends on the global genai pref.
+-  // @ts-ignore bug 1996860
+-  visible: () => lazy.LinkPreview.canShowKeyPoints,
+-});
+-Preferences.addSetting({
+-  id: "linkPreviewLongPress",
+-  pref: "browser.ml.linkPreview.longPress",
+-});
++// GORILLA D-157-00 (2026-10-17): link preview (genai) excised; its settings and rows are gone, not hidden:
++// hidden rows still named AI-control settings that do not exist and Fluent ids this page does not load.
++
+ const HIGHLIGHT_TO_SEARCH_ACTIONS = [
+   "highlightToSearchAskChatbot",
+   "highlightToSearchSearch",
+@@ -914,21 +893,6 @@ SettingGroupManager.registerGroups({
+         supportPage: "extensionrecommendations",
+         subcategory: "cfrfeatures",
+       },
+-      {
+-        id: "linkPreviewEnabled",
+-        l10nId: "link-preview-settings-enable",
+-        subcategory: "link-preview",
+-        items: [
+-          {
+-            id: "linkPreviewKeyPoints",
+-            l10nId: "link-preview-settings-key-points",
+-          },
+-          {
+-            id: "linkPreviewLongPress",
+-            l10nId: "link-preview-settings-long-press",
+-          },
+-        ],
+-      },
+       {
+         id: "highlightToSearchEnabled",
+         l10nId: "highlight-to-search-settings-enable",

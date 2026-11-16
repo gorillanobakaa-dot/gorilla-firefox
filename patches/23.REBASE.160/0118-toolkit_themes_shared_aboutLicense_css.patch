@@ -1,0 +1,20 @@
+# Gorilla 160 rebase: toolkit/themes/shared/aboutLicense.css as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/toolkit/themes/shared/aboutLicense.css b/toolkit/themes/shared/aboutLicense.css
+index 02f2fe4bba569f52d68d85d2d8c24a11c29a9e18..4aaf9f73ba90dcc9b10c2ba7ad7fecc097370fbb 100644
+--- a/toolkit/themes/shared/aboutLicense.css
++++ b/toolkit/themes/shared/aboutLicense.css
+@@ -90,3 +90,11 @@
+     }
+   }
+ }
++
++/* GORILLA UNLEASHED 2026-10-04: the 769 px licence <pre> blocks set the
++ * minimum width of the centred table and pushed it 36 px past the left edge
++ * of a normal window; wrap the licence text instead. */
++#lic-info pre {
++  white-space: pre-wrap;
++  overflow-wrap: anywhere;
++}

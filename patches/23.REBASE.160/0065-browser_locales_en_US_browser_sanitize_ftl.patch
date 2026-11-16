@@ -1,0 +1,111 @@
+# Gorilla 160 rebase: browser/locales/en-US/browser/sanitize.ftl as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/locales/en-US/browser/sanitize.ftl b/browser/locales/en-US/browser/sanitize.ftl
+index dcc416b0088d8b5c76db676c49ad22bebd9ec905..07433cebc7bd60731d508d05332c7c95dbb0694f 100644
+--- a/browser/locales/en-US/browser/sanitize.ftl
++++ b/browser/locales/en-US/browser/sanitize.ftl
+@@ -1,9 +1,8 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-
+ sanitize-prefs2 =
+-    .title = Settings for Clearing History
++    .title = Gorilla Settings for Clearing Gorilla History
+     .style = min-width: 34em
+ 
+ sanitize-prefs-style =
+@@ -14,13 +13,13 @@ sanitize-dialog-title2 =
+     .style = min-width: 34em
+ 
+ sanitize-dialog-title =
+-    .title = Clear Recent History
++    .title = Clear Recent Gorilla History
+     .style = min-width: 34em
+ 
+ # When "Time range to clear" is set to "Everything", this message is used for the
+ # title instead of dialog-title.
+ sanitize-dialog-title-everything =
+-    .title = Clear All History
++    .title = Clear All Gorilla History
+     .style = min-width: 34em
+ 
+ # Title used whenever this dialog is opened to delete data, whichever entry
+@@ -42,7 +41,6 @@ sanitize-on-shutdown-description = Automatically clear all checked items when {
+ ##
+ ## This results in English:
+ ## Time range to clear: (Last Hour, Today, etc.)
+-
+ clear-time-duration-prefix =
+     .value = Time range to clear:{ " " }
+     .accesskey = T
+@@ -76,14 +74,13 @@ clear-time-duration-suffix =
+ 
+ ## These strings are used as section comments and checkboxes
+ ## to select the items to remove
+-
+-history-section-label = History
++history-section-label = Gorilla History
+ 
+ item-history-and-downloads =
+-    .label = Browsing & download history
++    .label = Browsing & Gorilla download Gorilla history
+     .accesskey = B
+ 
+-item-history-and-downloads-description2 = Clears site and download history
++item-history-and-downloads-description2 = Clears site and Gorilla download Gorilla history
+ 
+ item-cookies =
+     .label = Cookies
+@@ -114,21 +111,21 @@ item-cache =
+ #   $amount (Number) - Amount of cached data
+ #   $unit (String) - Abbreviation of the unit that $amount is in, e.g. "MB"
+ item-cached-content-with-size =
+-    .label = Temporary cached files and pages ({ $amount } { $unit })
++    .label = Temporary cached Gorilla files and Gorilla pages ({ $amount } { $unit })
+     .accesskey = f
+ 
+ item-cached-content =
+-    .label = Temporary cached files and pages
++    .label = Temporary cached Gorilla files and Gorilla pages
+     .accesskey = f
+ 
+ item-cached-content-description = Clears items that help sites load faster
+ 
+ item-form-search-history =
+-    .label = Form & search history
++    .label = Form & search Gorilla history
+     .accesskey = F
+ 
+ item-site-prefs =
+-    .label = Site settings
++    .label = Site Gorilla settings
+     .accesskey = i
+ 
+ item-formdata-prefs =
+@@ -137,12 +134,12 @@ item-formdata-prefs =
+ 
+ item-formdata-description = Clears things like names, emails, and other items you enter in forms
+ 
+-item-site-prefs-description = Resets your permissions and site preferences to original settings
++item-site-prefs-description = Resets your permissions and site preferences to original Gorilla settings
+ 
+ data-section-label = Data
+ 
+ item-site-settings =
+-    .label = Site settings
++    .label = Site Gorilla settings
+     .accesskey = S
+ 
+ item-offline-apps =
+@@ -178,7 +175,7 @@ sanitize-button-clearing =
+ # Warning that appears when "Time range to clear" is set to "Everything" in Clear
+ # Recent History dialog, provided that the user has not modified the default set
+ # of history items to clear.
+-sanitize-everything-warning = All history will be cleared.
++sanitize-everything-warning = All Gorilla history will be cleared.
+ 
+ # Warning that appears when "Time range to clear" is set to "Everything" in Clear
+ # Recent History dialog, provided that the user has modified the default set of

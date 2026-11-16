@@ -1,0 +1,45 @@
+# Gorilla 160 rebase: browser/components/tabbrowser/NewTabPagePreloading.sys.mjs as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/components/tabbrowser/NewTabPagePreloading.sys.mjs b/browser/components/tabbrowser/NewTabPagePreloading.sys.mjs
+index 09b8c8d57f917c079fae7209826f14c1218c5cb8..eb1134317d217241563bc59c88213469aa6c9816 100644
+--- a/browser/components/tabbrowser/NewTabPagePreloading.sys.mjs
++++ b/browser/components/tabbrowser/NewTabPagePreloading.sys.mjs
+@@ -11,8 +11,6 @@ import { XPCOMUtils } from "resource://gre/modules/XPCOMUtils.sys.mjs";
+ 
+ const lazy = XPCOMUtils.declareLazy({
+   AboutNewTab: "resource:///modules/AboutNewTab.sys.mjs",
+-  AIWindow:
+-    "moz-src:///browser/components/aiwindow/ui/modules/AIWindow.sys.mjs",
+   BrowserWindowTracker: "resource:///modules/BrowserWindowTracker.sys.mjs",
+   PrivateBrowsingUtils: "resource://gre/modules/PrivateBrowsingUtils.sys.mjs",
+ });
+@@ -64,13 +62,11 @@ export let NewTabPagePreloading = {
+    */
+   _adoptBrowserFromOtherWindow(window) {
+     let winPrivate = lazy.PrivateBrowsingUtils.isWindowPrivate(window);
+-    let winAIWindow = lazy.AIWindow.isAIWindowActive(window);
+     // Grab the least-recently-focused window with a preloaded browser:
+     let oldWin = lazy.BrowserWindowTracker.orderedWindows
+       .filter(w => {
+         return (
+           winPrivate == lazy.PrivateBrowsingUtils.isWindowPrivate(w) &&
+-          winAIWindow == lazy.AIWindow.isAIWindowActive(w) &&
+           w.gBrowser &&
+           w.gBrowser.preloadedBrowser
+         );
+@@ -108,12 +104,9 @@ export let NewTabPagePreloading = {
+ 
+     // Don't bother creating a preload browser if we're not in the top set of windows:
+     let windowPrivate = lazy.PrivateBrowsingUtils.isWindowPrivate(window);
+-    let windowAIWindow = lazy.AIWindow.isAIWindowActive(window);
+     let countKey = windowPrivate ? "private" : "normal";
+     let topWindows = lazy.BrowserWindowTracker.orderedWindows.filter(
+-      w =>
+-        lazy.PrivateBrowsingUtils.isWindowPrivate(w) == windowPrivate &&
+-        lazy.AIWindow.isAIWindowActive(w) == windowAIWindow
++      w => lazy.PrivateBrowsingUtils.isWindowPrivate(w) == windowPrivate
+     );
+     if (topWindows.indexOf(window) >= this.MAX_COUNT) {
+       return;

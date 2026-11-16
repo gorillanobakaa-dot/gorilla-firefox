@@ -1,0 +1,16 @@
+# Gorilla 160 rebase: browser/installer/package-manifest.in as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/installer/package-manifest.in b/browser/installer/package-manifest.in
+index b9db978c2ed8ef561f5ca6eed4d97d30eaa6aa84..4b2b4b561a627fca5d77c43596c75e5931224ea4 100644
+--- a/browser/installer/package-manifest.in
++++ b/browser/installer/package-manifest.in
+@@ -113,7 +113,6 @@
+ @BINPATH@/@DLL_PREFIX@Microsoft.UI.Input@DLL_SUFFIX@
+ @BINPATH@/@DLL_PREFIX@Microsoft.UI.Windowing.Core@DLL_SUFFIX@
+ @BINPATH@/@DLL_PREFIX@Microsoft.UI.Windowing@DLL_SUFFIX@
+-@BINPATH@/@DLL_PREFIX@Microsoft.WindowsAppRuntime@DLL_SUFFIX@
+ @BINPATH@/@DLL_PREFIX@Microsoft.WindowsAppRuntime.Insights.Resource@DLL_SUFFIX@
+ #endif
+ #ifdef MOZ_GTK

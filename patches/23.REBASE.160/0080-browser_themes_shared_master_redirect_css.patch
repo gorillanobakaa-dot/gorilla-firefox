@@ -1,0 +1,100 @@
+# Gorilla 160 rebase: browser/themes/shared/master-redirect.css as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/themes/shared/master-redirect.css b/browser/themes/shared/master-redirect.css
+index 9d5b391d98043f91c92d824af423a7b645c33dbd..a91aeb63daa5cb475fc87c65b631d1a4ede1a3aa 100644
+--- a/browser/themes/shared/master-redirect.css
++++ b/browser/themes/shared/master-redirect.css
+@@ -47,10 +47,16 @@
+ 
+ /* GORILLA 2026-10-15: the app menu is wide enough for its Gorilla labels. "Gorilla Extensions and Gorilla Themes"
+    with Ctrl+Shift+A did not fit Mozilla's 22.35em and was cut ("...Gorilla Them...", owner's screenshot 18:30).
+-   26em fits it with room for the shortcut; static, no effect on drawing cost. Proven by the ui clip check. */
++   26em fitted it on Linux. On Windows (Segoe UI, D-158-12) it was still cut, and the probe theme-diag showed why
++   (2026-10-18): in 158 the app menu's views are sized by panelUI-shared.css "#appMenu-popup panelview { width: 25em }",
++   not by --menu-panel-width (30em there changed nothing: the view stayed 300 px, the label needed 198 px of 192).
++   27em gives it room; static, no effect on drawing cost. Proven on the unpacked build with probe theme-diag. */
+ :root {
+   --menu-panel-width: 26em !important;
+ }
++#appMenu-popup panelview {
++  width: 27em !important;
++}
+ 
+ /* Override standard illustration classes and elements. GORILLA D-157-35: not the 16-42 px icon classes
+    (.info-icon, .error-icon, .category-icon): the artwork is lost at that size and only costs decoding. */
+@@ -528,17 +534,67 @@ panel[type="arrow"] {
+   color-scheme: dark !important;
+ }
+ 
++/* THEME.yaml (D-158-19, 2026-10-18): every menu is the Gorilla constant, as the Satellite menu already was:
++   black, cyan text and a cyan border, so it is not a flat black box (the reason the native restoration above was
++   made). Before, right-click menus were the system's Menu colours: dark text on white on Windows, a hover Windows
++   drew, the one surface the probe found off the palette. */
+ menupopup {
+-  appearance: auto !important;
+-  -moz-default-appearance: auto !important;
+-  background-color: Menu !important;
+-  color: MenuText !important;
++  appearance: none !important;
++  -moz-default-appearance: none !important;
++  --panel-background-color: #000000 !important;
++  --panel-text-color: #00FFFF !important;
++  --panel-border-color: #00FFFF !important;
++  background-color: #000000 !important;
++  color: #00FFFF !important;
+ }
+ 
+ menupopup menuitem,
+ menupopup menu {
+-  appearance: auto !important;
+-  -moz-default-appearance: auto !important;
++  appearance: none !important;
++  -moz-default-appearance: none !important;
+   background-color: transparent !important;
+   color: inherit !important;
+ }
++
++menupopup menuseparator {
++  appearance: none !important;
++  -moz-default-appearance: none !important;
++  border-top: 1px solid #1A4D4D !important;
++}
++
++/* ===========================================================================
++ * GORILLA THEME, ONE CONSTANT (gorilla-patchset/decisions/THEME.yaml; owner 2026-10-18)
++ * Black #000000 surfaces, cyan #00FFFF text, the highlight #65568C behind every hovered or selected row, a cyan
++ * focus ring. Flat colours: no transitions. Before this block:
++ *  - the search-mode list beside the address bar (a panel-list) painted Firefox's default box background: white
++ *    under cyan text, about 1.25:1 (user feedback "heavy on the eye", 2026-10-18);
++ *  - the hover and the focus ring came from Windows' accent colour, so they differed from machine to machine;
++ *  - the app menu at 26em still cut "Gorilla Extensions and Gorilla Themes" short with Segoe UI.
++ * Checked before the build (themecheck static) and after it (probe ui-contrast, themecheck judge_popups).
++ * =========================================================================== */
++:root,
++panel-list,
++.searchmode-switcher-panel {
++  --background-color-box: #000000 !important;
++  --panel-list-background-color: #000000 !important;
++  --panel-list-text-color: #00FFFF !important;
++  --panel-list-border-color: #00FFFF !important;
++  --button-background-color-hover: #65568C !important;
++  --button-text-color-hover: #00FFFF !important;
++  --button-background-color-menu-hover: #65568C !important;
++  --button-text-color-menu-hover: #00FFFF !important;
++  --button-background-color-menu-active: #65568C !important;
++  --button-text-color-menu-active: #00FFFF !important;
++  --panel-item-hover-bgcolor: #65568C !important;
++  --panel-item-active-bgcolor: #65568C !important;
++  --focus-outline-color: #00FFFF !important;
++}
++menupopup menuitem[_moz-menuactive]:not([disabled]),
++menupopup menu[_moz-menuactive]:not([disabled]),
++.subviewbutton:not([disabled]):hover,
++.subviewbutton:not([disabled]):focus-visible,
++#appMenu-popup toolbarbutton:not([disabled]):hover,
++#appMenu-popup toolbarbutton:not([disabled]):focus-visible {
++  background-color: #65568C !important;
++  color: #00FFFF !important;
++}

@@ -1,0 +1,17 @@
+# Gorilla 160 rebase: browser/themes/shared/urlbar/view-proton.css as built on Firefox 160
+# The earlier patches of this file do not apply to pristine 160 (superseded in the policy with
+# exclude_reason_160); this patch carries the file from the remaining set to the built tree.
+
+diff --git a/browser/themes/shared/urlbar/view-proton.css b/browser/themes/shared/urlbar/view-proton.css
+index 2dc49935247cd6318069af93dbddfb9176601184..8f38349a1b7fc1a86b1a55811486564be4f8f0da 100644
+--- a/browser/themes/shared/urlbar/view-proton.css
++++ b/browser/themes/shared/urlbar/view-proton.css
+@@ -619,7 +619,7 @@
+     font-size: var(--urlbarview-small-font-size);
+     margin-inline-start: calc(var(--urlbarview-row-padding-inline) + var(--urlbarview-favicon-margin-start));
+     padding-inline-start: calc(var(--urlbarview-favicon-size) + var(--urlbarview-favicon-margin-end));
+-    background-image: url("chrome://branding/content/icon32.png");
++    /* GORILLA D-157-35: no 16 px Gorilla beside this label */
+     background-repeat: no-repeat;
+     background-position: 0 center;
+     background-size: var(--urlbarview-favicon-size);

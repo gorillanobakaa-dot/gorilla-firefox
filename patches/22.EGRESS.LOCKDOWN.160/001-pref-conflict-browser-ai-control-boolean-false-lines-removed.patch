@@ -1,0 +1,22 @@
+# Gorilla 160 privacy cut
+# Pref conflict: browser.ai.control.* boolean false lines removed; the blocking string 'blocked' (locked) is the one definition, as in the 158 tree
+# Files: modules/libpref/init/all.js
+# Exported-by: build-harness export-hand firefox-160-linux
+
+diff --git a/modules/libpref/init/all.js b/modules/libpref/init/all.js
+index 4e66c4af6e..7885155c11 100644
+--- a/modules/libpref/init/all.js
++++ b/modules/libpref/init/all.js
+@@ -4374,12 +4374,6 @@ pref("browser.ml.chat.enabled", false);
+ pref("browser.ml.checkForMemory", false);
+ pref("extensions.ml.enabled", false);
+ pref("browser.sidebar.ai.enabled", false);
+-pref("browser.ai.control.default", false);
+-pref("browser.ai.control.sidebarChatbot", false);
+-pref("browser.ai.control.linkPreviewKeyPoints", false);
+-pref("browser.ai.control.pdfjsAltText", false);
+-pref("browser.ai.control.smartTabGroups", false);
+-pref("browser.ai.control.smartWindow", false);
+ 
+ // Disable Topsites & Sponsored Noise
+ pref("browser.urlbar.suggest.topsites", false);
