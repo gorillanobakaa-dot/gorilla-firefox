@@ -756,7 +756,8 @@
           "0122-widget_windows_moz_build.patch"
         ]
       },
-      "exclude_on_reason": "Owner decision 2026-11-17 (\"solve the 122 decision\"), replacing the 2026-11-16 note: Linux does NOT apply 0122-widget_windows_moz_build.patch. It writes only Windows files (Microsoft.WindowsAppRuntime.dll out of widget/windows/moz.build); Windows needs it. Read by firefox.py exclude_on and checked by setproof."
+      "exclude_on_reason": "Owner decision 2026-11-17 (\"solve the 122 decision\"), replacing the 2026-11-16 note: Linux does NOT apply 0122-widget_windows_moz_build.patch. It writes only Windows files (Microsoft.WindowsAppRuntime.dll out of widget/windows/moz.build); Windows needs it. Read by firefox.py exclude_on and checked by setproof.",
+      "note_windowsappruntime": "D-160-01 (owner 2026-11-17): Microsoft.WindowsAppRuntime.dll stays out of the Windows build as in 157/158; 0122 carries it. No tests, no clean-machine checks, no new stages."
     },
     "23.REBASE.160.linux": {
       "status": "enabled",
