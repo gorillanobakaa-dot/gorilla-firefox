@@ -1,0 +1,39 @@
+# Gorilla 160 port fix
+# 160 port fix: currentTabPageCategory guarded; the aiwindow AgentPageDetector module is excised, ASRouter targeting threw and the new tab page stayed blank
+# Files: browser/components/asrouter/modules/ASRouterTargeting.sys.mjs
+# Exported-by: build-harness export-hand firefox-160.0
+
+diff --git a/browser/components/asrouter/modules/ASRouterTargeting.sys.mjs b/browser/components/asrouter/modules/ASRouterTargeting.sys.mjs
+index 2222e55a45..8ddb4ecae4 100644
+--- a/browser/components/asrouter/modules/ASRouterTargeting.sys.mjs
++++ b/browser/components/asrouter/modules/ASRouterTargeting.sys.mjs
+@@ -57,8 +57,6 @@ ChromeUtils.defineESModuleGetters(lazy, {
+   AboutNewTabResourceMapping:
+     "resource:///modules/AboutNewTabResourceMapping.sys.mjs",
+   AddonManager: "resource://gre/modules/AddonManager.sys.mjs",
+-  AgentPageDetector:
+-    "moz-src:///browser/components/aiwindow/ui/modules/AgentPageDetector.sys.mjs",
+   AboutNewTab: "resource:///modules/AboutNewTab.sys.mjs",
+   AppProvidedConfigEngine:
+     "moz-src:///toolkit/components/search/ConfigSearchEngine.sys.mjs",
+@@ -805,17 +803,9 @@ const TargetingGetters = {
+   // The category of the page open in the active tab ("product-detail",
+   // "shopping-home", "news-home"), or null when it is in none of them.
+   get currentTabPageCategory() {
+-    const uri = getSelectedTabURI();
+-    if (!uri) {
+-      return null;
+-    }
+-    // Gorilla: the aiwindow module is excised from the build; a missing module must not
+-    // throw out of ASRouter targeting (the new tab page stayed blank).
+-    try {
+-      return lazy.AgentPageDetector.getPageCategory(uri);
+-    } catch (e) {
+-      return null;
+-    }
++    // Gorilla: the aiwindow AgentPageDetector module is excised from the build, so no tab
++    // has a page category (reading the missing module threw and the new tab page stayed blank).
++    return null;
+   },
+   get canCreateSelectableProfiles() {
+     if (!AppConstants.MOZ_SELECTABLE_PROFILES) {
