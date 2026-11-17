@@ -1517,3 +1517,16 @@ decisions:
       - tree_lacks: {path: browser/installer/windows/nsis/defines.nsi.in, text: "incoming.telemetry.mozilla.org"}
       - tree_lacks: {path: browser/installer/windows/nsis/shared.nsh, text: "\"Publisher\" \"Mozilla\""}
       - tree_contains: {path: browser/installer/windows/nsis/shared.nsh, text: "\"Publisher\" \"${CompanyName}\""}
+
+  - id: D-160-01
+    title: "Microsoft.WindowsAppRuntime.dll stays out of the Windows build, as in 157 and 158"
+    decided: 2026-11-17
+    by: owner
+    platforms: [windows]
+    provenance: 'owner order 2026-11-17 (Firefox 160 Windows job): WindowsAppRuntime stays out of the Windows Firefox build as in 157/158; no tests, no clean-machine checks, no new stages. Carried by 23.REBASE.160/0122-widget_windows_moz_build.patch (Windows only, see config/patch_policy.json).'
+    status: pending
+    why: >
+      Firefox 160 adds Microsoft.WindowsAppRuntime.dll to widget/windows/moz.build. Gorilla 157 and 158 shipped
+      without it and users reported no breakage; the owner keeps it out. Users' feedback is the verification:
+      no tests, no clean-machine checks and no new stages for this decision. Added by an agent as pending (register
+      rule); the owner marks it enforced.
