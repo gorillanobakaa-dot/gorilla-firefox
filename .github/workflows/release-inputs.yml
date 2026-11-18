@@ -1,0 +1,33 @@
+# The dedicated build runner exposes Fieldkit-produced packages staged under their exact source commit.
+name: release-inputs
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Product version without the v prefix
+        required: true
+        type: string
+permissions:
+  contents: read
+jobs:
+  collect:
+    if: github.ref_type == 'tag'
+    runs-on: [self-hosted, linux, x64, fieldkit-release-inputs]
+    timeout-minutes: 10
+    env:
+      VERSION: ${{ inputs.version }}
+    steps:
+      - id: files
+        shell: bash
+        run: |
+          [[ "$VERSION" =~ ^[0-9][A-Za-z0-9.+-]*$ && "$GITHUB_SHA" =~ ^[0-9a-f]{40}$ ]]
+          [[ "$GITHUB_REF" == "refs/tags/v$VERSION" ]]
+          : "${FIELDKIT_RELEASE_SPOOL:?Release spool is not configured on this runner}"
+          source="$FIELDKIT_RELEASE_SPOOL/$GITHUB_REPOSITORY/$GITHUB_SHA/$VERSION"
+          test -d "$source"
+          echo "source=$source" >> "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: release-inputs
+          path: ${{ steps.files.outputs.source }}
+          if-no-files-found: error
