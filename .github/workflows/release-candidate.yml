@@ -1,0 +1,110 @@
+# This workflow installs one candidate on its target OS and uploads the evidence for that run.
+name: release-candidate
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Product version without the v prefix
+        required: true
+        type: string
+      build_run:
+        description: Successful build run for this commit, carrying the release-inputs artifact
+        required: true
+        type: string
+      target:
+        description: Installer to test
+        required: true
+        type: choice
+        options: [windows-x86_64, debian-x86_64, macos-x86_64]
+permissions:
+  contents: read
+  actions: read
+env:
+  VERSION: ${{ inputs.version }}
+  TARGET: ${{ inputs.target }}
+  BUILD_RUN: ${{ inputs.build_run }}
+  FIELDKIT_CHECKOUT: .fieldkit
+jobs:
+  inputs:
+    runs-on: ubuntu-latest
+    outputs:
+      runner: ${{ steps.select.outputs.runner }}
+      container: ${{ steps.select.outputs.container }}
+    steps:
+      - id: select
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          [[ "$VERSION" =~ ^[0-9][A-Za-z0-9.+-]*$ && "$BUILD_RUN" =~ ^[1-9][0-9]*$ ]]
+          [[ "$GITHUB_REF" == "refs/tags/v$VERSION" ]]
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$BUILD_RUN" | jq -e '(.head_sha == env.GITHUB_SHA) and (.conclusion == "success") and
+            (.event == "push" or .event == "workflow_dispatch") and
+            (.head_repository.full_name == env.GITHUB_REPOSITORY) and
+            (.path | split("@")[0] == ".github/workflows/release-inputs.yml")'
+          case "$TARGET" in
+            windows-x86_64) runner='["windows-latest"]'; container='' ;;
+            debian-x86_64) runner='["ubuntu-latest"]'; container='debian:stable' ;;
+            macos-x86_64) runner='["self-hosted","linux","x64","fieldkit-release-mac-bridge"]'; container='' ;;
+            *) exit 1 ;;
+          esac
+          printf 'runner=%s\ncontainer=%s\n' "$runner" "$container" >> "$GITHUB_OUTPUT"
+  install:
+    needs: inputs
+    runs-on: ${{ fromJSON(needs.inputs.outputs.runner) }}
+    container: ${{ needs.inputs.outputs.container || null }}
+    timeout-minutes: 35
+    steps:
+      - name: Prepare disposable Linux userspace
+        if: needs.inputs.outputs.container != ''
+        shell: bash
+        run: |
+          case "$TARGET" in
+            debian-x86_64) apt-get update && apt-get install -y ca-certificates git python3 python3-yaml ;;
+            rpm-x86_64) dnf install -y git python3 python3-pyyaml ;;
+            arch-x86_64) pacman -Syu --noconfirm ca-certificates git python python-yaml ;;
+          esac
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          repository: gorillanobakaa-dot/Gorilla.Fieldkit
+          ref: 4c8326faf715d286e276aed79befbc83681d4180
+          path: .fieldkit
+          persist-credentials: false
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: release-inputs
+          path: candidate
+          run-id: ${{ inputs.build_run }}
+          github-token: ${{ github.token }}
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        if: runner.os == 'Windows'
+        with:
+          python-version: '3.12'
+      - name: Install and verify on Windows
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          python -m pip install -e .fieldkit
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          python -m fieldkit.method.installproof --target $env:TARGET --version $env:VERSION --directory candidate --output proof/proof.json -- pwsh -NoProfile -File .github/verify-candidate-install.ps1
+          exit $LASTEXITCODE
+      - name: Install and verify on Linux
+        if: needs.inputs.outputs.container != ''
+        shell: bash
+        run: |
+          extra=()
+          if [[ "$TARGET" == debian-x86_64 ]]; then extra+=(--cover-directory); fi
+          PYTHONPATH="$PWD/.fieldkit" python3 -m fieldkit.method.installproof --target "$TARGET" --version "$VERSION" \
+            --directory candidate "${extra[@]}" --output proof/proof.json -- bash .github/verify-candidate-install.sh "$TARGET"
+      - name: Install and verify on High Sierra over SSH
+        if: inputs.target == 'macos-x86_64'
+        shell: bash
+        run: bash .fieldkit/.github/high-sierra-proof.sh "$TARGET" "$VERSION" candidate proof/proof.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: install-proof-${{ inputs.target }}
+          path: proof/proof.json
+          if-no-files-found: error
